@@ -1,0 +1,6 @@
+/venv
+/output
+credentials.json
+token.json
+.idea
+__pycache__
