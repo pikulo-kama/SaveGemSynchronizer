@@ -1,8 +1,16 @@
+import locale
 import os.path
 import tkinter as tk
+from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
+
+from babel.dates import format_datetime, get_timezone
 
 from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, COPYRIGHT_LABEL, APPLICATION_ICO, \
-    PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION
+    PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION, SAVE_VERSION_FILE_NAME, SAVE_UP_TO_DATE_LABEL, \
+    SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
+    APPLICATION_LOCALE, TZ_PLUS_HOURS
+from core import Downloader
 
 
 class GUI:
@@ -17,8 +25,14 @@ class GUI:
         self.__window.resizable(False, False)
 
     def build(self):
-        self.__add_buttons_internal(self.__window)
+
+        body_frame = tk.Frame(self.__window)
+
+        self.__add_last_save_info(body_frame)
+        self.__add_buttons_internal(body_frame)
         self.__add_copyright_and_version(self.__window)
+
+        body_frame.place(relx=.5, rely=.3, anchor=tk.CENTER)
 
         self.__window.mainloop()
 
@@ -34,6 +48,31 @@ class GUI:
             "callback": callback,
             "properties": color
         })
+
+    def __add_last_save_info(self, frame):
+        info_frame = tk.Frame(frame)
+        latest_save = Downloader().download_last_save()
+
+        print(latest_save['createdTime'])
+        date_info = self.__extract_date(latest_save["createdTime"])
+
+        save_status = tk.Label(
+            info_frame,
+            text=self.__get_last_download_version_text(latest_save),
+            fg=APPLICATION_PRIMARY_TEXT_COLOR,
+            font=("Helvetica", 25)
+        )
+        last_save_info = tk.Label(
+            info_frame,
+            text=str(LAST_SAVE_INFO_LABEL.format(date_info["date"], date_info["time"], latest_save["owner"])),
+            fg=APPLICATION_SECONDARY_TEXT_COLOR,
+            font=("Helvetica", 13)
+        )
+
+        save_status.grid(row=0, column=0, pady=5)
+        last_save_info.grid(row=1, column=0, pady=5)
+
+        info_frame.grid(row=0, column=0, pady=150)
 
     def __add_buttons_internal(self, frame):
 
@@ -57,7 +96,7 @@ class GUI:
 
             tk_button.grid(row=0, column=idx, padx=5)
             tk_button.config(
-                fg='#009688',
+                fg=APPLICATION_PRIMARY_TEXT_COLOR,
                 bg=button["properties"]["colorStatic"],
                 borderwidth=0,
                 relief=tk.SOLID,
@@ -69,7 +108,35 @@ class GUI:
             tk_button.bind('<Enter>', on_button_enter)
             tk_button.bind('<Leave>', on_button_leave)
 
-        button_frame.place(relx=.5, rely=.5, anchor=tk.CENTER)
+        button_frame.grid(row=1, column=0)
+
+    def __get_last_download_version_text(self, latest_save):
+        save_version_file_name = os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME)
+        last_downloaded_version = None
+
+        if os.path.isfile(save_version_file_name):
+            with open(save_version_file_name, 'r') as save_version_file:
+                last_downloaded_version = save_version_file.read()
+
+        if last_downloaded_version is None:
+            save_status_message = ""
+
+        elif last_downloaded_version == latest_save["name"]:
+            save_status_message = SAVE_UP_TO_DATE_LABEL
+
+        else:
+            save_status_message = SAVE_OUTDATED_LABEL
+
+        return save_status_message
+
+    def __extract_date(self, date_str):
+        date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+        date += timedelta(hours=TZ_PLUS_HOURS)
+
+        return {
+            "date": format_datetime(date, "d MMMM", locale=APPLICATION_LOCALE),
+            "time": f"{date.hour}:{date.minute}"
+        }
 
     def __add_copyright_and_version(self, frame):
 

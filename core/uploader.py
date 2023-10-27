@@ -20,6 +20,7 @@ class Uploader:
         self.__filepath = f"{Uploader.output_dir}/{self.__filename}.{ZIP_EXTENSION}"
 
     def upload(self):
+        return
 
         metadata = {
             "name": f"{self.__filename}.{ZIP_EXTENSION}",

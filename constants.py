@@ -2,7 +2,9 @@ import os
 from datetime import date
 
 # General use constants
-APPLICATION_VERSION = "1.0.0"
+APPLICATION_VERSION = "1.1.0"
+APPLICATION_LOCALE = "uk_UA"
+TZ_PLUS_HOURS = 3
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ZIP_EXTENSION = "zip"
@@ -16,6 +18,12 @@ WINDOW_DEFAULT_WIDTH = 1080
 WINDOW_DEFAULT_HEIGHT = 720
 UPLOAD_LABEL = "🠉 Відвантажити"
 DOWNLOAD_LABEL = "🠋"
+APPLICATION_PRIMARY_TEXT_COLOR = "#009688"
+APPLICATION_SECONDARY_TEXT_COLOR = "#02544c"
+
+SAVE_UP_TO_DATE_LABEL = "Нічого нового... Твій сейв свіженький як ніколи."
+SAVE_OUTDATED_LABEL = "Здалося б оновитись.."
+LAST_SAVE_INFO_LABEL = "Останній сейв {0} o {1} від {2}"
 
 # Button colors
 UPLOAD_BTN_PROPERTIES = {
@@ -58,6 +66,7 @@ CONFIRMATION_BEFORE_DOWNLOAD_MSG = "Впевнений? Це знищить тв
 # Google Drive constants / Local file system constants
 TOKEN_FILE_NAME = "token.json"
 SECRET_FILE_NAME = "credentials.json"
+SAVE_VERSION_FILE_NAME = "save_version.txt"
 
 VALHEIM_LOCAL_SAVES_DIR = os.path.expandvars("%localappdata%low\\IronGate\\Valheim\\worlds_local")
 VALHEIM_SAVES_DIR_ID = "11KNPgZ_pEXm1Ur0uqZMggaJidezOZCZU"

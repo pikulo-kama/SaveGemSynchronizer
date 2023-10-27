@@ -1,7 +1,6 @@
-import os
-
 from constants import UPLOAD_LABEL, DOWNLOAD_LABEL, CONFIRMATION_BEFORE_DOWNLOAD_MSG, UPLOAD_BTN_PROPERTIES, \
     DOWNLOAD_BTN_PROPERTIES
+
 from gui import GUI
 from core import Downloader, Uploader
 from gui.confirmation import Confirmation

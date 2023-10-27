@@ -1,10 +1,11 @@
 import io
+import os.path
 import shutil
 
 from googleapiclient.http import MediaIoBaseDownload
 
 from constants import ZIP_MIME_TYPE, VALHEIM_SAVES_DIR_ID, NOTIFICATION_NO_SAVES_PRESENT_MSG, ZIP_EXTENSION, \
-    VALHEIM_LOCAL_SAVES_DIR, NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG
+    VALHEIM_LOCAL_SAVES_DIR, NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG, PROJECT_ROOT, SAVE_VERSION_FILE_NAME
 from core import Uploader
 from core.gcloud_service import GCloud
 from gui.notification import Notification
@@ -18,18 +19,18 @@ class Downloader:
 
     def download(self):
 
-        save = self.__list_saves()
+        save = self.download_last_save()
 
-        if len(save) == 0:
+        if save is None:
             Notification().show_notification(NOTIFICATION_NO_SAVES_PRESENT_MSG)
             return
 
-        save = save[0]
-        file_id = save.get("id")
+        with open(os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME), "w") as save_version_file:
+            save_version_file.write(save.get("name"))
 
         # Download file and write it to zip file locally (in output directory)
-        file = self.__download_file_internal(file_id)
-
+        file = self.__download_file_internal(save.get("id"))
+        return
         with open(f"{Uploader.output_dir}/{self.__temporary_save_zip_file}", "wb") as zip_save:
             zip_save.write(file)
 
@@ -54,14 +55,22 @@ class Downloader:
 
         return file.getvalue()
 
-    def __list_saves(self):
+    def download_last_save(self):
         page_token = None
 
         response = self.__drive.files().list(
             q=f"mimeType='{ZIP_MIME_TYPE}' and '{VALHEIM_SAVES_DIR_ID}' in parents",
             spaces='drive',
-            fields='nextPageToken, files(id, name)',
-            pageToken=page_token
+            fields='nextPageToken, files(id, name, owners, createdTime)',
+            pageToken=page_token,
+            pageSize=1
         ).execute()
 
-        return response.get('files', [])
+        save = None
+
+        if len(response.get('files', [])) == 1:
+            save = response.get('files', [])[0]
+            save["owner"] = save["owners"][0]["displayName"]
+            del save["owners"]
+
+        return save
