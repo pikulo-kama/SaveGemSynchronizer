@@ -2,6 +2,10 @@ import os
 from datetime import date
 
 # General use constants
+APPLICATION_VERSION = "1.1.0"
+APPLICATION_LOCALE = "uk_UA"
+TZ_PLUS_HOURS = 3
+
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ZIP_EXTENSION = "zip"
 ZIP_MIME_TYPE = "application/zip"
@@ -12,8 +16,30 @@ APPLICATION_ICO = "valheim_synchronizer.ico"
 WINDOW_TITLE = "Синхронізатор для Valheim"
 WINDOW_DEFAULT_WIDTH = 1080
 WINDOW_DEFAULT_HEIGHT = 720
-UPLOAD_LABEL = "Відвантажити"
-DOWNLOAD_LABEL = "Завантажити"
+UPLOAD_LABEL = "🠉 Відвантажити"
+DOWNLOAD_LABEL = "🠋"
+APPLICATION_PRIMARY_TEXT_COLOR = "#009688"
+APPLICATION_SECONDARY_TEXT_COLOR = "#068076"
+
+SAVE_UP_TO_DATE_LABEL = "Нічого нового... Твій сейв свіженький як ніколи."
+SAVE_OUTDATED_LABEL = "Здалося б оновитись.."
+LAST_SAVE_INFO_LABEL = "Останній сейв {0} o {1} від {2}"
+
+# Button colors
+UPLOAD_BTN_PROPERTIES = {
+    "colorStatic": "#ddedde",
+    "colorHover": "#dae6db",
+    "width": 35
+}
+
+DOWNLOAD_BTN_PROPERTIES = {
+    "colorStatic": "#cedfeb",
+    "colorHover": "#d5dde3",
+    "width": 5
+}
+
+BTN_PROPERTY_LIST = [UPLOAD_BTN_PROPERTIES, DOWNLOAD_BTN_PROPERTIES]
+
 COPYRIGHT_LABEL = f"© 2023{'' if date.today().year == 2023 else f'-{date.today().year}'} Артур Паркур. Всі права захищені."
 
 # Notification window constants
@@ -40,6 +66,7 @@ CONFIRMATION_BEFORE_DOWNLOAD_MSG = "Впевнений? Це знищить тв
 # Google Drive constants / Local file system constants
 TOKEN_FILE_NAME = "token.json"
 SECRET_FILE_NAME = "credentials.json"
+SAVE_VERSION_FILE_NAME = "save_version.txt"
 
 VALHEIM_LOCAL_SAVES_DIR = os.path.expandvars("%localappdata%low\\IronGate\\Valheim\\worlds_local")
 VALHEIM_SAVES_DIR_ID = "11KNPgZ_pEXm1Ur0uqZMggaJidezOZCZU"

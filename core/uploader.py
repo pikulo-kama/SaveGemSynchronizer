@@ -5,7 +5,7 @@ import shutil
 from googleapiclient.http import MediaFileUpload
 
 from constants import VALHEIM_SAVES_DIR_ID, VALHEIM_LOCAL_SAVES_DIR, ZIP_EXTENSION, NOTIFICATION_UPLOAD_COMPLETED_MSG, \
-    ZIP_MIME_TYPE, PROJECT_ROOT
+    ZIP_MIME_TYPE, PROJECT_ROOT, SAVE_VERSION_FILE_NAME
 from core.gcloud_service import GCloud
 from gui.notification import Notification
 
@@ -35,14 +35,16 @@ class Uploader:
             fields='id'
         ).execute()
 
+        with open(os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME), "w") as save_version_file:
+            save_version_file.write(metadata["name"])
+
         Notification().show_notification(NOTIFICATION_UPLOAD_COMPLETED_MSG)
 
     def __make_archive(self, filename):
         shutil.make_archive(f"{Uploader.output_dir}/{filename}", ZIP_EXTENSION, VALHEIM_LOCAL_SAVES_DIR)
 
     def __get_timestamp(self):
-        now = datetime.now()
-        return f"{now.year}{now.month}{now.day}{now.hour}{now.minute}{now.month}"
+        return datetime.now().strftime("%Y%m%d%H%M%S")
 
     @staticmethod
     def cleanup():

@@ -2,5 +2,6 @@
 /output
 credentials.json
 token.json
+save_version.txt
 .idea
-__pycache__
+__pycache__/
