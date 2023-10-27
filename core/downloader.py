@@ -5,7 +5,8 @@ import shutil
 from googleapiclient.http import MediaIoBaseDownload
 
 from constants import ZIP_MIME_TYPE, VALHEIM_SAVES_DIR_ID, NOTIFICATION_NO_SAVES_PRESENT_MSG, ZIP_EXTENSION, \
-    VALHEIM_LOCAL_SAVES_DIR, NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG, PROJECT_ROOT, SAVE_VERSION_FILE_NAME
+    VALHEIM_LOCAL_SAVES_DIR, NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, \
+    EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
 from core import Uploader
 from core.gcloud_service import GCloud
 from gui.notification import Notification
@@ -13,7 +14,8 @@ from gui.notification import Notification
 
 class Downloader:
 
-    def __init__(self):
+    def __init__(self, gui):
+        self.__gui = gui
         self.__drive = GCloud().get_drive_service()
         self.__temporary_save_zip_file = f'save.{ZIP_EXTENSION}'
 
@@ -40,6 +42,7 @@ class Downloader:
             ZIP_EXTENSION
         )
 
+        self.__gui.trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL)
         Notification().show_notification(NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG)
 
     def __download_file_internal(self, file_id):

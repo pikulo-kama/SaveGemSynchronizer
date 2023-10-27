@@ -5,7 +5,7 @@ import shutil
 from googleapiclient.http import MediaFileUpload
 
 from constants import VALHEIM_SAVES_DIR_ID, VALHEIM_LOCAL_SAVES_DIR, ZIP_EXTENSION, NOTIFICATION_UPLOAD_COMPLETED_MSG, \
-    ZIP_MIME_TYPE, PROJECT_ROOT, SAVE_VERSION_FILE_NAME
+    ZIP_MIME_TYPE, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
 from core.gcloud_service import GCloud
 from gui.notification import Notification
 
@@ -14,7 +14,8 @@ class Uploader:
 
     output_dir = os.path.join(PROJECT_ROOT, "output")
 
-    def __init__(self):
+    def __init__(self, gui):
+        self.__gui = gui
         self.__drive = GCloud().get_drive_service()
         self.__filename = f"save-{self.__get_timestamp()}"
         self.__filepath = f"{Uploader.output_dir}/{self.__filename}.{ZIP_EXTENSION}"
@@ -38,6 +39,7 @@ class Uploader:
         with open(os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME), "w") as save_version_file:
             save_version_file.write(metadata["name"])
 
+        self.__gui.trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL)
         Notification().show_notification(NOTIFICATION_UPLOAD_COMPLETED_MSG)
 
     def __make_archive(self, filename):

@@ -10,6 +10,7 @@ from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT,
     SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
     APPLICATION_LOCALE, TZ_PLUS_HOURS
 from core import Downloader
+from gui.gui_event_listener import GuiEventListener
 
 
 class GUI:
@@ -48,28 +49,31 @@ class GUI:
             "properties": color
         })
 
+    def trigger_event(self, event, context=None):
+        GuiEventListener().handle_event(event, self, context)
+
     def __add_last_save_info(self, frame):
         info_frame = tk.Frame(frame)
-        latest_save = Downloader().download_last_save()
+        latest_save = Downloader(self).download_last_save()
 
         print(latest_save['createdTime'])
-        date_info = self.__extract_date(latest_save["createdTime"])
+        date_info = self.extract_date(latest_save["createdTime"])
 
-        save_status = tk.Label(
+        self.save_status = tk.Label(
             info_frame,
-            text=self.__get_last_download_version_text(latest_save),
+            text=self.get_last_download_version_text(latest_save),
             fg=APPLICATION_PRIMARY_TEXT_COLOR,
             font=("Helvetica", 25)
         )
-        last_save_info = tk.Label(
+        self.last_save_info = tk.Label(
             info_frame,
             text=str(LAST_SAVE_INFO_LABEL.format(date_info["date"], date_info["time"], latest_save["owner"])),
             fg=APPLICATION_SECONDARY_TEXT_COLOR,
             font=("Helvetica", 11, 'bold')
         )
 
-        save_status.grid(row=0, column=0, pady=5)
-        last_save_info.grid(row=1, column=0, pady=5)
+        self.save_status.grid(row=0, column=0, pady=5)
+        self.last_save_info.grid(row=1, column=0, pady=5)
 
         info_frame.grid(row=0, column=0, pady=150)
 
@@ -109,7 +113,7 @@ class GUI:
 
         button_frame.grid(row=1, column=0)
 
-    def __get_last_download_version_text(self, latest_save):
+    def get_last_download_version_text(self, latest_save):
         save_version_file_name = os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME)
         last_downloaded_version = None
 
@@ -128,7 +132,7 @@ class GUI:
 
         return save_status_message
 
-    def __extract_date(self, date_str):
+    def extract_date(self, date_str):
         date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
         date += timedelta(hours=TZ_PLUS_HOURS)
 

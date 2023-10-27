@@ -16,14 +16,14 @@ def main():
 
         def internal_confirm():
             confirmation.destroy()
-            Downloader().download()
+            Downloader(window).download()
 
         confirmation = Confirmation()
         confirmation.show_notification(CONFIRMATION_BEFORE_DOWNLOAD_MSG, internal_confirm)
 
     window = GUI()
 
-    window.add_button(UPLOAD_LABEL, Uploader().upload, UPLOAD_BTN_PROPERTIES)
+    window.add_button(UPLOAD_LABEL, Uploader(window).upload, UPLOAD_BTN_PROPERTIES)
     window.add_button(DOWNLOAD_LABEL, confirm_before_download, DOWNLOAD_BTN_PROPERTIES)
 
     window.on_close(on_destroy)

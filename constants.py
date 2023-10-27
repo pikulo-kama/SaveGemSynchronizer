@@ -25,6 +25,9 @@ SAVE_UP_TO_DATE_LABEL = "Нічого нового... Твій сейв свіж
 SAVE_OUTDATED_LABEL = "Здалося б оновитись.."
 LAST_SAVE_INFO_LABEL = "Останній сейв {0} o {1} від {2}"
 
+# Application events
+EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL = "upload.download.successful"
+
 # Button colors
 UPLOAD_BTN_PROPERTIES = {
     "colorStatic": "#ddedde",
