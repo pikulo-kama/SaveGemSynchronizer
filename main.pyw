@@ -1,3 +1,5 @@
+import os.path
+
 from constants import UPLOAD_LABEL, DOWNLOAD_LABEL, CONFIRMATION_BEFORE_DOWNLOAD_MSG, UPLOAD_BTN_PROPERTIES, \
     DOWNLOAD_BTN_PROPERTIES
 
@@ -23,11 +25,20 @@ def main():
 
     window = GUI()
 
+    setup()
+
     window.add_button(UPLOAD_LABEL, Uploader(window).upload, UPLOAD_BTN_PROPERTIES)
     window.add_button(DOWNLOAD_LABEL, confirm_before_download, DOWNLOAD_BTN_PROPERTIES)
 
     window.on_close(on_destroy)
     window.build()
+
+
+def setup():
+
+    # Create 'output' directory if not exists
+    if not os.path.exists(Uploader.output_dir):
+        os.makedirs(Uploader.output_dir)
 
 
 if __name__ == '__main__':
