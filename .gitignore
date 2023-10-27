@@ -3,4 +3,4 @@
 credentials.json
 token.json
 .idea
-__pycache__
+__pycache__/

@@ -1,6 +1,7 @@
 import os
 
-from constants import UPLOAD_LABEL, DOWNLOAD_LABEL, CONFIRMATION_BEFORE_DOWNLOAD_MSG
+from constants import UPLOAD_LABEL, DOWNLOAD_LABEL, CONFIRMATION_BEFORE_DOWNLOAD_MSG, UPLOAD_BTN_PROPERTIES, \
+    DOWNLOAD_BTN_PROPERTIES
 from gui import GUI
 from core import Downloader, Uploader
 from gui.confirmation import Confirmation
@@ -23,8 +24,8 @@ def main():
 
     window = GUI()
 
-    window.add_button(UPLOAD_LABEL, Uploader().upload)
-    window.add_button(DOWNLOAD_LABEL, confirm_before_download)
+    window.add_button(UPLOAD_LABEL, Uploader().upload, UPLOAD_BTN_PROPERTIES)
+    window.add_button(DOWNLOAD_LABEL, confirm_before_download, DOWNLOAD_BTN_PROPERTIES)
 
     window.on_close(on_destroy)
     window.build()

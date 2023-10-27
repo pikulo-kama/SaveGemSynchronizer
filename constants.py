@@ -2,6 +2,8 @@ import os
 from datetime import date
 
 # General use constants
+APPLICATION_VERSION = "1.0.0"
+
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ZIP_EXTENSION = "zip"
 ZIP_MIME_TYPE = "application/zip"
@@ -12,8 +14,24 @@ APPLICATION_ICO = "valheim_synchronizer.ico"
 WINDOW_TITLE = "Синхронізатор для Valheim"
 WINDOW_DEFAULT_WIDTH = 1080
 WINDOW_DEFAULT_HEIGHT = 720
-UPLOAD_LABEL = "Відвантажити"
-DOWNLOAD_LABEL = "Завантажити"
+UPLOAD_LABEL = "🠉 Відвантажити"
+DOWNLOAD_LABEL = "🠋"
+
+# Button colors
+UPLOAD_BTN_PROPERTIES = {
+    "colorStatic": "#ddedde",
+    "colorHover": "#dae6db",
+    "width": 35
+}
+
+DOWNLOAD_BTN_PROPERTIES = {
+    "colorStatic": "#cedfeb",
+    "colorHover": "#d5dde3",
+    "width": 5
+}
+
+BTN_PROPERTY_LIST = [UPLOAD_BTN_PROPERTIES, DOWNLOAD_BTN_PROPERTIES]
+
 COPYRIGHT_LABEL = f"© 2023{'' if date.today().year == 2023 else f'-{date.today().year}'} Артур Паркур. Всі права захищені."
 
 # Notification window constants
