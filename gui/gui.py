@@ -1,10 +1,9 @@
-import locale
+import os.path
 import os.path
 import tkinter as tk
-from datetime import datetime, timezone, timedelta
-from zoneinfo import ZoneInfo
+from datetime import datetime, timedelta
 
-from babel.dates import format_datetime, get_timezone
+from babel.dates import format_datetime
 
 from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, COPYRIGHT_LABEL, APPLICATION_ICO, \
     PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION, SAVE_VERSION_FILE_NAME, SAVE_UP_TO_DATE_LABEL, \
@@ -66,7 +65,7 @@ class GUI:
             info_frame,
             text=str(LAST_SAVE_INFO_LABEL.format(date_info["date"], date_info["time"], latest_save["owner"])),
             fg=APPLICATION_SECONDARY_TEXT_COLOR,
-            font=("Helvetica", 13)
+            font=("Helvetica", 11, 'bold')
         )
 
         save_status.grid(row=0, column=0, pady=5)
@@ -135,7 +134,7 @@ class GUI:
 
         return {
             "date": format_datetime(date, "d MMMM", locale=APPLICATION_LOCALE),
-            "time": f"{date.hour}:{date.minute}"
+            "time": date.strftime("%H:%M")
         }
 
     def __add_copyright_and_version(self, frame):

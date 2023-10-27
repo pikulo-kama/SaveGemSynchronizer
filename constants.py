@@ -19,7 +19,7 @@ WINDOW_DEFAULT_HEIGHT = 720
 UPLOAD_LABEL = "🠉 Відвантажити"
 DOWNLOAD_LABEL = "🠋"
 APPLICATION_PRIMARY_TEXT_COLOR = "#009688"
-APPLICATION_SECONDARY_TEXT_COLOR = "#02544c"
+APPLICATION_SECONDARY_TEXT_COLOR = "#068076"
 
 SAVE_UP_TO_DATE_LABEL = "Нічого нового... Твій сейв свіженький як ніколи."
 SAVE_OUTDATED_LABEL = "Здалося б оновитись.."

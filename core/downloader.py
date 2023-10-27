@@ -30,7 +30,6 @@ class Downloader:
 
         # Download file and write it to zip file locally (in output directory)
         file = self.__download_file_internal(save.get("id"))
-        return
         with open(f"{Uploader.output_dir}/{self.__temporary_save_zip_file}", "wb") as zip_save:
             zip_save.write(file)
 
