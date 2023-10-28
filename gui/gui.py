@@ -9,37 +9,55 @@ from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT,
     PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION, SAVE_VERSION_FILE_NAME, SAVE_UP_TO_DATE_LABEL, \
     SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
     APPLICATION_LOCALE, TZ_PLUS_HOURS
-from core import Downloader
+from gui.gui_event_listener import GuiEventListener
 
 
 class GUI:
 
-    def __init__(self):
-        self.__window = tk.Tk()
-        self.__buttons = list()
+    _instance = None
 
-        self.__window.title(WINDOW_TITLE)
-        self.__window.iconbitmap(os.path.join(PROJECT_ROOT, APPLICATION_ICO))
-        self.__window.geometry(f"{WINDOW_DEFAULT_WIDTH}x{WINDOW_DEFAULT_HEIGHT}")
-        self.__window.resizable(False, False)
+    def __init__(self):
+        raise RuntimeError('Call instance() instead')
+
+    @classmethod
+    def instance(cls):
+
+        if cls._instance is None:
+            print('Creating new instance')
+            cls._instance = cls.__new__(cls)
+            cls._instance.__init()
+
+        return cls._instance
+
+    def __init(self):
+        self.window = tk.Tk()
+        self.__buttons = list()
+        self.__last_save_func = None
+
+        self.__center_window()
+
+        self.window.title(WINDOW_TITLE)
+        self.window.iconbitmap(os.path.join(PROJECT_ROOT, APPLICATION_ICO))
+        self.window.geometry(f"{WINDOW_DEFAULT_WIDTH}x{WINDOW_DEFAULT_HEIGHT}")
+        self.window.resizable(False, False)
 
     def build(self):
 
-        body_frame = tk.Frame(self.__window)
+        body_frame = tk.Frame(self.window)
 
         self.__add_last_save_info(body_frame)
         self.__add_buttons_internal(body_frame)
-        self.__add_copyright_and_version(self.__window)
+        self.__add_copyright_and_version(self.window)
 
         body_frame.place(relx=.5, rely=.3, anchor=tk.CENTER)
 
-        self.__window.mainloop()
+        self.window.mainloop()
 
     def destroy(self):
-        self.__window.destroy()
+        self.window.destroy()
 
     def on_close(self, callback):
-        self.__window.protocol('WM_DELETE_WINDOW', callback)
+        self.window.protocol('WM_DELETE_WINDOW', callback)
 
     def add_button(self, name, callback, color):
         self.__buttons.append({
@@ -48,28 +66,34 @@ class GUI:
             "properties": color
         })
 
+    def trigger_event(self, event, context=None):
+        GuiEventListener().handle_event(event, self, context)
+
+    def set_last_save_func(self, func):
+        self.__last_save_func = func
+
     def __add_last_save_info(self, frame):
         info_frame = tk.Frame(frame)
-        latest_save = Downloader().download_last_save()
+        latest_save = self.__last_save_func()
 
         print(latest_save['createdTime'])
-        date_info = self.__extract_date(latest_save["createdTime"])
+        date_info = self.extract_date(latest_save["createdTime"])
 
-        save_status = tk.Label(
+        self.save_status = tk.Label(
             info_frame,
-            text=self.__get_last_download_version_text(latest_save),
+            text=self.get_last_download_version_text(latest_save),
             fg=APPLICATION_PRIMARY_TEXT_COLOR,
             font=("Helvetica", 25)
         )
-        last_save_info = tk.Label(
+        self.last_save_info = tk.Label(
             info_frame,
             text=str(LAST_SAVE_INFO_LABEL.format(date_info["date"], date_info["time"], latest_save["owner"])),
             fg=APPLICATION_SECONDARY_TEXT_COLOR,
             font=("Helvetica", 11, 'bold')
         )
 
-        save_status.grid(row=0, column=0, pady=5)
-        last_save_info.grid(row=1, column=0, pady=5)
+        self.save_status.grid(row=0, column=0, pady=5)
+        self.last_save_info.grid(row=1, column=0, pady=5)
 
         info_frame.grid(row=0, column=0, pady=150)
 
@@ -109,7 +133,19 @@ class GUI:
 
         button_frame.grid(row=1, column=0)
 
-    def __get_last_download_version_text(self, latest_save):
+    def __add_copyright_and_version(self, frame):
+
+        horizontal_frame = tk.Frame(frame, pady=-4)
+
+        version_label = tk.Label(horizontal_frame, text=f"v{APPLICATION_VERSION}")
+        version_label.grid(row=0, column=0, padx=5)
+
+        copyright_label = tk.Label(horizontal_frame, text=COPYRIGHT_LABEL)
+        copyright_label.grid(row=0, column=1)
+
+        horizontal_frame.place(relx=.5, rely=.9, anchor=tk.N)
+
+    def get_last_download_version_text(self, latest_save):
         save_version_file_name = os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME)
         last_downloaded_version = None
 
@@ -128,7 +164,7 @@ class GUI:
 
         return save_status_message
 
-    def __extract_date(self, date_str):
+    def extract_date(self, date_str):
         date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
         date += timedelta(hours=TZ_PLUS_HOURS)
 
@@ -137,14 +173,15 @@ class GUI:
             "time": date.strftime("%H:%M")
         }
 
-    def __add_copyright_and_version(self, frame):
+    def __center_window(self):
 
-        horizontal_frame = tk.Frame(frame, pady=-4)
+        width = WINDOW_DEFAULT_WIDTH
+        height = WINDOW_DEFAULT_HEIGHT
 
-        version_label = tk.Label(horizontal_frame, text=f"v{APPLICATION_VERSION}")
-        version_label.grid(row=0, column=0, padx=5)
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
 
-        copyright_label = tk.Label(horizontal_frame, text=COPYRIGHT_LABEL)
-        copyright_label.grid(row=0, column=1)
+        x = (screen_width - width) / 2
+        y = (screen_height - height) / 2
 
-        horizontal_frame.place(relx=.5, rely=.9, anchor=tk.N)
+        self.window.geometry('%dx%d+%d+%d' % (width, height, x, y))
