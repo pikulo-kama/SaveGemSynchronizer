@@ -9,15 +9,30 @@ from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT,
     PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION, SAVE_VERSION_FILE_NAME, SAVE_UP_TO_DATE_LABEL, \
     SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
     APPLICATION_LOCALE, TZ_PLUS_HOURS
-from core import Downloader
 from gui.gui_event_listener import GuiEventListener
 
 
 class GUI:
 
+    _instance = None
+
     def __init__(self):
+        raise RuntimeError('Call instance() instead')
+
+    @classmethod
+    def instance(cls):
+
+        if cls._instance is None:
+            print('Creating new instance')
+            cls._instance = cls.__new__(cls)
+            cls._instance.__init()
+
+        return cls._instance
+
+    def __init(self):
         self.window = tk.Tk()
         self.__buttons = list()
+        self.__last_save_func = None
 
         self.__center_window()
 
@@ -54,9 +69,12 @@ class GUI:
     def trigger_event(self, event, context=None):
         GuiEventListener().handle_event(event, self, context)
 
+    def set_last_save_func(self, func):
+        self.__last_save_func = func
+
     def __add_last_save_info(self, frame):
         info_frame = tk.Frame(frame)
-        latest_save = Downloader(self).download_last_save()
+        latest_save = self.__last_save_func()
 
         print(latest_save['createdTime'])
         date_info = self.extract_date(latest_save["createdTime"])

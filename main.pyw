@@ -18,16 +18,20 @@ def main():
 
         def internal_confirm():
             confirmation.destroy()
-            Downloader(window).download()
+            downloader.download()
 
-        confirmation = Confirmation(window)
-        confirmation.show_confirmation(CONFIRMATION_BEFORE_DOWNLOAD_MSG, window, internal_confirm)
-
-    window = GUI()
+        confirmation = Confirmation()
+        confirmation.show_confirmation(CONFIRMATION_BEFORE_DOWNLOAD_MSG, internal_confirm)
 
     setup()
 
-    window.add_button(UPLOAD_LABEL, Uploader(window).upload, UPLOAD_BTN_PROPERTIES)
+    downloader = Downloader()
+    uploader = Uploader()
+
+    window = GUI.instance()
+    window.set_last_save_func(lambda: downloader.download_last_save())
+
+    window.add_button(UPLOAD_LABEL, uploader.upload, UPLOAD_BTN_PROPERTIES)
     window.add_button(DOWNLOAD_LABEL, confirm_before_download, DOWNLOAD_BTN_PROPERTIES)
 
     window.on_close(on_destroy)

@@ -14,8 +14,10 @@ from gui.popup.notification import Notification
 
 class Downloader:
 
-    def __init__(self, gui):
-        self.__gui = gui
+    def __init__(self):
+        from gui import GUI
+
+        self.__gui = GUI.instance()
         self.__drive = GCloud().get_drive_service()
         self.__temporary_save_zip_file = f'save.{ZIP_EXTENSION}'
 

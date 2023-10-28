@@ -14,8 +14,10 @@ class Uploader:
 
     output_dir = os.path.join(PROJECT_ROOT, "output")
 
-    def __init__(self, gui):
-        self.__gui = gui
+    def __init__(self):
+        from gui import GUI
+
+        self.__gui = GUI.instance()
         self.__drive = GCloud().get_drive_service()
         self.__filename = f"save-{self.__get_timestamp()}"
         self.__filepath = f"{Uploader.output_dir}/{self.__filename}.{ZIP_EXTENSION}"

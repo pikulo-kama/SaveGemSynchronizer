@@ -9,7 +9,7 @@ class GuiEventListener:
         # If download successful then refresh last save information labels
         if event == EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL:
 
-            save = Downloader(gui).download_last_save()
+            save = Downloader().download_last_save()
             date_info = gui.extract_date(save["createdTime"])
 
             gui.save_status.configure(text=gui.get_last_download_version_text(save))

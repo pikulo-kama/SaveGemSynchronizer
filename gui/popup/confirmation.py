@@ -5,15 +5,16 @@ from constants import CONFIRMATION_WINDOW_CONFIRM_BTN, CONFIRMATION_WINDOW_CLOSE
     CONFIRMATION_WINDOW_HEIGHT, CONFIRMATION_WINDOW_TITLE, CONFIRMATION_ICO, PROJECT_ROOT, \
     CONFIRMATION_TEXT_COLOR, CONFIRMATION_CONFIRM_BTN_PROPERTIES, CONFIRMATION_CANCEL_BTN_PROPERTIES, \
     CONFIRMATION_POPUP_PROPERTY_LIST, WINDOW_DEFAULT_WIDTH
+from gui import GUI
 
 
 class Confirmation:
 
-    def __init__(self, gui):
+    def __init__(self):
         self.__window = tk.Tk()
-        self.__center_window(gui)
+        self.__center_window(GUI.instance())
 
-    def show_confirmation(self, message, gui, callback):
+    def show_confirmation(self, message, callback):
 
         def on_button_leave(e):
             color_mapping = {btn["colorHover"]: btn["colorStatic"] for btn in CONFIRMATION_POPUP_PROPERTY_LIST}
