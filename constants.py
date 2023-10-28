@@ -2,7 +2,7 @@ import os
 from datetime import date
 
 # General use constants
-APPLICATION_VERSION = "1.1.0"
+APPLICATION_VERSION = "1.2.0"
 APPLICATION_LOCALE = "uk_UA"
 TZ_PLUS_HOURS = 3
 
