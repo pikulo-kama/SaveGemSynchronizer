@@ -2,17 +2,18 @@ import os
 import tkinter as tk
 
 from constants import CONFIRMATION_WINDOW_CONFIRM_BTN, CONFIRMATION_WINDOW_CLOSE_BTN, CONFIRMATION_WINDOW_WIDTH, \
-    CONFIRMATION_WINDOW_HEIGHT, CONFIRMATION_WINDOW_TITLE, CONFIRMATION_ICO, PROJECT_ROOT, NOTIFICATION_TEXT_COLOR, \
+    CONFIRMATION_WINDOW_HEIGHT, CONFIRMATION_WINDOW_TITLE, CONFIRMATION_ICO, PROJECT_ROOT, \
     CONFIRMATION_TEXT_COLOR, CONFIRMATION_CONFIRM_BTN_PROPERTIES, CONFIRMATION_CANCEL_BTN_PROPERTIES, \
-    CONFIRMATION_POPUP_PROPERTY_LIST
+    CONFIRMATION_POPUP_PROPERTY_LIST, WINDOW_DEFAULT_WIDTH
 
 
 class Confirmation:
 
-    def __init__(self):
+    def __init__(self, gui):
         self.__window = tk.Tk()
+        self.__center_window(gui)
 
-    def show_notification(self, message, callback):
+    def show_confirmation(self, message, gui, callback):
 
         def on_button_leave(e):
             color_mapping = {btn["colorHover"]: btn["colorStatic"] for btn in CONFIRMATION_POPUP_PROPERTY_LIST}
@@ -91,3 +92,15 @@ class Confirmation:
 
     def destroy(self):
         self.__window.destroy()
+
+    def __center_window(self, gui):
+
+        popup_width = CONFIRMATION_WINDOW_WIDTH
+        popup_height = CONFIRMATION_WINDOW_HEIGHT
+
+        self.__window.geometry('%dx%d+%d+%d' % (
+            popup_width,
+            popup_height,
+            gui.window.winfo_rootx() + ((WINDOW_DEFAULT_WIDTH - popup_width) / 2),
+            gui.window.winfo_rooty())
+       )

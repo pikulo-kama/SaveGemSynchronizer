@@ -16,31 +16,33 @@ from gui.gui_event_listener import GuiEventListener
 class GUI:
 
     def __init__(self):
-        self.__window = tk.Tk()
+        self.window = tk.Tk()
         self.__buttons = list()
 
-        self.__window.title(WINDOW_TITLE)
-        self.__window.iconbitmap(os.path.join(PROJECT_ROOT, APPLICATION_ICO))
-        self.__window.geometry(f"{WINDOW_DEFAULT_WIDTH}x{WINDOW_DEFAULT_HEIGHT}")
-        self.__window.resizable(False, False)
+        self.__center_window()
+
+        self.window.title(WINDOW_TITLE)
+        self.window.iconbitmap(os.path.join(PROJECT_ROOT, APPLICATION_ICO))
+        self.window.geometry(f"{WINDOW_DEFAULT_WIDTH}x{WINDOW_DEFAULT_HEIGHT}")
+        self.window.resizable(False, False)
 
     def build(self):
 
-        body_frame = tk.Frame(self.__window)
+        body_frame = tk.Frame(self.window)
 
         self.__add_last_save_info(body_frame)
         self.__add_buttons_internal(body_frame)
-        self.__add_copyright_and_version(self.__window)
+        self.__add_copyright_and_version(self.window)
 
         body_frame.place(relx=.5, rely=.3, anchor=tk.CENTER)
 
-        self.__window.mainloop()
+        self.window.mainloop()
 
     def destroy(self):
-        self.__window.destroy()
+        self.window.destroy()
 
     def on_close(self, callback):
-        self.__window.protocol('WM_DELETE_WINDOW', callback)
+        self.window.protocol('WM_DELETE_WINDOW', callback)
 
     def add_button(self, name, callback, color):
         self.__buttons.append({
@@ -113,6 +115,18 @@ class GUI:
 
         button_frame.grid(row=1, column=0)
 
+    def __add_copyright_and_version(self, frame):
+
+        horizontal_frame = tk.Frame(frame, pady=-4)
+
+        version_label = tk.Label(horizontal_frame, text=f"v{APPLICATION_VERSION}")
+        version_label.grid(row=0, column=0, padx=5)
+
+        copyright_label = tk.Label(horizontal_frame, text=COPYRIGHT_LABEL)
+        copyright_label.grid(row=0, column=1)
+
+        horizontal_frame.place(relx=.5, rely=.9, anchor=tk.N)
+
     def get_last_download_version_text(self, latest_save):
         save_version_file_name = os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME)
         last_downloaded_version = None
@@ -141,14 +155,15 @@ class GUI:
             "time": date.strftime("%H:%M")
         }
 
-    def __add_copyright_and_version(self, frame):
+    def __center_window(self):
 
-        horizontal_frame = tk.Frame(frame, pady=-4)
+        width = WINDOW_DEFAULT_WIDTH
+        height = WINDOW_DEFAULT_HEIGHT
 
-        version_label = tk.Label(horizontal_frame, text=f"v{APPLICATION_VERSION}")
-        version_label.grid(row=0, column=0, padx=5)
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
 
-        copyright_label = tk.Label(horizontal_frame, text=COPYRIGHT_LABEL)
-        copyright_label.grid(row=0, column=1)
+        x = (screen_width - width) / 2
+        y = (screen_height - height) / 2
 
-        horizontal_frame.place(relx=.5, rely=.9, anchor=tk.N)
+        self.window.geometry('%dx%d+%d+%d' % (width, height, x, y))

@@ -20,8 +20,8 @@ def main():
             confirmation.destroy()
             Downloader(window).download()
 
-        confirmation = Confirmation()
-        confirmation.show_notification(CONFIRMATION_BEFORE_DOWNLOAD_MSG, internal_confirm)
+        confirmation = Confirmation(window)
+        confirmation.show_confirmation(CONFIRMATION_BEFORE_DOWNLOAD_MSG, window, internal_confirm)
 
     window = GUI()
 

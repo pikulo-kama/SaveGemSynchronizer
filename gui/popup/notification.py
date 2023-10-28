@@ -3,13 +3,14 @@ import tkinter as tk
 
 from constants import NOTIFICATION_WINDOW_TITLE, NOTIFICATION_WINDOW_WIDTH, NOTIFICATION_WINDOW_HEIGHT, \
     NOTIFICATION_WINDOW_CLOSE_BTN, PROJECT_ROOT, NOTIFICATION_ICO, NOTIFICATION_TEXT_COLOR, \
-    NOTIFICATION_POPUP_PROPERTY_LIST, NOTIFICATION_CLOSE_BTN_PROPERTIES
+    NOTIFICATION_POPUP_PROPERTY_LIST, NOTIFICATION_CLOSE_BTN_PROPERTIES, WINDOW_DEFAULT_WIDTH
 
 
 class Notification:
 
-    def __init__(self):
+    def __init__(self, gui):
         self.__window = tk.Tk()
+        self.__center_window(gui)
 
     def show_notification(self, message):
 
@@ -64,3 +65,14 @@ class Notification:
 
     def destroy(self):
         self.__window.destroy()
+
+    def __center_window(self, gui):
+        popup_width = NOTIFICATION_WINDOW_WIDTH
+        popup_height = NOTIFICATION_WINDOW_HEIGHT
+
+        self.__window.geometry('%dx%d+%d+%d' % (
+            popup_width,
+            popup_height,
+            gui.window.winfo_rootx() + ((WINDOW_DEFAULT_WIDTH - popup_width) / 2),
+            gui.window.winfo_rooty())
+        )

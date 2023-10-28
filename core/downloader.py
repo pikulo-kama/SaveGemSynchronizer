@@ -24,7 +24,7 @@ class Downloader:
         save = self.download_last_save()
 
         if save is None:
-            Notification().show_notification(NOTIFICATION_NO_SAVES_PRESENT_MSG)
+            Notification(self.__gui).show_notification(NOTIFICATION_NO_SAVES_PRESENT_MSG)
             return
 
         with open(os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME), "w") as save_version_file:
@@ -43,7 +43,7 @@ class Downloader:
         )
 
         self.__gui.trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL)
-        Notification().show_notification(NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG)
+        Notification(self.__gui).show_notification(NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG)
 
     def __download_file_internal(self, file_id):
         request = self.__drive.files().get_media(fileId=file_id)

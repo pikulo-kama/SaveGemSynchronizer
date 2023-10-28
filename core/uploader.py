@@ -40,7 +40,7 @@ class Uploader:
             save_version_file.write(metadata["name"])
 
         self.__gui.trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL)
-        Notification().show_notification(NOTIFICATION_UPLOAD_COMPLETED_MSG)
+        Notification(self.__gui).show_notification(NOTIFICATION_UPLOAD_COMPLETED_MSG)
 
     def __make_archive(self, filename):
         shutil.make_archive(f"{Uploader.output_dir}/{filename}", ZIP_EXTENSION, VALHEIM_LOCAL_SAVES_DIR)
