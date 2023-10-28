@@ -7,7 +7,7 @@ from googleapiclient.http import MediaFileUpload
 from constants import VALHEIM_SAVES_DIR_ID, VALHEIM_LOCAL_SAVES_DIR, ZIP_EXTENSION, NOTIFICATION_UPLOAD_COMPLETED_MSG, \
     ZIP_MIME_TYPE, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
 from core.gcloud_service import GCloud
-from gui.notification import Notification
+from gui.popup.notification import Notification
 
 
 class Uploader:

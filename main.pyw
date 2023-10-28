@@ -5,7 +5,7 @@ from constants import UPLOAD_LABEL, DOWNLOAD_LABEL, CONFIRMATION_BEFORE_DOWNLOAD
 
 from gui import GUI
 from core import Downloader, Uploader
-from gui.confirmation import Confirmation
+from gui.popup.confirmation import Confirmation
 
 
 def main():

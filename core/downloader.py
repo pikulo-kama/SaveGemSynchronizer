@@ -9,7 +9,7 @@ from constants import ZIP_MIME_TYPE, VALHEIM_SAVES_DIR_ID, NOTIFICATION_NO_SAVES
     EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
 from core import Uploader
 from core.gcloud_service import GCloud
-from gui.notification import Notification
+from gui.popup.notification import Notification
 
 
 class Downloader:
