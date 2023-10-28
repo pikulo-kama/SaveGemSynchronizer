@@ -81,9 +81,14 @@ NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG = "Свіженький сейв 
 CONFIRMATION_BEFORE_DOWNLOAD_MSG = "Впевнений? Це знищить твій існуючий сейв."
 
 # Google Drive constants / Local file system constants
-TOKEN_FILE_NAME = "token.json"
+GCLOUD_TOKEN_FILE_NAME = "gcloud_token.json"
 SECRET_FILE_NAME = "credentials.json"
 SAVE_VERSION_FILE_NAME = "save_version.txt"
+
+# Xbox Live constants
+XBOX_CLIENT_ID = "7cc88370-21c2-43c6-bf9d-06f224740c0a"
+XBOX_TOKEN_FILE_NAME = "xbox_tokens.json"
+XBOX_SECRET_FILE_NAME = "xbox_secret.txt"
 
 VALHEIM_LOCAL_SAVES_DIR = os.path.expandvars("%localappdata%low\\IronGate\\Valheim\\worlds_local")
 VALHEIM_SAVES_DIR_ID = "11KNPgZ_pEXm1Ur0uqZMggaJidezOZCZU"

@@ -8,7 +8,7 @@ from constants import ZIP_MIME_TYPE, VALHEIM_SAVES_DIR_ID, NOTIFICATION_NO_SAVES
     VALHEIM_LOCAL_SAVES_DIR, NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, \
     EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
 from core import Uploader
-from core.gcloud_service import GCloud
+from service.gcloud_service import GCloud
 from gui.popup.notification import Notification
 
 
