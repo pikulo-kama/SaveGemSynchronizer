@@ -2,7 +2,7 @@ import os
 from datetime import date
 
 # General use constants
-APPLICATION_VERSION = "1.2.0"
+APPLICATION_VERSION = "2.0.0"
 APPLICATION_LOCALE = "uk_UA"
 TZ_PLUS_HOURS = 3
 
@@ -25,6 +25,13 @@ APPLICATION_SECONDARY_TEXT_COLOR = "#068076"
 SAVE_UP_TO_DATE_LABEL = "Нічого нового... Твій сейв свіженький як ніколи."
 SAVE_OUTDATED_LABEL = "Здалося б оновитись.."
 LAST_SAVE_INFO_LABEL = "Останній сейв {0} o {1} від {2}"
+
+# Active user GUI section constants
+ACTIVE_USER_STATE_LABEL = "⚫"
+
+ACTIVE_USER_IS_PLAYING_COLOR = "#32CD32"
+ACTIVE_USER_NOT_PLAYING_COLOR = "#d95b25"
+ACTIVE_USER_TEXT_COLOR = "#a4a8ab"
 
 # Application events
 EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL = "upload.download.successful"
@@ -85,6 +92,8 @@ CONFIRMATION_BEFORE_DOWNLOAD_MSG = "Впевнений? Це знищить тв
 GCLOUD_TOKEN_FILE_NAME = "gcloud_token.json"
 SECRET_FILE_NAME = "credentials.json"
 SAVE_VERSION_FILE_NAME = "save_version.txt"
+XBOX_ACCESS_MAP_DATE_UPDATE = "xbox_access_map_date_update.txt"
+XBOX_CACHED_ACCESS_MAP = "xbox_access_map.cached.json"
 
 VALHEIM_LOCAL_SAVES_DIR = os.path.expandvars("%localappdata%low\\IronGate\\Valheim\\worlds_local")
 VALHEIM_SAVES_DIR_ID = "11KNPgZ_pEXm1Ur0uqZMggaJidezOZCZU"

@@ -24,27 +24,16 @@ class GCloud:
 
     def download_file(self, file_id):
 
-        if False and file_id == VALHEIM_XBOX_ACCESS_MAP_FILE_ID:
-            res = self.get_drive_service().files().list(
-                q=f"'{VALHEIM_XBOX_ACCESS_MAP_FILE_ID}' in parents",
-                fields='nextPageToken, files(id, name, owners, createdTime, modifiedTime)',
-                spaces='drive',
-            ).execute()
+        request = self.get_drive_service().files().get_media(fileId=file_id)
+        file = io.BytesIO()
 
-            print(res)
+        downloader = MediaIoBaseDownload(file, request)
+        done = False
 
-        else:
+        while not done:
+            status, done = downloader.next_chunk()
 
-            request = self.get_drive_service().files().get_media(fileId=file_id)
-            file = io.BytesIO()
-
-            downloader = MediaIoBaseDownload(file, request)
-            done = False
-
-            while not done:
-                status, done = downloader.next_chunk()
-
-            return file.getvalue()
+        return file.getvalue()
 
     def get_users(self):
         client = self.get_drive_service()

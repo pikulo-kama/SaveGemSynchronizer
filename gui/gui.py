@@ -7,11 +7,10 @@ from babel.dates import format_datetime
 from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, COPYRIGHT_LABEL, APPLICATION_ICO, \
     PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION, SAVE_VERSION_FILE_NAME, SAVE_UP_TO_DATE_LABEL, \
     SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
-    APPLICATION_LOCALE, TZ_PLUS_HOURS
+    APPLICATION_LOCALE, TZ_PLUS_HOURS, ACTIVE_USER_NOT_PLAYING_COLOR, ACTIVE_USER_IS_PLAYING_COLOR, \
+    ACTIVE_USER_STATE_LABEL, ACTIVE_USER_TEXT_COLOR
 from gui.gui_event_listener import GuiEventListener
 from service.user_service import UserService
-
-
 
 
 class GUI:
@@ -25,7 +24,6 @@ class GUI:
     def instance(cls):
 
         if cls._instance is None:
-            print('Creating new instance')
             cls._instance = cls.__new__(cls)
             cls._instance.__init()
 
@@ -79,7 +77,6 @@ class GUI:
         info_frame = tk.Frame(frame)
         latest_save = self.__last_save_func()
 
-        print(latest_save['createdTime'])
         date_info = self.extract_date(latest_save["createdTime"])
 
         self.save_status = tk.Label(
@@ -148,15 +145,16 @@ class GUI:
 
             user_label = tk.Label(
                 user_frame,
-                fg=APPLICATION_SECONDARY_TEXT_COLOR,
+                fg=ACTIVE_USER_TEXT_COLOR,
                 text=user["name"],
                 justify="left",
-                anchor="w"
+                anchor="w",
+                font=('Helvetica', 10)
             )
             user_state_label = tk.Label(
                 user_frame,
-                text="⚫",
-                fg="#32CD32" if user["isPlaying"] else "#DC143C",
+                text=ACTIVE_USER_STATE_LABEL,
+                fg=ACTIVE_USER_IS_PLAYING_COLOR if user["isPlaying"] else ACTIVE_USER_NOT_PLAYING_COLOR,
                 justify="left",
                 anchor="w"
             )
@@ -167,13 +165,6 @@ class GUI:
             user_frame.grid(row=idx, column=0, sticky=tk.W)
 
         vertical_frame.place(rely=.865, relx=.95, anchor=tk.NE)
-
-    def __create_state_canvas(self, frame, is_playing):
-
-        canvas = tk.Canvas(frame)
-        canvas.create_oval(10, 10, 10, 10, fill="#32CD32" if is_playing else "#DC143C")
-
-        return canvas
 
     def __add_copyright_and_version(self, frame):
 

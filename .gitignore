@@ -7,3 +7,5 @@ save_version.txt
 __pycache__/
 xbox_secret.txt
 xbox_tokens.json
+xbox_access_map.cached.json
+xbox_access_map_date_update.txt
