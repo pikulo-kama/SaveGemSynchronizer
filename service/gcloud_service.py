@@ -1,11 +1,13 @@
+import io
 import os.path
 
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseDownload
 
-from constants import GCLOUD_TOKEN_FILE_NAME, SECRET_FILE_NAME, PROJECT_ROOT
+from constants import GCLOUD_TOKEN_FILE_NAME, SECRET_FILE_NAME, PROJECT_ROOT, VALHEIM_SAVES_DIR_ID
 
 SCOPES = [
     'https://www.googleapis.com/auth/docs',
@@ -18,6 +20,33 @@ class GCloud:
 
     def get_drive_service(self):
         return build('drive', 'v3', credentials=self.__get_credentials())
+
+    def download_file_internal(self, file_id):
+        request = self.get_drive_service().files().get_media(fileId=file_id)
+        file = io.BytesIO()
+
+        downloader = MediaIoBaseDownload(file, request)
+        done = False
+
+        while not done:
+            status, done = downloader.next_chunk()
+
+        return file.getvalue()
+
+    def get_users(self):
+        client = self.get_drive_service()
+
+        permissions = client.permissions().list(fileId=VALHEIM_SAVES_DIR_ID).execute()
+        users = []
+
+        for permission in permissions["permissions"]:
+            users.append(
+                client.permissions().get(
+                    fileId=VALHEIM_SAVES_DIR_ID,
+                    permissionId=permission["id"],
+                    fields="emailAddress, displayName"
+                ).execute()
+            )
 
     def __get_credentials(self):
 

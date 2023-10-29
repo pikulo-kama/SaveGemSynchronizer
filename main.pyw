@@ -6,9 +6,9 @@ from constants import UPLOAD_LABEL, DOWNLOAD_LABEL, CONFIRMATION_BEFORE_DOWNLOAD
 from gui import GUI
 from core import Downloader, Uploader
 from gui.popup.confirmation import Confirmation
-from service.xbox_service import XboxService
 
-async def main():
+
+def main():
 
     def on_destroy():
         Uploader.cleanup()
@@ -24,10 +24,6 @@ async def main():
         confirmation.show_confirmation(CONFIRMATION_BEFORE_DOWNLOAD_MSG, internal_confirm)
 
     setup()
-
-    xbox_client = XboxService().get_client()
-    await xbox_client.people.get_friends_own()
-
 
     downloader = Downloader()
     uploader = Uploader()

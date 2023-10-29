@@ -1,15 +1,12 @@
-import io
 import os.path
 import shutil
-
-from googleapiclient.http import MediaIoBaseDownload
 
 from constants import ZIP_MIME_TYPE, VALHEIM_SAVES_DIR_ID, NOTIFICATION_NO_SAVES_PRESENT_MSG, ZIP_EXTENSION, \
     VALHEIM_LOCAL_SAVES_DIR, NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, \
     EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
 from core import Uploader
-from service.gcloud_service import GCloud
 from gui.popup.notification import Notification
+from service.gcloud_service import GCloud
 
 
 class Downloader:
@@ -33,7 +30,7 @@ class Downloader:
             save_version_file.write(save.get("name"))
 
         # Download file and write it to zip file locally (in output directory)
-        file = self.__download_file_internal(save.get("id"))
+        file = GCloud.download_file_internal(save.get("id"))
         with open(f"{Uploader.output_dir}/{self.__temporary_save_zip_file}", "wb") as zip_save:
             zip_save.write(file)
 
@@ -46,18 +43,6 @@ class Downloader:
 
         self.__gui.trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL)
         Notification(self.__gui).show_notification(NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG)
-
-    def __download_file_internal(self, file_id):
-        request = self.__drive.files().get_media(fileId=file_id)
-        file = io.BytesIO()
-
-        downloader = MediaIoBaseDownload(file, request)
-        done = False
-
-        while not done:
-            status, done = downloader.next_chunk()
-
-        return file.getvalue()
 
     def download_last_save(self):
         page_token = None

@@ -10,7 +10,10 @@ from constants import XBOX_CLIENT_ID, PROJECT_ROOT, XBOX_SECRET_FILE_NAME, XBOX_
 
 class XboxService:
 
-    async def get_client(self):
+    async def get_friend_list(self):
+        return await self.__perform_action(lambda client: client.people.get_friends_own())
+
+    async def __perform_action(self, callback):
 
         token_file_name = os.path.join(PROJECT_ROOT, XBOX_TOKEN_FILE_NAME)
 
@@ -29,10 +32,10 @@ class XboxService:
                 token_file.write(auth_manager.oauth.json())
 
             xbox_client = XboxLiveClient(auth_manager)
-            return xbox_client
+
+            return await callback(xbox_client)
 
     def __get_secret(self):
-        client_secret = None
 
         with open(os.path.join(PROJECT_ROOT, XBOX_SECRET_FILE_NAME), 'r') as f:
             client_secret = str(f.read()).strip()
