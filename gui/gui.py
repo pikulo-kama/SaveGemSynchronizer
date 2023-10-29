@@ -1,5 +1,4 @@
 import os.path
-import os.path
 import tkinter as tk
 from datetime import datetime, timedelta
 
@@ -10,6 +9,9 @@ from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT,
     SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
     APPLICATION_LOCALE, TZ_PLUS_HOURS
 from gui.gui_event_listener import GuiEventListener
+from service.user_service import UserService
+
+
 
 
 class GUI:
@@ -47,6 +49,7 @@ class GUI:
 
         self.__add_last_save_info(body_frame)
         self.__add_buttons_internal(body_frame)
+        self.__add_active_users_section(self.window)
         self.__add_copyright_and_version(self.window)
 
         body_frame.place(relx=.5, rely=.3, anchor=tk.CENTER)
@@ -132,6 +135,45 @@ class GUI:
             tk_button.bind('<Leave>', on_button_leave)
 
         button_frame.grid(row=1, column=0)
+
+    def __add_active_users_section(self, frame):
+
+        user_data = UserService().get_user_data()
+
+        vertical_frame = tk.Frame(frame, pady=5)
+
+        for idx, user in enumerate(user_data):
+
+            user_frame = tk.Frame(vertical_frame)
+
+            user_label = tk.Label(
+                user_frame,
+                fg=APPLICATION_SECONDARY_TEXT_COLOR,
+                text=user["name"],
+                justify="left",
+                anchor="w"
+            )
+            user_state_label = tk.Label(
+                user_frame,
+                text="⚫",
+                fg="#32CD32" if user["isPlaying"] else "#DC143C",
+                justify="left",
+                anchor="w"
+            )
+
+            user_state_label.grid(row=0, column=0)
+            user_label.grid(row=0, column=1)
+
+            user_frame.grid(row=idx, column=0, sticky=tk.W)
+
+        vertical_frame.place(rely=.865, relx=.95, anchor=tk.NE)
+
+    def __create_state_canvas(self, frame, is_playing):
+
+        canvas = tk.Canvas(frame)
+        canvas.create_oval(10, 10, 10, 10, fill="#32CD32" if is_playing else "#DC143C")
+
+        return canvas
 
     def __add_copyright_and_version(self, frame):
 

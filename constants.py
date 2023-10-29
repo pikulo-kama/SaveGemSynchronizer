@@ -9,6 +9,7 @@ TZ_PLUS_HOURS = 3
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ZIP_EXTENSION = "zip"
 ZIP_MIME_TYPE = "application/zip"
+CSV_MIME_TYPE = "text/csv"
 
 APPLICATION_ICO = "valheim_synchronizer.ico"
 
@@ -85,10 +86,13 @@ GCLOUD_TOKEN_FILE_NAME = "gcloud_token.json"
 SECRET_FILE_NAME = "credentials.json"
 SAVE_VERSION_FILE_NAME = "save_version.txt"
 
+VALHEIM_LOCAL_SAVES_DIR = os.path.expandvars("%localappdata%low\\IronGate\\Valheim\\worlds_local")
+VALHEIM_SAVES_DIR_ID = "11KNPgZ_pEXm1Ur0uqZMggaJidezOZCZU"
+VALHEIM_XBOX_ACCESS_MAP_FILE_ID = "1FtTbXHsrhIzQ51FbSOP5yyk3P34yegBIEqVfhKgCloY"
+
 # Xbox Live constants
 XBOX_CLIENT_ID = "7cc88370-21c2-43c6-bf9d-06f224740c0a"
 XBOX_TOKEN_FILE_NAME = "xbox_tokens.json"
 XBOX_SECRET_FILE_NAME = "xbox_secret.txt"
 
-VALHEIM_LOCAL_SAVES_DIR = os.path.expandvars("%localappdata%low\\IronGate\\Valheim\\worlds_local")
-VALHEIM_SAVES_DIR_ID = "11KNPgZ_pEXm1Ur0uqZMggaJidezOZCZU"
+XBOX_VALHEIM_PRESENCE = "Valheim"

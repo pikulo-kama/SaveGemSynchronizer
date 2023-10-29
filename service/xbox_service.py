@@ -13,6 +13,9 @@ class XboxService:
     async def get_friend_list(self):
         return await self.__perform_action(lambda client: client.people.get_friends_own())
 
+    async def get_profile(self, xuid):
+        return await self.__perform_action(lambda client: client.profile.get_profile_by_xuid(xuid))
+
     async def __perform_action(self, callback):
 
         token_file_name = os.path.join(PROJECT_ROOT, XBOX_TOKEN_FILE_NAME)

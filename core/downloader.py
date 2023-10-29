@@ -30,7 +30,7 @@ class Downloader:
             save_version_file.write(save.get("name"))
 
         # Download file and write it to zip file locally (in output directory)
-        file = GCloud.download_file_internal(save.get("id"))
+        file = GCloud().download_file(save.get("id"))
         with open(f"{Uploader.output_dir}/{self.__temporary_save_zip_file}", "wb") as zip_save:
             zip_save.write(file)
 
