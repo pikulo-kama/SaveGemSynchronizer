@@ -1,5 +1,4 @@
 import os.path
-import os.path
 import tkinter as tk
 from datetime import datetime, timedelta
 
@@ -8,8 +7,10 @@ from babel.dates import format_datetime
 from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, COPYRIGHT_LABEL, APPLICATION_ICO, \
     PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION, SAVE_VERSION_FILE_NAME, SAVE_UP_TO_DATE_LABEL, \
     SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
-    APPLICATION_LOCALE, TZ_PLUS_HOURS
+    APPLICATION_LOCALE, TZ_PLUS_HOURS, ACTIVE_USER_NOT_PLAYING_COLOR, ACTIVE_USER_IS_PLAYING_COLOR, \
+    ACTIVE_USER_STATE_LABEL, ACTIVE_USER_TEXT_COLOR
 from gui.gui_event_listener import GuiEventListener
+from service.user_service import UserService
 
 
 class GUI:
@@ -23,7 +24,6 @@ class GUI:
     def instance(cls):
 
         if cls._instance is None:
-            print('Creating new instance')
             cls._instance = cls.__new__(cls)
             cls._instance.__init()
 
@@ -47,6 +47,7 @@ class GUI:
 
         self.__add_last_save_info(body_frame)
         self.__add_buttons_internal(body_frame)
+        self.__add_active_users_section(self.window)
         self.__add_copyright_and_version(self.window)
 
         body_frame.place(relx=.5, rely=.3, anchor=tk.CENTER)
@@ -76,7 +77,6 @@ class GUI:
         info_frame = tk.Frame(frame)
         latest_save = self.__last_save_func()
 
-        print(latest_save['createdTime'])
         date_info = self.extract_date(latest_save["createdTime"])
 
         self.save_status = tk.Label(
@@ -132,6 +132,39 @@ class GUI:
             tk_button.bind('<Leave>', on_button_leave)
 
         button_frame.grid(row=1, column=0)
+
+    def __add_active_users_section(self, frame):
+
+        user_data = UserService().get_user_data()
+
+        vertical_frame = tk.Frame(frame, pady=5)
+
+        for idx, user in enumerate(user_data):
+
+            user_frame = tk.Frame(vertical_frame)
+
+            user_label = tk.Label(
+                user_frame,
+                fg=ACTIVE_USER_TEXT_COLOR,
+                text=user["name"],
+                justify="left",
+                anchor="w",
+                font=('Helvetica', 10)
+            )
+            user_state_label = tk.Label(
+                user_frame,
+                text=ACTIVE_USER_STATE_LABEL,
+                fg=ACTIVE_USER_IS_PLAYING_COLOR if user["isPlaying"] else ACTIVE_USER_NOT_PLAYING_COLOR,
+                justify="left",
+                anchor="w"
+            )
+
+            user_state_label.grid(row=0, column=0)
+            user_label.grid(row=0, column=1)
+
+            user_frame.grid(row=idx, column=0, sticky=tk.W)
+
+        vertical_frame.place(rely=.865, relx=.95, anchor=tk.NE)
 
     def __add_copyright_and_version(self, frame):
 
