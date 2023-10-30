@@ -8,7 +8,7 @@ from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT,
     PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION, SAVE_VERSION_FILE_NAME, SAVE_UP_TO_DATE_LABEL, \
     SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
     APPLICATION_LOCALE, TZ_PLUS_HOURS, ACTIVE_USER_NOT_PLAYING_COLOR, ACTIVE_USER_IS_PLAYING_COLOR, \
-    ACTIVE_USER_STATE_LABEL, ACTIVE_USER_TEXT_COLOR
+    ACTIVE_USER_STATE_LABEL, ACTIVE_USER_NOT_PLAYING_TEXT_COLOR, ACTIVE_USER_PLAYING_TEXT_COLOR
 from gui.gui_event_listener import GuiEventListener
 from service.user_service import UserService
 
@@ -136,25 +136,27 @@ class GUI:
     def __add_active_users_section(self, frame):
 
         user_data = UserService().get_user_data()
+        user_data.sort(key=lambda u: u["isPlaying"], reverse=True)
 
         vertical_frame = tk.Frame(frame, pady=5)
 
         for idx, user in enumerate(user_data):
 
             user_frame = tk.Frame(vertical_frame)
+            is_playing = user["isPlaying"]
 
             user_label = tk.Label(
                 user_frame,
-                fg=ACTIVE_USER_TEXT_COLOR,
+                fg=ACTIVE_USER_PLAYING_TEXT_COLOR if is_playing else ACTIVE_USER_NOT_PLAYING_TEXT_COLOR,
                 text=user["name"],
                 justify="left",
                 anchor="w",
-                font=('Helvetica', 10)
+                font=('Minion Pro SmBd', 10)
             )
             user_state_label = tk.Label(
                 user_frame,
                 text=ACTIVE_USER_STATE_LABEL,
-                fg=ACTIVE_USER_IS_PLAYING_COLOR if user["isPlaying"] else ACTIVE_USER_NOT_PLAYING_COLOR,
+                fg=ACTIVE_USER_IS_PLAYING_COLOR if is_playing else ACTIVE_USER_NOT_PLAYING_COLOR,
                 justify="left",
                 anchor="w"
             )
@@ -164,7 +166,7 @@ class GUI:
 
             user_frame.grid(row=idx, column=0, sticky=tk.W)
 
-        vertical_frame.place(rely=.865, relx=.95, anchor=tk.NE)
+        vertical_frame.place(rely=.95, relx=.05, anchor=tk.SW)
 
     def __add_copyright_and_version(self, frame):
 
