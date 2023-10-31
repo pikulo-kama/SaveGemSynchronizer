@@ -1,14 +1,15 @@
 import os.path
 import tkinter as tk
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from babel.dates import format_datetime
+from pytz import timezone
 
 from constants import WINDOW_TITLE, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, COPYRIGHT_LABEL, APPLICATION_ICO, \
     PROJECT_ROOT, BTN_PROPERTY_LIST, APPLICATION_VERSION, SAVE_VERSION_FILE_NAME, SAVE_UP_TO_DATE_LABEL, \
     SAVE_OUTDATED_LABEL, LAST_SAVE_INFO_LABEL, APPLICATION_PRIMARY_TEXT_COLOR, APPLICATION_SECONDARY_TEXT_COLOR, \
-    APPLICATION_LOCALE, TZ_PLUS_HOURS, ACTIVE_USER_NOT_PLAYING_COLOR, ACTIVE_USER_IS_PLAYING_COLOR, \
-    ACTIVE_USER_STATE_LABEL, ACTIVE_USER_NOT_PLAYING_TEXT_COLOR, ACTIVE_USER_PLAYING_TEXT_COLOR
+    APPLICATION_LOCALE, ACTIVE_USER_NOT_PLAYING_COLOR, ACTIVE_USER_IS_PLAYING_COLOR, \
+    ACTIVE_USER_STATE_LABEL, ACTIVE_USER_NOT_PLAYING_TEXT_COLOR, ACTIVE_USER_PLAYING_TEXT_COLOR, APPLICATION_TIME_ZONE
 from gui.gui_event_listener import GuiEventListener
 from service.user_service import UserService
 
@@ -201,7 +202,7 @@ class GUI:
 
     def extract_date(self, date_str):
         date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
-        date += timedelta(hours=TZ_PLUS_HOURS)
+        date += timezone(APPLICATION_TIME_ZONE).utcoffset(date)
 
         return {
             "date": format_datetime(date, "d MMMM", locale=APPLICATION_LOCALE),

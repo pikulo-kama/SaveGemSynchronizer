@@ -2,9 +2,9 @@ import os
 from datetime import date
 
 # General use constants
-APPLICATION_VERSION = "2.1.2"
+APPLICATION_VERSION = "2.1.3"
 APPLICATION_LOCALE = "uk_UA"
-TZ_PLUS_HOURS = 3
+APPLICATION_TIME_ZONE = "Europe/Kiev"
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ZIP_EXTENSION = "zip"
