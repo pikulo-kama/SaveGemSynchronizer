@@ -3,7 +3,7 @@ import json
 import os
 
 from constants import VALHEIM_XBOX_ACCESS_MAP_FILE_ID, CSV_MIME_TYPE, XBOX_VALHEIM_PRESENCE, PROJECT_ROOT, \
-    XBOX_CACHED_ACCESS_MAP, XBOX_ACCESS_MAP_DATE_UPDATE
+    XBOX_CACHED_ACCESS_MAP, XBOX_ACCESS_MAP_DATE_UPDATE, XBOX_ONLINE_STATE
 from service.gcloud_service import GCloud
 from service.xbox_service import XboxService
 
@@ -22,14 +22,15 @@ class UserService:
 
         for guid, name in user_data.items():
 
-            xbox_presence = xbox_user_data.get(guid)
+            user_data_record = xbox_user_data.get(guid)
 
-            if xbox_presence is None:
+            if user_data_record is None:
                 continue
 
             users.append({
                 "name": name,
-                "isPlaying": xbox_presence == XBOX_VALHEIM_PRESENCE
+                "isPlaying": user_data_record["text"].find(XBOX_VALHEIM_PRESENCE) != -1 and \
+                             user_data_record["state"] == XBOX_ONLINE_STATE
             })
 
         return users
@@ -112,7 +113,7 @@ class UserService:
         friend_data = {}
 
         for user in xbox_friends.people:
-            friend_data[user.xuid] = user.presence_text
+            friend_data[user.xuid] = {"text": user.presence_text, "state": user.presence_state}
 
         return friend_data
 

@@ -107,3 +107,4 @@ XBOX_TOKEN_FILE_NAME = "xbox_tokens.json"
 XBOX_SECRET_FILE_NAME = "xbox_secret.txt"
 
 XBOX_VALHEIM_PRESENCE = "Valheim"
+XBOX_ONLINE_STATE = "Online"
