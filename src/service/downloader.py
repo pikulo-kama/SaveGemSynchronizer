@@ -1,75 +1,80 @@
 import os.path
 import shutil
-from distutils.dir_util import copy_tree
 
-from constants import ZIP_MIME_TYPE, VALHEIM_SAVES_DIR_ID, ZIP_EXTENSION, \
-    VALHEIM_LOCAL_SAVES_DIR, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, \
-    EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
+from constants import ZIP_MIME_TYPE, ZIP_EXTENSION, SAVE_VERSION_FILE_NAME, EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
+from src.core.AppState import AppState
+from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
-from src.gui.popup.notification import Notification
+from src.core.holders import game_prop
+from src.gui.gui_event_listener import trigger_event
+from src.gui.popup.notification import notification
 from src.service.gcloud_service import GCloud
-from src.util.file import resolve_output_file
+from src.util.file import resolve_temp_file, resolve_app_data, cleanup_directory
+from src.gui.gui import GUI
 
 
 class Downloader:
 
     def __init__(self):
-        from src.gui.gui import GUI
-
         self.__gui = GUI.instance()
         self.__drive = GCloud().get_drive_service()
-        self.__temporary_save_zip_file = f'save.{ZIP_EXTENSION}'
+        self.__tmp_zip_file = resolve_temp_file(f'save.{ZIP_EXTENSION}')
 
     def download(self):
 
-        save = self.download_last_save()
+        saves_directory = os.path.expandvars(game_prop("localPath"))
+        metadata = self.get_last_save_metadata()
 
-        if save is None:
-            Notification(self.__gui).show_notification(tr("notification_StorageIsEmpty"))
+        if metadata is None:
+            notification(tr("notification_StorageIsEmpty"))
             return
 
-        with open(os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME), "w") as save_version_file:
-            save_version_file.write(save.get("name"))
+        save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
+        save_versions.set_value(AppState.get_game(), metadata.get("name"))
 
         # Download file and write it to zip file locally (in output directory)
-        file = GCloud().download_file(save.get("id"))
-        with open(resolve_output_file(self.__temporary_save_zip_file), "wb") as zip_save:
+        file = GCloud().download_file(metadata.get("id"))
+        with open(self.__tmp_zip_file, "wb") as zip_save:
             zip_save.write(file)
 
-        # Make backup of existing save, just in case
-        backup_dir = VALHEIM_LOCAL_SAVES_DIR + "_backup"
+        # Make backup of existing save, just in case.
+        backup_dir = saves_directory + "_backup"
 
-        if not os.path.exists(backup_dir):
-            os.makedirs(backup_dir)
+        # Need to remove directory if it exists since shutil wil create it.
+        if os.path.exists(backup_dir):
+            cleanup_directory(backup_dir)
+            os.removedirs(backup_dir)
 
-        copy_tree(VALHEIM_LOCAL_SAVES_DIR, backup_dir)
+        shutil.copytree(saves_directory, backup_dir)
 
         # Extract archive contents to the target directory
         shutil.unpack_archive(
-            resolve_output_file(self.__temporary_save_zip_file),
-            VALHEIM_LOCAL_SAVES_DIR,
+            self.__tmp_zip_file,
+            saves_directory,
             ZIP_EXTENSION
         )
 
-        self.__gui.trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL)
-        Notification(self.__gui).show_notification(tr("notification_NewSaveHasBeenDownloaded"))
+        trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL, self.get_last_save_metadata())
+        notification(tr("notification_NewSaveHasBeenDownloaded"))
 
-    def download_last_save(self):
-        page_token = None
+    def get_last_save_metadata(self):
 
         response = self.__drive.files().list(
-            q=f"mimeType='{ZIP_MIME_TYPE}' and '{VALHEIM_SAVES_DIR_ID}' in parents",
+            q=f"mimeType='{ZIP_MIME_TYPE}' and '{game_prop("gcloudParentDirectoryId")}' in parents",
             spaces='drive',
             fields='nextPageToken, files(id, name, owners, createdTime)',
-            pageToken=page_token,
+            pageToken=None,
             pageSize=1
         ).execute()
 
-        save = None
+        files = response.get("files", [])
 
-        if len(response.get('files', [])) == 1:
-            save = response.get('files', [])[0]
-            save["owner"] = save["owners"][0]["displayName"]
-            del save["owners"]
+        if len(files) == 0:
+            return None
 
-        return save
+        return {
+            "id": files[0]["id"],
+            "name": files[0]["name"],
+            "createdTime": files[0]["createdTime"],
+            "owner": files[0]["owners"][0]["displayName"],
+        }

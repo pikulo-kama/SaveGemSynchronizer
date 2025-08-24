@@ -1,120 +1,81 @@
-import asyncio
-import json
-import os
-
-from constants import VALHEIM_XBOX_ACCESS_MAP_FILE_ID, CSV_MIME_TYPE, XBOX_VALHEIM_PRESENCE, PROJECT_ROOT, \
-    XBOX_CACHED_ACCESS_MAP, XBOX_ACCESS_MAP_DATE_UPDATE, XBOX_ONLINE_STATE
+from constants import VALHEIM_XBOX_ACCESS_MAP_FILE_ID, CSV_MIME_TYPE, XBOX_CACHED_ACCESS_MAP
+from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.service.gcloud_service import GCloud
 from src.service.xbox_service import XboxService
+from src.util.file import resolve_app_data
 
 
 class UserService:
 
-    last_modification_date_file = os.path.join(PROJECT_ROOT, XBOX_ACCESS_MAP_DATE_UPDATE)
-    cached_access_map_file = os.path.join(PROJECT_ROOT, XBOX_CACHED_ACCESS_MAP)
+    __cached_access_map_file = resolve_app_data(XBOX_CACHED_ACCESS_MAP)
 
     def get_user_data(self):
+        """
+        Gets metadata from cloud that contains mapping of users to their unique Xbox GUIDs.
+        After that XBOX API is being queried to obtain current activity of users in order to display them in app.
+        """
 
-        user_data = self.__get_user_data_internal()
-
-        xbox_user_data: dict = self.__get_xbox_user_data()
         users = []
+
+        user_data = self.__get_and_format_user_metadata()
+        friends_data: dict = XboxService().get_friends_data()
 
         for guid, name in user_data.items():
 
-            user_data_record = xbox_user_data.get(guid)
+            friend_record = friends_data.get(guid)
 
-            if user_data_record is None:
+            if friend_record is None:
                 continue
 
             users.append({
                 "name": name,
-                "isPlaying": user_data_record["text"].find(XBOX_VALHEIM_PRESENCE) != -1 and \
-                             user_data_record["state"] == XBOX_ONLINE_STATE
+                "isPlaying": friend_record["isPlaying"]
             })
 
         return users
 
-    def __format_access_map(self, access_map):
-        access_map = str(access_map)
+    def __get_and_format_user_metadata(self):
+        last_modified = GCloud().get_last_modified(VALHEIM_XBOX_ACCESS_MAP_FILE_ID)
+        access_map = EditableJsonConfigHolder(self.__cached_access_map_file)
 
-        # Remove "'b" on start and "'" at the end of csv content
-        access_map = access_map[2:-1]
+        if access_map.get_value("modifiedTime") == last_modified:
+            # Return cached user data if refresh is not needed
+            return access_map.get_value("users")
 
-        access_map_rows = access_map.split("\\r\\n")
-        # Remove header row
-        access_map_rows = access_map_rows[1:]
-
-        access_map_formatted = {}
-
-        for row in access_map_rows:
-            email, guid = row.split(",")
-            access_map_formatted[email] = guid
-
-        return access_map_formatted
-
-    def __get_user_data_internal(self):
-
-        user_map_metadata = GCloud().get_drive_service().files().get(
-            fileId=VALHEIM_XBOX_ACCESS_MAP_FILE_ID,
-            fields="modifiedTime"
-        ).execute()
-
-        modified_time = user_map_metadata["modifiedTime"]
-
-        need_refresh = self.__access_map_needs_refresh(modified_time)
-
-        if not need_refresh:
-            # Returned cached user data if refresh is not needed
-            with open(UserService.cached_access_map_file, 'r') as f:
-                return json.load(f)
-
-        xbox_gmail_user_map = GCloud().get_drive_service().files().export(
-            fileId=VALHEIM_XBOX_ACCESS_MAP_FILE_ID,
-            mimeType=CSV_MIME_TYPE
-        ).execute()
-
-        xbox_gmail_user_map: dict = self.__format_access_map(xbox_gmail_user_map)
-        gcloud_user_data: list = GCloud().get_users()
+        xbox_mail_mappings = GCloud().download_file_raw(
+            VALHEIM_XBOX_ACCESS_MAP_FILE_ID,
+            CSV_MIME_TYPE
+        )
 
         users = {}
+        xbox_mail_mappings: dict = self.__csv_to_json(xbox_mail_mappings)
+        gcloud_user_data: list = GCloud().get_users()
 
-        for email, xbox_guid in xbox_gmail_user_map.items():
+        def get_name_by_email(mail: str):
+            gcloud_user_record = list(filter(lambda record: record["emailAddress"] == mail, gcloud_user_data))
+            return gcloud_user_record[0]["displayName"]
 
-            gcloud_user_entry = list(filter(lambda entry: entry["emailAddress"] == email, gcloud_user_data))
-            display_name = gcloud_user_entry[0]["displayName"]
+        for email, xbox_guid in xbox_mail_mappings.items():
+            users[xbox_guid] = get_name_by_email(email)
 
-            users[xbox_guid] = display_name
-
-        with open(UserService.cached_access_map_file, "w") as f:
-            json.dump(users, f)
-
-        with open(UserService.last_modification_date_file, "w") as f:
-            f.write(modified_time)
+        access_map.set_value("users", users)
+        access_map.set_value("modifiedTime", last_modified)
 
         return users
 
-    def __access_map_needs_refresh(self, modified_time):
+    @staticmethod
+    def __csv_to_json(csv_file):
+        # Remove "'b" on start and "'" at the end of csv content.
+        csv_file = str(csv_file)[2:-1]
+        # Split into rows.
+        csv_rows = csv_file.split("\\r\\n")
+        # Remove header row.
+        csv_rows = csv_rows[1:]
 
-        if not os.path.exists(UserService.last_modification_date_file) or not os.path.exists(UserService.cached_access_map_file):
-            return True
+        json_data = {}
 
-        with open(UserService.last_modification_date_file, "r") as f:
-            saved_modified_time = f.read()
+        for row in csv_rows:
+            email, guid = row.split(",")
+            json_data[email] = guid
 
-        if modified_time == saved_modified_time:
-            return False
-
-        return True
-
-    def __get_xbox_user_data(self):
-
-        xbox_friends = asyncio.run(XboxService().get_friend_list())
-        friend_data = {}
-
-        for user in xbox_friends.people:
-            friend_data[user.xuid] = {"text": user.presence_text, "state": user.presence_state}
-
-        return friend_data
-
-
+        return json_data

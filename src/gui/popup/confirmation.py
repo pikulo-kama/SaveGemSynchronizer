@@ -1,4 +1,3 @@
-import os
 import tkinter as tk
 
 from src.core.TextResource import tr
@@ -105,4 +104,4 @@ class Confirmation:
             popup_height,
             gui.window.winfo_rootx() + ((prop("windowWidth") - popup_width) / 2),
             gui.window.winfo_rooty())
-       )
+        )

@@ -7,7 +7,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
-from constants import GCLOUD_TOKEN_FILE_NAME, SECRET_FILE_NAME, PROJECT_ROOT, VALHEIM_SAVES_DIR_ID
+from constants import GCLOUD_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME
+from src.core.holders import game_prop
+from src.util.file import resolve_app_data, resolve_project_data
 
 SCOPES = [
     'https://www.googleapis.com/auth/docs',
@@ -20,6 +22,21 @@ class GCloud:
 
     def get_drive_service(self):
         return build('drive', 'v3', credentials=self.__get_credentials())
+
+    def get_last_modified(self, file_id: str):
+        return self.get_file_metadata(file_id, "modifiedTime")["modifiedTime"]
+
+    def get_file_metadata(self, file_id: str, fields: str):
+        return self.get_drive_service().files().get(
+            fileId=file_id,
+            fields=fields
+        )
+
+    def download_file_raw(self, file_id: str, mime_type: str):
+        return self.get_drive_service().files().export(
+            fileId=file_id,
+            mimeType=mime_type
+        ).execute()
 
     def download_file(self, file_id):
 
@@ -35,15 +52,20 @@ class GCloud:
         return file.getvalue()
 
     def get_users(self):
+        """
+        Used to retrieve user information (name, email) of users that have access to the
+        save game parent directory.
+        """
+        cloud_parent_directory = game_prop("gcloudParentDirectoryId")
         client = self.get_drive_service()
 
-        permissions = client.permissions().list(fileId=VALHEIM_SAVES_DIR_ID).execute()
+        permissions = client.permissions().list(fileId=cloud_parent_directory).execute()
         users = []
 
         for permission in permissions["permissions"]:
             users.append(
                 client.permissions().get(
-                    fileId=VALHEIM_SAVES_DIR_ID,
+                    fileId=cloud_parent_directory,
                     permissionId=permission["id"],
                     fields="emailAddress, displayName"
                 ).execute()
@@ -54,8 +76,8 @@ class GCloud:
     @staticmethod
     def __get_credentials():
 
-        token_file_name = str(os.path.join(PROJECT_ROOT, GCLOUD_TOKEN_FILE_NAME))
-        secret_file_name = str(os.path.join(PROJECT_ROOT, SECRET_FILE_NAME))
+        token_file_name = resolve_app_data(GCLOUD_TOKEN_FILE_NAME)
+        secret_file_name = resolve_project_data(CREDENTIALS_FILE_NAME)
         creds = None
 
         # Get credentials from file (possible if authentication was done previously)
@@ -74,7 +96,7 @@ class GCloud:
             flow = InstalledAppFlow.from_client_secrets_file(secret_file_name, SCOPES)
             creds = flow.run_local_server(port=0)
 
-            with open(GCLOUD_TOKEN_FILE_NAME, 'w') as token_file:
+            with open(token_file_name, 'w') as token_file:
                 token_file.write(creds.to_json())
 
         else:

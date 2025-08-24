@@ -1,11 +1,11 @@
-import os.path
 import tkinter as tk
 
-from constants import PROJECT_ROOT, SAVE_VERSION_FILE_NAME
+from constants import SAVE_VERSION_FILE_NAME
+from src.core.AppState import AppState
+from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import prop
-from src.gui.gui_event_listener import GuiEventListener
-from src.util.file import resolve_resource
+from src.util.file import resolve_resource, resolve_app_data
 
 
 class GUI:
@@ -64,28 +64,6 @@ class GUI:
             "properties": color
         })
 
-    def trigger_event(self, event, context=None):
-        GuiEventListener.handle_event(event, self, context)
-
-    def get_last_download_version_text(self, latest_save):
-        save_version_file_name = os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME)
-        last_downloaded_version = None
-
-        if os.path.isfile(save_version_file_name):
-            with open(save_version_file_name, 'r') as save_version_file:
-                last_downloaded_version = save_version_file.read()
-
-        if last_downloaded_version is None:
-            save_status_message = ""
-
-        elif last_downloaded_version == latest_save["name"]:
-            save_status_message = tr("info_SaveIsUpToDate")
-
-        else:
-            save_status_message = tr("info_SaveNeedsToBeDownloaded")
-
-        return save_status_message
-
     def __center_window(self):
 
         width = prop("windowWidth")
@@ -98,3 +76,22 @@ class GUI:
         y = (screen_height - height) / 2
 
         self.window.geometry('%dx%d+%d+%d' % (width, height, x, y))
+
+    def configure_dynamic_elements(self, last_save_meta):
+
+
+    def get_last_download_version_text(self, latest_save):
+
+        save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
+        last_downloaded_version = save_versions.get_value(AppState.get_game())
+
+        if last_downloaded_version is None:
+            save_message = ""
+
+        elif last_downloaded_version == latest_save["name"]:
+            save_message = tr("info_SaveIsUpToDate")
+
+        else:
+            save_message = tr("info_SaveNeedsToBeDownloaded")
+
+        return save_message

@@ -2,9 +2,12 @@ from constants import EVENT_GAME_SELECTION_CHANGED
 from src.core.AppState import AppState
 from src.core.holders import games, prop
 from src.gui.gui import GUI
+from src.gui.gui_event_listener import trigger_event
 from src.gui.visitor.Visitor import Visitor
 from tkinter import ttk
 import tkinter as tk
+
+from src.service.downloader import Downloader
 
 
 class GameDropdownVisitor(Visitor):
@@ -13,7 +16,7 @@ class GameDropdownVisitor(Visitor):
         self.__add_game_selection_dropdown(gui)
 
     def is_enabled(self):
-        # Visitor should be enabled always even if there is one game, so it would still be obvious what game.
+        # Visitor should be enabled always even if there is one game, so it would still be obvious what game
         # is selected.
         if len(games()) == 0:
             raise RuntimeError("There are no games configured in config/games.json. Can't proceed.")
@@ -23,9 +26,8 @@ class GameDropdownVisitor(Visitor):
     @staticmethod
     def __add_game_selection_dropdown(gui: GUI):
         game_names = [game["name"] for game in games()]
-        combobox_state = "disabled" if len(game_names) == 1 else "normal"
+        combobox_state = "disabled" if len(game_names) < 2 else "normal"
         selected_game = AppState.get_game(game_names[0])
-        print(selected_game)
 
         style = ttk.Style()
         style.theme_use("clam")
@@ -46,7 +48,7 @@ class GameDropdownVisitor(Visitor):
 
         def on_game_selection_change(event):
             AppState.set_game(event.widget.get())
-            gui.trigger_event(EVENT_GAME_SELECTION_CHANGED)
+            trigger_event(EVENT_GAME_SELECTION_CHANGED, Downloader().get_last_save_metadata())
 
         # Select first option in dropdown.
         combobox.set(selected_game)

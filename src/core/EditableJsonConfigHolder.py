@@ -9,6 +9,7 @@ class EditableJsonConfigHolder(JsonConfigHolder):
 
     def set_value(self, property_name: str, value: any):
         self._data[property_name] = value
+        self.save()
 
     def save(self):
         self.__save_internal(self._data)

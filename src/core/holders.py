@@ -1,5 +1,4 @@
-import os
-
+from src.core.AppState import AppState
 from src.core.JsonConfigHolder import JsonConfigHolder
 from src.util.file import resolve_config
 
@@ -20,3 +19,7 @@ def games():
 
 def game(game_name: str):
     return games_map[game_name]
+
+
+def game_prop(property_name: str):
+    return game(AppState.get_game())[property_name]

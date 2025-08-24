@@ -1,5 +1,7 @@
 import os.path
+import shutil
 
+from constants import APP_DATA_ROOT
 from src.core.TextResource import tr
 from src.core.holders import prop
 from src.gui.visitor.GameDropdownVisitor import GameDropdownVisitor
@@ -10,13 +12,13 @@ from src.gui.gui import GUI
 from src.gui.popup.confirmation import Confirmation
 from src.gui.visitor.CoreVisitor import CoreVisitor
 from src.gui.visitor.XboxUserListVisitor import XboxUserListVisitor
-from src.util.file import OUTPUT_DIR
+from src.util.file import OUTPUT_DIR, resolve_temp_file, cleanup_directory
 
 
 def main():
 
     def on_destroy():
-        Uploader.cleanup()
+        cleanup_directory(OUTPUT_DIR)
         window.destroy()
 
     def confirm_before_download():
@@ -34,7 +36,7 @@ def main():
     uploader = Uploader()
 
     window = GUI.instance()
-    window.last_save_func = lambda: downloader.download_last_save()
+    window.last_save_func = lambda: downloader.get_last_save_metadata()
 
     window.add_button(tr("label_UploadSaveToCloud"), uploader.upload, prop("primaryButton"))
     window.add_button(tr("label_DownloadSaveFromCloud"), confirm_before_download, prop("secondaryButton"))
@@ -48,8 +50,9 @@ def main():
 
 
 def setup():
+    if not os.path.exists(APP_DATA_ROOT):
+        os.makedirs(APP_DATA_ROOT)
 
-    # Create 'output' directory if not exists
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
 

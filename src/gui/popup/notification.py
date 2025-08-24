@@ -3,14 +3,19 @@ import tkinter as tk
 
 from src.core.TextResource import tr
 from src.core.holders import prop
+from src.gui.gui import GUI
 from src.util.file import resolve_resource
+
+
+def notification(message: str):
+    Notification().show_notification(message)
 
 
 class Notification:
 
-    def __init__(self, gui):
+    def __init__(self):
         self.__window = tk.Tk()
-        self.__center_window(gui)
+        self.__center_window(GUI.instance())
 
     def show_notification(self, message):
 

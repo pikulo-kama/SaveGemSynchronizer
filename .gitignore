@@ -1,11 +1,4 @@
 /venv
-/output
 credentials.json
-gcloud_token.json
-save_version.txt
 .idea
 __pycache__/
-xbox_secret.txt
-xbox_tokens.json
-xbox_access_map.cached.json
-xbox_access_map_date_update.txt

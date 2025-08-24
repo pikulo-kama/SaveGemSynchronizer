@@ -14,6 +14,7 @@
   "notification_SaveHasBeenUploaded": "Save uploaded successfully.",
   "notification_StorageIsEmpty": "Storage is empty. Upload is required to proceed.",
   "notification_NewSaveHasBeenDownloaded": "Save has been downloaded successfully.",
+  "notification_ErrorUploadingToCloud" : "Error occurred when uploading to cloud.",
   "confirmation_ConfirmToDownloadSave": "Sure? This will erase existing save you have.",
   "gameDropdown_SelectGameFromList" : "Select a game"
 }

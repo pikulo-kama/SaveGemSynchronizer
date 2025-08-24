@@ -1,17 +1,18 @@
 from constants import STATE_SELECTED_GAME, STATE_SELECTED_LOCALE
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
+from src.util.file import resolve_app_data
 
 
 class AppState:
 
-    __state = EditableJsonConfigHolder("state")
+    __state = EditableJsonConfigHolder(resolve_app_data("state"))
 
     @staticmethod
     def set_game(game_name: str):
         AppState.__set_value(STATE_SELECTED_GAME, game_name)
 
     @staticmethod
-    def get_game(default_value: str):
+    def get_game(default_value: str = None):
         return AppState.__get_value(STATE_SELECTED_GAME, default_value)
 
     @staticmethod
@@ -19,7 +20,7 @@ class AppState:
         AppState.__set_value(STATE_SELECTED_LOCALE, locale)
 
     @staticmethod
-    def get_locale(default_value: str):
+    def get_locale(default_value: str = None):
         return AppState.__get_value(STATE_SELECTED_LOCALE, default_value)
 
     @staticmethod
@@ -35,4 +36,3 @@ class AppState:
     @staticmethod
     def __set_value(key: str, value: any):
         AppState.__state.set_value(key, value)
-        AppState.__state.save()

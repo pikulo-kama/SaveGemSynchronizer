@@ -21,19 +21,28 @@ class CoreVisitor(Visitor):
     @staticmethod
     def __add_last_save_info(gui):
         info_frame = tk.Frame(gui.body_frame)
-        latest_save = gui.last_save_func()
+        last_save_meta = gui.last_save_func()
+        last_save_info_label = ""
 
-        date_info = extract_date(latest_save["createdTime"])
+        if last_save_meta is not None:
+            date_info = extract_date(last_save_meta["createdTime"])
+            last_save_info_label = tr(
+                "info_NewestSaveOnCloudInformation",
+                date_info["date"],
+                date_info["time"],
+                last_save_meta["owner"]
+            )
 
         gui.save_status = tk.Label(
             info_frame,
-            text=gui.get_last_download_version_text(latest_save),
+            text=gui.get_last_download_version_text(last_save_meta),
             fg=prop("primaryColor"),
             font=("Helvetica", 25)
         )
+
         gui.last_save_info = tk.Label(
             info_frame,
-            text=tr("info_NewestSaveOnCloudInformation", date_info["date"], date_info["time"], latest_save["owner"]),
+            text=last_save_info_label,
             fg=prop("secondaryColor"),
             font=("Helvetica", 11, 'bold')
         )
