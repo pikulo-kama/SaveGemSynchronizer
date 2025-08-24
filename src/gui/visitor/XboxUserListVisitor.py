@@ -1,6 +1,5 @@
 import tkinter as tk
 
-from constants import ACTIVE_USER_STATE_LABEL
 from src.core.holders import prop, game_prop
 from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
@@ -54,7 +53,7 @@ class XboxUserListVisitor(Visitor):
 
             is_playing_label = tk.Label(
                 user_frame,
-                text=ACTIVE_USER_STATE_LABEL,
+                text="⚫",
                 fg=get_user_prop("bg"),
                 justify="left",
                 anchor="w"

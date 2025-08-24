@@ -1,5 +1,6 @@
-from constants import VALHEIM_XBOX_ACCESS_MAP_FILE_ID, CSV_MIME_TYPE, XBOX_CACHED_ACCESS_MAP
+from constants import CSV_MIME_TYPE, XBOX_ACCESS_MAP
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
+from src.core.holders import prop
 from src.service.gcloud_service import GCloud
 from src.service.xbox_service import XboxService
 from src.util.file import resolve_app_data
@@ -7,7 +8,7 @@ from src.util.file import resolve_app_data
 
 class UserService:
 
-    __cached_access_map_file = resolve_app_data(XBOX_CACHED_ACCESS_MAP)
+    __cached_access_map_file = resolve_app_data(XBOX_ACCESS_MAP)
 
     def get_user_data(self):
         """
@@ -35,7 +36,8 @@ class UserService:
         return users
 
     def __get_and_format_user_metadata(self):
-        last_modified = GCloud().get_last_modified(VALHEIM_XBOX_ACCESS_MAP_FILE_ID)
+        xbox_mapping_file_id = prop("xboxEmailMappingFileId")
+        last_modified = GCloud().get_last_modified(xbox_mapping_file_id)
         access_map = EditableJsonConfigHolder(self.__cached_access_map_file)
 
         if access_map.get_value("modifiedTime") == last_modified:
@@ -43,7 +45,7 @@ class UserService:
             return access_map.get_value("users")
 
         xbox_mail_mappings = GCloud().download_file_raw(
-            VALHEIM_XBOX_ACCESS_MAP_FILE_ID,
+            xbox_mapping_file_id,
             CSV_MIME_TYPE
         )
 

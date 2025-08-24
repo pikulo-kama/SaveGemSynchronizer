@@ -4,7 +4,6 @@ from src.core.TextResource import tr
 from src.core.holders import prop
 from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
-from src.util.date import extract_date
 from datetime import date
 
 
@@ -15,34 +14,27 @@ class CoreVisitor(Visitor):
         self.__add_buttons_internal(gui)
         self.__add_copyright_and_version(gui)
 
+        gui.configure_dynamic_elements(gui.metadata_function())
+
     def is_enabled(self):
         return True
 
     @staticmethod
     def __add_last_save_info(gui):
         info_frame = tk.Frame(gui.body_frame)
-        last_save_meta = gui.last_save_func()
-        last_save_info_label = ""
 
-        if last_save_meta is not None:
-            date_info = extract_date(last_save_meta["createdTime"])
-            last_save_info_label = tr(
-                "info_NewestSaveOnCloudInformation",
-                date_info["date"],
-                date_info["time"],
-                last_save_meta["owner"]
-            )
-
+        # Text is empty for fields at this moment
+        # They would be populated later by GUI component.
         gui.save_status = tk.Label(
             info_frame,
-            text=gui.get_last_download_version_text(last_save_meta),
+            text="",
             fg=prop("primaryColor"),
             font=("Helvetica", 25)
         )
 
         gui.last_save_info = tk.Label(
             info_frame,
-            text=last_save_info_label,
+            text="",
             fg=prop("secondaryColor"),
             font=("Helvetica", 11, 'bold')
         )

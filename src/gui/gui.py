@@ -5,6 +5,7 @@ from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import prop
+from src.util.date import extract_date
 from src.util.file import resolve_resource, resolve_app_data
 
 
@@ -29,7 +30,7 @@ class GUI:
         self.body_frame = tk.Frame(self.window)
 
         self.buttons = list()
-        self.last_save_func = None
+        self.metadata_function = None
 
         self.save_status = None
         self.last_save_info = None
@@ -78,20 +79,36 @@ class GUI:
         self.window.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
     def configure_dynamic_elements(self, last_save_meta):
+        last_save_info_label = ""
 
+        if last_save_meta is not None:
+            date_info = extract_date(last_save_meta["createdTime"])
+            last_save_info_label = tr(
+                "info_NewestSaveOnCloudInformation",
+                date_info["date"],
+                date_info["time"],
+                last_save_meta["owner"]
+            )
 
-    def get_last_download_version_text(self, latest_save):
+        self.save_status.configure(
+            text=self.__get_last_download_version_text(last_save_meta)
+        )
+
+        self.last_save_info.configure(
+            text=last_save_info_label
+        )
+
+    @staticmethod
+    def __get_last_download_version_text(latest_save):
 
         save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
         last_downloaded_version = save_versions.get_value(AppState.get_game())
 
         if last_downloaded_version is None:
-            save_message = ""
+            return ""
 
         elif last_downloaded_version == latest_save["name"]:
-            save_message = tr("info_SaveIsUpToDate")
+            return tr("info_SaveIsUpToDate")
 
         else:
-            save_message = tr("info_SaveNeedsToBeDownloaded")
-
-        return save_message
+            return tr("info_SaveNeedsToBeDownloaded")

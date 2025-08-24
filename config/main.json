@@ -24,6 +24,7 @@
 
   "xboxPluginEnabled" : false,
   "xboxClientId" : "7cc88370-21c2-43c6-bf9d-06f224740c0a",
+  "xboxEmailMappingFileId" : "1FtTbXHsrhIzQ51FbSOP5yyk3P34yegBIEqVfhKgCloY",
   "xboxUserActive" : {
     "fg" : "#404040",
     "bg" : "#32CD32"
