@@ -1,4 +1,7 @@
 /venv
-credentials.json
-.idea
+/dist
+/build
+/.idea
 __pycache__/
+
+credentials.json
