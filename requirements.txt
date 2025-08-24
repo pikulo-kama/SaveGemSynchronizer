@@ -3,4 +3,4 @@ google-auth-httplib2==0.1.1
 google_auth_oauthlib==1.1.0
 babel==2.13.1
 pytz
-git+https://github.com/pikulo-kama/xbox-webapi-python.git
+xbox-webapi==2.1.0

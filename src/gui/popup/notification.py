@@ -1,9 +1,9 @@
 import os
 import tkinter as tk
 
-from constants import NOTIFICATION_WINDOW_TITLE, NOTIFICATION_WINDOW_WIDTH, NOTIFICATION_WINDOW_HEIGHT, \
-    NOTIFICATION_WINDOW_CLOSE_BTN, PROJECT_ROOT, NOTIFICATION_ICO, NOTIFICATION_TEXT_COLOR, \
-    NOTIFICATION_POPUP_PROPERTY_LIST, NOTIFICATION_CLOSE_BTN_PROPERTIES, WINDOW_DEFAULT_WIDTH
+from src.core.TextResource import tr
+from src.core.holders import prop
+from src.util.file import resolve_resource
 
 
 class Notification:
@@ -15,16 +15,14 @@ class Notification:
     def show_notification(self, message):
 
         def on_button_leave(e):
-            color_mapping = {btn["colorHover"]: btn["colorStatic"] for btn in NOTIFICATION_POPUP_PROPERTY_LIST}
-            e.widget['bg'] = color_mapping[e.widget['bg']]
+            e.widget['bg'] = prop("primaryButton")['colorStatic']
 
         def on_button_enter(e):
-            color_mapping = {btn["colorStatic"]: btn["colorHover"] for btn in NOTIFICATION_POPUP_PROPERTY_LIST}
-            e.widget['bg'] = color_mapping[e.widget['bg']]
+            e.widget['bg'] = prop("primaryButton")['colorHover']
 
-        self.__window.geometry(f"{NOTIFICATION_WINDOW_WIDTH}x{NOTIFICATION_WINDOW_HEIGHT}")
-        self.__window.title(NOTIFICATION_WINDOW_TITLE)
-        self.__window.iconbitmap(os.path.join(PROJECT_ROOT, NOTIFICATION_ICO))
+        self.__window.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
+        self.__window.title(tr("popup_NotificationTitle"))
+        self.__window.iconbitmap(resolve_resource("notification.ico"))
         self.__window.resizable(False, False)
 
         container = tk.Frame(self.__window)
@@ -32,20 +30,20 @@ class Notification:
         message_label = tk.Label(
             container,
             text=message,
-            fg=NOTIFICATION_TEXT_COLOR,
+            fg=prop("secondaryColor"),
             font=('Helvetica', 10, 'bold')
         )
 
         close_btn = tk.Button(
             container,
-            text=NOTIFICATION_WINDOW_CLOSE_BTN,
+            text=tr("popup_NotificationButtonClose"),
             width=20,
             command=lambda: self.__window.destroy()
         )
 
         close_btn.config(
-            fg=NOTIFICATION_TEXT_COLOR,
-            bg=NOTIFICATION_CLOSE_BTN_PROPERTIES["colorStatic"],
+            fg=prop("secondaryColor"),
+            bg=prop("primaryButton")["colorStatic"],
             borderwidth=0,
             relief=tk.SOLID,
             pady=5,
@@ -67,12 +65,12 @@ class Notification:
         self.__window.destroy()
 
     def __center_window(self, gui):
-        popup_width = NOTIFICATION_WINDOW_WIDTH
-        popup_height = NOTIFICATION_WINDOW_HEIGHT
+        popup_width = prop("popupWidth")
+        popup_height = prop("popupHeight")
 
         self.__window.geometry('%dx%d+%d+%d' % (
             popup_width,
             popup_height,
-            gui.window.winfo_rootx() + ((WINDOW_DEFAULT_WIDTH - popup_width) / 2),
+            gui.window.winfo_rootx() + ((prop("windowWidth") - popup_width) / 2),
             gui.window.winfo_rooty())
         )

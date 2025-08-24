@@ -4,8 +4,8 @@ import os
 
 from constants import VALHEIM_XBOX_ACCESS_MAP_FILE_ID, CSV_MIME_TYPE, XBOX_VALHEIM_PRESENCE, PROJECT_ROOT, \
     XBOX_CACHED_ACCESS_MAP, XBOX_ACCESS_MAP_DATE_UPDATE, XBOX_ONLINE_STATE
-from service.gcloud_service import GCloud
-from service.xbox_service import XboxService
+from src.service.gcloud_service import GCloud
+from src.service.xbox_service import XboxService
 
 
 class UserService:

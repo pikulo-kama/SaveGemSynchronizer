@@ -1,0 +1,35 @@
+{
+  "version" : "2.1.4",
+  "locale" : "uk_UA",
+  "timeZone" : "Europe/Kiev",
+
+  "windowWidth" : 1080,
+  "windowHeight" : 720,
+  "popupWidth" : 400,
+  "popupHeight" : 150,
+
+  "primaryColor": "#009688",
+  "secondaryColor": "#068076",
+
+  "primaryButton" : {
+    "colorStatic" : "#ddedde",
+    "colorHover" : "#dae6db",
+    "width" : 35
+  },
+  "secondaryButton" : {
+    "colorStatic" : "#cedfeb",
+    "colorHover" : "#d5dde3",
+    "width" : 5
+  },
+
+  "xboxPluginEnabled" : false,
+  "xboxClientId" : "7cc88370-21c2-43c6-bf9d-06f224740c0a",
+  "xboxUserActive" : {
+    "fg" : "#404040",
+    "bg" : "#32CD32"
+  },
+  "xboxUserInactive" : {
+    "fg" : "#a4a8ab",
+    "bg" : "#d95b25"
+  }
+}

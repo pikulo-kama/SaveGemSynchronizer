@@ -2,18 +2,19 @@ import os.path
 import shutil
 from distutils.dir_util import copy_tree
 
-from constants import ZIP_MIME_TYPE, VALHEIM_SAVES_DIR_ID, NOTIFICATION_NO_SAVES_PRESENT_MSG, ZIP_EXTENSION, \
-    VALHEIM_LOCAL_SAVES_DIR, NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, \
+from constants import ZIP_MIME_TYPE, VALHEIM_SAVES_DIR_ID, ZIP_EXTENSION, \
+    VALHEIM_LOCAL_SAVES_DIR, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, \
     EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
-from core import Uploader
-from gui.popup.notification import Notification
-from service.gcloud_service import GCloud
+from src.core.TextResource import tr
+from src.gui.popup.notification import Notification
+from src.service.gcloud_service import GCloud
+from src.util.file import resolve_output_file
 
 
 class Downloader:
 
     def __init__(self):
-        from gui import GUI
+        from src.gui.gui import GUI
 
         self.__gui = GUI.instance()
         self.__drive = GCloud().get_drive_service()
@@ -24,7 +25,7 @@ class Downloader:
         save = self.download_last_save()
 
         if save is None:
-            Notification(self.__gui).show_notification(NOTIFICATION_NO_SAVES_PRESENT_MSG)
+            Notification(self.__gui).show_notification(tr("notification_StorageIsEmpty"))
             return
 
         with open(os.path.join(PROJECT_ROOT, SAVE_VERSION_FILE_NAME), "w") as save_version_file:
@@ -32,7 +33,7 @@ class Downloader:
 
         # Download file and write it to zip file locally (in output directory)
         file = GCloud().download_file(save.get("id"))
-        with open(f"{Uploader.output_dir}/{self.__temporary_save_zip_file}", "wb") as zip_save:
+        with open(resolve_output_file(self.__temporary_save_zip_file), "wb") as zip_save:
             zip_save.write(file)
 
         # Make backup of existing save, just in case
@@ -45,13 +46,13 @@ class Downloader:
 
         # Extract archive contents to the target directory
         shutil.unpack_archive(
-            f"{Uploader.output_dir}/{self.__temporary_save_zip_file}",
+            resolve_output_file(self.__temporary_save_zip_file),
             VALHEIM_LOCAL_SAVES_DIR,
             ZIP_EXTENSION
         )
 
         self.__gui.trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL)
-        Notification(self.__gui).show_notification(NOTIFICATION_DOWNLOAD_AND_EXTRACT_COMPLETE_MSG)
+        Notification(self.__gui).show_notification(tr("notification_NewSaveHasBeenDownloaded"))
 
     def download_last_save(self):
         page_token = None

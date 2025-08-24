@@ -1,11 +1,10 @@
 import os
 import tkinter as tk
 
-from constants import CONFIRMATION_WINDOW_CONFIRM_BTN, CONFIRMATION_WINDOW_CLOSE_BTN, CONFIRMATION_WINDOW_WIDTH, \
-    CONFIRMATION_WINDOW_HEIGHT, CONFIRMATION_WINDOW_TITLE, CONFIRMATION_ICO, PROJECT_ROOT, \
-    CONFIRMATION_TEXT_COLOR, CONFIRMATION_CONFIRM_BTN_PROPERTIES, CONFIRMATION_CANCEL_BTN_PROPERTIES, \
-    CONFIRMATION_POPUP_PROPERTY_LIST, WINDOW_DEFAULT_WIDTH
-from gui import GUI
+from src.core.TextResource import tr
+from src.core.holders import prop
+from src.gui.gui import GUI
+from src.util.file import resolve_resource
 
 
 class Confirmation:
@@ -16,17 +15,19 @@ class Confirmation:
 
     def show_confirmation(self, message, callback):
 
+        confirmation_popup_property_list = [prop("primaryButton"), prop("secondaryButton")]
+
         def on_button_leave(e):
-            color_mapping = {btn["colorHover"]: btn["colorStatic"] for btn in CONFIRMATION_POPUP_PROPERTY_LIST}
+            color_mapping = {btn["colorHover"]: btn["colorStatic"] for btn in confirmation_popup_property_list}
             e.widget['bg'] = color_mapping[e.widget['bg']]
 
         def on_button_enter(e):
-            color_mapping = {btn["colorStatic"]: btn["colorHover"] for btn in CONFIRMATION_POPUP_PROPERTY_LIST}
+            color_mapping = {btn["colorStatic"]: btn["colorHover"] for btn in confirmation_popup_property_list}
             e.widget['bg'] = color_mapping[e.widget['bg']]
 
-        self.__window.geometry(f"{CONFIRMATION_WINDOW_WIDTH}x{CONFIRMATION_WINDOW_HEIGHT}")
-        self.__window.title(CONFIRMATION_WINDOW_TITLE)
-        self.__window.iconbitmap(os.path.join(PROJECT_ROOT, CONFIRMATION_ICO))
+        self.__window.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
+        self.__window.title(tr("popup_ConfirmationTitle"))
+        self.__window.iconbitmap(resolve_resource("confirmation.ico"))
         self.__window.resizable(False, False)
 
         container = tk.Frame(self.__window)
@@ -35,7 +36,7 @@ class Confirmation:
         message_label = tk.Label(
             container,
             text=message,
-            fg=CONFIRMATION_TEXT_COLOR,
+            fg=prop("secondaryColor"),
             font=('Helvetica', 10, 'bold')
         )
 
@@ -43,21 +44,21 @@ class Confirmation:
 
         confirm_btn = tk.Button(
             button_frame,
-            text=CONFIRMATION_WINDOW_CONFIRM_BTN,
+            text=tr("popup_ConfirmationButtonConfirm"),
             width=10,
             command=callback
         )
 
         close_btn = tk.Button(
             button_frame,
-            text=CONFIRMATION_WINDOW_CLOSE_BTN,
+            text=tr("popup_ConfirmationButtonClose"),
             width=10,
             command=lambda: self.__window.destroy()
         )
 
         confirm_btn.config(
-            fg=CONFIRMATION_TEXT_COLOR,
-            bg=CONFIRMATION_CONFIRM_BTN_PROPERTIES["colorStatic"],
+            fg=prop("secondaryColor"),
+            bg=prop("primaryButton")["colorStatic"],
             borderwidth=0,
             relief=tk.SOLID,
             pady=5,
@@ -66,8 +67,8 @@ class Confirmation:
         )
 
         close_btn.config(
-            fg=CONFIRMATION_TEXT_COLOR,
-            bg=CONFIRMATION_CANCEL_BTN_PROPERTIES["colorStatic"],
+            fg=prop("secondaryColor"),
+            bg=prop("secondaryButton")["colorStatic"],
             borderwidth=0,
             relief=tk.SOLID,
             pady=5,
@@ -96,12 +97,12 @@ class Confirmation:
 
     def __center_window(self, gui):
 
-        popup_width = CONFIRMATION_WINDOW_WIDTH
-        popup_height = CONFIRMATION_WINDOW_HEIGHT
+        popup_width = prop("popupWidth")
+        popup_height = prop("popupHeight")
 
         self.__window.geometry('%dx%d+%d+%d' % (
             popup_width,
             popup_height,
-            gui.window.winfo_rootx() + ((WINDOW_DEFAULT_WIDTH - popup_width) / 2),
+            gui.window.winfo_rootx() + ((prop("windowWidth") - popup_width) / 2),
             gui.window.winfo_rooty())
        )

@@ -7,8 +7,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
-from constants import GCLOUD_TOKEN_FILE_NAME, SECRET_FILE_NAME, PROJECT_ROOT, VALHEIM_SAVES_DIR_ID, \
-    VALHEIM_XBOX_ACCESS_MAP_FILE_ID
+from constants import GCLOUD_TOKEN_FILE_NAME, SECRET_FILE_NAME, PROJECT_ROOT, VALHEIM_SAVES_DIR_ID
 
 SCOPES = [
     'https://www.googleapis.com/auth/docs',
@@ -52,25 +51,33 @@ class GCloud:
 
         return users
 
-    def __get_credentials(self):
+    @staticmethod
+    def __get_credentials():
 
+        token_file_name = str(os.path.join(PROJECT_ROOT, GCLOUD_TOKEN_FILE_NAME))
+        secret_file_name = str(os.path.join(PROJECT_ROOT, SECRET_FILE_NAME))
         creds = None
 
         # Get credentials from file (possible if authentication was done previously)
-        if os.path.exists(os.path.join(PROJECT_ROOT, GCLOUD_TOKEN_FILE_NAME)):
-            creds = Credentials.from_authorized_user_file(os.path.join(PROJECT_ROOT, GCLOUD_TOKEN_FILE_NAME), SCOPES)
+        if os.path.exists(token_file_name):
+            creds = Credentials.from_authorized_user_file(token_file_name, SCOPES)
 
-        if not creds or not creds.valid:
+            if creds and creds.valid:
+                return creds
 
-            # If they're just expired then try to refresh them
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
+        # If they're just expired then try to refresh them
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
 
-            else: # Authenticate with credentials and then store them for future use
-                flow = InstalledAppFlow.from_client_secrets_file(os.path.join(PROJECT_ROOT, SECRET_FILE_NAME), SCOPES)
-                creds = flow.run_local_server(port=0)
+        # Authenticate with credentials and then store them for future use
+        elif os.path.exists(secret_file_name):
+            flow = InstalledAppFlow.from_client_secrets_file(secret_file_name, SCOPES)
+            creds = flow.run_local_server(port=0)
 
-                with open(GCLOUD_TOKEN_FILE_NAME, 'w') as token_file:
-                    token_file.write(creds.to_json())
+            with open(GCLOUD_TOKEN_FILE_NAME, 'w') as token_file:
+                token_file.write(creds.to_json())
+
+        else:
+            raise RuntimeError("Google Cloud credentials are missing in root of the project. Add credentials.json.")
 
         return creds

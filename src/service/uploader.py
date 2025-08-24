@@ -4,23 +4,23 @@ import shutil
 
 from googleapiclient.http import MediaFileUpload
 
-from constants import VALHEIM_SAVES_DIR_ID, VALHEIM_LOCAL_SAVES_DIR, ZIP_EXTENSION, NOTIFICATION_UPLOAD_COMPLETED_MSG, \
+from constants import VALHEIM_SAVES_DIR_ID, VALHEIM_LOCAL_SAVES_DIR, ZIP_EXTENSION, \
     ZIP_MIME_TYPE, PROJECT_ROOT, SAVE_VERSION_FILE_NAME, EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
-from service.gcloud_service import GCloud
-from gui.popup.notification import Notification
+from src.core.TextResource import tr
+from src.service.gcloud_service import GCloud
+from src.gui.popup.notification import Notification
+from src.util.file import resolve_output_file, OUTPUT_DIR
 
 
 class Uploader:
 
-    output_dir = os.path.join(PROJECT_ROOT, "output")
-
     def __init__(self):
-        from gui import GUI
+        from src.gui.gui import GUI
 
         self.__gui = GUI.instance()
         self.__drive = GCloud().get_drive_service()
         self.__filename = f"save-{self.__get_timestamp()}"
-        self.__filepath = f"{Uploader.output_dir}/{self.__filename}.{ZIP_EXTENSION}"
+        self.__filepath = resolve_output_file(f"{self.__filename}.{ZIP_EXTENSION}")
 
     def upload(self):
 
@@ -42,18 +42,19 @@ class Uploader:
             save_version_file.write(metadata["name"])
 
         self.__gui.trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL)
-        Notification(self.__gui).show_notification(NOTIFICATION_UPLOAD_COMPLETED_MSG)
+        Notification(self.__gui).show_notification(tr("notification_SaveHasBeenUploaded"))
 
     def __make_archive(self, filename):
-        shutil.make_archive(f"{Uploader.output_dir}/{filename}", ZIP_EXTENSION, VALHEIM_LOCAL_SAVES_DIR)
+        shutil.make_archive(resolve_output_file(filename), ZIP_EXTENSION, VALHEIM_LOCAL_SAVES_DIR)
 
     def __get_timestamp(self):
         return datetime.now().strftime("%Y%m%d%H%M%S")
 
     @staticmethod
     def cleanup():
-        for filename in os.listdir(Uploader.output_dir):
-            file_path = os.path.join(Uploader.output_dir, filename)
+        for filename in os.listdir(OUTPUT_DIR):
+            file_path = os.path.join(OUTPUT_DIR, filename)
+
             try:
                 if os.path.isfile(file_path) or os.path.islink(file_path):
                     os.unlink(file_path)

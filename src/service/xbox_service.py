@@ -6,7 +6,8 @@ from xbox.webapi.authentication.manager import AuthenticationManager
 from xbox.webapi.authentication.models import OAuth2TokenResponse
 from xbox.webapi.common.signed_session import SignedSession
 
-from constants import XBOX_CLIENT_ID, PROJECT_ROOT, XBOX_SECRET_FILE_NAME, XBOX_TOKEN_FILE_NAME
+from constants import PROJECT_ROOT, XBOX_SECRET_FILE_NAME, XBOX_TOKEN_FILE_NAME
+from src.core.holders import prop
 
 
 class XboxService:
@@ -21,7 +22,7 @@ class XboxService:
     async def __perform_action(self, callback):
 
         async with SignedSession() as session:
-            auth_manager = AuthenticationManager(session, XBOX_CLIENT_ID, self.__get_secret(), "")
+            auth_manager = AuthenticationManager(session, prop("xboxClientId"), self.__get_secret(), "")
 
             # Provide tokens to authentication manager
             if os.path.exists(XboxService.__token_file_name):
@@ -32,7 +33,7 @@ class XboxService:
                     "xbox-authenticate",
                     "-t", XboxService.__token_file_name,
                     "-cs", self.__get_secret(),
-                    "-cid", XBOX_CLIENT_ID
+                    "-cid", prop("xboxClientId")
                 ])
 
                 self.__load_tokens(auth_manager)

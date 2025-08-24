@@ -1,0 +1,19 @@
+{
+  "window_Title": "SaveGem Synchronizer",
+  "window_Signature": "{0} Artur Parkour. All rights reserved.",
+  "popup_NotificationTitle": "Information",
+  "popup_NotificationButtonClose": "OK",
+  "popup_ConfirmationTitle": "Be Aware",
+  "popup_ConfirmationButtonClose": "Cancel",
+  "popup_ConfirmationButtonConfirm": "Agree",
+  "label_UploadSaveToCloud": "🠉 Upload",
+  "label_DownloadSaveFromCloud": "🠋",
+  "info_SaveIsUpToDate": "Nothing new... Your save is as fresh as it could be.",
+  "info_SaveNeedsToBeDownloaded": "You haven't upgraded in a while..",
+  "info_NewestSaveOnCloudInformation": "Last save was uploaded {0} on {1} by {2}",
+  "notification_SaveHasBeenUploaded": "Save uploaded successfully.",
+  "notification_StorageIsEmpty": "Storage is empty. Upload is required to proceed.",
+  "notification_NewSaveHasBeenDownloaded": "Save has been downloaded successfully.",
+  "confirmation_ConfirmToDownloadSave": "Sure? This will erase existing save you have.",
+  "gameDropdown_SelectGameFromList" : "Select a game"
+}
