@@ -4,6 +4,7 @@ from constants import APP_DATA_ROOT
 from src.core.TextResource import tr
 from src.core.holders import prop
 from src.gui.visitor.GameDropdownVisitor import GameDropdownVisitor
+from src.gui.visitor.LanguageSwitchVisitor import LanguageSwitchVisitor
 
 from src.service.downloader import Downloader
 from src.service.uploader import Uploader
@@ -37,13 +38,14 @@ def main():
     window = GUI.instance()
     window.metadata_function = lambda: downloader.get_last_save_metadata()
 
-    window.add_button(tr("label_UploadSaveToCloud"), uploader.upload, prop("primaryButton"))
-    window.add_button(tr("label_DownloadSaveFromCloud"), confirm_before_download, prop("secondaryButton"))
+    window.add_button("label_UploadSaveToCloud", uploader.upload, prop("primaryButton"))
+    window.add_button("label_DownloadSaveFromCloud", confirm_before_download, prop("secondaryButton"))
 
     window.on_close(on_destroy)
     window.build([
         CoreVisitor(),
         GameDropdownVisitor(),
+        LanguageSwitchVisitor(),
         XboxUserListVisitor()
     ])
 

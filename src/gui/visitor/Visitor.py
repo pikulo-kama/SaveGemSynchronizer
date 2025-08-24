@@ -11,5 +11,9 @@ class Visitor(abc.ABC):
         pass
 
     @abstractmethod
+    def refresh(self, gui: GUI):
+        pass
+
+    @abstractmethod
     def is_enabled(self):
         pass

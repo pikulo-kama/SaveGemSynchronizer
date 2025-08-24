@@ -14,15 +14,16 @@ class Confirmation:
 
     def show_confirmation(self, message, callback):
 
-        confirmation_popup_property_list = [prop("primaryButton"), prop("secondaryButton")]
+        color_mapping = {
+            **{btn["colorHover"]: btn["colorStatic"] for btn in [prop("primaryButton"), prop("secondaryButton")]},
+            **{btn["colorStatic"]: btn["colorHover"] for btn in [prop("primaryButton"), prop("secondaryButton")]}
+        }
 
-        def on_button_leave(e):
-            color_mapping = {btn["colorHover"]: btn["colorStatic"] for btn in confirmation_popup_property_list}
-            e.widget['bg'] = color_mapping[e.widget['bg']]
+        def on_button_leave(event):
+            event.widget['bg'] = color_mapping[event.widget['bg']]
 
-        def on_button_enter(e):
-            color_mapping = {btn["colorStatic"]: btn["colorHover"] for btn in confirmation_popup_property_list}
-            e.widget['bg'] = color_mapping[e.widget['bg']]
+        def on_button_enter(event):
+            event.widget['bg'] = color_mapping[event.widget['bg']]
 
         self.__window.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
         self.__window.title(tr("popup_ConfirmationTitle"))

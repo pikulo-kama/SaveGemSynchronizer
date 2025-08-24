@@ -4,15 +4,14 @@ import shutil
 
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
+from src.gui.gui import GUI
 
 from constants import ZIP_EXTENSION, \
-    ZIP_MIME_TYPE, SAVE_VERSION_FILE_NAME, EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
+    ZIP_MIME_TYPE, SAVE_VERSION_FILE_NAME
 from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import game_prop
-from src.gui.gui_event_listener import trigger_event
-from src.service.downloader import Downloader
 from src.service.gcloud_service import GCloud
 from src.gui.popup.notification import notification
 from src.util.file import resolve_temp_file, resolve_app_data
@@ -21,8 +20,6 @@ from src.util.file import resolve_temp_file, resolve_app_data
 class Uploader:
 
     def __init__(self):
-        from src.gui.gui import GUI
-
         self.__gui = GUI.instance()
         self.__drive = GCloud().get_drive_service()
         self.__filename = f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}"
@@ -59,5 +56,5 @@ class Uploader:
         save_versions.set_value(AppState.get_game(), metadata["name"])
 
         # Show success notification in application.
-        trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL, Downloader().get_last_save_metadata())
+        self.__gui.refresh()
         notification(tr("notification_SaveHasBeenUploaded"))

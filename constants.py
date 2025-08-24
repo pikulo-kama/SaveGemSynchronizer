@@ -9,10 +9,6 @@ ZIP_EXTENSION = "zip"
 ZIP_MIME_TYPE = "application/zip"
 CSV_MIME_TYPE = "text/csv"
 
-# Application events
-EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL = "upload.download.successful"
-EVENT_GAME_SELECTION_CHANGED = "game.selection.changed"
-
 # Global state properties
 STATE_SELECTED_GAME = "game"
 STATE_SELECTED_LOCALE = "locale"

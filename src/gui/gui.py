@@ -1,12 +1,8 @@
 import tkinter as tk
 
-from constants import SAVE_VERSION_FILE_NAME
-from src.core.AppState import AppState
-from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import prop
-from src.util.date import extract_date
-from src.util.file import resolve_resource, resolve_app_data
+from src.util.file import resolve_resource
 
 
 class GUI:
@@ -14,6 +10,8 @@ class GUI:
     _instance = None
 
     def __init__(self):
+        # Just to shup up IDE..
+        self.visitors = list()
         raise RuntimeError('Call instance() instead')
 
     @classmethod
@@ -28,12 +26,16 @@ class GUI:
     def __init(self):
         self.window = tk.Tk()
         self.body_frame = tk.Frame(self.window)
+        self.metadata_function = None
+        self.visitors = list()
 
         self.buttons = list()
-        self.metadata_function = None
+        self.tk_buttons = list()
 
         self.save_status = None
         self.last_save_info = None
+        self.copyright_label = None
+        self.language_button = None
 
         self.__center_window()
 
@@ -44,13 +46,19 @@ class GUI:
 
     def build(self, visitors):
 
-        for visitor in visitors:
+        self.visitors = list(filter(lambda v: v.is_enabled(), visitors))
 
-            if visitor.is_enabled():
-                visitor.visit(self)
+        for visitor in self.visitors:
+            visitor.visit(self)
 
         self.body_frame.place(relx=.5, rely=.3, anchor=tk.CENTER)
+
+        self.refresh()
         self.window.mainloop()
+
+    def refresh(self):
+        for visitor in self.visitors:
+            visitor.refresh(self)
 
     def destroy(self):
         self.window.destroy()
@@ -60,7 +68,7 @@ class GUI:
 
     def add_button(self, name, callback, color):
         self.buttons.append({
-            "name": name,
+            "nameTextResource": name,
             "callback": callback,
             "properties": color
         })
@@ -77,38 +85,3 @@ class GUI:
         y = (screen_height - height) / 2
 
         self.window.geometry('%dx%d+%d+%d' % (width, height, x, y))
-
-    def configure_dynamic_elements(self, last_save_meta):
-        last_save_info_label = ""
-
-        if last_save_meta is not None:
-            date_info = extract_date(last_save_meta["createdTime"])
-            last_save_info_label = tr(
-                "info_NewestSaveOnCloudInformation",
-                date_info["date"],
-                date_info["time"],
-                last_save_meta["owner"]
-            )
-
-        self.save_status.configure(
-            text=self.__get_last_download_version_text(last_save_meta)
-        )
-
-        self.last_save_info.configure(
-            text=last_save_info_label
-        )
-
-    @staticmethod
-    def __get_last_download_version_text(latest_save):
-
-        save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
-        last_downloaded_version = save_versions.get_value(AppState.get_game())
-
-        if last_downloaded_version is None:
-            return ""
-
-        elif last_downloaded_version == latest_save["name"]:
-            return tr("info_SaveIsUpToDate")
-
-        else:
-            return tr("info_SaveNeedsToBeDownloaded")

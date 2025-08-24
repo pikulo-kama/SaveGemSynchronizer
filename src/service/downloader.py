@@ -1,12 +1,11 @@
 import os.path
 import shutil
 
-from constants import ZIP_MIME_TYPE, ZIP_EXTENSION, SAVE_VERSION_FILE_NAME, EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL
+from constants import ZIP_MIME_TYPE, ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
 from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import game_prop
-from src.gui.gui_event_listener import trigger_event
 from src.gui.popup.notification import notification
 from src.service.gcloud_service import GCloud
 from src.util.file import resolve_temp_file, resolve_app_data, cleanup_directory
@@ -54,7 +53,7 @@ class Downloader:
             ZIP_EXTENSION
         )
 
-        trigger_event(EVENT_UPLOAD_DOWNLOAD_SUCCESSFUL, self.get_last_save_metadata())
+        self.__gui.refresh()
         notification(tr("notification_NewSaveHasBeenDownloaded"))
 
     def get_last_save_metadata(self):

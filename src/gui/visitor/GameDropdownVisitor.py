@@ -1,13 +1,9 @@
-from constants import EVENT_GAME_SELECTION_CHANGED
 from src.core.AppState import AppState
 from src.core.holders import games, prop
 from src.gui.gui import GUI
-from src.gui.gui_event_listener import trigger_event
 from src.gui.visitor.Visitor import Visitor
 from tkinter import ttk
 import tkinter as tk
-
-from src.service.downloader import Downloader
 
 
 class GameDropdownVisitor(Visitor):
@@ -22,6 +18,9 @@ class GameDropdownVisitor(Visitor):
             raise RuntimeError("There are no games configured in config/games.json. Can't proceed.")
 
         return True
+
+    def refresh(self, gui: GUI):
+        pass
 
     @staticmethod
     def __add_game_selection_dropdown(gui: GUI):
@@ -48,7 +47,7 @@ class GameDropdownVisitor(Visitor):
 
         def on_game_selection_change(event):
             AppState.set_game(event.widget.get())
-            trigger_event(EVENT_GAME_SELECTION_CHANGED, Downloader().get_last_save_metadata())
+            gui.refresh()
 
         # Select first option in dropdown.
         combobox.set(selected_game)

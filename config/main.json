@@ -1,6 +1,6 @@
 {
-  "version" : "2.1.4",
-  "locale" : "uk_UA",
+  "version" : "3.0.0",
+  "defaultLocale" : "uk_UA",
   "timeZone" : "Europe/Kiev",
 
   "windowWidth" : 1080,

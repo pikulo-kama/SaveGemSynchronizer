@@ -14,6 +14,9 @@ class XboxUserListVisitor(Visitor):
     def is_enabled(self):
         return prop("xboxPluginEnabled") is True
 
+    def refresh(self, gui: GUI):
+        pass
+
     @staticmethod
     def __add_active_users_section(gui):
 

@@ -1,4 +1,3 @@
-import os
 import tkinter as tk
 
 from src.core.TextResource import tr
@@ -19,11 +18,11 @@ class Notification:
 
     def show_notification(self, message):
 
-        def on_button_leave(e):
-            e.widget['bg'] = prop("primaryButton")['colorStatic']
+        def on_button_leave(event):
+            event.widget['bg'] = prop("primaryButton")['colorStatic']
 
-        def on_button_enter(e):
-            e.widget['bg'] = prop("primaryButton")['colorHover']
+        def on_button_enter(event):
+            event.widget['bg'] = prop("primaryButton")['colorHover']
 
         self.__window.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
         self.__window.title(tr("popup_NotificationTitle"))

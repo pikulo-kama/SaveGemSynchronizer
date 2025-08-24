@@ -1,11 +1,12 @@
-
+from src.core.AppState import AppState
 from src.core.JsonConfigHolder import JsonConfigHolder
 from src.core.holders import prop
 from src.util.file import resolve_locale
 
 
 def tr(key: str, *args) -> str:
-    return TextResource.get(prop("locale"), key, *args)
+    locale = AppState.get_locale(prop("defaultLocale"))
+    return TextResource.get(locale, key, *args)
 
 
 class TextResource:
