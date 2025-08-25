@@ -37,36 +37,54 @@ class GameDropdownVisitor(Visitor):
         Used to render game selection dropdown.
         """
 
-        def add_leading_space(text: str):
-            return " " + text.strip()
+        def expand_property(value):
+            return [("readonly", value), ("disabled", value)]
 
-        game_names = [add_leading_space(game["name"]) for game in games()]
-        combobox_state = "disabled" if len(game_names) < 2 else "normal"
-        selected_game = add_leading_space(AppState.get_game(game_names[0].strip()))
+        game_names = [game["name"] for game in games()]
+        selected_game = AppState.get_game(game_names[0])
+
+        combobox_state = "readonly"
+        combobox_cursor = "hand2"
+
+        if len(game_names) == 1:
+            combobox_state = "disabled"
+            combobox_cursor = "arrow"
 
         style = ttk.Style()
         style.theme_use("clam")
 
+        style.map(
+            "Custom.TCombobox",
+            fieldbackground=expand_property(prop("secondaryButton")["colorHover"]),
+            selectbackground=expand_property(prop("secondaryButton")["colorHover"]),
+            foreground=expand_property(prop("secondaryColor")),
+            selectforeground=expand_property(prop("secondaryColor")),
+            background=expand_property(prop("secondaryButton")["colorStatic"])
+        )
+
         style.configure(
-            "TCombobox",
-            fieldbackground=prop("secondaryButton")["colorHover"],
-            foreground=prop("secondaryColor"),
-            background=prop("secondaryButton")["colorStatic"]
+            "Custom.TCombobox",
+            padding=(10, 0, 0, 0),
+            borderwidth=0,
+            # style: flat, groove, ridge, solid, sunken, raised
+            relief="flat"
         )
 
         combobox = ttk.Combobox(
             gui.window,
             values=game_names,
+            cursor=combobox_cursor,
             font=("Helvetica", 10, font.BOLD),
             width=20,
-            state=combobox_state
+            state=combobox_state,
+            style="Custom.TCombobox"
         )
 
         def on_game_selection_change(event):
             logger.info("Game selection changed.")
             logger.info("Selected game - %s", event.widget.get())
 
-            AppState.set_game(event.widget.get().strip())
+            AppState.set_game(event.widget.get())
             gui.refresh()
 
         # Select first option in dropdown.
