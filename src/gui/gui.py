@@ -27,7 +27,6 @@ def add_button_hover_effect(button):
     button.bind('<Leave>', on_button_leave)
 
 
-
 class GUI:
 
     _instance = None

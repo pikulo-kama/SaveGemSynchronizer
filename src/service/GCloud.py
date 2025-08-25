@@ -5,11 +5,11 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseDownload
+from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 
-from constants import GCLOUD_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME
-from src.core.holders import game_prop
-from src.util.file import resolve_app_data, resolve_project_data
+from constants import GCLOUD_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME, ZIP_MIME_TYPE
+from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)
@@ -25,42 +25,31 @@ class GCloud:
     Class that has most of the Google Cloud interaction logic defined.
     """
 
-    def get_drive_service(self):
-        """
-        Used to get raw Google Drive service.
-        """
-        return build('drive', 'v3', credentials=self.__get_credentials())
+    @staticmethod
+    def query_single(target_field: str, fields: str, q: str):
 
-    def get_last_modified(self, file_id: str):
-        """
-        Used to get date when file on cloud was modified last time.
-        """
-        return self.get_file_metadata(file_id, "modifiedTime")["modifiedTime"]
+        try:
+            request = GCloud.__drive().files().list(
+                q=q,
+                spaces="drive",
+                fields=fields,
+                pageToken=None,
+                pageSize=1
+            )
 
-    def get_file_metadata(self, file_id: str, fields: str):
-        """
-        Used to get file metadata from cloud.
-        """
-        return self.get_drive_service().files().get(
-            fileId=file_id,
-            fields=fields
-        )
+            return request.execute().get(target_field)
 
-    def download_file_raw(self, file_id: str, mime_type: str):
-        """
-        Used to download primitive files that could be stored and accessed in-memory.
-        """
-        return self.get_drive_service().files().export(
-            fileId=file_id,
-            mimeType=mime_type
-        ).execute()
+        except HttpError as e:
+            logger.error("Error downloading save metadata", e)
+            return None
 
-    def download_file(self, file_id):
+    @staticmethod
+    def download_file(file_id):
         """
         Used to in the first place to download archives.
         """
 
-        request = self.get_drive_service().files().get_media(fileId=file_id)
+        request = GCloud.__drive().files().get_media(fileId=file_id)
         file = io.BytesIO()
 
         downloader = MediaIoBaseDownload(file, request)
@@ -71,27 +60,37 @@ class GCloud:
 
         return file.getvalue()
 
-    def get_users(self):
+    @staticmethod
+    def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE):
         """
-        Used to retrieve user information (name, email) of users that have access to the
-        save game parent directory.
+        Used to upload file to google cloud into provided directory.
         """
-        cloud_parent_directory = game_prop("gcloudParentDirectoryId")
-        client = self.get_drive_service()
 
-        permissions = client.permissions().list(fileId=cloud_parent_directory).execute()
-        users = []
+        media = MediaFileUpload(file_path, mimetype=mime_type)
+        metadata = {
+            "name": file_name_from_path(file_path),
+            "parents": [parent_directory_id]
+        }
 
-        for permission in permissions["permissions"]:
-            users.append(
-                client.permissions().get(
-                    fileId=cloud_parent_directory,
-                    permissionId=permission["id"],
-                    fields="emailAddress, displayName"
-                ).execute()
-            )
+        try:
+            # Upload archive to Google Drive.
+            logger.info("Uploading archive to cloud.")
+            GCloud.__drive().files().create(
+                body=metadata,
+                media_body=media,
+                fields='id'
+            ).execute()
 
-        return users
+        except HttpError as error:
+            logger.error("Error uploading archive to cloud", error)
+            raise error
+
+    @staticmethod
+    def __drive():
+        """
+        Used to get raw Google Drive service.
+        """
+        return build('drive', 'v3', credentials=GCloud.__get_credentials())
 
     @staticmethod
     def __get_credentials():

@@ -12,7 +12,6 @@ from src.service.Uploader import Uploader
 from src.gui.gui import GUI
 from src.gui.popup.confirmation import Confirmation
 from src.gui.visitor.CoreVisitor import CoreVisitor
-from src.gui.visitor.XboxUserListVisitor import XboxUserListVisitor
 from src.util.file import OUTPUT_DIR, cleanup_directory
 from src.util.logger import get_logger
 
@@ -31,7 +30,7 @@ def main():
 
         def internal_confirm():
             confirmation.destroy()
-            downloader.download()
+            Downloader.download()
 
         confirmation = Confirmation()
         confirmation.set_confirm_callback(internal_confirm)
@@ -39,13 +38,10 @@ def main():
 
     logger.info("Initializing application.")
 
-    downloader = Downloader()
-    uploader = Uploader()
-
     window = GUI.instance()
-    window.metadata_function = lambda: downloader.get_last_save_metadata()
+    window.metadata_function = lambda: Downloader.get_last_save_metadata()
 
-    window.add_button("label_UploadSaveToCloud", uploader.upload, prop("primaryButton"))
+    window.add_button("label_UploadSaveToCloud", Uploader.upload, prop("primaryButton"))
     window.add_button("label_DownloadSaveFromCloud", confirm_before_download, prop("secondaryButton"))
 
     window.on_close(on_destroy)
@@ -53,8 +49,7 @@ def main():
         CoreVisitor(),
         UIRefreshButtonVisitor(),
         GameDropdownVisitor(),
-        LanguageSwitchVisitor(),
-        XboxUserListVisitor()
+        LanguageSwitchVisitor()
     ])
 
     window.build()

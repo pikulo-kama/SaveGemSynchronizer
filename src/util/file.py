@@ -56,3 +56,11 @@ def cleanup_directory(directory: str):
 
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+
+def file_name_from_path(file_path: str):
+    return file_path[file_path.rindex(os.path.sep) + 1:]
+
+
+def remove_extension_from_path(file_path: str):
+    return file_path[0:file_path.rindex(".")]

@@ -1,5 +1,5 @@
 {
-  "version" : "3.1.2",
+  "version" : "3.2.0",
   "defaultLocale" : "en_US",
   "timeZone" : "Europe/Kiev",
 
@@ -20,17 +20,5 @@
     "colorStatic" : "#cedfeb",
     "colorHover" : "#d5dde3",
     "width" : 5
-  },
-
-  "xboxPluginEnabled" : false,
-  "xboxClientId" : "7cc88370-21c2-43c6-bf9d-06f224740c0a",
-  "xboxEmailMappingFileId" : "1FtTbXHsrhIzQ51FbSOP5yyk3P34yegBIEqVfhKgCloY",
-  "xboxUserActive" : {
-    "fg" : "#404040",
-    "bg" : "#32CD32"
-  },
-  "xboxUserInactive" : {
-    "fg" : "#a4a8ab",
-    "bg" : "#d95b25"
   }
 }

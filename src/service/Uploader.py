@@ -3,17 +3,16 @@ from datetime import datetime
 import shutil
 
 from googleapiclient.errors import HttpError
-from googleapiclient.http import MediaFileUpload
 from src.gui.gui import GUI
 
-from constants import ZIP_EXTENSION, ZIP_MIME_TYPE, SAVE_VERSION_FILE_NAME
+from constants import ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
 from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import game_prop
 from src.service.GCloud import GCloud
 from src.gui.popup.notification import notification
-from src.util.file import resolve_temp_file, resolve_app_data
+from src.util.file import resolve_temp_file, resolve_app_data, file_name_from_path, remove_extension_from_path
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)
@@ -21,44 +20,27 @@ logger = get_logger(__name__)
 
 class Uploader:
 
-    def __init__(self):
-        self.__gui = GUI.instance()
-        self.__drive = GCloud().get_drive_service()
-        self.__filename = f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}"
-        self.__filepath = resolve_temp_file(f"{self.__filename}.{ZIP_EXTENSION}")
+    @staticmethod
+    def upload():
 
-    def upload(self):
-
+        file_path = resolve_temp_file(f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}.{ZIP_EXTENSION}")
         saves_directory = os.path.expandvars(game_prop("localPath"))
         cloud_parent_id = game_prop("gcloudParentDirectoryId")
 
-        metadata = {
-            "name": f"{self.__filename}.{ZIP_EXTENSION}",
-            "parents": [cloud_parent_id]
-        }
-
         # Archive save contents to mitigate impact on drive storage.
         logger.info("Archiving save files that need to be uploaded.")
-        shutil.make_archive(resolve_temp_file(self.__filename), ZIP_EXTENSION, saves_directory)
-        media = MediaFileUpload(self.__filepath, mimetype=ZIP_MIME_TYPE)
+        shutil.make_archive(remove_extension_from_path(file_path), ZIP_EXTENSION, saves_directory)
 
         try:
-            # Upload archive to Google Drive.
-            logger.info("Uploading archive to cloud.")
-            self.__drive.files().create(
-                body=metadata,
-                media_body=media,
-                fields='id'
-            ).execute()
+            GCloud.upload_file(file_path, cloud_parent_id)
 
-        except HttpError as error:
-            logger.error("Error uploading archive to cloud", error)
+        except HttpError:
             notification(tr("notification_ErrorUploadingToCloud"))
 
         # Update last version of save locally.
         save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
-        save_versions.set_value(AppState.get_game(), metadata["name"])
+        save_versions.set_value(AppState.get_game(), file_name_from_path(file_path))
 
         # Show success notification in application.
-        self.__gui.refresh()
+        GUI.instance().refresh()
         notification(tr("notification_SaveHasBeenUploaded"))

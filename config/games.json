@@ -3,13 +3,11 @@
     "name" : "Valheim",
     "localPath" : "%LOCALAPPDATA%Low\\IronGate\\Valheim\\worlds_local",
     "gcloudParentDirectoryId" : "11KNPgZ_pEXm1Ur0uqZMggaJidezOZCZU",
-    "accessMapFileId" : "1FtTbXHsrhIzQ51FbSOP5yyk3P34yegBIEqVfhKgCloY",
-    "xboxPresence" : "Valheim"
+    "accessMapFileId" : "1FtTbXHsrhIzQ51FbSOP5yyk3P34yegBIEqVfhKgCloY"
   },
   {
     "name" : "Vintage Story",
     "localPath" : "%APPDATA%\\VintageStoryData\\Saves",
-    "gcloudParentDirectoryId" : "1ulAGvR27yALHFzG_vB3W3BagyBe0mWmK",
-    "xboxPresence" : null
+    "gcloudParentDirectoryId" : "1ulAGvR27yALHFzG_vB3W3BagyBe0mWmK"
   }
 ]

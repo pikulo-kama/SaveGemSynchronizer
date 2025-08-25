@@ -1,8 +1,6 @@
 import os.path
 import shutil
 
-from googleapiclient.errors import HttpError
-
 from constants import ZIP_MIME_TYPE, ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
 from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
@@ -19,15 +17,13 @@ logger = get_logger(__name__)
 
 class Downloader:
 
-    def __init__(self):
-        self.__gui = GUI.instance()
-        self.__drive = GCloud().get_drive_service()
-        self.__tmp_zip_file = resolve_temp_file(f'save.{ZIP_EXTENSION}')
-
-    def download(self):
+    @staticmethod
+    def download():
 
         saves_directory = os.path.expandvars(game_prop("localPath"))
-        metadata = self.get_last_save_metadata()
+        temp_zip_file_name = resolve_temp_file(f'save.{ZIP_EXTENSION}')
+
+        metadata = Downloader.get_last_save_metadata()
         logger.debug("savesDirectory = %s", saves_directory)
 
         if metadata is None:
@@ -39,9 +35,9 @@ class Downloader:
 
         # Download file and write it to zip file locally (in output directory)
         logger.info("Downloading save archive")
-        file = GCloud().download_file(metadata.get("id"))
+        file = GCloud.download_file(metadata.get("id"))
 
-        with open(self.__tmp_zip_file, "wb") as zip_save:
+        with open(temp_zip_file_name, "wb") as zip_save:
             logger.info("Storing file in output directory.")
             zip_save.write(file)
 
@@ -61,33 +57,23 @@ class Downloader:
         # Extract archive contents to the target directory
         logger.info("Extracting archive into saves directory.")
         shutil.unpack_archive(
-            self.__tmp_zip_file,
+            temp_zip_file_name,
             saves_directory,
             ZIP_EXTENSION
         )
 
-        self.__gui.refresh()
+        GUI.instance().refresh()
         notification(tr("notification_NewSaveHasBeenDownloaded"))
 
-    def get_last_save_metadata(self):
+    @staticmethod
+    def get_last_save_metadata():
+        files = GCloud.query_single(
+            "files",
+            "nextPageToken, files(id, name, owners, createdTime)",
+            f"mimeType='{ZIP_MIME_TYPE}' and '{game_prop("gcloudParentDirectoryId")}' in parents"
+        )
 
-        files = []
-
-        try:
-            response = self.__drive.files().list(
-                q=f"mimeType='{ZIP_MIME_TYPE}' and '{game_prop("gcloudParentDirectoryId")}' in parents",
-                spaces='drive',
-                fields='nextPageToken, files(id, name, owners, createdTime)',
-                pageToken=None,
-                pageSize=1
-            ).execute()
-
-            files = response.get("files", [])
-
-        except HttpError as e:
-            logger.error("Error downloading save metadata", e)
-
-        if len(files) == 0:
+        if files is None:
             logger.warn("There are no files or metadata in cloud saves directory.")
             return None
 
@@ -95,5 +81,5 @@ class Downloader:
             "id": files[0]["id"],
             "name": files[0]["name"],
             "createdTime": files[0]["createdTime"],
-            "owner": files[0]["owners"][0]["displayName"],
+            "owner": files[0]["owners"][0]["displayName"]
         }
