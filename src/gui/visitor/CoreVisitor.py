@@ -32,8 +32,8 @@ class CoreVisitor(Visitor):
     """
 
     def visit(self, gui: GUI):
-        self.__add_last_save_info(gui)
-        self.__add_buttons_internal(gui)
+        self.__add_save_information(gui)
+        self.__add_buttons(gui)
         self.__add_copyright_and_version(gui)
 
     def is_enabled(self):
@@ -67,7 +67,7 @@ class CoreVisitor(Visitor):
         logger.debug("%d buttons were reloaded.", len(gui.tk_buttons))
 
     @staticmethod
-    def __add_last_save_info(gui):
+    def __add_save_information(gui):
         """
         Used to render both local and Google Drive save status labels.
         """
@@ -94,7 +94,7 @@ class CoreVisitor(Visitor):
         info_frame.grid(row=0, column=0, pady=150)
 
     @staticmethod
-    def __add_buttons_internal(gui):
+    def __add_buttons(gui):
         """
         Used to render upload and download buttons.
         """
@@ -102,7 +102,6 @@ class CoreVisitor(Visitor):
         button_frame = tk.Frame(gui.body_frame)
 
         for idx, button in enumerate(gui.buttons):
-
             props = button["properties"]
 
             tk_button = ttk.Button(
@@ -148,8 +147,13 @@ class CoreVisitor(Visitor):
 
         creation_datetime = datetime.strptime(last_save_meta["createdTime"], "%Y-%m-%dT%H:%M:%S.%fZ")
         creation_datetime += timezone(prop("timeZone")).utcoffset(creation_datetime)
+        date_format = "d MMMM"
 
-        creation_date = format_datetime(creation_datetime, "d MMMM", locale=locale)
+        if creation_datetime.year != date.today().year:
+            # Only show year if it's not current one, just ot avoid extra information.
+            date_format = "d MMMM YYYY"
+
+        creation_date = format_datetime(creation_datetime, date_format, locale=locale)
         creation_time = creation_datetime.strftime("%H:%M")
 
         return tr(

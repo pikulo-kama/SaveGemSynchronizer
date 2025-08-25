@@ -70,8 +70,9 @@ class Downloader:
             ZIP_EXTENSION
         )
 
-        GUI.instance().refresh()
-        notification(tr("notification_NewSaveHasBeenDownloaded"))
+        gui = GUI.instance()
+        gui.refresh()
+        gui.window.after(0, lambda: notification(tr("notification_NewSaveHasBeenDownloaded")))
 
     @staticmethod
     def get_last_save_metadata():

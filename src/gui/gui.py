@@ -60,6 +60,12 @@ class GUI:
 
         init_styles()
 
+    def set_cursor(self, cursor=""):
+        """
+        Used to change main window cursor.
+        """
+        self.window.config(cursor=cursor)
+
     def register_visitors(self, visitors):
         """
         Used to register visitors.

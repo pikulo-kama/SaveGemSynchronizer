@@ -2,6 +2,7 @@
 # noinspection PyUnresolvedReferences
 import initializer
 
+from threading import Thread
 from src.core.TextResource import tr
 from src.core.holders import prop
 from src.gui.visitor.GameDropdownVisitor import GameDropdownVisitor
@@ -30,11 +31,22 @@ def main():
         logger.info("Destroying window.")
         window.destroy()
 
+    def execute_in_thread(function):
+        def task():
+            function()
+            window.set_cursor()
+
+        window.set_cursor("wait")
+        Thread(target=task).start()
+
+    def do_upload():
+        execute_in_thread(Uploader.upload)
+
     def confirm_before_download():
 
         def internal_confirm():
             confirmation.destroy()
-            Downloader.download()
+            execute_in_thread(Downloader.download)
 
         confirmation = Confirmation()
         confirmation.set_confirm_callback(internal_confirm)
@@ -45,7 +57,7 @@ def main():
     window = GUI.instance()
     window.metadata_function = lambda: Downloader.get_last_save_metadata()
 
-    window.add_button("label_UploadSaveToDrive", Uploader.upload, prop("primaryButton"))
+    window.add_button("label_UploadSaveToDrive", do_upload, prop("primaryButton"))
     window.add_button("label_DownloadSaveFromDrive", confirm_before_download, prop("secondaryButton"))
 
     window.on_close(on_destroy)

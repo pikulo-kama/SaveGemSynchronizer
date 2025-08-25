@@ -54,5 +54,6 @@ class Uploader:
         save_versions.set_value(AppState.get_game(), file_name_from_path(file_path))
 
         # Show success notification in application.
-        GUI.instance().refresh()
-        notification(tr("notification_SaveHasBeenUploaded"))
+        gui = GUI.instance()
+        gui.refresh()
+        gui.window.after(0, lambda: notification(tr("notification_SaveHasBeenUploaded")))
