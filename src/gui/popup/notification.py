@@ -2,7 +2,8 @@ import tkinter as tk
 
 from src.core.TextResource import tr
 from src.core.holders import prop
-from src.gui.popup.popup import Popup, add_button_hover_effect
+from src.gui.popup.popup import Popup
+from src.gui.gui import add_button_hover_effect
 
 
 def notification(message: str):

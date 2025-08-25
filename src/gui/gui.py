@@ -8,6 +8,26 @@ from src.util.logger import get_logger
 logger = get_logger(__name__)
 
 
+def add_button_hover_effect(button):
+
+    color_mapping = {
+        **{btn["colorHover"]: btn["colorStatic"] for btn in [prop("primaryButton"), prop("secondaryButton")]},
+        **{btn["colorStatic"]: btn["colorHover"] for btn in [prop("primaryButton"), prop("secondaryButton")]}
+    }
+
+    logger.debug("Button hover color mapping - %s", color_mapping)
+
+    def on_button_leave(event):
+        event.widget['bg'] = color_mapping[event.widget['bg']]
+
+    def on_button_enter(event):
+        event.widget['bg'] = color_mapping[event.widget['bg']]
+
+    button.bind('<Enter>', on_button_enter)
+    button.bind('<Leave>', on_button_leave)
+
+
+
 class GUI:
 
     _instance = None

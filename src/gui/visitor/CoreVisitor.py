@@ -5,7 +5,7 @@ from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import prop
-from src.gui.gui import GUI
+from src.gui.gui import GUI, add_button_hover_effect
 from src.gui.visitor.Visitor import Visitor
 from datetime import date, datetime
 
@@ -80,16 +80,6 @@ class CoreVisitor(Visitor):
     @staticmethod
     def __add_buttons_internal(gui):
 
-        btn_property_list = [prop("primaryButton"), prop("secondaryButton")]
-
-        def on_button_leave(e):
-            color_mapping = {btn["colorHover"]: btn["colorStatic"] for btn in btn_property_list}
-            e.widget['bg'] = color_mapping[e.widget['bg']]
-
-        def on_button_enter(e):
-            color_mapping = {btn["colorStatic"]: btn["colorHover"] for btn in btn_property_list}
-            e.widget['bg'] = color_mapping[e.widget['bg']]
-
         button_frame = tk.Frame(gui.body_frame)
 
         for idx, button in enumerate(gui.buttons):
@@ -111,9 +101,7 @@ class CoreVisitor(Visitor):
                 font=40
             )
 
-            tk_button.bind('<Enter>', on_button_enter)
-            tk_button.bind('<Leave>', on_button_leave)
-
+            add_button_hover_effect(tk_button)
             gui.tk_buttons.insert(idx, tk_button)
 
         button_frame.grid(row=1, column=0)
@@ -159,7 +147,7 @@ class CoreVisitor(Visitor):
         last_downloaded_version = save_versions.get_value(AppState.get_game())
 
         if last_downloaded_version is None:
-            return ""
+            return tr("label_NoInformationAboutCurrentSaveVersion")
 
         elif last_downloaded_version == last_save_meta["name"]:
             return tr("info_SaveIsUpToDate")

@@ -9,13 +9,13 @@
   "popup_ConfirmationButtonConfirm": "Agree",
   "label_UploadSaveToCloud": "🠉 Upload",
   "label_DownloadSaveFromCloud": "🠋",
+  "label_NoInformationAboutCurrentSaveVersion" : "We're not sure which save is newer, but..",
   "info_SaveIsUpToDate": "Nothing new... Your save is as fresh as it could be.",
   "info_SaveNeedsToBeDownloaded": "Well well well, would you look at that..",
-  "info_NewestSaveOnCloudInformation": "Last save was uploaded on {0} at {1} by {2}",
+  "info_NewestSaveOnCloudInformation": "last save was uploaded on {0} at {1} by {2}",
   "notification_SaveHasBeenUploaded": "Save uploaded successfully.",
   "notification_StorageIsEmpty": "Storage is empty. Upload is required to proceed.",
   "notification_NewSaveHasBeenDownloaded": "Save has been downloaded successfully.",
   "notification_ErrorUploadingToCloud" : "Error occurred when uploading to cloud.",
-  "confirmation_ConfirmToDownloadSave": "Sure? This will erase existing save you have.",
-  "gameDropdown_SelectGameFromList" : "Select a game"
+  "confirmation_ConfirmToDownloadSave": "Sure? This will erase existing save you have."
 }
