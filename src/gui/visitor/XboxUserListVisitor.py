@@ -4,7 +4,7 @@ from src.core.AppState import AppState
 from src.core.holders import prop, game_prop
 from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
-from src.service.user_service import UserService
+from src.service.UserService import UserService
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)

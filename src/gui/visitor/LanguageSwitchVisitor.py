@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 
 from src.core.AppState import AppState
 from src.core.TextResource import tr
@@ -34,11 +35,12 @@ class LanguageSwitchVisitor(Visitor):
         gui.language_button = tk.Button(
             gui.window,
             command=switch_language,
-            font=("Segoe UI Emoji", 14),
+            font=("Small Fonts", 14, font.BOLD),
             bd=0,
             padx=3,
             cursor="hand2",
-            bg=prop("secondaryButton")["colorStatic"]
+            bg=prop("secondaryButton")["colorStatic"],
+            fg=prop("primaryColor")
         )
 
         gui.language_button.pack()

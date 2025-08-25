@@ -5,5 +5,15 @@
   "src.core.EditableJsonConfigHolder" : "ERROR",
   "src.core.TextResource" : "ERROR",
   "src.core.holders" : "ERROR",
-  "src.gui.popup.popup" : "ERROR"
+  "src.gui.popup.popup" : "ERROR",
+  "src.gui.visitor.CoreVisitor" : "WARN",
+  "src.gui.visitor.GameDropdownVisitor" : "WARN",
+  "src.gui.visitor.LanguageSwitchVisitor" : "WARN",
+  "src.gui.visitor.XboxUserListVisitor" : "WARN",
+  "src.gui.gui" : "INFO",
+  "src.service.Downloader" : "INFO",
+  "src.service.Uploader" : "INFO",
+  "src.service.GCloud" : "INFO",
+  "src.service.UserService" : "INFO",
+  "src.service.XboxService" : "INFO"
 }

@@ -1,19 +1,19 @@
-import os.path
+# Needs to be first thing that is being imported when application starts.
+from initializer import init
 
-from constants import APP_DATA_ROOT
 from src.core.TextResource import tr
 from src.core.holders import prop
 from src.gui.visitor.GameDropdownVisitor import GameDropdownVisitor
 from src.gui.visitor.LanguageSwitchVisitor import LanguageSwitchVisitor
 
-from src.service.downloader import Downloader
-from src.service.uploader import Uploader
+from src.service.Downloader import Downloader
+from src.service.Uploader import Uploader
 from src.gui.gui import GUI
 from src.gui.popup.confirmation import Confirmation
 from src.gui.visitor.CoreVisitor import CoreVisitor
 from src.gui.visitor.XboxUserListVisitor import XboxUserListVisitor
-from src.util.file import OUTPUT_DIR, cleanup_directory, LOGS_DIR
-from src.util.logger import get_logger, initialize_logging
+from src.util.file import OUTPUT_DIR, cleanup_directory
+from src.util.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -36,7 +36,6 @@ def main():
         confirmation.set_confirm_callback(internal_confirm)
         confirmation.show(tr("confirmation_ConfirmToDownloadSave"))
 
-    setup()
     logger.info("Initializing application.")
 
     downloader = Downloader()
@@ -60,15 +59,6 @@ def main():
     logger.info("Application shut down.")
 
 
-def setup():
-
-    for directory in [APP_DATA_ROOT, OUTPUT_DIR, LOGS_DIR]:
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-            logger.info("Creating '%s' directory.", directory)
-
-    initialize_logging()
-
-
 if __name__ == '__main__':
+    init()
     main()

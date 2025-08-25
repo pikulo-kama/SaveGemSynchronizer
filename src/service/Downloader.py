@@ -9,7 +9,7 @@ from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import game_prop
 from src.gui.popup.notification import notification
-from src.service.gcloud_service import GCloud
+from src.service.GCloud import GCloud
 from src.util.file import resolve_temp_file, resolve_app_data, cleanup_directory
 from src.gui.gui import GUI
 from src.util.logger import get_logger

@@ -1,8 +1,8 @@
 from constants import CSV_MIME_TYPE, XBOX_ACCESS_MAP
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.holders import prop
-from src.service.gcloud_service import GCloud
-from src.service.xbox_service import XboxService
+from src.service.GCloud import GCloud
+from src.service.XboxService import XboxService
 from src.util.file import resolve_app_data
 from src.util.logger import get_logger
 
