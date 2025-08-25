@@ -73,7 +73,7 @@ class Downloader:
             f"mimeType='{ZIP_MIME_TYPE}' and '{game_prop("gcloudParentDirectoryId")}' in parents"
         )
 
-        if files is None:
+        if files is None or len(files) == 0:
             logger.warn("There are no files or metadata in cloud saves directory.")
             return None
 

@@ -2,7 +2,7 @@ from src.core.AppState import AppState
 from src.core.holders import games, prop
 from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
-from tkinter import ttk
+from tkinter import ttk, font
 import tkinter as tk
 
 from src.util.logger import get_logger
@@ -46,6 +46,7 @@ class GameDropdownVisitor(Visitor):
         combobox = ttk.Combobox(
             gui.window,
             values=game_names,
+            font=("Helvetica", 10, font.BOLD),
             width=20,
             state=combobox_state
         )
@@ -61,5 +62,5 @@ class GameDropdownVisitor(Visitor):
         combobox.set(selected_game)
         combobox.pack()
 
-        combobox.place(relx=.9, rely=.05, anchor=tk.N)
+        combobox.place(relx=.9, rely=.05, width=150, height=30, anchor=tk.N)
         combobox.bind("<<ComboboxSelected>>", on_game_selection_change)
