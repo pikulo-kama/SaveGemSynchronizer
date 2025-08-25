@@ -115,7 +115,7 @@ class CoreVisitor(Visitor):
             )
 
             tk_button.grid(row=0, column=idx, padx=5)
-            gui.tk_buttons.insert(idx, tk_button)
+            gui.tk_buttons.append(tk_button)
 
         button_frame.grid(row=1, column=0)
 

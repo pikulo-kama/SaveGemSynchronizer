@@ -82,7 +82,7 @@ class Downloader:
         )
 
         if files is None or len(files) == 0:
-            logger.warn("There are no files or metadata in Google Drive saves directory.")
+            logger.warn("There are no saves on Google Drive for %s.", AppState.get_game())
             return None
 
         return {
