@@ -1,14 +1,14 @@
-# 🎮 SaveSync – Cloud Save Manager for PC Games
+# 🎮 SaveGem – Cloud Save Manager for PC Games
 
 ## 📌 Overview
-**SaveSync** is a simple desktop application built with **Tkinter** that allows players to **upload and download save files to Google Cloud**.  
+**SaveGem** is a simple desktop application built with **Tkinter** that allows players to **upload and download save files to Google Cloud**.  
 
 It’s designed for games that:
 - Don’t have official cloud save support.
 - Host servers directly on the player’s PC.
 - Require manual save sharing between friends or across multiple devices.
 
-With SaveSync, you can seamlessly keep your save games **backed up and in sync**.
+With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 
 ---
 
@@ -30,4 +30,4 @@ With SaveSync, you can seamlessly keep your save games **backed up and in sync**
 
 ### Install dependencies (Windows)
 ```bash
-./build.ps1
+./build.sh
