@@ -12,6 +12,9 @@ logger = get_logger(__name__)
 
 
 class Popup(abc.ABC):
+    """
+    Tkinter wrapper for popups.
+    """
 
     def __init__(self, title_text_resource, icon):
         self._window = tk.Tk()
@@ -22,6 +25,10 @@ class Popup(abc.ABC):
         self._container = None
 
     def show(self, message):
+        """
+        Used to display popup with provided message.
+        """
+
         logger.info("Initializing popup.")
 
         logger.debug("popupTitle = %s", self.__title_text_resource)
@@ -38,7 +45,7 @@ class Popup(abc.ABC):
             self._container,
             text=message,
             fg=prop("secondaryColor"),
-            font=('Helvetica', 10, 'bold')
+            font=("Helvetica", 10, "bold")
         )
 
         self._show_internal()
@@ -50,13 +57,26 @@ class Popup(abc.ABC):
 
     @abstractmethod
     def _show_internal(self):
+        """
+        Should be overridden in child classes.
+        Should be used to add additional or customize existing
+        controls in popup.
+        """
         pass
 
     def destroy(self):
+        """
+        Used to destroy window context.
+        """
+
         self._window.destroy()
         logger.info("Popup has been destroyed.")
 
     def __center_window(self, gui):
+        """
+        Used to center popup against main application window.
+        """
+
         popup_width = prop("popupWidth")
         popup_height = prop("popupHeight")
         window_width = prop("windowWidth")
@@ -68,7 +88,7 @@ class Popup(abc.ABC):
         logger.debug("popupXPosition = %d", offset_x)
         logger.debug("popupYPosition = %d", offset_y)
 
-        self._window.geometry('%dx%d+%d+%d' % (
+        self._window.geometry("%dx%d+%d+%d" % (
             popup_width,
             popup_height,
             offset_x,

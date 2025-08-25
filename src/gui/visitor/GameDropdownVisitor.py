@@ -11,6 +11,10 @@ logger = get_logger(__name__)
 
 
 class GameDropdownVisitor(Visitor):
+    """
+    Used to build game selection dropdown.
+    Always enabled. If there are no games configured app will crash.
+    """
 
     def visit(self, gui: GUI):
         self.__add_game_selection_dropdown(gui)
@@ -29,13 +33,16 @@ class GameDropdownVisitor(Visitor):
 
     @staticmethod
     def __add_game_selection_dropdown(gui: GUI):
+        """
+        Used to render game selection dropdown.
+        """
 
         def add_leading_space(text: str):
             return " " + text.strip()
 
         game_names = [add_leading_space(game["name"]) for game in games()]
         combobox_state = "disabled" if len(game_names) < 2 else "normal"
-        selected_game = add_leading_space(AppState.get_game(game_names[0]))
+        selected_game = add_leading_space(AppState.get_game(game_names[0].strip()))
 
         style = ttk.Style()
         style.theme_use("clam")

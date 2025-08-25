@@ -1,4 +1,5 @@
 # Needs to be first thing that is being imported when application starts.
+# noinspection PyUnresolvedReferences
 import initializer
 
 from src.core.TextResource import tr
@@ -19,6 +20,9 @@ logger = get_logger(__name__)
 
 
 def main():
+    """
+    Application entry point.
+    """
 
     def on_destroy():
         logger.info("Cleaning up 'output' directory.")
@@ -41,8 +45,8 @@ def main():
     window = GUI.instance()
     window.metadata_function = lambda: Downloader.get_last_save_metadata()
 
-    window.add_button("label_UploadSaveToCloud", Uploader.upload, prop("primaryButton"))
-    window.add_button("label_DownloadSaveFromCloud", confirm_before_download, prop("secondaryButton"))
+    window.add_button("label_UploadSaveToDrive", Uploader.upload, prop("primaryButton"))
+    window.add_button("label_DownloadSaveFromDrive", confirm_before_download, prop("secondaryButton"))
 
     window.on_close(on_destroy)
     window.register_visitors([
@@ -56,5 +60,5 @@ def main():
     logger.info("Application shut down.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

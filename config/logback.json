@@ -13,7 +13,7 @@
   "src.gui.gui" : "INFO",
   "src.service.Downloader" : "INFO",
   "src.service.Uploader" : "INFO",
-  "src.service.GCloud" : "INFO",
+  "src.service.GDrive" : "INFO",
   "src.service.UserService" : "INFO",
   "src.service.XboxService" : "INFO"
 }

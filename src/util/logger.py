@@ -29,26 +29,34 @@ log_level_map = {
 
 
 def initialize_logging():
+    """
+    Used to initialize logging module.
+    """
 
     handler = TimedRotatingFileHandler(
         resolve_log(LOG_FILE_NAME),
         when="midnight",
         interval=1,
         backupCount=5,
-        encoding='utf-8'
+        encoding="utf-8"
     )
 
     handler.suffix = "%Y-%m-%d.log"
     handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
 
     logging.basicConfig(
-        encoding='utf-8',
-        format='%(asctime)s - (%(name)s:%(lineno)d) [%(levelname)s] : %(message)s',
+        encoding="utf-8",
+        format="%(asctime)s - (%(name)s:%(lineno)d) [%(levelname)s] : %(message)s",
         handlers=[handler]
     )
 
 
 def log_level(logger_name: str):
+    """
+    Used to query logback.xml and get configured log level for provided log name.
+    If log level is not configured 'INFO' would be used as default.
+    """
+
     level = log_levels.get_value(logger_name)
 
     if level is not None:
@@ -58,6 +66,10 @@ def log_level(logger_name: str):
 
 
 def get_logger(logger_name: str):
+    """
+    Used to create logger for provided logger name.
+    """
+
     logger = logging.getLogger(logger_name)
     logger.setLevel(log_level(logger_name))
 

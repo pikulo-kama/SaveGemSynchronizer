@@ -1,7 +1,7 @@
-# 🎮 SaveGem – Cloud Save Manager for PC Games
+# 🎮 SaveGem – Save Manager for PC Games
 
 ## 📌 Overview
-**SaveGem** is a simple desktop application built with **Tkinter** that allows players to **upload and download save files to Google Cloud**.  
+**SaveGem** is a simple desktop application built with **Tkinter** that allows players to **upload and download save files to Google Drive**.  
 
 It’s designed for games that:
 - Don’t have official cloud save support.
@@ -13,12 +13,12 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 ---
 
 ## 🚀 Features
-- ✅ Upload local save files to Google Cloud  
-- ✅ Download the latest save files from the cloud  
+- ✅ Upload local save files to Google Drive  
+- ✅ Download the latest save files from the drive  
 - ✅ Easy-to-use desktop UI (Tkinter)  
 - ✅ Works for any game where saves are stored locally  
 - ✅ Has XBOX Live integration to see if any friends are currently playing
-- ✅ Just to not mess anything we do backup of your save before replacing it with the one from cloud (just in case..)
+- ✅ Just to not mess anything up we do backup of your save before replacing it with the one from drive (just in case...)
 
 ---
 

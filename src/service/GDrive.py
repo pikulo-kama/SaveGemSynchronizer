@@ -8,28 +8,31 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 
-from constants import GCLOUD_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME, ZIP_MIME_TYPE
+from constants import GDRIVE_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME, ZIP_MIME_TYPE
 from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)
 SCOPES = [
-    'https://www.googleapis.com/auth/docs',
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/drive.appdata'
+    "https://www.googleapis.com/auth/docs",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/drive.appdata"
 ]
 
 
-class GCloud:
+class GDrive:
     """
-    Class that has most of the Google Cloud interaction logic defined.
+    Class that has most of the Google Drive interaction logic defined.
     """
 
     @staticmethod
     def query_single(target_field: str, fields: str, q: str):
+        """
+        Used to query metadata of single file from Google Drive.
+        """
 
         try:
-            request = GCloud.__drive().files().list(
+            request = GDrive.__drive().files().list(
                 q=q,
                 spaces="drive",
                 fields=fields,
@@ -49,7 +52,7 @@ class GCloud:
         Used to in the first place to download archives.
         """
 
-        request = GCloud.__drive().files().get_media(fileId=file_id)
+        request = GDrive.__drive().files().get_media(fileId=file_id)
         file = io.BytesIO()
 
         downloader = MediaIoBaseDownload(file, request)
@@ -63,7 +66,7 @@ class GCloud:
     @staticmethod
     def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE):
         """
-        Used to upload file to google cloud into provided directory.
+        Used to upload file to Google Drive into provided directory.
         """
 
         media = MediaFileUpload(file_path, mimetype=mime_type)
@@ -74,15 +77,15 @@ class GCloud:
 
         try:
             # Upload archive to Google Drive.
-            logger.info("Uploading archive to cloud.")
-            GCloud.__drive().files().create(
+            logger.info("Uploading archive to drive.")
+            GDrive.__drive().files().create(
                 body=metadata,
                 media_body=media,
-                fields='id'
+                fields="id"
             ).execute()
 
         except HttpError as error:
-            logger.error("Error uploading archive to cloud", error)
+            logger.error("Error uploading archive to drive", error)
             raise error
 
     @staticmethod
@@ -90,7 +93,7 @@ class GCloud:
         """
         Used to get raw Google Drive service.
         """
-        return build('drive', 'v3', credentials=GCloud.__get_credentials())
+        return build("drive", "v3", credentials=GDrive.__get_credentials())
 
     @staticmethod
     def __get_credentials():
@@ -98,7 +101,7 @@ class GCloud:
         Used to authenticate to Google Cloud as well as refresh token if needed.
         """
 
-        token_file_name = resolve_app_data(GCLOUD_TOKEN_FILE_NAME)
+        token_file_name = resolve_app_data(GDRIVE_TOKEN_FILE_NAME)
         credentials_file_name = resolve_project_data(CREDENTIALS_FILE_NAME)
         creds = None
 
@@ -124,7 +127,7 @@ class GCloud:
 
             logger.info("Authentication completed.")
 
-            with open(token_file_name, 'w') as token_file:
+            with open(token_file_name, "w") as token_file:
                 logger.info("Saving Google Cloud access token for later use.")
                 token_file.write(creds.to_json())
 

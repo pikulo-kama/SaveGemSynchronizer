@@ -8,17 +8,27 @@ logger = get_logger(__name__)
 
 
 def tr(key: str, *args) -> str:
+    """
+    Used to resolve text resource based on the currently selected language.
+    """
     locale = AppState.get_locale(prop("defaultLocale"))
     return TextResource.get(locale, key, *args)
 
 
 class TextResource:
+    """
+    Used to resolve text resources.
+    """
 
     current_locale = None
     holder = None
 
     @staticmethod
     def get(locale: str, key: str, *args) -> str:
+        """
+        Gets text resource by key using currently selected game.
+        If text resources has placeholder and arguments have been provided then they would be resolved.
+        """
 
         if TextResource.current_locale != locale:
             logger.info("Locale selection has been changed. Initializing holder for %s", locale)

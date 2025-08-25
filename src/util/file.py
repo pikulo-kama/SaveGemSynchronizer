@@ -12,34 +12,58 @@ LOGS_DIR = os.path.join(APP_DATA_ROOT, "logs")
 
 
 def resolve_config(config_name: str):
+    """
+    Used to resolve file in '{PROJECT_ROOT}/config' directory.
+    """
     return os.path.join(CONFIG_DIR, config_name)
 
 
 def resolve_locale(locale_name: str):
+    """
+    Used to resolve file in '{PROJECT_ROOT}/locale' directory.
+    """
     return os.path.join(LOCALE_DIR, locale_name)
 
 
 def resolve_resource(resource_name: str):
+    """
+    Used to resolve file in '{PROJECT_ROOT}/resource' directory.
+    """
     return os.path.join(RESOURCE_DIR, resource_name)
 
 
 def resolve_temp_file(file_name: str):
+    """
+    Used to resolve file in '{APP_DATA}/SaveGem/output' directory.
+    """
     return os.path.join(OUTPUT_DIR, file_name)
 
 
 def resolve_app_data(file_name: str):
+    """
+    Used to resolve file in '{APP_DATA}' directory.
+    """
     return os.path.join(APP_DATA_ROOT, file_name)
 
 
 def resolve_log(file_name: str):
+    """
+    Used to resolve file in '{APP_DATA}/logs' directory.
+    """
     return os.path.join(LOGS_DIR, file_name)
 
 
 def resolve_project_data(file_name: str):
+    """
+    Used to resolve file in '{PROJECT_ROOT}' directory.
+    """
     return os.path.join(PROJECT_ROOT, file_name)
 
 
 def cleanup_directory(directory: str):
+    """
+    Used to delete all contents of directory.
+    """
 
     if not os.path.exists(directory):
         return
@@ -55,12 +79,20 @@ def cleanup_directory(directory: str):
                 shutil.rmtree(file_path)
 
         except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))
+            print("Failed to delete %s. Reason: %s" % (file_path, e))
 
 
 def file_name_from_path(file_path: str):
+    """
+    Used to extract file name from file path.
+    e.g. /path/to/file.txt -> file.txt
+    """
     return file_path[file_path.rindex(os.path.sep) + 1:]
 
 
 def remove_extension_from_path(file_path: str):
+    """
+    Used to remove file extension from file path.
+    e.g. /path/to/file.txt -> /path/to/file
+    """
     return file_path[0:file_path.rindex(".")]

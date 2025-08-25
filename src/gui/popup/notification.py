@@ -7,10 +7,16 @@ from src.gui.gui import add_button_hover_effect
 
 
 def notification(message: str):
+    """
+    Used to display notification message.
+    """
     Notification().show(message)
 
 
 class Notification(Popup):
+    """
+    Popup used to display notification messages.
+    """
 
     def __init__(self):
         super().__init__("popup_NotificationTitle", "notification.ico")

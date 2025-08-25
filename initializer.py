@@ -8,6 +8,7 @@ def init():
     """
     Used to initialize application mandatory resources.
     """
+
     for directory in [APP_DATA_ROOT, OUTPUT_DIR, LOGS_DIR]:
         # Create all required directories.
         if not os.path.exists(directory):

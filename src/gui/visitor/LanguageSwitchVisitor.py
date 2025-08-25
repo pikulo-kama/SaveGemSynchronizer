@@ -12,6 +12,10 @@ logger = get_logger(__name__)
 
 
 class LanguageSwitchVisitor(Visitor):
+    """
+    Used to render language switch button.
+    Enabled only if there are at least two languages configured.
+    """
 
     def visit(self, gui: GUI):
         self.__add_language_switch_control(gui)
@@ -28,6 +32,9 @@ class LanguageSwitchVisitor(Visitor):
 
     @staticmethod
     def __add_language_switch_control(gui: GUI):
+        """
+        Used to render language switch control.
+        """
 
         def switch_language():
             LanguageSwitchVisitor.__switch_language(gui)
@@ -50,6 +57,9 @@ class LanguageSwitchVisitor(Visitor):
 
     @staticmethod
     def __switch_language(gui: GUI):
+        """
+        Used as callback function when language switch button is being clicked.
+        """
 
         current_locale = AppState.get_locale(prop("defaultLocale"))
         next_locale_index = locales.index(current_locale) + 1

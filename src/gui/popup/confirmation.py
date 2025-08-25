@@ -7,12 +7,20 @@ from src.gui.gui import add_button_hover_effect
 
 
 class Confirmation(Popup):
+    """
+    Popup used to display confirmation messages.
+    """
 
     def __init__(self):
         super().__init__("popup_ConfirmationTitle", "confirmation.ico")
         self.__confirm_callback = None
 
     def set_confirm_callback(self, callback):
+        """
+        Used to set callback that would be executed
+        when Confirm button is bein clicked.
+        """
+
         self.__confirm_callback = callback
 
     def _show_internal(self):

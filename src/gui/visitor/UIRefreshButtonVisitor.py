@@ -7,6 +7,10 @@ from src.gui.visitor.Visitor import Visitor
 
 
 class UIRefreshButtonVisitor(Visitor):
+    """
+    Used to render UI refresh button.
+    Always enabled.
+    """
 
     def visit(self, gui: GUI):
         self.__add_refresh_button(gui)
@@ -19,6 +23,10 @@ class UIRefreshButtonVisitor(Visitor):
 
     @staticmethod
     def __add_refresh_button(gui):
+        """
+        Used to render UI refresh button.
+        """
+
         refresh_button = tk.Button(
             gui.window,
             text="⟳",

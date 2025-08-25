@@ -9,6 +9,12 @@ logger = get_logger(__name__)
 
 
 def add_button_hover_effect(button):
+    """
+    Used to create color change for button when hovering.
+
+    Used primary and secondary button colors to build color mapping.
+    Mapping then used to swap colors depending on the button event.
+    """
 
     color_mapping = {
         **{btn["colorHover"]: btn["colorStatic"] for btn in [prop("primaryButton"), prop("secondaryButton")]},
@@ -18,16 +24,19 @@ def add_button_hover_effect(button):
     logger.debug("Button hover color mapping - %s", color_mapping)
 
     def on_button_leave(event):
-        event.widget['bg'] = color_mapping[event.widget['bg']]
+        event.widget["bg"] = color_mapping[event.widget["bg"]]
 
     def on_button_enter(event):
-        event.widget['bg'] = color_mapping[event.widget['bg']]
+        event.widget["bg"] = color_mapping[event.widget["bg"]]
 
-    button.bind('<Enter>', on_button_enter)
-    button.bind('<Leave>', on_button_leave)
+    button.bind("<Enter>", on_button_enter)
+    button.bind("<Leave>", on_button_leave)
 
 
 class GUI:
+    """
+    Main class to operate with application window.
+    """
 
     _instance = None
 
@@ -38,6 +47,9 @@ class GUI:
 
     @classmethod
     def instance(cls):
+        """
+        Used to get GUI instance.
+        """
 
         if cls._instance is None:
             cls._instance = cls.__new__(cls)
@@ -46,6 +58,10 @@ class GUI:
         return cls._instance
 
     def __init(self):
+        """
+        Used to initialize GUI.
+        """
+
         self.window = tk.Tk()
         self.body_frame = tk.Frame(self.window)
         self.metadata_function = None
@@ -67,6 +83,9 @@ class GUI:
         self.window.resizable(False, False)
 
     def register_visitors(self, visitors):
+        """
+        Used to register visitors.
+        """
 
         for visitor in visitors:
 
@@ -80,6 +99,11 @@ class GUI:
             logger.info("Registered visitor '%s'", visitor_name)
 
     def build(self):
+        """
+        Used to build GUI.
+        Will use defined visitors to build all elements.
+        """
+
         logger.info("Building UI.")
 
         for visitor in self.visitors:
@@ -92,6 +116,10 @@ class GUI:
         self.window.mainloop()
 
     def refresh(self):
+        """
+        Used to refresh dynamic UI elements.
+        """
+
         logger.info("Refreshing UI.")
         self.window.title(tr("window_Title"))
 
@@ -99,12 +127,22 @@ class GUI:
             visitor.refresh(self)
 
     def destroy(self):
+        """
+        Used to destroy application window.
+        """
         self.window.destroy()
 
     def on_close(self, callback):
-        self.window.protocol('WM_DELETE_WINDOW', callback)
+        """
+        Allows to configure additional callback function that would
+        be invoked when window is being destroyed.
+        """
+        self.window.protocol("WM_DELETE_WINDOW", callback)
 
     def add_button(self, name, callback, color):
+        """
+        Used to add main application button.
+        """
         self.buttons.append({
             "nameTextResource": name,
             "callback": callback,
@@ -112,6 +150,10 @@ class GUI:
         })
 
     def __center_window(self):
+        """
+        Used to center application window.
+        Will ensure that each time app opened it's in the center of screen.
+        """
 
         width = prop("windowWidth")
         height = prop("windowHeight")
@@ -122,4 +164,4 @@ class GUI:
         x = (screen_width - width) / 2
         y = (screen_height - height) / 2
 
-        self.window.geometry('%dx%d+%d+%d' % (width, height, x, y))
+        self.window.geometry("%dx%d+%d+%d" % (width, height, x, y))

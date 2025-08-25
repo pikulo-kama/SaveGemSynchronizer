@@ -18,6 +18,17 @@ logger = get_logger(__name__)
 
 
 class CoreVisitor(Visitor):
+    """
+    Used to build main application elements.
+
+    Specifically:
+    - Last drive save information
+    - Local save status information
+    - Download/Upload buttons
+    - Copyright
+
+    Always enabled.
+    """
 
     def visit(self, gui: GUI):
         self.__add_last_save_info(gui)
@@ -33,7 +44,7 @@ class CoreVisitor(Visitor):
         save_status_label = self.__get_last_download_version_text(last_save_meta)
         last_save_info_label = self.__get_last_save_info_text(last_save_meta)
 
-        copy = f"© 2023{'' if date.today().year == 2023 else f'-{date.today().year}'}"
+        copy = f"© 2023{"" if date.today().year == 2023 else f"-{date.today().year}"}"
         copyright_label = tr("window_Signature", copy)
 
         gui.save_status.configure(text=save_status_label)
@@ -56,6 +67,10 @@ class CoreVisitor(Visitor):
 
     @staticmethod
     def __add_last_save_info(gui):
+        """
+        Used to render both local and Google Drive save status labels.
+        """
+
         info_frame = tk.Frame(gui.body_frame)
 
         # Text is empty for fields at this moment
@@ -69,7 +84,7 @@ class CoreVisitor(Visitor):
         gui.last_save_info = tk.Label(
             info_frame,
             fg=prop("secondaryColor"),
-            font=("Helvetica", 11, 'bold')
+            font=("Helvetica", 11, "bold")
         )
 
         gui.save_status.grid(row=0, column=0, pady=5)
@@ -79,6 +94,9 @@ class CoreVisitor(Visitor):
 
     @staticmethod
     def __add_buttons_internal(gui):
+        """
+        Used to render upload and download buttons.
+        """
 
         button_frame = tk.Frame(gui.body_frame)
 
@@ -108,6 +126,9 @@ class CoreVisitor(Visitor):
 
     @staticmethod
     def __add_copyright_and_version(gui):
+        """
+        Used to render copyright label.
+        """
 
         horizontal_frame = tk.Frame(gui.window, pady=-4)
 
@@ -121,6 +142,9 @@ class CoreVisitor(Visitor):
 
     @staticmethod
     def __get_last_save_info_text(last_save_meta):
+        """
+        Used to get Google Drive save status label.
+        """
 
         if last_save_meta is None:
             return ""
@@ -134,7 +158,7 @@ class CoreVisitor(Visitor):
         creation_time = creation_datetime.strftime("%H:%M")
 
         return tr(
-            "info_NewestSaveOnCloudInformation",
+            "info_NewestSaveOnDriveInformation",
             creation_date,
             creation_time,
             last_save_meta["owner"]
@@ -142,6 +166,9 @@ class CoreVisitor(Visitor):
 
     @staticmethod
     def __get_last_download_version_text(last_save_meta):
+        """
+        Used to get local save status label.
+        """
 
         save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
         last_downloaded_version = save_versions.get_value(AppState.get_game())
