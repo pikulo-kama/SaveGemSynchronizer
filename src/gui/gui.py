@@ -40,7 +40,7 @@ class GUI:
         self.__center_window()
 
         self.window.title(tr("window_Title"))
-        self.window.iconbitmap(resolve_resource("save_gem_synchronizer.ico"))
+        self.window.iconbitmap(resolve_resource("application.ico"))
         self.window.geometry(f"{prop("windowWidth")}x{prop("windowHeight")}")
         self.window.resizable(False, False)
 
