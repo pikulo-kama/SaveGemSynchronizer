@@ -5,6 +5,7 @@ from src.core.TextResource import tr
 from src.core.holders import prop
 from src.gui.visitor.GameDropdownVisitor import GameDropdownVisitor
 from src.gui.visitor.LanguageSwitchVisitor import LanguageSwitchVisitor
+from src.gui.visitor.UIRefreshButtonVisitor import UIRefreshButtonVisitor
 
 from src.service.Downloader import Downloader
 from src.service.Uploader import Uploader
@@ -50,6 +51,7 @@ def main():
     window.on_close(on_destroy)
     window.register_visitors([
         CoreVisitor(),
+        UIRefreshButtonVisitor(),
         GameDropdownVisitor(),
         LanguageSwitchVisitor(),
         XboxUserListVisitor()

@@ -37,14 +37,16 @@ class LanguageSwitchVisitor(Visitor):
             command=switch_language,
             font=("Small Fonts", 14, font.BOLD),
             bd=0,
-            padx=3,
+            width=2,
+            padx=10,
+            height=1,
             cursor="hand2",
             bg=prop("secondaryButton")["colorStatic"],
             fg=prop("primaryColor")
         )
 
         gui.language_button.pack()
-        gui.language_button.place(relx=.05, rely=.05, anchor=tk.N)
+        gui.language_button.place(relx=.05, rely=.13, anchor=tk.N)
 
     @staticmethod
     def __switch_language(gui: GUI):

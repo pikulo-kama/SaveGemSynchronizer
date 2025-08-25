@@ -10,7 +10,7 @@
   "label_UploadSaveToCloud": "🠉 Upload",
   "label_DownloadSaveFromCloud": "🠋",
   "info_SaveIsUpToDate": "Nothing new... Your save is as fresh as it could be.",
-  "info_SaveNeedsToBeDownloaded": "You haven't upgraded in a while..",
+  "info_SaveNeedsToBeDownloaded": "Well well well, would you look at that..",
   "info_NewestSaveOnCloudInformation": "Last save was uploaded on {0} at {1} by {2}",
   "notification_SaveHasBeenUploaded": "Save uploaded successfully.",
   "notification_StorageIsEmpty": "Storage is empty. Upload is required to proceed.",
