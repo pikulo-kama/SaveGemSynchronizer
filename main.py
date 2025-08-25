@@ -1,5 +1,5 @@
 # Needs to be first thing that is being imported when application starts.
-from initializer import init
+import initializer
 
 from src.core.TextResource import tr
 from src.core.holders import prop
@@ -60,5 +60,4 @@ def main():
 
 
 if __name__ == '__main__':
-    init()
     main()

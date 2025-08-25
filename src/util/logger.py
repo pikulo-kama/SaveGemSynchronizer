@@ -1,5 +1,7 @@
 import logging
 import os.path
+import re
+from logging.handlers import TimedRotatingFileHandler
 
 from constants import LOG_FILE_NAME, LOGBACK_FILE_NAME
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
@@ -27,10 +29,22 @@ log_level_map = {
 
 
 def initialize_logging():
+
+    handler = TimedRotatingFileHandler(
+        resolve_log(LOG_FILE_NAME),
+        when="midnight",
+        interval=1,
+        backupCount=5,
+        encoding='utf-8'
+    )
+
+    handler.suffix = "%Y-%m-%d.log"
+    handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
+
     logging.basicConfig(
-        filename=resolve_log(LOG_FILE_NAME),
         encoding='utf-8',
-        format='%(asctime)s - (%(name)s:%(lineno)d) [%(levelname)s] : %(message)s'
+        format='%(asctime)s - (%(name)s:%(lineno)d) [%(levelname)s] : %(message)s',
+        handlers=[handler]
     )
 
 
