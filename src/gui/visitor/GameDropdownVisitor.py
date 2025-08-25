@@ -29,9 +29,13 @@ class GameDropdownVisitor(Visitor):
 
     @staticmethod
     def __add_game_selection_dropdown(gui: GUI):
-        game_names = [game["name"] for game in games()]
+
+        def add_leading_space(text: str):
+            return " " + text.strip()
+
+        game_names = [add_leading_space(game["name"]) for game in games()]
         combobox_state = "disabled" if len(game_names) < 2 else "normal"
-        selected_game = AppState.get_game(game_names[0])
+        selected_game = add_leading_space(AppState.get_game(game_names[0]))
 
         style = ttk.Style()
         style.theme_use("clam")
@@ -55,7 +59,7 @@ class GameDropdownVisitor(Visitor):
             logger.info("Game selection changed.")
             logger.info("Selected game - %s", event.widget.get())
 
-            AppState.set_game(event.widget.get())
+            AppState.set_game(event.widget.get().strip())
             gui.refresh()
 
         # Select first option in dropdown.
