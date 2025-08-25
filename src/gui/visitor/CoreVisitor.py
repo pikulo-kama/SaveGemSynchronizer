@@ -146,7 +146,10 @@ class CoreVisitor(Visitor):
         save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
         last_downloaded_version = save_versions.get_value(AppState.get_game())
 
-        if last_downloaded_version is None:
+        if last_save_meta is None:
+            return tr("label_StorageIsEmpty")
+            
+        elif last_downloaded_version is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")
 
         elif last_downloaded_version == last_save_meta["name"]:

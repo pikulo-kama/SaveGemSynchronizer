@@ -14,7 +14,7 @@
   "info_SaveNeedsToBeDownloaded" : "Здалося б оновитись..",
   "info_NewestSaveOnCloudInformation" : "останній сейв відвантажено {0} o {1} від {2}",
   "notification_SaveHasBeenUploaded" : "Сейв успішно відвантажено.",
-  "notification_StorageIsEmpty" : "Cховище порожнє. Потрібно виконати відвантаження.",
+  "label_StorageIsEmpty" : "Cховище порожнє. Потрібно виконати відвантаження.",
   "notification_NewSaveHasBeenDownloaded" : "Свіженький сейв успішно завантажено.",
   "notification_ErrorUploadingToCloud" : "От халепа. Схоже щось пішло не так...",
   "confirmation_ConfirmToDownloadSave" : "Впевнений? Це знищить твій існуючий сейв."

@@ -31,7 +31,7 @@ class Downloader:
         logger.debug("savesDirectory = %s", saves_directory)
 
         if metadata is None:
-            notification(tr("notification_StorageIsEmpty"))
+            notification(tr("label_StorageIsEmpty"))
             return
 
         save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
