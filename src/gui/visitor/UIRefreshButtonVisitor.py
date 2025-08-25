@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from src.gui.gui import GUI
+from src.gui.style import add_button_movement_effect
 from src.gui.visitor.Visitor import Visitor
 
 
@@ -36,5 +37,6 @@ class UIRefreshButtonVisitor(Visitor):
             takefocus=False
         )
 
+        add_button_movement_effect(refresh_button)
         refresh_button.pack()
         refresh_button.place(relx=.05, rely=.05, anchor=tk.N)

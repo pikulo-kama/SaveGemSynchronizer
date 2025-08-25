@@ -42,18 +42,18 @@ class Uploader:
         # Archive save contents to mitigate impact on drive storage.
         logger.info("Archiving save files that need to be uploaded.")
         shutil.make_archive(remove_extension_from_path(file_path), ZIP_EXTENSION, saves_directory)
+        gui = GUI.instance()
 
         try:
             GDrive.upload_file(file_path, parent_directory_id)
 
         except HttpError:
-            notification(tr("notification_ErrorUploadingToDrive"))
+            gui.window.after(0, lambda: notification(tr("notification_ErrorUploadingToDrive")))
 
         # Update last version of save locally.
         save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
         save_versions.set_value(AppState.get_game(), file_name_from_path(file_path))
 
         # Show success notification in application.
-        gui = GUI.instance()
         gui.refresh()
         gui.window.after(0, lambda: notification(tr("notification_SaveHasBeenUploaded")))

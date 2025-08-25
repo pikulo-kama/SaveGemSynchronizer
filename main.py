@@ -2,7 +2,6 @@
 # noinspection PyUnresolvedReferences
 import initializer
 
-from threading import Thread
 from src.core.TextResource import tr
 from src.core.holders import prop
 from src.gui.visitor.GameDropdownVisitor import GameDropdownVisitor
@@ -16,6 +15,7 @@ from src.gui.popup.confirmation import Confirmation
 from src.gui.visitor.CoreVisitor import CoreVisitor
 from src.util.file import OUTPUT_DIR, cleanup_directory
 from src.util.logger import get_logger
+from src.util.thread import execute_in_thread
 
 logger = get_logger(__name__)
 
@@ -30,14 +30,6 @@ def main():
         cleanup_directory(OUTPUT_DIR)
         logger.info("Destroying window.")
         window.destroy()
-
-    def execute_in_thread(function):
-        def task():
-            function()
-            window.set_cursor()
-
-        window.set_cursor("wait")
-        Thread(target=task).start()
 
     def do_upload():
         execute_in_thread(Uploader.upload)

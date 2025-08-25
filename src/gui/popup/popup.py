@@ -20,10 +20,16 @@ class Popup(abc.ABC):
         gui = GUI.instance()
 
         self.__popup = tk.Toplevel(gui.window)
-        self.__center_window(gui)
+        self.__offset_x = None
+        self.__offset_y = None
+
+        gui.window.bind("<Configure>", lambda _: self.__center_popup(gui))
+        self.__center_popup(gui)
+        self.__lock_popup()
 
         self.__popup.transient(gui.window)
         self.__popup.grab_set()
+        self.__popup.focus_set()
 
         self.__title_text_resource = title_text_resource
         self.__icon = icon
@@ -74,10 +80,12 @@ class Popup(abc.ABC):
         Used to destroy window context.
         """
 
+        GUI.instance().window.unbind("<Configure>")
         self.__popup.destroy()
+
         logger.info("Popup has been destroyed.")
 
-    def __center_window(self, gui):
+    def __center_popup(self, gui):
         """
         Used to center popup against main application window.
         """
@@ -87,15 +95,24 @@ class Popup(abc.ABC):
         window_width = prop("windowWidth")
 
         window_x = gui.window.winfo_rootx()
-        offset_x = window_x + ((window_width - popup_width) / 2)
-        offset_y = gui.window.winfo_rooty()
+        self.__offset_x = window_x + ((window_width - popup_width) / 2)
+        self.__offset_y = gui.window.winfo_rooty()
 
-        logger.debug("popupXPosition = %d", offset_x)
-        logger.debug("popupYPosition = %d", offset_y)
+        logger.debug("popupXPosition = %d", self.__offset_x)
+        logger.debug("popupYPosition = %d", self.__offset_y)
 
         self.__popup.geometry("%dx%d+%d+%d" % (
             popup_width,
             popup_height,
-            offset_x,
-            offset_y
+            self.__offset_x,
+            self.__offset_y
         ))
+
+    def __lock_popup(self):
+        """
+        Used to disable movement for popup to lock it in its initial place.
+        """
+        def keep_position(_):
+            self.__popup.geometry(f"+{int(self.__offset_x)}+{int(self.__offset_y)}")
+
+        self.__popup.bind("<Configure>", keep_position)

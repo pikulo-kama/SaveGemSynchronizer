@@ -5,6 +5,7 @@ from src.core.AppState import AppState
 from src.core.TextResource import tr
 from src.core.holders import prop, locales
 from src.gui.gui import GUI
+from src.gui.style import add_button_movement_effect
 from src.gui.visitor.Visitor import Visitor
 from src.util.logger import get_logger
 
@@ -47,6 +48,7 @@ class LanguageSwitchVisitor(Visitor):
             takefocus=False
         )
 
+        add_button_movement_effect(gui.language_button)
         gui.language_button.pack()
         gui.language_button.place(relx=.05, rely=.13, anchor=tk.N)
 

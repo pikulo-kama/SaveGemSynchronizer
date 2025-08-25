@@ -134,6 +134,17 @@ def add_square_button(style: Style, button, font_size: int):
     )
 
 
+def add_button_movement_effect(button, pixel_offset=2):
+    """
+    Used to add elevation effect to button when it's being clicked.
+    """
+
+    original_y = button.winfo_y()
+
+    button.bind("<ButtonPress-1>", lambda e: e.widget.place_configure(y=original_y + pixel_offset))
+    button.bind("<ButtonRelease-1>", lambda e: e.widget.place_configure(y=original_y - pixel_offset))
+
+
 def log_style(style_name: str):
     """
     Just a wrapper to log event when custom style is being registered.
