@@ -5,6 +5,10 @@ from src.gui.visitor.Visitor import Visitor
 from tkinter import ttk
 import tkinter as tk
 
+from src.util.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 class GameDropdownVisitor(Visitor):
 
@@ -15,6 +19,7 @@ class GameDropdownVisitor(Visitor):
         # Visitor should be enabled always even if there is one game, so it would still be obvious what game
         # is selected.
         if len(games()) == 0:
+            logger.error("There are no games configured in config/games.json. Can't proceed.")
             raise RuntimeError("There are no games configured in config/games.json. Can't proceed.")
 
         return True
@@ -46,6 +51,9 @@ class GameDropdownVisitor(Visitor):
         )
 
         def on_game_selection_change(event):
+            logger.info("Game selection changed.")
+            logger.info("Selected game - %s", event.widget.get())
+
             AppState.set_game(event.widget.get())
             gui.refresh()
 

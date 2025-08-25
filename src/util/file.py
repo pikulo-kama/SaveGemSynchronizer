@@ -6,7 +6,9 @@ from constants import PROJECT_ROOT, APP_DATA_ROOT
 CONFIG_DIR = os.path.join(PROJECT_ROOT, "config")
 LOCALE_DIR = os.path.join(PROJECT_ROOT, "locale")
 RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resources")
+
 OUTPUT_DIR = os.path.join(APP_DATA_ROOT, "output")
+LOGS_DIR = os.path.join(APP_DATA_ROOT, "logs")
 
 
 def resolve_config(config_name: str):
@@ -29,11 +31,19 @@ def resolve_app_data(file_name: str):
     return os.path.join(APP_DATA_ROOT, file_name)
 
 
+def resolve_log(file_name: str):
+    return os.path.join(LOGS_DIR, file_name)
+
+
 def resolve_project_data(file_name: str):
     return os.path.join(PROJECT_ROOT, file_name)
 
 
 def cleanup_directory(directory: str):
+
+    if not os.path.exists(directory):
+        return
+
     for filename in os.listdir(directory):
         file_path = os.path.join(directory, filename)
 

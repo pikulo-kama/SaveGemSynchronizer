@@ -1,0 +1,9 @@
+{
+  "__main__" : "INFO",
+  "src.core.AppState" : "ERROR",
+  "src.core.JsonConfigHolder" : "ERROR",
+  "src.core.EditableJsonConfigHolder" : "ERROR",
+  "src.core.TextResource" : "ERROR",
+  "src.core.holders" : "ERROR",
+  "src.gui.popup.popup" : "ERROR"
+}

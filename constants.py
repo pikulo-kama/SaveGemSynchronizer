@@ -14,6 +14,7 @@ STATE_SELECTED_GAME = "game"
 STATE_SELECTED_LOCALE = "locale"
 
 # File constants
+LOG_FILE_NAME = "application.log"
 GCLOUD_TOKEN_FILE_NAME = "gcloud_token.json"
 CREDENTIALS_FILE_NAME = "credentials.json"
 SAVE_VERSION_FILE_NAME = "save_version.json"

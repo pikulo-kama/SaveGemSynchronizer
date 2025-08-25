@@ -1,0 +1,95 @@
+import abc
+from abc import abstractmethod
+import tkinter as tk
+
+from src.core.TextResource import tr
+from src.core.holders import prop
+from src.gui.gui import GUI
+from src.util.file import resolve_resource
+from src.util.logger import get_logger
+
+logger = get_logger(__name__)
+
+
+def add_button_hover_effect(button):
+
+    color_mapping = {
+        **{btn["colorHover"]: btn["colorStatic"] for btn in [prop("primaryButton"), prop("secondaryButton")]},
+        **{btn["colorStatic"]: btn["colorHover"] for btn in [prop("primaryButton"), prop("secondaryButton")]}
+    }
+
+    logger.debug("Button hover color mapping - %s", color_mapping)
+
+    def on_button_leave(event):
+        event.widget['bg'] = color_mapping[event.widget['bg']]
+
+    def on_button_enter(event):
+        event.widget['bg'] = color_mapping[event.widget['bg']]
+
+    button.bind('<Enter>', on_button_enter)
+    button.bind('<Leave>', on_button_leave)
+
+
+class Popup(abc.ABC):
+
+    def __init__(self, title_text_resource, icon):
+        self._window = tk.Tk()
+        self.__center_window(GUI.instance())
+
+        self.__title_text_resource = title_text_resource
+        self.__icon = icon
+        self._container = None
+
+    def show(self, message):
+        logger.info("Initializing popup.")
+
+        logger.debug("popupTitle = %s", self.__title_text_resource)
+        logger.debug("popupMessage = %s", message)
+
+        self._window.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
+        self._window.title(tr(self.__title_text_resource))
+        self._window.iconbitmap(resolve_resource(self.__icon))
+        self._window.resizable(False, False)
+
+        self._container = tk.Frame(self._window)
+
+        message_label = tk.Label(
+            self._container,
+            text=message,
+            fg=prop("secondaryColor"),
+            font=('Helvetica', 10, 'bold')
+        )
+
+        self._show_internal()
+
+        message_label.grid(row=0, column=0, pady=20)
+        self._container.place(relx=.5, rely=.5, anchor=tk.CENTER)
+
+        self._window.mainloop()
+
+    @abstractmethod
+    def _show_internal(self):
+        pass
+
+    def destroy(self):
+        self._window.destroy()
+        logger.info("Popup has been destroyed.")
+
+    def __center_window(self, gui):
+        popup_width = prop("popupWidth")
+        popup_height = prop("popupHeight")
+        window_width = prop("windowWidth")
+
+        window_x = gui.window.winfo_rootx()
+        offset_x = window_x + ((window_width - popup_width) / 2)
+        offset_y = gui.window.winfo_rooty()
+
+        logger.debug("popupXPosition = %d", offset_x)
+        logger.debug("popupYPosition = %d", offset_y)
+
+        self._window.geometry('%dx%d+%d+%d' % (
+            popup_width,
+            popup_height,
+            offset_x,
+            offset_y
+        ))

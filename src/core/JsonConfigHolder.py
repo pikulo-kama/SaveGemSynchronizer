@@ -20,7 +20,6 @@ class JsonConfigHolder:
             self._data = json.load(f)
 
     def get_value(self, property_name):
-
         if property_name not in self._data:
             return None
 

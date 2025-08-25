@@ -10,6 +10,9 @@ from xbox.webapi.common.signed_session import SignedSession
 from constants import XBOX_SECRET_FILE_NAME, XBOX_TOKEN_FILE_NAME, XBOX_ONLINE_STATE
 from src.core.holders import prop, game_prop
 from src.util.file import resolve_app_data
+from src.util.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class XboxService:
@@ -38,6 +41,7 @@ class XboxService:
                 "isPlaying": state == XBOX_ONLINE_STATE and is_playing_selected_game
             }
 
+        logger.debug("friendData = %s", friend_data)
         return friend_data
 
     async def __perform_action(self, callback):
@@ -47,9 +51,12 @@ class XboxService:
 
             # Provide tokens to authentication manager
             if os.path.exists(XboxService.__token_file_name):
+                logger.info("XBOX token exists. Using it to authenticate to XBOX Live.")
                 self.__load_tokens(auth_manager)
 
             if not auth_manager.oauth or not auth_manager.oauth.is_valid():
+
+                logger.info("Initiating XBOX authentication process.")
                 subprocess.run([
                     "xbox-authenticate",
                     "-t", XboxService.__token_file_name,
@@ -61,6 +68,7 @@ class XboxService:
 
             else:
                 # Try to refresh tokens
+                logger.info("Refreshing XBOX tokens.")
                 await auth_manager.refresh_tokens()
 
             return await callback(XboxLiveClient(auth_manager))

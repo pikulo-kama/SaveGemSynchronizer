@@ -3,6 +3,9 @@ import tkinter as tk
 from src.core.TextResource import tr
 from src.core.holders import prop
 from src.util.file import resolve_resource
+from src.util.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class GUI:
@@ -44,19 +47,33 @@ class GUI:
         self.window.geometry(f"{prop("windowWidth")}x{prop("windowHeight")}")
         self.window.resizable(False, False)
 
-    def build(self, visitors):
+    def register_visitors(self, visitors):
 
-        self.visitors = list(filter(lambda v: v.is_enabled(), visitors))
+        for visitor in visitors:
+
+            visitor_name = type(visitor).__name__
+
+            if not visitor.is_enabled():
+                logger.warn("Skipping disabled visitor '%s'.", visitor_name)
+                continue
+
+            self.visitors.append(visitor)
+            logger.info("Registered visitor '%s'", visitor_name)
+
+    def build(self):
+        logger.info("Building UI.")
 
         for visitor in self.visitors:
             visitor.visit(self)
 
         self.body_frame.place(relx=.5, rely=.3, anchor=tk.CENTER)
-
         self.refresh()
+
+        logger.info("Application loop has been started.")
         self.window.mainloop()
 
     def refresh(self):
+        logger.info("Refreshing UI.")
         self.window.title(tr("window_Title"))
 
         for visitor in self.visitors:

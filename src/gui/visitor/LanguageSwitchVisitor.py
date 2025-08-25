@@ -5,6 +5,9 @@ from src.core.TextResource import tr
 from src.core.holders import prop, locales
 from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
+from src.util.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class LanguageSwitchVisitor(Visitor):
@@ -17,7 +20,10 @@ class LanguageSwitchVisitor(Visitor):
         return len(locales) > 1
 
     def refresh(self, gui: GUI):
-        gui.language_button.configure(text=tr("languageId"))
+        language_id = tr("languageId")
+
+        logger.debug("Refreshing language switch (%s)", language_id)
+        gui.language_button.configure(text=language_id)
 
     @staticmethod
     def __add_language_switch_control(gui: GUI):
@@ -47,5 +53,10 @@ class LanguageSwitchVisitor(Visitor):
         if next_locale_index == len(locales):
             next_locale_index = 0
 
-        AppState.set_locale(locales[next_locale_index])
+        new_locale = locales[next_locale_index]
+
+        logger.info("Language has been changed.")
+        logger.info("Selected language - %s", new_locale)
+
+        AppState.set_locale(new_locale)
         gui.refresh()

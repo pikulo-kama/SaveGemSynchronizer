@@ -12,6 +12,9 @@ from datetime import date, datetime
 from babel.dates import format_datetime
 from pytz import timezone
 from src.util.file import resolve_app_data
+from src.util.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class CoreVisitor(Visitor):
@@ -26,15 +29,30 @@ class CoreVisitor(Visitor):
 
     def refresh(self, gui: GUI):
         last_save_meta = gui.metadata_function()
-        copy = f"© 2023{'' if date.today().year == 2023 else f'-{date.today().year}'}"
 
-        gui.save_status.configure(text=self.__get_last_download_version_text(last_save_meta))
-        gui.last_save_info.configure(text=self.__get_last_save_info_text(last_save_meta))
-        gui.copyright_label.configure(text=tr("window_Signature", copy))
+        save_status_label = self.__get_last_download_version_text(last_save_meta)
+        last_save_info_label = self.__get_last_save_info_text(last_save_meta)
+
+        copy = f"© 2023{'' if date.today().year == 2023 else f'-{date.today().year}'}"
+        copyright_label = tr("window_Signature", copy)
+
+        gui.save_status.configure(text=save_status_label)
+        logger.debug("Save status label was reloaded. (%s)", save_status_label)
+
+        gui.last_save_info.configure(text=last_save_info_label)
+        logger.debug("Last save information label was reloaded. (%s)", last_save_info_label)
+
+        gui.copyright_label.configure(text=copyright_label)
+        logger.debug("Copyright was reloaded. (%s)", copyright_label)
 
         for idx, tk_button in enumerate(gui.tk_buttons):
             name_text_resource = gui.buttons[idx]["nameTextResource"]
-            tk_button.configure(text=tr(name_text_resource))
+            button_label = tr(name_text_resource)
+
+            tk_button.configure(text=button_label)
+            logger.debug("Button reloaded (%s)", button_label)
+
+        logger.debug("%d buttons were reloaded.", len(gui.tk_buttons))
 
     @staticmethod
     def __add_last_save_info(gui):

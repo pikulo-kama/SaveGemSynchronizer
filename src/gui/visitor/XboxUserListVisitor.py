@@ -1,9 +1,13 @@
 import tkinter as tk
 
+from src.core.AppState import AppState
 from src.core.holders import prop, game_prop
 from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
 from src.service.user_service import UserService
+from src.util.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class XboxUserListVisitor(Visitor):
@@ -24,6 +28,8 @@ class XboxUserListVisitor(Visitor):
             # Even if XBOX plugin is enabled, we need to additionally check if
             # presence is configured per game.
             # It's impossible to determine state of users without presence
+            logger.warn("Can't add XBOX controls for game called %s", AppState.get_game())
+            logger.warn("Reason: Missing XBOX presence configured.")
             return
 
         user_data = UserService().get_user_data()

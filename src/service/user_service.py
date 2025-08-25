@@ -4,6 +4,9 @@ from src.core.holders import prop
 from src.service.gcloud_service import GCloud
 from src.service.xbox_service import XboxService
 from src.util.file import resolve_app_data
+from src.util.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class UserService:
@@ -26,6 +29,7 @@ class UserService:
             friend_record = friends_data.get(guid)
 
             if friend_record is None:
+                logger.error("Invalid XBOX friend record. Skipping.")
                 continue
 
             users.append({
@@ -42,15 +46,20 @@ class UserService:
 
         if access_map.get_value("modifiedTime") == last_modified:
             # Return cached user data if refresh is not needed
+            logger.info("XBOX Access Map hasn't been modified. Retrieving cached map.")
             return access_map.get_value("users")
 
+        logger.info("Downloading XBOX access map.")
         xbox_mail_mappings = GCloud().download_file_raw(
             xbox_mapping_file_id,
             CSV_MIME_TYPE
         )
 
         users = {}
+        logger.info("Formating XBOX access map.")
         xbox_mail_mappings: dict = self.__csv_to_json(xbox_mail_mappings)
+
+        logger.info("Retrieving users that have access to root directory in Google Cloud.")
         gcloud_user_data: list = GCloud().get_users()
 
         def get_name_by_email(mail: str):
