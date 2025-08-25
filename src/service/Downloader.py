@@ -26,6 +26,11 @@ class Downloader:
         saves_directory = os.path.expandvars(game_prop("localPath"))
         temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
+        if not os.path.exists(saves_directory):
+            logger.error("Directory with saves is missing %s", saves_directory)
+            notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory))
+            return
+
         metadata = Downloader.get_last_save_metadata()
         logger.debug("savesDirectory = %s", saves_directory)
 

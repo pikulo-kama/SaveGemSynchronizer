@@ -34,6 +34,11 @@ class Uploader:
         saves_directory = os.path.expandvars(game_prop("localPath"))
         parent_directory_id = game_prop("gdriveParentDirectoryId")
 
+        if not os.path.exists(saves_directory):
+            logger.error("Directory with saves is missing %s", saves_directory)
+            notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory))
+            return
+
         # Archive save contents to mitigate impact on drive storage.
         logger.info("Archiving save files that need to be uploaded.")
         shutil.make_archive(remove_extension_from_path(file_path), ZIP_EXTENSION, saves_directory)

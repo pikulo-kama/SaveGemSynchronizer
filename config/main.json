@@ -1,7 +1,6 @@
 {
-  "version" : "3.2.6",
+  "version" : "3.2.7",
   "defaultLocale" : "en_US",
-  "encoding": "utf-8",
   "timeZone" : "Europe/Kiev",
 
   "windowWidth" : 1080,
