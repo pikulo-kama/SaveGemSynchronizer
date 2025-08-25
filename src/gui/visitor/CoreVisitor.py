@@ -1,11 +1,12 @@
 import tkinter as tk
+from tkinter import ttk
 
 from constants import SAVE_VERSION_FILE_NAME
 from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
 from src.core.holders import prop
-from src.gui.gui import GUI, add_button_hover_effect
+from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
 from datetime import date, datetime
 
@@ -101,25 +102,19 @@ class CoreVisitor(Visitor):
         button_frame = tk.Frame(gui.body_frame)
 
         for idx, button in enumerate(gui.buttons):
-            tk_button = tk.Button(
+
+            props = button["properties"]
+
+            tk_button = ttk.Button(
                 button_frame,
-                width=button["properties"]["width"],
-                command=button["callback"]
+                cursor="hand2",
+                width=props["width"],
+                command=button["callback"],
+                style=f"{props["styleName"]}.TButton",
+                takefocus=False
             )
 
             tk_button.grid(row=0, column=idx, padx=5)
-            tk_button.config(
-                cursor="hand2",
-                fg=prop("primaryColor"),
-                bg=button["properties"]["colorStatic"],
-                borderwidth=0,
-                relief=tk.SOLID,
-                pady=15,
-                padx=15,
-                font=40
-            )
-
-            add_button_hover_effect(tk_button)
             gui.tk_buttons.insert(idx, tk_button)
 
         button_frame.grid(row=1, column=0)

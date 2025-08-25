@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import font
+from tkinter import ttk
 
 from src.core.AppState import AppState
 from src.core.TextResource import tr
@@ -39,17 +39,12 @@ class LanguageSwitchVisitor(Visitor):
         def switch_language():
             LanguageSwitchVisitor.__switch_language(gui)
 
-        gui.language_button = tk.Button(
+        gui.language_button = ttk.Button(
             gui.window,
             command=switch_language,
-            font=("Small Fonts", 14, font.BOLD),
-            bd=0,
-            width=2,
-            padx=10,
-            height=1,
             cursor="hand2",
-            bg=prop("secondaryButton")["colorStatic"],
-            fg=prop("primaryColor")
+            style="SquareSecondary.16.TButton",
+            takefocus=False
         )
 
         gui.language_button.pack()

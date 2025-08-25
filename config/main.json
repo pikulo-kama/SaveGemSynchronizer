@@ -1,5 +1,5 @@
 {
-  "version" : "3.2.7",
+  "version" : "3.2.8",
   "defaultLocale" : "en_US",
   "timeZone" : "Europe/Kiev",
 
@@ -12,11 +12,13 @@
   "secondaryColor": "#068076",
 
   "primaryButton" : {
+    "styleName" : "Primary",
     "colorStatic" : "#ddedde",
     "colorHover" : "#dae6db",
     "width" : 35
   },
   "secondaryButton" : {
+    "styleName" : "Secondary",
     "colorStatic" : "#cedfeb",
     "colorHover" : "#d5dde3",
     "width" : 5

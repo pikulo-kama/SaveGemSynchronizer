@@ -2,35 +2,11 @@ import tkinter as tk
 
 from src.core.TextResource import tr
 from src.core.holders import prop
+from src.gui.style import init_styles
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)
-
-
-def add_button_hover_effect(button):
-    """
-    Used to create color change for button when hovering.
-
-    Used primary and secondary button colors to build color mapping.
-    Mapping then used to swap colors depending on the button event.
-    """
-
-    color_mapping = {
-        **{btn["colorHover"]: btn["colorStatic"] for btn in [prop("primaryButton"), prop("secondaryButton")]},
-        **{btn["colorStatic"]: btn["colorHover"] for btn in [prop("primaryButton"), prop("secondaryButton")]}
-    }
-
-    logger.debug("Button hover color mapping - %s", color_mapping)
-
-    def on_button_leave(event):
-        event.widget["bg"] = color_mapping[event.widget["bg"]]
-
-    def on_button_enter(event):
-        event.widget["bg"] = color_mapping[event.widget["bg"]]
-
-    button.bind("<Enter>", on_button_enter)
-    button.bind("<Leave>", on_button_leave)
 
 
 class GUI:
@@ -81,6 +57,8 @@ class GUI:
         self.window.iconbitmap(resolve_resource("application.ico"))
         self.window.geometry(f"{prop("windowWidth")}x{prop("windowHeight")}")
         self.window.resizable(False, False)
+
+        init_styles()
 
     def register_visitors(self, visitors):
         """

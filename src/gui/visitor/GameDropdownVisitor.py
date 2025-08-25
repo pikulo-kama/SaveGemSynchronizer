@@ -1,5 +1,5 @@
 from src.core.AppState import AppState
-from src.core.holders import games, prop
+from src.core.holders import games
 from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
 from tkinter import ttk, font
@@ -37,9 +37,6 @@ class GameDropdownVisitor(Visitor):
         Used to render game selection dropdown.
         """
 
-        def expand_property(value):
-            return [("readonly", value), ("disabled", value)]
-
         game_names = [game["name"] for game in games()]
         selected_game = AppState.get_game(game_names[0])
 
@@ -48,27 +45,7 @@ class GameDropdownVisitor(Visitor):
 
         if len(game_names) == 1:
             combobox_state = "disabled"
-            combobox_cursor = "arrow"
-
-        style = ttk.Style()
-        style.theme_use("clam")
-
-        style.map(
-            "Custom.TCombobox",
-            fieldbackground=expand_property(prop("secondaryButton")["colorHover"]),
-            selectbackground=expand_property(prop("secondaryButton")["colorHover"]),
-            foreground=expand_property(prop("secondaryColor")),
-            selectforeground=expand_property(prop("secondaryColor")),
-            background=expand_property(prop("secondaryButton")["colorStatic"])
-        )
-
-        style.configure(
-            "Custom.TCombobox",
-            padding=(10, 0, 0, 0),
-            borderwidth=0,
-            # style: flat, groove, ridge, solid, sunken, raised
-            relief="flat"
-        )
+            combobox_cursor = "no"
 
         combobox = ttk.Combobox(
             gui.window,
@@ -77,7 +54,7 @@ class GameDropdownVisitor(Visitor):
             font=("Helvetica", 10, font.BOLD),
             width=20,
             state=combobox_state,
-            style="Custom.TCombobox"
+            style="Secondary.TCombobox"
         )
 
         def on_game_selection_change(event):

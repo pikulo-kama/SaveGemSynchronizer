@@ -17,8 +17,13 @@ class Popup(abc.ABC):
     """
 
     def __init__(self, title_text_resource, icon):
-        self._window = tk.Tk()
-        self.__center_window(GUI.instance())
+        gui = GUI.instance()
+
+        self.__popup = tk.Toplevel(gui.window)
+        self.__center_window(gui)
+
+        self.__popup.transient(gui.window)
+        self.__popup.grab_set()
 
         self.__title_text_resource = title_text_resource
         self.__icon = icon
@@ -34,12 +39,12 @@ class Popup(abc.ABC):
         logger.debug("popupTitle = %s", self.__title_text_resource)
         logger.debug("popupMessage = %s", message)
 
-        self._window.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
-        self._window.title(tr(self.__title_text_resource))
-        self._window.iconbitmap(resolve_resource(self.__icon))
-        self._window.resizable(False, False)
+        self.__popup.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
+        self.__popup.title(tr(self.__title_text_resource))
+        self.__popup.iconbitmap(resolve_resource(self.__icon))
+        self.__popup.resizable(False, False)
 
-        self._container = tk.Frame(self._window)
+        self._container = tk.Frame(self.__popup)
 
         message_label = tk.Label(
             self._container,
@@ -53,7 +58,7 @@ class Popup(abc.ABC):
         message_label.grid(row=0, column=0, pady=20)
         self._container.place(relx=.5, rely=.5, anchor=tk.CENTER)
 
-        self._window.mainloop()
+        self.__popup.mainloop()
 
     @abstractmethod
     def _show_internal(self):
@@ -69,7 +74,7 @@ class Popup(abc.ABC):
         Used to destroy window context.
         """
 
-        self._window.destroy()
+        self.__popup.destroy()
         logger.info("Popup has been destroyed.")
 
     def __center_window(self, gui):
@@ -88,7 +93,7 @@ class Popup(abc.ABC):
         logger.debug("popupXPosition = %d", offset_x)
         logger.debug("popupYPosition = %d", offset_y)
 
-        self._window.geometry("%dx%d+%d+%d" % (
+        self.__popup.geometry("%dx%d+%d+%d" % (
             popup_width,
             popup_height,
             offset_x,

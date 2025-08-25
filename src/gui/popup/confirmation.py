@@ -1,9 +1,8 @@
 import tkinter as tk
+from tkinter import ttk
 
 from src.core.TextResource import tr
-from src.core.holders import prop
 from src.gui.popup.popup import Popup
-from src.gui.gui import add_button_hover_effect
 
 
 class Confirmation(Popup):
@@ -26,42 +25,27 @@ class Confirmation(Popup):
     def _show_internal(self):
         button_frame = tk.Frame(self._container)
 
-        confirm_btn = tk.Button(
+        confirm_btn = ttk.Button(
             button_frame,
             text=tr("popup_ConfirmationButtonConfirm"),
-            width=10,
-            command=self.__confirm_callback
+            cursor="hand2",
+            width=12,
+            command=self.__confirm_callback,
+            style="SmallPrimary.TButton",
+            takefocus=False
         )
-        close_btn = tk.Button(
+
+        close_btn = ttk.Button(
             button_frame,
             text=tr("popup_ConfirmationButtonClose"),
+            cursor="hand2",
             width=10,
-            command=self.destroy
+            command=self.destroy,
+            style="SmallSecondary.TButton",
+            takefocus=False
         )
 
-        confirm_btn.config(
-            fg=prop("secondaryColor"),
-            bg=prop("primaryButton")["colorStatic"],
-            borderwidth=0,
-            relief=tk.SOLID,
-            pady=5,
-            padx=5,
-            font=4
-        )
-        close_btn.config(
-            fg=prop("secondaryColor"),
-            bg=prop("secondaryButton")["colorStatic"],
-            borderwidth=0,
-            relief=tk.SOLID,
-            pady=5,
-            padx=5,
-            font=4
-        )
-
-        add_button_hover_effect(confirm_btn)
-        add_button_hover_effect(close_btn)
-
-        confirm_btn.grid(row=0, column=0, padx=20)
+        confirm_btn.grid(row=0, column=0, padx=(10, 10))
         close_btn.grid(row=0, column=1)
 
         button_frame.grid(row=1, column=0)

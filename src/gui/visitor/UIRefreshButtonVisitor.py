@@ -1,7 +1,6 @@
 import tkinter as tk
-from tkinter import font
+from tkinter import ttk
 
-from src.core.holders import prop
 from src.gui.gui import GUI
 from src.gui.visitor.Visitor import Visitor
 
@@ -27,17 +26,14 @@ class UIRefreshButtonVisitor(Visitor):
         Used to render UI refresh button.
         """
 
-        refresh_button = tk.Button(
+        refresh_button = ttk.Button(
             gui.window,
             text="⟳",
             command=gui.refresh,
-            font=("Small Fonts", 18, font.BOLD),
-            bd=0,
-            width=3,
-            height=1,
             cursor="hand2",
-            bg=prop("primaryButton")["colorStatic"],
-            fg=prop("primaryColor")
+            padding=(4, 7),
+            style="SquarePrimary.18.TButton",
+            takefocus=False
         )
 
         refresh_button.pack()
