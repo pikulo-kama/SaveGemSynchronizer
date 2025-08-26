@@ -1,5 +1,3 @@
-
-import json
 import os.path
 
 from src.core.JsonConfigHolder import JsonConfigHolder

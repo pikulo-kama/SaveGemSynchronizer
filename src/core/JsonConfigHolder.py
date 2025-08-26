@@ -1,4 +1,3 @@
-import json
 from constants import JSON_EXTENSION
 from src.util.file import read_file
 

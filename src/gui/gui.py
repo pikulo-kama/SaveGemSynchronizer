@@ -66,6 +66,13 @@ class GUI:
         """
         self.window.config(cursor=cursor)
 
+    def schedule_operation(self, callback):
+        """
+        Used by processes executed on separate thread to execute some work back on main thread.
+        This is needed since Tkinter doesn't work well with multithreading.
+        """
+        self.window.after(0, callback)
+
     def register_visitors(self, visitors):
         """
         Used to register visitors.

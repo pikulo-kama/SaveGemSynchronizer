@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[ ('credentials.json', '.') ],
+    datas=[ ('credentials.json', '.'), ('game-config-file-id.txt', '.') ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

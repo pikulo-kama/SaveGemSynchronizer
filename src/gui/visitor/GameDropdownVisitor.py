@@ -33,8 +33,13 @@ class GameDropdownVisitor(Visitor):
             logger.error("There are no games configured. Can't proceed.")
             raise RuntimeError("There are no games configured. Can't proceed.")
 
-        game_names = [game["name"] for game in GameConfig.games()]
-        selected_game = AppState.get_game(game_names[0])
+        game_names = GameConfig.game_names()
+        default_game = game_names[0]
+        selected_game = AppState.get_game(default_game)
+
+        if selected_game not in game_names:
+            selected_game = default_game
+            AppState.set_game(default_game)
 
         combobox_state = "readonly"
         combobox_cursor = "hand2"

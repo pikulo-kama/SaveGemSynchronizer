@@ -102,8 +102,9 @@ def save_file(file_path: str, data: any, as_json: bool = False, binary: bool = F
     """
 
     mode = "wb" if binary else "w"
+    encoding = None if binary else "utf-8"
 
-    with open(file_path, mode, encoding="utf-8") as file:
+    with open(file_path, mode, encoding=encoding) as file:
         json.dump(data, file, indent=2) if as_json else file.write(data)
 
 

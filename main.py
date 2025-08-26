@@ -54,9 +54,9 @@ def main():
 
     window.on_close(on_destroy)
     window.register_visitors([
+        GameDropdownVisitor(),
         CoreVisitor(),
         UIRefreshButtonVisitor(),
-        GameDropdownVisitor(),
         LanguageSwitchVisitor()
     ])
 

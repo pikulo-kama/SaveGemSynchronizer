@@ -42,8 +42,19 @@ class GameConfig:
         return GameConfig.__games
 
     @staticmethod
+    def game_names():
+        return list(GameConfig.__games_mapping.keys())
+
+    @staticmethod
     def game_prop(property_name: str):
         """
         Used to get property from configuration of game that is in state.
         """
-        return GameConfig.__games_mapping[AppState.get_game()][property_name]
+
+        selected_game = AppState.get_game()
+
+        if selected_game not in GameConfig.__games_mapping:
+            selected_game = GameConfig.game_names()[0]
+            AppState.set_game(selected_game)
+
+        return GameConfig.__games_mapping[selected_game][property_name]
