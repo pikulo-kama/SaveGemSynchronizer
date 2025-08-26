@@ -9,17 +9,17 @@ from src.core.json_config_holder import JsonConfigHolder
 from src.util.file import resolve_log, resolve_config, resolve_app_data
 
 
-local_logback_file_name = resolve_config(LOGBACK_FILE_NAME)
-app_data_logback_file_name = resolve_app_data(LOGBACK_FILE_NAME)
+local_logback_file_path = resolve_config(LOGBACK_FILE_NAME)
+app_data_logback_file_path = resolve_app_data(LOGBACK_FILE_NAME)
 
 # Copy logback.json to app data if it's missing.
-if not os.path.exists(app_data_logback_file_name):
-    local_log_levels = JsonConfigHolder(local_logback_file_name)
-    log_levels = EditableJsonConfigHolder(app_data_logback_file_name)
-    log_levels.set(local_log_levels.get())
+if not os.path.exists(app_data_logback_file_path):
+    local_logback = JsonConfigHolder(local_logback_file_path)
+    logback = EditableJsonConfigHolder(app_data_logback_file_path)
+    logback.set(local_logback.get())
 
-log_levels = JsonConfigHolder(app_data_logback_file_name)
-log_level_map = {
+logback = JsonConfigHolder(app_data_logback_file_path)
+log_levels = {
     "INFO": logging.INFO,
     "WARN": logging.WARN,
     "ERROR": logging.ERROR,
@@ -51,16 +51,16 @@ def initialize_logging():
     )
 
 
-def log_level(logger_name: str):
+def get_log_level(logger_name: str):
     """
     Used to query logback.xml and get configured log level for provided log name.
     If log level is not configured 'INFO' would be used as default.
     """
 
-    level = log_levels.get_value(logger_name)
+    level = logback.get_value(logger_name)
 
     if level is not None:
-        return log_level_map[level]
+        return log_levels[level]
 
     return logging.INFO
 
@@ -71,6 +71,7 @@ def get_logger(logger_name: str):
     """
 
     logger = logging.getLogger(logger_name)
-    logger.setLevel(log_level(logger_name))
+    level = get_log_level(logger_name)
+    logger.setLevel(level)
 
     return logger
