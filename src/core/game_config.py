@@ -35,6 +35,8 @@ class GameConfig:
             raise RuntimeError(message)
 
         game_config.seek(0)
+        GameConfig.__games = list()
+        GameConfig.__games_mapping = dict()
 
         for game in json.load(game_config):
             name = game["name"]
