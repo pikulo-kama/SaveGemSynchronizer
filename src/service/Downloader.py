@@ -4,11 +4,11 @@ import shutil
 from constants import ZIP_MIME_TYPE, ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
 from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
+from src.core.GameConfig import GameConfig
 from src.core.TextResource import tr
-from src.core.holders import game_prop
 from src.gui.popup.notification import notification
 from src.service.GDrive import GDrive
-from src.util.file import resolve_temp_file, resolve_app_data, cleanup_directory
+from src.util.file import resolve_temp_file, resolve_app_data, cleanup_directory, save_file
 from src.gui.gui import GUI
 from src.util.logger import get_logger
 
@@ -24,7 +24,7 @@ class Downloader:
     def download():
 
         gui = GUI.instance()
-        saves_directory = os.path.expandvars(game_prop("localPath"))
+        saves_directory = os.path.expandvars(GameConfig.game_prop("localPath"))
         temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
@@ -44,11 +44,10 @@ class Downloader:
 
         # Download file and write it to zip file locally (in output directory)
         logger.info("Downloading save archive")
-        file = GDrive.download_file(metadata.get("id"))
+        file = GDrive.download_file(metadata.get("id")).getvalue()
 
-        with open(temp_zip_file_name, "wb") as zip_save:
-            logger.info("Storing file in output directory.")
-            zip_save.write(file)
+        logger.info("Storing file in output directory.")
+        save_file(temp_zip_file_name, file, binary=True)
 
         # Make backup of existing save, just in case.
         backup_dir = saves_directory + "_backup"
@@ -79,7 +78,7 @@ class Downloader:
         files = GDrive.query_single(
             "files",
             "nextPageToken, files(id, name, owners, createdTime)",
-            f"mimeType='{ZIP_MIME_TYPE}' and '{game_prop("gdriveParentDirectoryId")}' in parents"
+            f"mimeType='{ZIP_MIME_TYPE}' and '{GameConfig.game_prop("gdriveParentDirectoryId")}' in parents"
         )
 
         if files is None or len(files) == 0:

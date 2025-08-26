@@ -9,7 +9,7 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 
 from constants import GDRIVE_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME, ZIP_MIME_TYPE
-from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path
+from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)
@@ -61,7 +61,7 @@ class GDrive:
         while not done:
             status, done = downloader.next_chunk()
 
-        return file.getvalue()
+        return file
 
     @staticmethod
     def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE):
@@ -127,9 +127,8 @@ class GDrive:
 
             logger.info("Authentication completed.")
 
-            with open(token_file_name, "w") as token_file:
-                logger.info("Saving Google Cloud access token for later use.")
-                token_file.write(creds.to_json())
+            logger.info("Saving Google Cloud access token for later use.")
+            save_file(token_file_name, creds.to_json())
 
         else:
             logger.fatal("credentials.json is missing.")

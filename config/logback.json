@@ -5,6 +5,7 @@
   "src.core.EditableJsonConfigHolder" : "ERROR",
   "src.core.TextResource" : "ERROR",
   "src.core.holders" : "ERROR",
+  "src.core.GameConfig" : "INFO",
   "src.gui.popup.popup" : "ERROR",
   "src.gui.visitor.CoreVisitor" : "WARN",
   "src.gui.visitor.GameDropdownVisitor" : "WARN",

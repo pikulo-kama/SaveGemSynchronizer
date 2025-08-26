@@ -3,6 +3,7 @@ import json
 import os.path
 
 from src.core.JsonConfigHolder import JsonConfigHolder
+from src.util.file import save_file
 
 
 class EditableJsonConfigHolder(JsonConfigHolder):
@@ -36,5 +37,4 @@ class EditableJsonConfigHolder(JsonConfigHolder):
         """
 
         # Can't use property from config since it wil result in circular dependency.
-        with open(self._config_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+        save_file(self._config_path, data, as_json=True)

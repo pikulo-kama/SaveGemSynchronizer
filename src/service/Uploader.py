@@ -3,13 +3,14 @@ from datetime import datetime
 import shutil
 
 from googleapiclient.errors import HttpError
+
+from src.core.GameConfig import GameConfig
 from src.gui.gui import GUI
 
 from constants import ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
 from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
 from src.core.TextResource import tr
-from src.core.holders import game_prop
 from src.service.GDrive import GDrive
 from src.gui.popup.notification import notification
 from src.util.file import resolve_temp_file, resolve_app_data, file_name_from_path, remove_extension_from_path
@@ -31,8 +32,8 @@ class Uploader:
         """
 
         file_path = resolve_temp_file(f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}.{ZIP_EXTENSION}")
-        saves_directory = os.path.expandvars(game_prop("localPath"))
-        parent_directory_id = game_prop("gdriveParentDirectoryId")
+        saves_directory = os.path.expandvars(GameConfig.game_prop("localPath"))
+        parent_directory_id = GameConfig.game_prop("gdriveParentDirectoryId")
 
         if not os.path.exists(saves_directory):
             logger.error("Directory with saves is missing %s", saves_directory)

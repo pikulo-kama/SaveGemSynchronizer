@@ -1,0 +1,17 @@
+This file is placeholder, please create game-config-file-id.txt in root of the project before building solution.
+This file should contain single line with Google Drive File ID that points to JSON with games configuration.
+e.g. 1Ks-7P1bsgLhXzcT2MAcwQ4Cev1T-HVVr
+
+Example of file in Google Drive:
+[
+  {
+    "name" : "Valheim",
+    "localPath" : "%LOCALAPPDATA%Low\\IronGate\\Valheim\\worlds_local",
+    "gdriveParentDirectoryId" : "11KNPgZ_pEXm1Ur0uqZMggaJi1111111"
+  },
+  {
+    "name" : "Vintage Story",
+    "localPath" : "%APPDATA%\\VintageStoryData\\Saves",
+    "gdriveParentDirectoryId" : "1ulAGvR27yALHFzG_vB3W3Bagy111111"
+  }
+]

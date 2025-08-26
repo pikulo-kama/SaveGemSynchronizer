@@ -1,5 +1,6 @@
 import json
 from constants import JSON_EXTENSION
+from src.util.file import read_file
 
 
 class JsonConfigHolder:
@@ -19,8 +20,7 @@ class JsonConfigHolder:
         self._before_file_open()
 
         # Can't use property from config since it wil result in circular dependency.
-        with open(self._config_path, encoding="utf-8") as f:
-            self._data = json.load(f)
+        self._data = read_file(self._config_path, as_json=True)
 
     def get_value(self, property_name):
         """

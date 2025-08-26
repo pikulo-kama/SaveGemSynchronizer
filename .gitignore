@@ -4,5 +4,6 @@
 /.idea
 __pycache__/
 
+game-config-file-id.txt
 credentials.json
 *.exe

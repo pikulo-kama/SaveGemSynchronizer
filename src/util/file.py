@@ -1,3 +1,4 @@
+import json
 import os.path
 import shutil
 
@@ -80,6 +81,30 @@ def cleanup_directory(directory: str):
 
         except Exception as e:
             print("Failed to delete %s. Reason: %s" % (file_path, e))
+
+
+def read_file(file_path: str, as_json: bool = False):
+    """
+    Used to read contents of the file.
+    Throws exception if file doesn't exist.
+    """
+
+    if not os.path.exists(file_path):
+        raise RuntimeError(f"File {file_path} doesn't exist.")
+
+    with open(file_path, "r", encoding="utf-8") as file:
+        return json.load(file) if as_json else file.read()
+
+
+def save_file(file_path: str, data: any, as_json: bool = False, binary: bool = False):
+    """
+    Used to save contents of the file.
+    """
+
+    mode = "wb" if binary else "w"
+
+    with open(file_path, mode, encoding="utf-8") as file:
+        json.dump(data, file, indent=2) if as_json else file.write(data)
 
 
 def file_name_from_path(file_path: str):
