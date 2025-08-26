@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 
 from babel.localtime import get_localzone
 
@@ -14,6 +13,8 @@ from datetime import date, datetime
 
 from babel.dates import format_datetime
 from pytz import timezone
+
+from src.service.Downloader import Downloader
 from src.util.file import resolve_app_data
 from src.util.logger import get_logger
 
@@ -27,112 +28,79 @@ class CoreVisitor(Visitor):
     Specifically:
     - Last drive save information
     - Local save status information
-    - Download/Upload buttons
     - Copyright
 
     Always enabled.
     """
 
+    def __init__(self):
+        self.__save_status = None
+        self.__last_save_timestamp = None
+        self.__copyright_label = None
+
     def visit(self, gui: GUI):
         self.__add_save_information(gui)
-        self.__add_buttons(gui)
         self.__add_copyright_and_version(gui)
 
     def is_enabled(self):
         return True
 
     def refresh(self, gui: GUI):
-        last_save_meta = gui.metadata_function()
+        last_save_meta = Downloader.get_last_save_metadata()
 
         save_status_label = self.__get_last_download_version_text(last_save_meta)
-        last_save_info_label = self.__get_last_save_info_text(last_save_meta)
+        last_save_timestamp_label = self.__get_last_save_info_text(last_save_meta)
 
         copy = f"© 2023{"" if date.today().year == 2023 else f"-{date.today().year}"}"
         copyright_label = tr("window_Signature", copy)
 
-        gui.save_status.configure(text=save_status_label)
+        self.__save_status.configure(text=save_status_label)
         logger.debug("Save status label was reloaded. (%s)", save_status_label)
 
-        gui.last_save_info.configure(text=last_save_info_label)
-        logger.debug("Last save information label was reloaded. (%s)", last_save_info_label)
+        self.__last_save_timestamp.configure(text=last_save_timestamp_label)
+        logger.debug("Last save information label was reloaded. (%s)", last_save_timestamp_label)
 
-        gui.copyright_label.configure(text=copyright_label)
+        self.__copyright_label.configure(text=copyright_label)
         logger.debug("Copyright was reloaded. (%s)", copyright_label)
 
-        for idx, tk_button in enumerate(gui.tk_buttons):
-            name_text_resource = gui.buttons[idx]["nameTextResource"]
-            button_label = tr(name_text_resource)
-
-            tk_button.configure(text=button_label)
-            logger.debug("Button reloaded (%s)", button_label)
-
-        logger.debug("%d buttons were reloaded.", len(gui.tk_buttons))
-
-    @staticmethod
-    def __add_save_information(gui):
+    def __add_save_information(self, gui):
         """
         Used to render both local and Google Drive save status labels.
         """
 
-        info_frame = tk.Frame(gui.body_frame)
+        info_frame = tk.Frame(gui.body())
 
         # Text is empty for fields at this moment
         # They would be populated later by GUI component.
-        gui.save_status = tk.Label(
+        self.__save_status = tk.Label(
             info_frame,
             fg=prop("primaryColor"),
             font=("Helvetica", 25)
         )
 
-        gui.last_save_info = tk.Label(
+        self.__last_save_timestamp = tk.Label(
             info_frame,
             fg=prop("secondaryColor"),
             font=("Helvetica", 11, "bold")
         )
 
-        gui.save_status.grid(row=0, column=0, pady=5)
-        gui.last_save_info.grid(row=1, column=0, pady=5)
+        self.__save_status.grid(row=0, column=0, pady=5)
+        self.__last_save_timestamp.grid(row=1, column=0, pady=5)
 
         info_frame.grid(row=0, column=0, pady=150)
 
-    @staticmethod
-    def __add_buttons(gui):
-        """
-        Used to render upload and download buttons.
-        """
-
-        button_frame = tk.Frame(gui.body_frame)
-
-        for idx, button in enumerate(gui.buttons):
-            props = button["properties"]
-
-            tk_button = ttk.Button(
-                button_frame,
-                cursor="hand2",
-                width=props["width"],
-                command=button["callback"],
-                style=f"{props["styleName"]}.TButton",
-                takefocus=False
-            )
-
-            tk_button.grid(row=0, column=idx, padx=5)
-            gui.tk_buttons.append(tk_button)
-
-        button_frame.grid(row=1, column=0)
-
-    @staticmethod
-    def __add_copyright_and_version(gui):
+    def __add_copyright_and_version(self, gui):
         """
         Used to render copyright label.
         """
 
-        horizontal_frame = tk.Frame(gui.window, pady=-4)
+        horizontal_frame = tk.Frame(gui.window(), pady=-4)
 
         version_label = tk.Label(horizontal_frame, text=f"v{prop("version")}")
         version_label.grid(row=0, column=0, padx=5)
 
-        gui.copyright_label = tk.Label(horizontal_frame)
-        gui.copyright_label.grid(row=0, column=1)
+        self.__copyright_label = tk.Label(horizontal_frame)
+        self.__copyright_label.grid(row=0, column=1)
 
         horizontal_frame.place(relx=.5, rely=.9, anchor=tk.N)
 

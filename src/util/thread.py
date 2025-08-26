@@ -8,11 +8,11 @@ def execute_in_thread(function):
     Will update UI cursor to display that operation is being performed.
     """
 
-    window = GUI.instance()
+    gui = GUI.instance()
 
     def task():
         function()
-        window.set_cursor()
+        gui.set_cursor()
 
-    window.set_cursor("wait")
+    gui.set_cursor("wait")
     Thread(target=task).start()

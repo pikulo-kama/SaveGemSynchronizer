@@ -28,7 +28,7 @@ class UIRefreshButtonVisitor(Visitor):
         """
 
         refresh_button = ttk.Button(
-            gui.window,
+            gui.window(),
             text="⟳",
             command=gui.refresh,
             cursor="hand2",

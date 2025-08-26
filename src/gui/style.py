@@ -7,7 +7,7 @@ from src.util.logger import get_logger
 logger = get_logger(__name__)
 
 
-def init_styles():
+def init_gui_styles():
     """
     Used to initialize Tkinter custom styles.
     """

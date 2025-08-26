@@ -2,7 +2,7 @@ import tkinter as tk
 
 from src.core.TextResource import tr
 from src.core.holders import prop
-from src.gui.style import init_styles
+from src.gui.style import init_gui_styles
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
@@ -17,8 +17,9 @@ class GUI:
     _instance = None
 
     def __init__(self):
-        # Just to shup up IDE..
-        self.visitors = list()
+        # Just to shut up Pylint...
+        self.__visitors = list()
+        self.__destroy_callback = None
         raise RuntimeError('Call instance() instead')
 
     @classmethod
@@ -38,40 +39,46 @@ class GUI:
         Used to initialize GUI.
         """
 
-        self.window = tk.Tk()
-        self.body_frame = tk.Frame(self.window)
-        self.metadata_function = None
-        self.visitors = list()
+        self.__visitors = list()
+        self.__destroy_callback = None
 
-        self.buttons = list()
-        self.tk_buttons = list()
-
-        self.save_status = None
-        self.last_save_info = None
-        self.copyright_label = None
-        self.language_button = None
+        self.__window = tk.Tk()
+        self.__body = tk.Frame(self.__window)
 
         self.__center_window()
+        self.__window.title(tr("window_Title"))
+        self.__window.iconbitmap(resolve_resource("application.ico"))
+        self.__window.geometry(f"{prop("windowWidth")}x{prop("windowHeight")}")
+        self.__window.resizable(False, False)
 
-        self.window.title(tr("window_Title"))
-        self.window.iconbitmap(resolve_resource("application.ico"))
-        self.window.geometry(f"{prop("windowWidth")}x{prop("windowHeight")}")
-        self.window.resizable(False, False)
+        self.__window.protocol("WM_DELETE_WINDOW", self.destroy)
+        init_gui_styles()
 
-        init_styles()
+    def window(self):
+        """
+        Used to get root widget.
+        """
+        return self.__window
+
+    def body(self):
+        """
+        Used to get main widget which is direct child of body.
+        Affects more center area of the window (compared to root)
+        """
+        return self.__body
 
     def set_cursor(self, cursor=""):
         """
         Used to change main window cursor.
         """
-        self.window.config(cursor=cursor)
+        self.__window.config(cursor=cursor)
 
     def schedule_operation(self, callback):
         """
         Used by processes executed on separate thread to execute some work back on main thread.
         This is needed since Tkinter doesn't work well with multithreading.
         """
-        self.window.after(0, callback)
+        self.__window.after(0, callback)
 
     def register_visitors(self, visitors):
         """
@@ -79,14 +86,13 @@ class GUI:
         """
 
         for visitor in visitors:
-
             visitor_name = type(visitor).__name__
 
             if not visitor.is_enabled():
                 logger.warn("Skipping disabled visitor '%s'.", visitor_name)
                 continue
 
-            self.visitors.append(visitor)
+            self.__visitors.append(visitor)
             logger.info("Registered visitor '%s'", visitor_name)
 
     def build(self):
@@ -97,14 +103,14 @@ class GUI:
 
         logger.info("Building UI.")
 
-        for visitor in self.visitors:
+        for visitor in self.__visitors:
             visitor.visit(self)
 
-        self.body_frame.place(relx=.5, rely=.3, anchor=tk.CENTER)
+        self.__body.place(relx=.5, rely=.3, anchor=tk.CENTER)
         self.refresh()
 
         logger.info("Application loop has been started.")
-        self.window.mainloop()
+        self.__window.mainloop()
 
     def refresh(self):
         """
@@ -112,33 +118,27 @@ class GUI:
         """
 
         logger.info("Refreshing UI.")
-        self.window.title(tr("window_Title"))
-
-        for visitor in self.visitors:
+        for visitor in self.__visitors:
             visitor.refresh(self)
+
+        self.__window.title(tr("window_Title"))
 
     def destroy(self):
         """
         Used to destroy application window.
         """
-        self.window.destroy()
 
-    def on_close(self, callback):
+        if self.__destroy_callback is not None:
+            self.__destroy_callback()
+
+        self.__window.destroy()
+
+    def before_destroy(self, callback):
         """
         Allows to configure additional callback function that would
         be invoked when window is being destroyed.
         """
-        self.window.protocol("WM_DELETE_WINDOW", callback)
-
-    def add_button(self, name, callback, color):
-        """
-        Used to add main application button.
-        """
-        self.buttons.append({
-            "nameTextResource": name,
-            "callback": callback,
-            "properties": color
-        })
+        self.__destroy_callback = callback
 
     def __center_window(self):
         """
@@ -149,10 +149,10 @@ class GUI:
         width = prop("windowWidth")
         height = prop("windowHeight")
 
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
+        screen_width = self.__window.winfo_screenwidth()
+        screen_height = self.__window.winfo_screenheight()
 
         x = (screen_width - width) / 2
         y = (screen_height - height) / 2
 
-        self.window.geometry("%dx%d+%d+%d" % (width, height, x, y))
+        self.__window.geometry("%dx%d+%d+%d" % (width, height, x, y))

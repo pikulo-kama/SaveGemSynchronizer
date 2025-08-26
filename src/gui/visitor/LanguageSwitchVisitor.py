@@ -18,6 +18,9 @@ class LanguageSwitchVisitor(Visitor):
     Enabled only if there are at least two languages configured.
     """
 
+    def __init__(self):
+        self.__language_switch = None
+
     def visit(self, gui: GUI):
         self.__add_language_switch_control(gui)
 
@@ -33,28 +36,25 @@ class LanguageSwitchVisitor(Visitor):
             language_id = language_id[:2]
 
         logger.debug("Refreshing language switch (%s)", language_id)
-        gui.language_button.configure(text=language_id)
+        self.__language_switch.configure(text=language_id)
 
-    @staticmethod
-    def __add_language_switch_control(gui: GUI):
+    def __add_language_switch_control(self, gui: GUI):
         """
         Used to render language switch control.
         """
 
-        def switch_language():
-            LanguageSwitchVisitor.__switch_language(gui)
-
-        gui.language_button = ttk.Button(
-            gui.window,
-            command=switch_language,
+        self.__language_switch = ttk.Button(
+            gui.window(),
+            command=lambda: LanguageSwitchVisitor.__switch_language(gui),
             cursor="hand2",
             style="SquareSecondary.16.TButton",
             takefocus=False
         )
 
-        add_button_movement_effect(gui.language_button)
-        gui.language_button.pack()
-        gui.language_button.place(relx=.05, rely=.13, anchor=tk.N)
+        add_button_movement_effect(self.__language_switch)
+
+        self.__language_switch.pack()
+        self.__language_switch.place(relx=.05, rely=.13, anchor=tk.N)
 
     @staticmethod
     def __switch_language(gui: GUI):

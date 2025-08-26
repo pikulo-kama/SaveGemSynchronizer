@@ -61,15 +61,6 @@ class GameDropdownVisitor(Visitor):
         Used to render game selection dropdown.
         """
 
-        self.__combobox = ttk.Combobox(
-            gui.window,
-            # values=game_names,
-            # cursor=combobox_cursor,
-            font=("Helvetica", 10, font.BOLD),
-            width=20,
-            style="Secondary.TCombobox"
-        )
-
         def on_game_selection_change(event):
             logger.info("Game selection changed.")
             logger.info("Selected game - %s", event.widget.get())
@@ -77,8 +68,13 @@ class GameDropdownVisitor(Visitor):
             AppState.set_game(event.widget.get())
             gui.refresh()
 
-        # Select first option in dropdown.
-        self.__combobox.pack()
+        self.__combobox = ttk.Combobox(
+            gui.window(),
+            font=("Helvetica", 10, font.BOLD),
+            width=20,
+            style="Secondary.TCombobox"
+        )
 
+        self.__combobox.pack()
         self.__combobox.place(relx=.9, rely=.05, width=150, height=30, anchor=tk.N)
         self.__combobox.bind("<<ComboboxSelected>>", on_game_selection_change)
