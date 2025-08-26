@@ -26,18 +26,25 @@ class GameConfig:
         game_config_pointer_file = resolve_project_data(GAME_CONFIG_POINTER_FILE_NAME)
         game_config_file_id = read_file(game_config_pointer_file)
 
-        file = GDrive.download_file(game_config_file_id)
+        game_config = GDrive.download_file(game_config_file_id)
 
-        if file is None:
+        if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
 
             logger.error(message)
             raise RuntimeError(message)
 
-        file.seek(0)
+        game_config.seek(0)
 
-        GameConfig.__games = json.load(file)
-        GameConfig.__games_mapping = {game["name"]: game for game in GameConfig.__games}
+        for game in json.load(game_config):
+            name = game["name"]
+
+            if "hidden" in game and game["hidden"] is True:
+                logger.info("Skipping '%s' since it's marked as hidden.", name)
+                continue
+
+            GameConfig.__games.append(game)
+            GameConfig.__games_mapping[name] = game
 
         logger.info("Configuration for following games was found = %s", ", ".join(GameConfig.__games_mapping.keys()))
 
