@@ -28,6 +28,10 @@ class LanguageSwitchVisitor(Visitor):
     def refresh(self, gui: GUI):
         language_id = tr("languageId")
 
+        # Limit language code to 2 characters.
+        if len(language_id) > 2:
+            language_id = language_id[:2]
+
         logger.debug("Refreshing language switch (%s)", language_id)
         gui.language_button.configure(text=language_id)
 

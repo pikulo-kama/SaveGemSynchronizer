@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
+from babel.localtime import get_localzone
+
 from constants import SAVE_VERSION_FILE_NAME
 from src.core.AppState import AppState
 from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
@@ -145,9 +147,11 @@ class CoreVisitor(Visitor):
 
         locale = AppState.get_locale(prop("defaultLocale"))
 
-        creation_datetime = datetime.strptime(last_save_meta["createdTime"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        creation_datetime += timezone(prop("timeZone")).utcoffset(creation_datetime)
+        time_zone = str(get_localzone())
         date_format = "d MMMM"
+
+        creation_datetime = datetime.strptime(last_save_meta["createdTime"], "%Y-%m-%dT%H:%M:%S.%fZ")
+        creation_datetime += timezone(time_zone).utcoffset(creation_datetime)
 
         if creation_datetime.year != date.today().year:
             # Only show year if it's not current one, just ot avoid extra information.
