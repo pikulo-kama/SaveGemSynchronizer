@@ -1,9 +1,7 @@
 import os
 
 from constants import APP_DATA_ROOT
-from src.core.game_config import GameConfig
 from src.util.file import OUTPUT_DIR, LOGS_DIR
-from src.util.logger import initialize_logging
 
 
 def init():
@@ -16,7 +14,10 @@ def init():
         if not os.path.exists(directory):
             os.makedirs(directory)
 
+    from src.util.logger import initialize_logging
     initialize_logging()
+
+    from src.core.game_config import GameConfig
     GameConfig.download()
 
 
