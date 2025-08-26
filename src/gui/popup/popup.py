@@ -24,6 +24,8 @@ class Popup(abc.ABC):
         self.__offset_y = None
 
         gui.window.bind("<Configure>", lambda _: self.__center_popup(gui))
+        self.__popup.protocol("WM_DELETE_WINDOW", self.destroy)
+
         self.__center_popup(gui)
         self.__lock_popup()
 

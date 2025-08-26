@@ -58,10 +58,16 @@ class GDrive:
         downloader = MediaIoBaseDownload(file, request)
         done = False
 
-        while not done:
-            status, done = downloader.next_chunk()
+        try:
+            while not done:
+                status, done = downloader.next_chunk()
 
-        return file
+            return file
+
+        except HttpError as error:
+            logger.error("Failed to download file from drive", error)
+        
+        return None
 
     @staticmethod
     def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE):
@@ -131,7 +137,7 @@ class GDrive:
             save_file(token_file_name, creds.to_json())
 
         else:
-            logger.fatal("credentials.json is missing.")
+            logger.critical("credentials.json is missing.")
             raise RuntimeError("Google Cloud credentials are missing in root of the project. Add credentials.json.")
 
         return creds

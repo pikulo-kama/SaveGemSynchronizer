@@ -27,6 +27,13 @@ class GameConfig:
         game_config_file_id = read_file(game_config_pointer_file)
 
         file = GDrive.download_file(game_config_file_id)
+
+        if file is None:
+            message = "Configuration file ID is invalid, is missing or you don't have access."
+
+            logger.error(message)
+            raise RuntimeError(message)
+
         file.seek(0)
 
         GameConfig.__games = json.load(file)

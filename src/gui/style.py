@@ -65,8 +65,8 @@ def add_button(style: Style, button):
         relief=tk.SOLID,
         foreground=prop("primaryColor"),
         background=button["colorStatic"],
-        padding=(15, 15),
-        font=40
+        padding=15,
+        font=("Segoe UI Semibold", 15)
     )
 
     style.map(

@@ -81,7 +81,13 @@ class Downloader:
             f"mimeType='{ZIP_MIME_TYPE}' and '{GameConfig.game_prop("gdriveParentDirectoryId")}' in parents"
         )
 
-        if files is None or len(files) == 0:
+        if files is None:
+            message = "Error downloading metadata. Either configuration is incorrect or you don't have access."
+
+            logger.error(message)
+            raise RuntimeError(message)
+
+        if len(files) == 0:
             logger.warn("There are no saves on Google Drive for %s.", AppState.get_game())
             return None
 
