@@ -1,0 +1,21 @@
+{
+  "languageId" : "ES",
+  "window_Title": "Sincronizador SaveGem",
+  "window_Signature": "{0} SaveGem® & Artur Parkour. Todos los derechos reservados.",
+  "popup_NotificationTitle": "Información",
+  "popup_NotificationButtonClose": "OK",
+  "popup_ConfirmationTitle": "Atención",
+  "popup_ConfirmationButtonClose": "Cancelar",
+  "popup_ConfirmationButtonConfirm": "Aceptar",
+  "label_UploadSaveToDrive": "🠉 Subir",
+  "label_DownloadSaveFromDrive": "🠋",
+  "label_NoInformationAboutCurrentSaveVersion" : "No estamos seguros de cuál guardado es más reciente, pero...",
+  "label_StorageIsEmpty": "El almacenamiento está vacío. Es necesario subir un archivo para continuar.",
+  "info_SaveIsUpToDate": "Nada nuevo... Tu guardado está lo más actualizado posible.",
+  "info_SaveNeedsToBeDownloaded": "Bueno bueno bueno, mira nada más...",
+  "info_NewestSaveOnDriveInformation": "el último guardado fue subido el {0} a las {1} por {2}",
+  "notification_SaveHasBeenUploaded": "Guardado subido con éxito.",
+  "notification_NewSaveHasBeenDownloaded": "Guardado descargado con éxito.",
+  "notification_ErrorUploadingToDrive" : "Ocurrió un error al subir al almacenamiento.",
+  "confirmation_ConfirmToDownloadSave": "¿Seguro? Esto borrará el guardado existente."
+}

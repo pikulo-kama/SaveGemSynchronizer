@@ -1,0 +1,21 @@
+{
+  "languageId": "DE",
+  "window_Title": "SaveGem Synchronisierer",
+  "window_Signature": "{0} SaveGem® & Artur Parkour. Alle Rechte vorbehalten.",
+  "popup_NotificationTitle": "Information",
+  "popup_NotificationButtonClose": "OK",
+  "popup_ConfirmationTitle": "Achtung",
+  "popup_ConfirmationButtonClose": "Abbrechen",
+  "popup_ConfirmationButtonConfirm": "Bestätigen",
+  "label_UploadSaveToDrive": "🠉 Hochladen",
+  "label_DownloadSaveFromDrive": "🠋",
+  "label_NoInformationAboutCurrentSaveVersion": "Wir sind uns nicht sicher, welcher Spielstand neuer ist, aber...",
+  "label_StorageIsEmpty": "Der Speicher ist leer. Ein Hochladen ist erforderlich, um fortzufahren.",
+  "info_SaveIsUpToDate": "Nichts Neues... Dein Spielstand ist so aktuell wie möglich.",
+  "info_SaveNeedsToBeDownloaded": "Na, schau einer an...",
+  "info_NewestSaveOnDriveInformation": "der letzte Spielstand wurde am {0} um {1} von {2} hochgeladen",
+  "notification_SaveHasBeenUploaded": "Spielstand erfolgreich hochgeladen.",
+  "notification_NewSaveHasBeenDownloaded": "Spielstand erfolgreich heruntergeladen.",
+  "notification_ErrorUploadingToDrive": "Fehler beim Hochladen auf den Drive.",
+  "confirmation_ConfirmToDownloadSave": "Sicher? Dies überschreibt deinen vorhandenen Spielstand."
+}

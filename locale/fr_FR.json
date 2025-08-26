@@ -1,0 +1,21 @@
+{
+  "languageId": "FR",
+  "window_Title": "Synchroniseur SaveGem",
+  "window_Signature": "{0} SaveGem® & Artur Parkour. Tous droits réservés.",
+  "popup_NotificationTitle": "Information",
+  "popup_NotificationButtonClose": "OK",
+  "popup_ConfirmationTitle": "Attention",
+  "popup_ConfirmationButtonClose": "Annuler",
+  "popup_ConfirmationButtonConfirm": "Confirmer",
+  "label_UploadSaveToDrive": "🠉 Envoyer",
+  "label_DownloadSaveFromDrive": "🠋",
+  "label_NoInformationAboutCurrentSaveVersion": "Nous ne savons pas quelle sauvegarde est la plus récente, mais...",
+  "label_StorageIsEmpty": "Le stockage est vide. Un envoi est nécessaire pour continuer.",
+  "info_SaveIsUpToDate": "Rien de nouveau... Votre sauvegarde est déjà à jour.",
+  "info_SaveNeedsToBeDownloaded": "Eh bien, regardez-moi ça...",
+  "info_NewestSaveOnDriveInformation": "la dernière sauvegarde a été envoyée le {0} à {1} par {2}",
+  "notification_SaveHasBeenUploaded": "Sauvegarde envoyée avec succès.",
+  "notification_NewSaveHasBeenDownloaded": "Sauvegarde téléchargée avec succès.",
+  "notification_ErrorUploadingToDrive": "Erreur lors de l'envoi sur le drive.",
+  "confirmation_ConfirmToDownloadSave": "Êtes-vous sûr ? Cela écrasera la sauvegarde existante."
+}
