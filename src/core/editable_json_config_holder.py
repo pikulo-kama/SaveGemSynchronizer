@@ -15,7 +15,7 @@ class EditableJsonConfigHolder(JsonConfigHolder):
         Used to set json property in configuration.
         """
         self._data[property_name] = value
-        self.__save(self._data)
+        save_file(self._config_path, self._data, as_json=True)
 
     def set(self, value: any):
         """
@@ -23,16 +23,8 @@ class EditableJsonConfigHolder(JsonConfigHolder):
         This will fully replace existing configuration.
         """
         self._data = value
-        self.__save(self._data)
+        save_file(self._config_path, self._data, as_json=True)
 
     def _before_file_open(self):
         if not os.path.exists(self._config_path):
-            self.__save({})
-
-    def __save(self, data: any):
-        """
-        Used to save configuration with all its changes to the file system.
-        """
-
-        # Can't use property from config since it wil result in circular dependency.
-        save_file(self._config_path, data, as_json=True)
+            save_file(self._config_path, {}, as_json=True)

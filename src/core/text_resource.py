@@ -20,8 +20,8 @@ class TextResource:
     Used to resolve text resources.
     """
 
-    current_locale = None
-    holder = None
+    __current_locale = None
+    __holder = None
 
     @staticmethod
     def get(locale: str, key: str, *args) -> str:
@@ -30,12 +30,12 @@ class TextResource:
         If text resources has placeholder and arguments have been provided then they would be resolved.
         """
 
-        if TextResource.current_locale != locale:
+        if TextResource.__current_locale != locale:
             logger.info("Locale selection has been changed. Initializing holder for %s", locale)
-            TextResource.current_locale = locale
-            TextResource.holder = JsonConfigHolder(resolve_locale(locale))
+            TextResource.__current_locale = locale
+            TextResource.__holder = JsonConfigHolder(resolve_locale(locale))
 
-        label = str(TextResource.holder.get_value(key))
+        label = str(TextResource.__holder.get_value(key))
         logger.debug("TextResource '%s.%s' = %s", locale, key, label)
 
         if len(args) > 0:

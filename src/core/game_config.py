@@ -1,4 +1,5 @@
 import json
+import os
 
 from constants import GAME_CONFIG_POINTER_FILE_NAME
 from src.core.app_state import AppState
@@ -42,7 +43,7 @@ class GameConfig:
             name = game["name"]
 
             if "hidden" in game and game["hidden"] is True:
-                logger.info("Skipping '%s' since it's marked as hidden.", name)
+                logger.info("Skipping game '%s' since it's marked as hidden.", name)
                 continue
 
             GameConfig.__games.append(game)
@@ -62,7 +63,23 @@ class GameConfig:
         return list(GameConfig.__games_mapping.keys())
 
     @staticmethod
-    def game_prop(property_name: str):
+    def local_path():
+        """
+        Used to get local path where currently selected game save files
+        are located.
+        """
+        return os.path.expandvars(GameConfig.__game_prop("localPath"))
+
+    @staticmethod
+    def gdrive_directory_id():
+        """
+        Used to get Google Drive parent directory ID for currently selected game.
+        This directory contain all the save files.
+        """
+        return GameConfig.__game_prop("gdriveParentDirectoryId")
+
+    @staticmethod
+    def __game_prop(property_name: str):
         """
         Used to get property from configuration of game that is in state.
         """

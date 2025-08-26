@@ -32,9 +32,8 @@ class Uploader:
         """
 
         gui = GUI.instance()
+        saves_directory = GameConfig.local_path()
         file_path = resolve_temp_file(f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}.{ZIP_EXTENSION}")
-        saves_directory = os.path.expandvars(GameConfig.game_prop("localPath"))
-        parent_directory_id = GameConfig.game_prop("gdriveParentDirectoryId")
 
         if not os.path.exists(saves_directory):
             logger.error("Directory with saves is missing %s", saves_directory)
@@ -46,7 +45,7 @@ class Uploader:
         shutil.make_archive(remove_extension_from_path(file_path), ZIP_EXTENSION, saves_directory)
 
         try:
-            GDrive.upload_file(file_path, parent_directory_id)
+            GDrive.upload_file(file_path, GameConfig.gdrive_directory_id())
 
         except HttpError:
             gui.schedule_operation(lambda: notification(tr("notification_ErrorUploadingToDrive")))

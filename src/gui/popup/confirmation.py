@@ -5,6 +5,15 @@ from src.core.text_resource import tr
 from src.gui.popup import Popup
 
 
+def confirmation(message: str, callback):
+    """
+    Present popup used to display confirmation messages.
+    """
+    popup = Confirmation()
+    popup.set_confirm_callback(callback)
+    popup.show(message)
+
+
 class Confirmation(Popup):
     """
     Popup used to display confirmation messages.
@@ -25,12 +34,18 @@ class Confirmation(Popup):
     def _show_internal(self):
         button_frame = tk.Frame(self._container)
 
+        def confirm_callback():
+            if self.__confirm_callback is not None:
+                self.__confirm_callback()
+
+            self.destroy()
+
         confirm_btn = ttk.Button(
             button_frame,
             text=tr("popup_ConfirmationButtonConfirm"),
             cursor="hand2",
             width=12,
-            command=self.__confirm_callback,
+            command=confirm_callback,
             style="SmallPrimary.TButton",
             takefocus=False
         )

@@ -22,9 +22,13 @@ class Downloader:
 
     @staticmethod
     def download():
+        """
+        Used to download latest save from Google Drive
+        also responsible for making backup of old save.
+        """
 
         gui = GUI.instance()
-        saves_directory = os.path.expandvars(GameConfig.game_prop("localPath"))
+        saves_directory = GameConfig.local_path()
         temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
@@ -75,10 +79,14 @@ class Downloader:
 
     @staticmethod
     def get_last_save_metadata():
+        """
+        Used to get metadata of last save in Google Drive.
+        """
+
         files = GDrive.query_single(
             "files",
             "nextPageToken, files(id, name, owners, createdTime)",
-            f"mimeType='{ZIP_MIME_TYPE}' and '{GameConfig.game_prop("gdriveParentDirectoryId")}' in parents"
+            f"mimeType='{ZIP_MIME_TYPE}' and '{GameConfig.gdrive_directory_id()}' in parents"
         )
 
         if files is None:

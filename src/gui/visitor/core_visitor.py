@@ -122,7 +122,7 @@ class CoreVisitor(Visitor):
         creation_datetime += timezone(time_zone).utcoffset(creation_datetime)
 
         if creation_datetime.year != date.today().year:
-            # Only show year if it's not current one, just ot avoid extra information.
+            # Only show year if it's not current one, just to avoid extra information.
             date_format = "d MMMM YYYY"
 
         creation_date = format_datetime(creation_datetime, date_format, locale=locale)

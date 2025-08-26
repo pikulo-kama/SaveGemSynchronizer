@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from src.core.text_resource import tr
 from src.gui import GUI
-from src.gui.popup.confirmation import Confirmation
+from src.gui.popup.confirmation import confirmation
 from src.gui.visitor import Visitor
 from src.service.downloader import Downloader
 from src.service.uploader import Uploader
@@ -45,18 +45,6 @@ class DownloadUploadButtonVisitor(Visitor):
         Used to render upload and download buttons.
         """
 
-        def confirm_before_download():
-            """
-            Callback for download operation.
-            """
-            def internal_confirm():
-                confirmation.destroy()
-                execute_in_thread(Downloader.download)
-
-            confirmation = Confirmation()
-            confirmation.set_confirm_callback(internal_confirm)
-            confirmation.show(tr("confirmation_ConfirmToDownloadSave"))
-
         button_frame = tk.Frame(gui.body())
 
         self.__upload_button = ttk.Button(
@@ -72,7 +60,10 @@ class DownloadUploadButtonVisitor(Visitor):
             button_frame,
             cursor="hand2",
             width=5,
-            command=confirm_before_download,
+            command=lambda: confirmation(
+                tr("confirmation_ConfirmToDownloadSave"),
+                lambda: execute_in_thread(Downloader.download)
+            ),
             style="Secondary.TButton",
             takefocus=False
         )

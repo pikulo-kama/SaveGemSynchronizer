@@ -19,7 +19,7 @@ class GUI:
     def __init__(self):
         # Just to shut up Pylint...
         self.__visitors = list()
-        self.__destroy_callback = None
+        self.__before_destroy_callback = None
         raise RuntimeError('Call instance() instead')
 
     @classmethod
@@ -40,18 +40,18 @@ class GUI:
         """
 
         self.__visitors = list()
-        self.__destroy_callback = None
+        self.__before_destroy_callback = None
 
         self.__window = tk.Tk()
-        self.__body = tk.Frame(self.__window)
+        self.__body = tk.Frame(self.window())
 
         self.__center_window()
-        self.__window.title(tr("window_Title"))
-        self.__window.iconbitmap(resolve_resource("application.ico"))
-        self.__window.geometry(f"{prop("windowWidth")}x{prop("windowHeight")}")
-        self.__window.resizable(False, False)
+        self.window().title(tr("window_Title"))
+        self.window().iconbitmap(resolve_resource("application.ico"))
+        self.window().geometry(f"{prop("windowWidth")}x{prop("windowHeight")}")
+        self.window().resizable(False, False)
 
-        self.__window.protocol("WM_DELETE_WINDOW", self.destroy)
+        self.window().protocol("WM_DELETE_WINDOW", self.destroy)
         init_gui_styles()
 
     def window(self):
@@ -62,8 +62,8 @@ class GUI:
 
     def body(self):
         """
-        Used to get main widget which is direct child of body.
-        Affects more center area of the window (compared to root)
+        Used to get main widget which is direct child of root.
+        Works with more central area of the window (compared to root)
         """
         return self.__body
 
@@ -71,14 +71,14 @@ class GUI:
         """
         Used to change main window cursor.
         """
-        self.__window.config(cursor=cursor)
+        self.window().config(cursor=cursor)
 
     def schedule_operation(self, callback):
         """
         Used by processes executed on separate thread to execute some work back on main thread.
         This is needed since Tkinter doesn't work well with multithreading.
         """
-        self.__window.after(0, callback)
+        self.window().after(0, callback)
 
     def register_visitors(self, visitors):
         """
@@ -106,11 +106,11 @@ class GUI:
         for visitor in self.__visitors:
             visitor.visit(self)
 
-        self.__body.place(relx=.5, rely=.3, anchor=tk.CENTER)
+        self.body().place(relx=.5, rely=.3, anchor=tk.CENTER)
         self.refresh()
 
         logger.info("Application loop has been started.")
-        self.__window.mainloop()
+        self.window().mainloop()
 
     def refresh(self):
         """
@@ -121,24 +121,24 @@ class GUI:
         for visitor in self.__visitors:
             visitor.refresh(self)
 
-        self.__window.title(tr("window_Title"))
+        self.window().title(tr("window_Title"))
 
     def destroy(self):
         """
         Used to destroy application window.
         """
 
-        if self.__destroy_callback is not None:
-            self.__destroy_callback()
+        if self.__before_destroy_callback is not None:
+            self.__before_destroy_callback()
 
-        self.__window.destroy()
+        self.window().destroy()
 
     def before_destroy(self, callback):
         """
         Allows to configure additional callback function that would
         be invoked when window is being destroyed.
         """
-        self.__destroy_callback = callback
+        self.__before_destroy_callback = callback
 
     def __center_window(self):
         """
@@ -149,10 +149,10 @@ class GUI:
         width = prop("windowWidth")
         height = prop("windowHeight")
 
-        screen_width = self.__window.winfo_screenwidth()
-        screen_height = self.__window.winfo_screenheight()
+        screen_width = self.window().winfo_screenwidth()
+        screen_height = self.window().winfo_screenheight()
 
         x = (screen_width - width) / 2
         y = (screen_height - height) / 2
 
-        self.__window.geometry("%dx%d+%d+%d" % (width, height, x, y))
+        self.window().geometry("%dx%d+%d+%d" % (width, height, x, y))
