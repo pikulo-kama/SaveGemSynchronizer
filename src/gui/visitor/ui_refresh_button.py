@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.gui.gui import GUI
+from src.gui import GUI
 from src.gui.style import add_button_movement_effect
-from src.gui.visitor.Visitor import Visitor
+from src.gui.visitor import Visitor
 
 
 class UIRefreshButtonVisitor(Visitor):

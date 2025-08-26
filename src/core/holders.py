@@ -1,7 +1,7 @@
 import os
 
 from constants import JSON_EXTENSION
-from src.core.JsonConfigHolder import JsonConfigHolder
+from src.core.json_config_holder import JsonConfigHolder
 from src.util.file import resolve_config, LOCALE_DIR
 from src.util.logger import get_logger
 

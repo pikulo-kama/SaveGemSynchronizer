@@ -1,7 +1,7 @@
-from src.core.AppState import AppState
-from src.core.GameConfig import GameConfig
-from src.gui.gui import GUI
-from src.gui.visitor.Visitor import Visitor
+from src.core.app_state import AppState
+from src.core.game_config import GameConfig
+from src.gui import GUI
+from src.gui.visitor import Visitor
 from tkinter import ttk, font
 import tkinter as tk
 

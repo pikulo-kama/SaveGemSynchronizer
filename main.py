@@ -2,13 +2,13 @@
 # noinspection PyUnresolvedReferences
 import initializer
 
-from src.gui.visitor.DownloadUploadButtonVisitor import DownloadUploadButtonVisitor
-from src.gui.visitor.GameDropdownVisitor import GameDropdownVisitor
-from src.gui.visitor.LanguageSwitchVisitor import LanguageSwitchVisitor
-from src.gui.visitor.UIRefreshButtonVisitor import UIRefreshButtonVisitor
+from src.gui.visitor.download_upload_button import DownloadUploadButtonVisitor
+from src.gui.visitor.game_dropdown import GameDropdownVisitor
+from src.gui.visitor.language_switch import LanguageSwitchVisitor
+from src.gui.visitor.ui_refresh_button import UIRefreshButtonVisitor
 
-from src.gui.gui import GUI
-from src.gui.visitor.CoreVisitor import CoreVisitor
+from src.gui import GUI
+from src.gui.visitor.core_visitor import CoreVisitor
 from src.util.file import OUTPUT_DIR, cleanup_directory
 from src.util.logger import get_logger
 

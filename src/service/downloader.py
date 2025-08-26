@@ -2,14 +2,14 @@ import os.path
 import shutil
 
 from constants import ZIP_MIME_TYPE, ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
-from src.core.AppState import AppState
-from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
-from src.core.GameConfig import GameConfig
-from src.core.TextResource import tr
+from src.core.app_state import AppState
+from src.core.editable_json_config_holder import EditableJsonConfigHolder
+from src.core.game_config import GameConfig
+from src.core.text_resource import tr
 from src.gui.popup.notification import notification
-from src.service.GDrive import GDrive
+from src.service.gdrive import GDrive
 from src.util.file import resolve_temp_file, resolve_app_data, cleanup_directory, save_file
-from src.gui.gui import GUI
+from src.gui import GUI
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)

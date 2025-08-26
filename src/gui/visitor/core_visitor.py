@@ -3,18 +3,18 @@ import tkinter as tk
 from babel.localtime import get_localzone
 
 from constants import SAVE_VERSION_FILE_NAME
-from src.core.AppState import AppState
-from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
-from src.core.TextResource import tr
+from src.core.app_state import AppState
+from src.core.editable_json_config_holder import EditableJsonConfigHolder
+from src.core.text_resource import tr
 from src.core.holders import prop
-from src.gui.gui import GUI
-from src.gui.visitor.Visitor import Visitor
+from src.gui import GUI
+from src.gui.visitor import Visitor
 from datetime import date, datetime
 
 from babel.dates import format_datetime
 from pytz import timezone
 
-from src.service.Downloader import Downloader
+from src.service.downloader import Downloader
 from src.util.file import resolve_app_data
 from src.util.logger import get_logger
 

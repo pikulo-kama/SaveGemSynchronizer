@@ -1,5 +1,5 @@
 from threading import Thread
-from src.gui.gui import GUI
+from src.gui import GUI
 
 
 def execute_in_thread(function):

@@ -1,5 +1,5 @@
-from src.core.AppState import AppState
-from src.core.JsonConfigHolder import JsonConfigHolder
+from src.core.app_state import AppState
+from src.core.json_config_holder import JsonConfigHolder
 from src.core.holders import prop
 from src.util.file import resolve_locale
 from src.util.logger import get_logger

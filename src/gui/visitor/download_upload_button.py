@@ -1,12 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.core.TextResource import tr
-from src.gui.gui import GUI
+from src.core.text_resource import tr
+from src.gui import GUI
 from src.gui.popup.confirmation import Confirmation
-from src.gui.visitor.Visitor import Visitor
-from src.service.Downloader import Downloader
-from src.service.Uploader import Uploader
+from src.gui.visitor import Visitor
+from src.service.downloader import Downloader
+from src.service.uploader import Uploader
 from src.util.logger import get_logger
 from src.util.thread import execute_in_thread
 

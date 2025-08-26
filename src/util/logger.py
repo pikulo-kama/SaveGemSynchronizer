@@ -4,8 +4,8 @@ import re
 from logging.handlers import TimedRotatingFileHandler
 
 from constants import LOG_FILE_NAME, LOGBACK_FILE_NAME
-from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
-from src.core.JsonConfigHolder import JsonConfigHolder
+from src.core.editable_json_config_holder import EditableJsonConfigHolder
+from src.core.json_config_holder import JsonConfigHolder
 from src.util.file import resolve_log, resolve_config, resolve_app_data
 
 

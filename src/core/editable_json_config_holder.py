@@ -1,6 +1,6 @@
 import os.path
 
-from src.core.JsonConfigHolder import JsonConfigHolder
+from src.core.json_config_holder import JsonConfigHolder
 from src.util.file import save_file
 
 

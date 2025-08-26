@@ -1,12 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.core.AppState import AppState
-from src.core.TextResource import tr
+from src.core.app_state import AppState
+from src.core.text_resource import tr
 from src.core.holders import prop, locales
-from src.gui.gui import GUI
+from src.gui import GUI
 from src.gui.style import add_button_movement_effect
-from src.gui.visitor.Visitor import Visitor
+from src.gui.visitor import Visitor
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)

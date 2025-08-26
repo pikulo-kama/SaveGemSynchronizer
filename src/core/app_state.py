@@ -1,5 +1,5 @@
 from constants import STATE_SELECTED_GAME, STATE_SELECTED_LOCALE
-from src.core.EditableJsonConfigHolder import EditableJsonConfigHolder
+from src.core.editable_json_config_holder import EditableJsonConfigHolder
 from src.util.file import resolve_app_data
 from src.util.logger import get_logger
 

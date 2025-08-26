@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.core.TextResource import tr
-from src.gui.popup.popup import Popup
+from src.core.text_resource import tr
+from src.gui.popup import Popup
 
 
 class Confirmation(Popup):

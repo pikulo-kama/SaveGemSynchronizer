@@ -1,7 +1,7 @@
 import os
 
 from constants import APP_DATA_ROOT
-from src.core.GameConfig import GameConfig
+from src.core.game_config import GameConfig
 from src.util.file import OUTPUT_DIR, LOGS_DIR
 from src.util.logger import initialize_logging
 

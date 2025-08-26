@@ -1,8 +1,8 @@
 import json
 
 from constants import GAME_CONFIG_POINTER_FILE_NAME
-from src.core.AppState import AppState
-from src.service.GDrive import GDrive
+from src.core.app_state import AppState
+from src.service.gdrive import GDrive
 from src.util.file import resolve_project_data, read_file
 from src.util.logger import get_logger
 
