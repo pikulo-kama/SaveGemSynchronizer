@@ -1,6 +1,7 @@
 ![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
 # 💎 SaveGem – Save Manager for PC Games
+<img src="assets/application-demo.png" alt="SaveGem Screenshot" width="800"/>
 
 ## 📌 Overview
 **SaveGem** is a simple desktop application built with **Tkinter** that allows players to **upload and download save files to Google Drive**.  
