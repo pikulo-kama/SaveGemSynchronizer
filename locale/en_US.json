@@ -1,7 +1,7 @@
 {
   "languageId" : "EN",
   "window_Title": "SaveGem Synchronizer",
-  "window_Signature": "{0} SaveGem® & Artur Parkour. All rights reserved.",
+  "window_Copyright": "SaveGem™ v{0} © {1} Artur Parkour. Licensed under GPLv3.",
   "popup_NotificationTitle": "Information",
   "popup_NotificationButtonClose": "OK",
   "popup_ConfirmationTitle": "Be Aware",
@@ -17,5 +17,6 @@
   "notification_SaveHasBeenUploaded": "Save uploaded successfully.",
   "notification_NewSaveHasBeenDownloaded": "Save has been downloaded successfully.",
   "notification_ErrorUploadingToDrive" : "Error occurred when uploading to drive.",
+  "notification_ErrorSaveDirectoryMissing": "Save directory not found. \n{0}",
   "confirmation_ConfirmToDownloadSave": "Sure? This will erase existing save you have."
 }

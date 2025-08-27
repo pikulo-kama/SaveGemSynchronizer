@@ -15,15 +15,15 @@ def init_gui_styles():
     style = Style()
     style.theme_use("clam")
 
-    add_button(style, prop("primaryButton"))
-    add_button(style, prop("secondaryButton"))
+    add_button(style, "primaryButton")
+    add_button(style, "secondaryButton")
 
-    add_small_button(style, prop("primaryButton"))
-    add_small_button(style, prop("secondaryButton"))
+    add_small_button(style, "primaryButton")
+    add_small_button(style, "secondaryButton")
 
     for font_size in [16, 18]:
-        add_square_button(style, prop("primaryButton"), font_size)
-        add_square_button(style, prop("secondaryButton"), font_size)
+        add_square_button(style, "primaryButton", font_size)
+        add_square_button(style, "secondaryButton", font_size)
 
     add_secondary_combobox(style)
 
@@ -43,20 +43,20 @@ def add_secondary_combobox(style: Style):
 
     style.map(
         style_name,
-        fieldbackground=expand_property(prop("secondaryButton")["colorHover"]),
-        selectbackground=expand_property(prop("secondaryButton")["colorHover"]),
+        fieldbackground=expand_property(prop("secondaryButton.colorHover")),
+        selectbackground=expand_property(prop("secondaryButton.colorHover")),
         foreground=expand_property(prop("secondaryColor")),
         selectforeground=expand_property(prop("secondaryColor")),
-        background=expand_property(prop("secondaryButton")["colorStatic"])
+        background=expand_property(prop("secondaryButton.colorStatic"))
     )
 
 
-def add_button(style: Style, button):
+def add_button(style: Style, button: str):
     """
     Used to create regular button style using provided configuration.
     """
 
-    style_name = f"{button["styleName"]}.TButton"
+    style_name = f"{prop(f"{button}.styleName")}.TButton"
     log_style(style_name)
 
     style.configure(
@@ -64,7 +64,7 @@ def add_button(style: Style, button):
         borderwidth=0,
         relief=tk.SOLID,
         foreground=prop("primaryColor"),
-        background=button["colorStatic"],
+        background=prop(f"{button}.colorStatic"),
         padding=15,
         font=("Segoe UI Semibold", 15)
     )
@@ -72,8 +72,8 @@ def add_button(style: Style, button):
     style.map(
         style_name,
         background=[
-            ("active", button["colorHover"]),
-            ("pressed", button["colorStatic"])
+            ("active", prop(f"{button}.colorHover")),
+            ("pressed", prop(f"{button}.colorStatic"))
         ]
     )
 
@@ -83,7 +83,7 @@ def add_small_button(style: Style, button):
     Used to create small button style using provided configuration.
     """
 
-    style_name = f"Small{button["styleName"]}.TButton"
+    style_name = f"Small{prop(f"{button}.styleName")}.TButton"
     log_style(style_name)
 
     style.configure(
@@ -91,7 +91,7 @@ def add_small_button(style: Style, button):
         borderwidth=0,
         relief=tk.SOLID,
         foreground=prop("secondaryColor"),
-        background=button["colorStatic"],
+        background=prop(f"{button}.colorStatic"),
         padding=(5, 5),
         font=4
     )
@@ -99,8 +99,8 @@ def add_small_button(style: Style, button):
     style.map(
         style_name,
         background=[
-            ("active", button["colorHover"]),
-            ("pressed", button["colorStatic"])
+            ("active", prop(f"{button}.colorHover")),
+            ("pressed", prop(f"{button}.colorStatic"))
         ]
     )
 
@@ -110,7 +110,7 @@ def add_square_button(style: Style, button, font_size: int):
     Used to create square button style using provided configuration and font size.
     """
 
-    style_name = f"Square{button["styleName"]}.{font_size}.TButton"
+    style_name = f"Square{prop(f"{button}.styleName")}.{font_size}.TButton"
     log_style(style_name)
 
     style.configure(
@@ -121,15 +121,15 @@ def add_square_button(style: Style, button, font_size: int):
         width=3,
         height=1,
         foreground=prop("primaryColor"),
-        background=button["colorStatic"],
+        background=prop(f"{button}.colorStatic"),
         padding=(7, 10)
     )
 
     style.map(
         style_name,
         background=[
-            ("active", button["colorHover"]),
-            ("pressed", button["colorStatic"])
+            ("active", prop(f"{button}.colorHover")),
+            ("pressed", prop(f"{button}.colorStatic"))
         ]
     )
 

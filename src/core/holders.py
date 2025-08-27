@@ -18,4 +18,15 @@ def prop(property_name: str):
     """
     Used to get property value from main configuration file (config/main.json)
     """
-    return main_config.get_value(property_name)
+
+    parts = property_name.split(".")
+
+    if len(parts) == 1:
+        return main_config.get_value(property_name)
+
+    value = main_config.get_value(parts.pop(0))
+
+    for property_part in parts:
+        value = value[property_part]
+
+    return value

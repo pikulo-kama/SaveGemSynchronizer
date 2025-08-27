@@ -24,10 +24,6 @@ class LanguageSwitchVisitor(Visitor):
     def visit(self, gui: GUI):
         self.__add_language_switch_control(gui)
 
-    def is_enabled(self):
-        # Only show control when there are multiple locales configured.
-        return len(locales) > 1
-
     def refresh(self, gui: GUI):
         language_id = tr("languageId")
 
@@ -37,6 +33,10 @@ class LanguageSwitchVisitor(Visitor):
 
         logger.debug("Refreshing language switch (%s)", language_id)
         self.__language_switch.configure(text=language_id)
+
+    def is_enabled(self):
+        # Only show control when there are multiple locales configured.
+        return len(locales) > 1
 
     def __add_language_switch_control(self, gui: GUI):
         """

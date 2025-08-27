@@ -1,7 +1,7 @@
 {
   "languageId": "DE",
   "window_Title": "SaveGem Synchronisierer",
-  "window_Signature": "{0} SaveGem® & Artur Parkour. Alle Rechte vorbehalten.",
+  "window_Copyright": "SaveGem™ v{0} © {1} Artur Parkour. Lizenziert unter GPLv3.",
   "popup_NotificationTitle": "Information",
   "popup_NotificationButtonClose": "OK",
   "popup_ConfirmationTitle": "Achtung",
@@ -17,5 +17,6 @@
   "notification_SaveHasBeenUploaded": "Spielstand erfolgreich hochgeladen.",
   "notification_NewSaveHasBeenDownloaded": "Spielstand erfolgreich heruntergeladen.",
   "notification_ErrorUploadingToDrive": "Fehler beim Hochladen auf den Drive.",
+  "notification_ErrorSaveDirectoryMissing": "Speicherordner nicht gefunden. \n{0}",
   "confirmation_ConfirmToDownloadSave": "Sicher? Dies überschreibt deinen vorhandenen Spielstand."
 }

@@ -26,9 +26,6 @@ class DownloadUploadButtonVisitor(Visitor):
     def visit(self, gui: GUI):
         self.__add_buttons(gui)
 
-    def is_enabled(self):
-        return True
-
     def refresh(self, gui: GUI):
 
         upload_button_label = tr("label_UploadSaveToDrive")
@@ -39,6 +36,9 @@ class DownloadUploadButtonVisitor(Visitor):
 
         self.__download_button.configure(text=download_button_label)
         logger.debug("Download button reloaded (%s)", download_button_label)
+
+    def is_enabled(self):
+        return True
 
     def __add_buttons(self, gui):
         """

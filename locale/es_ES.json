@@ -1,7 +1,7 @@
 {
   "languageId" : "ES",
   "window_Title": "Sincronizador SaveGem",
-  "window_Signature": "{0} SaveGem® & Artur Parkour. Todos los derechos reservados.",
+  "window_Copyright": "SaveGem™ v{0} © {1} Artur Parkour. Licenciado bajo GPLv3.",
   "popup_NotificationTitle": "Información",
   "popup_NotificationButtonClose": "OK",
   "popup_ConfirmationTitle": "Atención",
@@ -17,5 +17,6 @@
   "notification_SaveHasBeenUploaded": "Guardado subido con éxito.",
   "notification_NewSaveHasBeenDownloaded": "Guardado descargado con éxito.",
   "notification_ErrorUploadingToDrive" : "Ocurrió un error al subir al almacenamiento.",
+  "notification_ErrorSaveDirectoryMissing": "Carpeta de guardado no encontrada. \n{0}",
   "confirmation_ConfirmToDownloadSave": "¿Seguro? Esto borrará el guardado existente."
 }

@@ -1,4 +1,6 @@
-# 🎮 SaveGem – Save Manager for PC Games
+![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg)
+
+# 💎 SaveGem – Save Manager for PC Games
 
 ## 📌 Overview
 **SaveGem** is a simple desktop application built with **Tkinter** that allows players to **upload and download save files to Google Drive**.  
@@ -29,13 +31,18 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 - In order to build EXE or just be able to use application you need file called `credentials.json` to be in root of the project
 - You also need `game-config.file-id.txt` to be present in root directory with ID of Google Drive game config. (See [placeholder file](./game-config-file-id.txt.placeholder)) 
 
-### Install dependencies
+### Install dependencies and Build
 #### Linux
 ```bash
 ./scripts/build.sh
 ```
 ####
 Windows
-```bash
+```powershell
 ./scripts/build.ps1
 ```
+
+## ⚖️ Licensing
+
+- Application code: GPLv3 (see [LICENSE](LICENSE))
+- Dependencies and assets: see [NOTICE.md](NOTICE.md) for details

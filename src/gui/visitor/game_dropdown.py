@@ -22,9 +22,6 @@ class GameDropdownVisitor(Visitor):
     def visit(self, gui: GUI):
         self.__add_game_selection_dropdown(gui)
 
-    def is_enabled(self):
-        return True
-
     def refresh(self, gui: GUI):
 
         GameConfig.download()
@@ -55,6 +52,9 @@ class GameDropdownVisitor(Visitor):
         )
 
         self.__combobox.set(selected_game)
+
+    def is_enabled(self):
+        return True
 
     def __add_game_selection_dropdown(self, gui: GUI):
         """

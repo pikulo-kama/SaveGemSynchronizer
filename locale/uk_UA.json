@@ -1,7 +1,7 @@
 {
   "languageId" : "UK",
   "window_Title" : "Синхронізатор SaveGem",
-  "window_Signature" : "{0} SaveGem® & Артур Паркур. Всі права захищені.",
+  "window_Copyright" : "SaveGem™ v{0} © {1} Artur Parkour. Ліцензовано за GPLv3.",
   "popup_NotificationTitle" : "Інформасьйон",
   "popup_NotificationButtonClose" : "OK",
   "popup_ConfirmationTitle" : "Застереження",

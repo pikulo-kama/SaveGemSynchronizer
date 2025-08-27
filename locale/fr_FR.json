@@ -1,7 +1,7 @@
 {
   "languageId": "FR",
   "window_Title": "Synchroniseur SaveGem",
-  "window_Signature": "{0} SaveGem® & Artur Parkour. Tous droits réservés.",
+  "window_Copyright": "SaveGem™ v{0} © {1} Artur Parkour. Sous licence GPLv3.",
   "popup_NotificationTitle": "Information",
   "popup_NotificationButtonClose": "OK",
   "popup_ConfirmationTitle": "Attention",
@@ -17,5 +17,6 @@
   "notification_SaveHasBeenUploaded": "Sauvegarde envoyée avec succès.",
   "notification_NewSaveHasBeenDownloaded": "Sauvegarde téléchargée avec succès.",
   "notification_ErrorUploadingToDrive": "Erreur lors de l'envoi sur le drive.",
+  "notification_ErrorSaveDirectoryMissing": "Dossier de sauvegarde introuvable. \n{0}",
   "confirmation_ConfirmToDownloadSave": "Êtes-vous sûr ? Cela écrasera la sauvegarde existante."
 }

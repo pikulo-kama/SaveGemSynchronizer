@@ -21,14 +21,11 @@ from src.util.logger import get_logger
 logger = get_logger(__name__)
 
 
-class CoreVisitor(Visitor):
+class SaveStatusVisitor(Visitor):
     """
-    Used to build main application elements.
-
-    Specifically:
+    Used to build elements displaying:
     - Last drive save information
     - Local save status information
-    - Copyright
 
     Always enabled.
     """
@@ -36,14 +33,9 @@ class CoreVisitor(Visitor):
     def __init__(self):
         self.__save_status = None
         self.__last_save_timestamp = None
-        self.__copyright_label = None
 
     def visit(self, gui: GUI):
         self.__add_save_information(gui)
-        self.__add_copyright_and_version(gui)
-
-    def is_enabled(self):
-        return True
 
     def refresh(self, gui: GUI):
         last_save_meta = Downloader.get_last_save_metadata()
@@ -51,17 +43,14 @@ class CoreVisitor(Visitor):
         save_status_label = self.__get_last_download_version_text(last_save_meta)
         last_save_timestamp_label = self.__get_last_save_info_text(last_save_meta)
 
-        copy = f"© 2023{"" if date.today().year == 2023 else f"-{date.today().year}"}"
-        copyright_label = tr("window_Signature", copy)
-
         self.__save_status.configure(text=save_status_label)
         logger.debug("Save status label was reloaded. (%s)", save_status_label)
 
         self.__last_save_timestamp.configure(text=last_save_timestamp_label)
         logger.debug("Last save information label was reloaded. (%s)", last_save_timestamp_label)
 
-        self.__copyright_label.configure(text=copyright_label)
-        logger.debug("Copyright was reloaded. (%s)", copyright_label)
+    def is_enabled(self):
+        return True
 
     def __add_save_information(self, gui):
         """
@@ -88,21 +77,6 @@ class CoreVisitor(Visitor):
         self.__last_save_timestamp.grid(row=1, column=0, pady=5)
 
         info_frame.grid(row=0, column=0, pady=150)
-
-    def __add_copyright_and_version(self, gui):
-        """
-        Used to render copyright label.
-        """
-
-        horizontal_frame = tk.Frame(gui.window(), pady=-4)
-
-        version_label = tk.Label(horizontal_frame, text=f"v{prop("version")}")
-        version_label.grid(row=0, column=0, padx=5)
-
-        self.__copyright_label = tk.Label(horizontal_frame)
-        self.__copyright_label.grid(row=0, column=1)
-
-        horizontal_frame.place(relx=.5, rely=.9, anchor=tk.N)
 
     @staticmethod
     def __get_last_save_info_text(last_save_meta):
@@ -146,7 +120,7 @@ class CoreVisitor(Visitor):
 
         if last_save_meta is None:
             return tr("label_StorageIsEmpty")
-            
+
         elif last_downloaded_version is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")
 
