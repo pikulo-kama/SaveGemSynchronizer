@@ -1,10 +1,10 @@
 import tkinter as tk
-from tkinter import ttk
 
 from src.core.app_state import AppState
 from src.core.text_resource import tr
 from src.core.holders import prop, locales
 from src.gui import GUI
+from src.gui.component.wait_button import WaitButton
 from src.gui.style import add_button_movement_effect
 from src.gui.visitor import Visitor
 from src.util.logger import get_logger
@@ -47,7 +47,7 @@ class LanguageSwitchVisitor(Visitor):
         def switch_language():
             LanguageSwitchVisitor.__switch_language(gui)
 
-        self.__language_switch = ttk.Button(
+        self.__language_switch = WaitButton(
             gui.window(),
             command=lambda: execute_in_thread(switch_language),
             cursor="hand2",

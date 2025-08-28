@@ -3,6 +3,7 @@ from tkinter import ttk
 
 from src.core.text_resource import tr
 from src.gui import GUI
+from src.gui.component.wait_button import WaitButton
 from src.gui.popup.confirmation import confirmation
 from src.gui.visitor import Visitor
 from src.service.downloader import Downloader
@@ -47,11 +48,12 @@ class DownloadUploadButtonVisitor(Visitor):
 
         button_frame = tk.Frame(gui.body())
 
-        self.__upload_button = ttk.Button(
+        self.__upload_button = WaitButton(
             button_frame,
             cursor="hand2",
             width=35,
             command=lambda: execute_in_thread(Uploader.upload),
+            waitMessage=tr("label_UploadingSaveToDrive"),
             style="Primary.TButton",
             takefocus=False
         )
