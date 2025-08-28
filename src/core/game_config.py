@@ -27,6 +27,7 @@ class GameConfig:
         game_config_pointer_file = resolve_project_data(GAME_CONFIG_POINTER_FILE_NAME)
         game_config_file_id = read_file(game_config_pointer_file)
 
+        logger.info("Download game configuration from drive.")
         game_config = GDrive.download_file(game_config_file_id)
 
         if game_config is None:
@@ -49,7 +50,7 @@ class GameConfig:
             GameConfig.__games.append(game)
             GameConfig.__games_mapping[name] = game
 
-        logger.info("Configuration for following games was found = %s", ", ".join(GameConfig.__games_mapping.keys()))
+        logger.info("Configuration for following game(s) was found = %s", ", ".join(GameConfig.__games_mapping.keys()))
 
     @staticmethod
     def games():

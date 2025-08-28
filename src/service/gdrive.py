@@ -1,4 +1,5 @@
 import io
+import logging
 import os.path
 
 from google.oauth2.credentials import Credentials
@@ -11,6 +12,7 @@ from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 from constants import GDRIVE_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME, ZIP_MIME_TYPE
 from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
 from src.util.logger import get_logger
+from src.util.timer import measure_time
 
 logger = get_logger(__name__)
 SCOPES = [
@@ -47,6 +49,7 @@ class GDrive:
             return None
 
     @staticmethod
+    @measure_time(when=logging.DEBUG)
     def download_file(file_id):
         """
         Used to in the first place to download archives.
@@ -70,20 +73,19 @@ class GDrive:
         return None
 
     @staticmethod
+    @measure_time(when=logging.DEBUG)
     def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE):
         """
         Used to upload file to Google Drive into provided directory.
         """
 
-        media = MediaFileUpload(file_path, mimetype=mime_type)
+        media = MediaFileUpload(file_path, mimetype=mime_type, resumable=True, chunksize=5 * 1024 * 1024)
         metadata = {
             "name": file_name_from_path(file_path),
             "parents": [parent_directory_id]
         }
 
         try:
-            # Upload archive to Google Drive.
-            logger.info("Uploading archive to drive.")
             GDrive.__drive().files().create(
                 body=metadata,
                 media_body=media,
@@ -91,7 +93,7 @@ class GDrive:
             ).execute()
 
         except HttpError as error:
-            logger.error("Error uploading archive to drive", error)
+            logger.error("Error uploading file to drive", error)
             raise error
 
     @staticmethod
