@@ -8,6 +8,7 @@ from src.gui import GUI
 from src.gui.style import add_button_movement_effect
 from src.gui.visitor import Visitor
 from src.util.logger import get_logger
+from src.util.thread import execute_in_thread
 
 logger = get_logger(__name__)
 
@@ -43,9 +44,12 @@ class LanguageSwitchVisitor(Visitor):
         Used to render language switch control.
         """
 
+        def switch_language():
+            LanguageSwitchVisitor.__switch_language(gui)
+
         self.__language_switch = ttk.Button(
             gui.window(),
-            command=lambda: LanguageSwitchVisitor.__switch_language(gui),
+            command=lambda: execute_in_thread(switch_language),
             cursor="hand2",
             style="SquareSecondary.16.TButton",
             takefocus=False

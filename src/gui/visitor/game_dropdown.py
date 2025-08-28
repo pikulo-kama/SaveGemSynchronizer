@@ -6,6 +6,7 @@ from tkinter import ttk, font
 import tkinter as tk
 
 from src.util.logger import get_logger
+from src.util.thread import execute_in_thread
 
 logger = get_logger(__name__)
 
@@ -77,4 +78,4 @@ class GameDropdownVisitor(Visitor):
 
         self.__combobox.pack()
         self.__combobox.place(relx=.9, rely=.05, width=150, height=30, anchor=tk.N)
-        self.__combobox.bind("<<ComboboxSelected>>", on_game_selection_change)
+        self.__combobox.bind("<<ComboboxSelected>>", lambda e: execute_in_thread(lambda: on_game_selection_change(e)))

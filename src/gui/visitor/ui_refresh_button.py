@@ -4,6 +4,7 @@ from tkinter import ttk
 from src.gui import GUI
 from src.gui.style import add_button_movement_effect
 from src.gui.visitor import Visitor
+from src.util.thread import execute_in_thread
 
 
 class UIRefreshButtonVisitor(Visitor):
@@ -30,7 +31,7 @@ class UIRefreshButtonVisitor(Visitor):
         refresh_button = ttk.Button(
             gui.window(),
             text="⟳",
-            command=gui.refresh,
+            command=lambda: execute_in_thread(gui.refresh),
             cursor="hand2",
             padding=(4, 7),
             style="SquarePrimary.18.TButton",
