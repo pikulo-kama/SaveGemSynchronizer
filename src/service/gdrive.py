@@ -27,6 +27,19 @@ class GDrive:
     Class that has most of the Google Drive interaction logic defined.
     """
 
+    __CHUNK_SIZE = 10 * 1024 * 1024
+
+    @staticmethod
+    def get_current_user():
+        """
+        Used to get information about authenticated user.
+        """
+        response = GDrive.__drive().about() \
+            .get(fields="user") \
+            .execute()
+
+        return response["user"]
+
     @staticmethod
     def query_single(target_field: str, fields: str, q: str):
         """
@@ -50,51 +63,80 @@ class GDrive:
 
     @staticmethod
     @measure_time(when=logging.DEBUG)
-    def download_file(file_id):
+    def download_file(file_id, subscriber=None):
         """
         Used to in the first place to download archives.
         """
 
-        request = GDrive.__drive().files().get_media(fileId=file_id)
-        file = io.BytesIO()
-
-        downloader = MediaIoBaseDownload(file, request)
         done = False
+        file = io.BytesIO()
+        request = GDrive.__drive().files().get_media(fileId=file_id)
+        downloader = MediaIoBaseDownload(file, request, chunksize=GDrive.__CHUNK_SIZE)
 
         try:
             while not done:
-                status, done = downloader.next_chunk()
-
-            return file
+                _, done = GDrive.__next_chunk(downloader, subscriber)
 
         except HttpError as error:
             logger.error("Failed to download file from drive", error)
+            return None
         
-        return None
+        return file
 
     @staticmethod
     @measure_time(when=logging.DEBUG)
-    def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE):
+    def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE, subscriber=None):
         """
         Used to upload file to Google Drive into provided directory.
         """
 
-        media = MediaFileUpload(file_path, mimetype=mime_type, resumable=True, chunksize=5 * 1024 * 1024)
+        done = False
+        media = MediaFileUpload(
+            file_path,
+            mimetype=mime_type,
+            resumable=True,
+            chunksize=GDrive.__CHUNK_SIZE
+        )
         metadata = {
             "name": file_name_from_path(file_path),
             "parents": [parent_directory_id]
         }
 
         try:
-            GDrive.__drive().files().create(
+            request = GDrive.__drive().files().create(
                 body=metadata,
                 media_body=media,
                 fields="id"
-            ).execute()
+            )
+
+            while not done:
+                _, done = GDrive.__next_chunk(request, subscriber)
 
         except HttpError as error:
             logger.error("Error uploading file to drive", error)
             raise error
+
+    @staticmethod
+    def __next_chunk(request, subscriber=None):
+        """
+        Wrapper method which formats progress into percentage number from 0 to 100.
+        Accepts subscriber callback which could be used to respond to download/upload progress.
+        """
+
+        status, done = request.next_chunk()
+
+        if subscriber is not None:
+
+            if done:
+                progress = 100
+            elif status is not None:
+                progress = int(status.progress() * 100)
+            else:
+                progress = 0
+
+            subscriber(progress)
+
+        return status, done
 
     @staticmethod
     def __drive():

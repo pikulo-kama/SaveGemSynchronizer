@@ -20,10 +20,6 @@ class DownloadUploadButtonVisitor(Visitor):
     Always enabled.
     """
 
-    def __init__(self):
-        self.__download_button = None
-        self.__upload_button = None
-
     def visit(self, gui: GUI):
         self.__add_buttons(gui)
 
@@ -32,23 +28,24 @@ class DownloadUploadButtonVisitor(Visitor):
         upload_button_label = tr("label_UploadSaveToDrive")
         download_button_label = tr("label_DownloadSaveFromDrive")
 
-        self.__upload_button.configure(text=upload_button_label)
+        gui.widget("upload_button").configure(text=upload_button_label)
         logger.debug("Upload button reloaded (%s)", upload_button_label)
 
-        self.__download_button.configure(text=download_button_label)
+        gui.widget("download_button").configure(text=download_button_label)
         logger.debug("Download button reloaded (%s)", download_button_label)
 
     def is_enabled(self):
         return True
 
-    def __add_buttons(self, gui):
+    @staticmethod
+    def __add_buttons(gui):
         """
         Used to render upload and download buttons.
         """
 
         button_frame = tk.Frame(gui.body())
 
-        self.__upload_button = WaitButton(
+        upload_button = WaitButton(
             button_frame,
             cursor="hand2",
             width=35,
@@ -58,7 +55,7 @@ class DownloadUploadButtonVisitor(Visitor):
             takefocus=False
         )
 
-        self.__download_button = ttk.Button(
+        download_button = ttk.Button(
             button_frame,
             cursor="hand2",
             width=5,
@@ -70,6 +67,9 @@ class DownloadUploadButtonVisitor(Visitor):
             takefocus=False
         )
 
-        self.__upload_button.grid(row=0, column=0, padx=5)
-        self.__download_button.grid(row=0, column=1, padx=5)
+        upload_button.grid(row=0, column=0, padx=5)
+        download_button.grid(row=0, column=1, padx=5)
         button_frame.grid(row=1, column=0)
+
+        gui.add_widget("upload_button", upload_button)
+        gui.add_widget("download_button", download_button)

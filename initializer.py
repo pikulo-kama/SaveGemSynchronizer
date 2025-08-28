@@ -20,5 +20,11 @@ def init():
     from src.core.game_config import GameConfig
     GameConfig.download()
 
+    from src.core.app_state import AppState
+    from src.service.gdrive import GDrive
+
+    user = GDrive.get_current_user()
+    AppState.set_user_email(user["emailAddress"])
+
 
 init()

@@ -47,7 +47,7 @@ class Downloader:
 
         # Download file and write it to zip file locally (in output directory)
         logger.info("Downloading save archive.")
-        file = GDrive.download_file(metadata.get("id")).getvalue()
+        file = GDrive.download_file(metadata.get("id"), subscriber=Downloader.__download_subscriber).getvalue()
 
         logger.info("Storing file in output directory.")
         save_file(temp_zip_file_name, file, binary=True)
@@ -104,3 +104,7 @@ class Downloader:
             "createdTime": files[0]["createdTime"],
             "owner": files[0]["owners"][0]["displayName"]
         }
+
+    @staticmethod
+    def __download_subscriber(progress):
+        GUI.instance().widget("download_button").configure(text=f"{progress}%")

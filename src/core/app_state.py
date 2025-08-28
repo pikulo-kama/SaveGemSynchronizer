@@ -14,47 +14,64 @@ class AppState:
     """
 
     __state = EditableJsonConfigHolder(resolve_app_data("state"))
+    # This shouldn't be part of state since it would be a security issue.
+    __user_email: str = None
 
-    @staticmethod
-    def set_game(game_name: str):
+    @classmethod
+    def set_user_email(cls, user_email: str):
+        """
+        Used to set email of currently authenticated user in memory.
+        This will not be written to state.json.
+        """
+        cls.__user_email = user_email
+
+    @classmethod
+    def get_user_email(cls):
+        """
+        Used to get email address of currently authenticated user.
+        """
+        return cls.__user_email
+
+    @classmethod
+    def set_game(cls, game_name: str):
         """
         Set game as active.
         """
-        AppState.__state.set_value(STATE_SELECTED_GAME, game_name)
+        cls.__state.set_value(STATE_SELECTED_GAME, game_name)
 
-    @staticmethod
-    def get_game(default_value: str = None):
+    @classmethod
+    def get_game(cls, default_value: str = None):
         """
         Get active game.
         """
-        return AppState.__get_value(STATE_SELECTED_GAME, default_value)
+        return cls.__get_value(STATE_SELECTED_GAME, default_value)
 
-    @staticmethod
-    def set_locale(locale: str):
+    @classmethod
+    def set_locale(cls, locale: str):
         """
         Set active locale.
         """
-        AppState.__state.set_value(STATE_SELECTED_LOCALE, locale)
+        cls.__state.set_value(STATE_SELECTED_LOCALE, locale)
 
-    @staticmethod
-    def get_locale(default_value: str = None):
+    @classmethod
+    def get_locale(cls, default_value: str = None):
         """
         Get active locale.
         """
-        return AppState.__get_value(STATE_SELECTED_LOCALE, default_value)
+        return cls.__get_value(STATE_SELECTED_LOCALE, default_value)
 
-    @staticmethod
-    def __get_value(key: str, default_value):
+    @classmethod
+    def __get_value(cls, key: str, default_value):
         """
         For internal use.
         Used to get value from state, if value is not in state
         then it would be populated with default one and persisted.
         """
-        state_value = AppState.__state.get_value(key)
+        state_value = cls.__state.get_value(key)
 
         if state_value is None:
             logger.warn("Value for '%s' is missing in state. Using '%s' as default value.", key, default_value)
-            AppState.__state.set_value(key, default_value)
+            cls.__state.set_value(key, default_value)
             return default_value
 
         logger.debug("State value %s=%s", key, state_value)

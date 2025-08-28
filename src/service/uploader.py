@@ -45,7 +45,7 @@ class Uploader:
 
         try:
             logger.info("Uploading archive to cloud.")
-            GDrive.upload_file(file_path, GameConfig.gdrive_directory_id())
+            GDrive.upload_file(file_path, GameConfig.gdrive_directory_id(), subscriber=Uploader.__upload_subscriber)
 
         except HttpError:
             notification(tr("notification_ErrorUploadingToDrive"))
@@ -57,3 +57,7 @@ class Uploader:
         # Show success notification in application.
         GUI.instance().refresh()
         notification(tr("notification_SaveHasBeenUploaded"))
+
+    @staticmethod
+    def __upload_subscriber(progress):
+        GUI.instance().widget("upload_button").configure(text=f"{progress}%")

@@ -2,16 +2,36 @@ This file is placeholder, please create game-config-file-id.txt in root of the p
 This file should contain single line with Google Drive File ID that points to JSON with games configuration.
 e.g. 1Ks-7P1bsgLhXzcT2MAcwQ4Cev1T-HVVr
 
-Example of file in Google Drive:
+
+Configuration Legend:
+
+* = mandatory field
+
+- *name (str) = serves as visual representation of game in dropdown as well as its unique ID
+- *localPath (str) = path to directory with save files, can contain env variables (suc as %LOCALAPPDATA%, %APPDATA%, etc.)
+- *gdriveParentDirectoryId (str) = ID of directory in google cloud were all saves would be stored
+- hidden (bool) = whether game should be visible in app or not, if field is not populated it would be treated as False.
+- players (list[str]) = list of user emails that should see game in dropdown, if field is missing all users will be able
+to see it.
+
+
+Example of configuration file in Google Drive:
+
 [
   {
     "name" : "First Game",
     "localPath" : "%LOCALAPPDATA%Low\\FirstGameDev\\FirstGame\\saves_local",
-    "gdriveParentDirectoryId" : "11KNPgZ_pEXm1Ur0uqZMggaJi1111111"
+    "gdriveParentDirectoryId" : "11KNPgZ_pEXm1Ur0uqZMggaJi1111111",
+    "hidden" : True,
+    "players" : [
+        "test1@example.com",
+        "test2@example.com",
+        "test3@example.com"
+    ]
   },
   {
     "name" : "Second Game",
     "localPath" : "%APPDATA%\\SecondGameData\\Saves",
-    "gdriveParentDirectoryId" : "1ulAGvR27yALHFzG_vB3W3Bagy111111"
+    "gdriveParentDirectoryId" : "1ulAGvR27yALHFzG_vB3W3Bagy111111",
   }
 ]
