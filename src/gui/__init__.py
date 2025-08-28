@@ -3,6 +3,7 @@ import tkinter as tk
 from src.core.text_resource import tr
 from src.core.holders import prop
 from src.gui.style import init_gui_styles
+from src.gui.visitor import load_visitors
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
@@ -39,7 +40,7 @@ class GUI:
         Used to initialize GUI.
         """
 
-        self.__visitors = list()
+        self.__visitors = load_visitors()
         self.__before_destroy_callback = None
 
         self.__window = tk.Tk()
@@ -80,21 +81,6 @@ class GUI:
         """
         self.window().after(0, callback)
 
-    def register_visitors(self, visitors):
-        """
-        Used to register visitors.
-        """
-
-        for visitor in visitors:
-            visitor_name = type(visitor).__name__
-
-            if not visitor.is_enabled():
-                logger.warn("Skipping disabled visitor '%s'.", visitor_name)
-                continue
-
-            self.__visitors.append(visitor)
-            logger.info("Registered visitor '%s'", visitor_name)
-
     def build(self):
         """
         Used to build GUI.
@@ -103,8 +89,8 @@ class GUI:
 
         logger.info("Building UI.")
 
-        for visitor in self.__visitors:
-            visitor.visit(self)
+        for visitor_obj in self.__visitors:
+            visitor_obj.visit(self)
 
         self.body().place(relx=.5, rely=.3, anchor=tk.CENTER)
         self.refresh()
@@ -118,8 +104,8 @@ class GUI:
         """
 
         logger.info("Refreshing UI.")
-        for visitor in self.__visitors:
-            visitor.refresh(self)
+        for visitor_obj in self.__visitors:
+            visitor_obj.refresh(self)
 
         self.window().title(tr("window_Title"))
 

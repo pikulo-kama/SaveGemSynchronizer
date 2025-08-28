@@ -20,6 +20,11 @@ class GameDropdownVisitor(Visitor):
     def __init__(self):
         self.__combobox = None
 
+    @property
+    def order(self) -> int:
+        # Needs to be initialized first.
+        return 0
+
     def visit(self, gui: GUI):
         self.__add_game_selection_dropdown(gui)
 
