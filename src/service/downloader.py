@@ -27,27 +27,26 @@ class Downloader:
         also responsible for making backup of old save.
         """
 
-        gui = GUI.instance()
         saves_directory = GameConfig.local_path()
         temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
             logger.error("Directory with saves is missing %s", saves_directory)
-            gui.schedule_operation(lambda: notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory)))
+            notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory))
             return
 
         metadata = Downloader.get_last_save_metadata()
         logger.debug("savesDirectory = %s", saves_directory)
 
         if metadata is None:
-            gui.schedule_operation(lambda: notification(tr("label_StorageIsEmpty")))
+            notification(tr("label_StorageIsEmpty"))
             return
 
         save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
         save_versions.set_value(AppState.get_game(), metadata.get("name"))
 
         # Download file and write it to zip file locally (in output directory)
-        logger.info("Downloading save archive")
+        logger.info("Downloading save archive.")
         file = GDrive.download_file(metadata.get("id")).getvalue()
 
         logger.info("Storing file in output directory.")
@@ -74,8 +73,8 @@ class Downloader:
             ZIP_EXTENSION
         )
 
-        gui.refresh()
-        gui.schedule_operation(lambda: notification(tr("notification_NewSaveHasBeenDownloaded")))
+        GUI.instance().refresh()
+        notification(tr("notification_NewSaveHasBeenDownloaded"))
 
     @staticmethod
     def get_last_save_metadata():

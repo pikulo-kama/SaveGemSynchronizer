@@ -31,13 +31,12 @@ class Uploader:
         Save files are being archived before being uploaded.
         """
 
-        gui = GUI.instance()
         saves_directory = GameConfig.local_path()
         file_path = resolve_temp_file(f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
             logger.error("Directory with saves is missing %s", saves_directory)
-            gui.schedule_operation(lambda: notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory)))
+            notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory))
             return
 
         # Archive save contents to mitigate impact on drive storage.
@@ -45,15 +44,16 @@ class Uploader:
         shutil.make_archive(remove_extension_from_path(file_path), ZIP_EXTENSION, saves_directory)
 
         try:
+            logger.info("Uploading archive to cloud.")
             GDrive.upload_file(file_path, GameConfig.gdrive_directory_id())
 
         except HttpError:
-            gui.schedule_operation(lambda: notification(tr("notification_ErrorUploadingToDrive")))
+            notification(tr("notification_ErrorUploadingToDrive"))
 
         # Update last version of save locally.
         save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
         save_versions.set_value(AppState.get_game(), file_name_from_path(file_path))
 
         # Show success notification in application.
-        gui.refresh()
-        gui.schedule_operation(lambda: notification(tr("notification_SaveHasBeenUploaded")))
+        GUI.instance().refresh()
+        notification(tr("notification_SaveHasBeenUploaded"))
