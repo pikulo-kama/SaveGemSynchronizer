@@ -22,6 +22,9 @@ class ProgressButton(tk.Frame):
 
     def __init__(self, master, **kwargs):
 
+        self.__state = ""
+        self.__style_name = ""
+
         self.__text = ""
         self.__progress = None
         self.__command = None
@@ -34,7 +37,7 @@ class ProgressButton(tk.Frame):
         self.__canvas = tk.Canvas(self, highlightthickness=0)
         self.__canvas.pack(fill="both", expand=True)
 
-        self.__bind_command()
+        self.__register_handlers()
         self.__draw()
 
     def configure(self, cnf=None, **kwargs):
@@ -42,7 +45,7 @@ class ProgressButton(tk.Frame):
         kwargs = self.__initialize(**kwargs)
         super().configure(cnf, **kwargs)
 
-        self.__bind_command()
+        self.__register_handlers()
         self.__draw()
 
     def __draw(self):
@@ -53,13 +56,16 @@ class ProgressButton(tk.Frame):
         width = self.__get_width()
         height = self.__get_height()
 
+        background = self.__get_style_value("background", "#ffffff")
+        foreground = self.__get_style_value("foreground", "#000000")
+
         self.__canvas.delete("all")
         self.__canvas.configure(width=width, height=height)
 
         # Draw button itself.
         self.__canvas.create_rectangle(
             0, 0, width, height,
-            fill=self.__background,
+            fill=background,
             outline=""
         )
 
@@ -67,7 +73,7 @@ class ProgressButton(tk.Frame):
         if self.__progress is not None:
             self.__canvas.create_rectangle(
                 0, 0, width * self.__progress, height,
-                fill=adjust_color(self.__background, 0.95),
+                fill=adjust_color(background, 0.95),
                 outline=""
             )
 
@@ -75,7 +81,7 @@ class ProgressButton(tk.Frame):
         self.__canvas.create_text(
             width / 2, height / 2,
             text=self.__text,
-            fill=self.__foreground,
+            fill=foreground,
             font=self.__font
         )
 
@@ -109,12 +115,6 @@ class ProgressButton(tk.Frame):
         if self.__paddings is None:
             self.__paddings = (0, 0, 0, 0)
 
-        if self.__foreground is None:
-            self.__foreground = "black"
-
-        if self.__background is None:
-            self.__background = "white"
-
         width = safe_get_prop(_WIDTH_PROP, **kwargs)
         height = safe_get_prop(_HEIGHT_PROP, **kwargs)
 
@@ -133,24 +133,80 @@ class ProgressButton(tk.Frame):
         # Remove custom properties before passing kwargs to parent class.
         return safe_delete_props([_STYLE_PROP, _TEXT_PROP, _PROGRES_PROP, _COMMAND_PROP], **kwargs)
 
-    def __bind_command(self):
+    def __get_style_value(self, prop_name: str, default_value=None):
         """
-        Used to bind left mouse button command.
+        Used to get value from style.
+        If dynamic property for map configured and state matches configuration
+        then dynamic value would be returned.
         """
+
+        if self.__style_name is None:
+            return default_value
+
+        default_state_value = style.lookup(self.__style_name, prop_name)
+
+        if default_state_value is None:
+            default_state_value = default_value
+
+        if self.__style_name is None or len(self.__style_name) == 0:
+            return default_state_value
+
+        for state, value in style.map(self.__style_name, prop_name):
+            if state == self.__state:
+                return value
+
+        return default_state_value
+
+    def __register_handlers(self):
+        """
+        Used to register handlers for button events.
+        """
+
+        def set_state(state: str):
+            """
+            Used to register simple events that simply change widget state.
+            """
+
+            def handler(_):
+                self.__state = state
+                self.__draw()
+
+            return handler
+
+        def on_release(event):
+            """
+            Used to register event when button is released.
+            Tracks if mouse was released over the button.
+            If it was then command would be executed, otherwise it would not.
+            """
+
+            width = self.__get_width()
+            height = self.__get_height()
+            x, y = event.x, event.y
+
+            if 0 <= x <= width and 0 <= y <= height:
+                if self.__command is not None:
+                    self.__command()
+
+            self.__state = "active"
+            self.__draw()
 
         self.__canvas.unbind("<Button-1>")
+        self.__canvas.unbind("<Enter>")
+        self.__canvas.unbind("<Leave>")
+        self.__canvas.unbind("<ButtonRelease-1>")
 
-        if self.__command is not None:
-            self.__canvas.bind("<Button-1>", lambda _: self.__command())
+        self.__canvas.bind("<Button-1>", set_state("pressed"))
+        self.__canvas.bind("<Enter>", set_state("active"))
+        self.__canvas.bind("<Leave>", set_state(""))
+        self.__canvas.bind("<ButtonRelease-1>", on_release)
 
     def __init_style(self, style_name: str):
         """
         Used to initialize properties from provided style.
         """
 
-        if style_name is None:
-            return
-
+        self.__style_name = style_name
         self.__font = font.Font(root=None, font=parse_font(style.lookup(style_name, "font")))
         self.__paddings = unwrap_paddings(style.lookup(style_name, "padding"))
         self.__foreground = style.lookup(style_name, "foreground")
