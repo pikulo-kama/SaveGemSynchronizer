@@ -2,7 +2,6 @@ import tkinter as tk
 
 from src.core.text_resource import tr
 from src.core.holders import prop
-from src.gui.style import init_gui_styles
 from src.gui.visitor import load_visitors
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
@@ -40,11 +39,14 @@ class GUI:
         Used to initialize GUI.
         """
 
-        self.__visitors = load_visitors()
-        self.__before_destroy_callback = None
-
         self.__window = tk.Tk()
         self.__body = tk.Frame(self.window())
+
+        from src.gui.style import init_gui_styles
+        init_gui_styles()
+
+        self.__visitors = load_visitors()
+        self.__before_destroy_callback = None
 
         self.__center_window()
         self.window().title(tr("window_Title"))
@@ -53,7 +55,6 @@ class GUI:
         self.window().resizable(False, False)
 
         self.window().protocol("WM_DELETE_WINDOW", self.destroy)
-        init_gui_styles()
 
     def window(self):
         """

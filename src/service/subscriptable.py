@@ -112,6 +112,8 @@ class SubscriptableService:
         self.__stages = stage_count
         self.__single_stage_percentage = 1 / stage_count
 
+        # Reset previous progress.
+        self.__progress = 0
         # Just to trigger event and let user know that work has begun.
         self._complete_stage(completion=0)
 

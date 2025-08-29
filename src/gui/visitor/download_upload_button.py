@@ -1,9 +1,9 @@
 import tkinter as tk
-from tkinter import ttk
 
 from src.core import app
 from src.core.text_resource import tr
 from src.gui import GUI
+from src.gui.component.progress_button import ProgressButton
 from src.gui.popup.confirmation import confirmation
 from src.gui.popup.notification import notification
 from src.gui.visitor import Visitor
@@ -44,10 +44,10 @@ class DownloadUploadButtonVisitor(Visitor):
         upload_button_label = tr("label_UploadSaveToDrive")
         download_button_label = tr("label_DownloadSaveFromDrive")
 
-        self.__upload_button.configure(text=upload_button_label)
+        self.__upload_button.configure(text=upload_button_label, progress=0)
         _logger.debug("Upload button reloaded (%s)", upload_button_label)
 
-        self.__download_button.configure(text=download_button_label)
+        self.__download_button.configure(text=download_button_label, progress=0)
         _logger.debug("Download button reloaded (%s)", download_button_label)
 
     def is_enabled(self):
@@ -60,7 +60,7 @@ class DownloadUploadButtonVisitor(Visitor):
 
         button_frame = tk.Frame(gui.body())
 
-        self.__upload_button = ttk.Button(
+        self.__upload_button = ProgressButton(
             button_frame,
             cursor="hand2",
             width=35,
@@ -69,7 +69,7 @@ class DownloadUploadButtonVisitor(Visitor):
             takefocus=False
         )
 
-        self.__download_button = ttk.Button(
+        self.__download_button = ProgressButton(
             button_frame,
             cursor="hand2",
             width=5,
@@ -115,10 +115,13 @@ class DownloadUploadButtonVisitor(Visitor):
             notification(tr("notification_ErrorUploadingToDrive"))
 
     @staticmethod
-    def __progress_subscriber(widget):
+    def __progress_subscriber(widget: ProgressButton):
 
         def subscriber(event: ProgressEvent):
             if event.type == EventType.PROGRESS:
-                widget.configure(text=f"{int(event.progress * 100)}%")
+                widget.configure(
+                    text=f"{int(event.progress * 100)}%",
+                    progress=event.progress
+                )
 
         return subscriber

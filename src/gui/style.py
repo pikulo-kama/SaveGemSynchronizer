@@ -5,6 +5,37 @@ from src.core.holders import prop
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
+style = Style()
+
+
+def adjust_color(hex_color: str, factor: float) -> str:
+    """
+    Darken or brighter a HEX color by a given factor (0–1).
+    Example: adjust_color("#6699ff", 0.8) -> "#527acc"
+    """
+
+    hex_color = hex_color.lstrip('#')
+
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
+
+    r = int(r * factor)
+    g = int(g * factor)
+    b = int(b * factor)
+
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def add_button_movement_effect(button, pixel_offset=2):
+    """
+    Used to add elevation effect to button when it's being clicked.
+    """
+
+    original_y = button.winfo_y()
+
+    button.bind("<ButtonPress-1>", lambda e: e.widget.place_configure(y=original_y + pixel_offset))
+    button.bind("<ButtonRelease-1>", lambda e: e.widget.place_configure(y=original_y - pixel_offset))
 
 
 def init_gui_styles():
@@ -12,29 +43,28 @@ def init_gui_styles():
     Used to initialize Tkinter custom styles.
     """
 
-    style = Style()
     style.theme_use("clam")
 
-    add_button(style, "primaryButton")
-    add_button(style, "secondaryButton")
+    _add_button("primaryButton")
+    _add_button("secondaryButton")
 
-    add_small_button(style, "primaryButton")
-    add_small_button(style, "secondaryButton")
+    _add_small_button("primaryButton")
+    _add_small_button("secondaryButton")
 
     for font_size in [16, 18]:
-        add_square_button(style, "primaryButton", font_size)
-        add_square_button(style, "secondaryButton", font_size)
+        _add_square_button("primaryButton", font_size)
+        _add_square_button("secondaryButton", font_size)
 
-    add_secondary_combobox(style)
+    _add_secondary_combobox()
 
 
-def add_secondary_combobox(style: Style):
+def _add_secondary_combobox():
     """
     Used to add custom Combobox styles with secondary color accent.
     """
 
     style_name = "Secondary.TCombobox"
-    log_style(style_name)
+    _log_style(style_name)
 
     style.configure(
         style_name,
@@ -43,21 +73,21 @@ def add_secondary_combobox(style: Style):
 
     style.map(
         style_name,
-        fieldbackground=expand_property(prop("secondaryButton.colorHover")),
-        selectbackground=expand_property(prop("secondaryButton.colorHover")),
-        foreground=expand_property(prop("secondaryColor")),
-        selectforeground=expand_property(prop("secondaryColor")),
-        background=expand_property(prop("secondaryButton.colorStatic"))
+        fieldbackground=_expand_property(prop("secondaryButton.colorHover")),
+        selectbackground=_expand_property(prop("secondaryButton.colorHover")),
+        foreground=_expand_property(prop("secondaryColor")),
+        selectforeground=_expand_property(prop("secondaryColor")),
+        background=_expand_property(prop("secondaryButton.colorStatic"))
     )
 
 
-def add_button(style: Style, button: str):
+def _add_button(button: str):
     """
     Used to create regular button style using provided configuration.
     """
 
     style_name = f"{prop(f"{button}.styleName")}.TButton"
-    log_style(style_name)
+    _log_style(style_name)
 
     style.configure(
         style_name,
@@ -78,13 +108,13 @@ def add_button(style: Style, button: str):
     )
 
 
-def add_small_button(style: Style, button):
+def _add_small_button(button):
     """
     Used to create small button style using provided configuration.
     """
 
     style_name = f"Small{prop(f"{button}.styleName")}.TButton"
-    log_style(style_name)
+    _log_style(style_name)
 
     style.configure(
         style_name,
@@ -105,13 +135,13 @@ def add_small_button(style: Style, button):
     )
 
 
-def add_square_button(style: Style, button, font_size: int):
+def _add_square_button(button, font_size: int):
     """
     Used to create square button style using provided configuration and font size.
     """
 
     style_name = f"Square{prop(f"{button}.styleName")}.{font_size}.TButton"
-    log_style(style_name)
+    _log_style(style_name)
 
     style.configure(
         style_name,
@@ -134,25 +164,14 @@ def add_square_button(style: Style, button, font_size: int):
     )
 
 
-def add_button_movement_effect(button, pixel_offset=2):
-    """
-    Used to add elevation effect to button when it's being clicked.
-    """
-
-    original_y = button.winfo_y()
-
-    button.bind("<ButtonPress-1>", lambda e: e.widget.place_configure(y=original_y + pixel_offset))
-    button.bind("<ButtonRelease-1>", lambda e: e.widget.place_configure(y=original_y - pixel_offset))
-
-
-def log_style(style_name: str):
+def _log_style(style_name: str):
     """
     Just a wrapper to log event when custom style is being registered.
     """
     _logger.info("Adding custom style '%s'", style_name)
 
 
-def expand_property(value):
+def _expand_property(value):
     """
     Used to create tuple list for value.
     Needed for scenarios where property should be the same
