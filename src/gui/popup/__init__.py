@@ -22,10 +22,10 @@ class Popup(abc.ABC):
         self.__offset_x = None
         self.__offset_y = None
 
-        gui.window.bind("<Configure>", lambda _: self.__center_popup(gui))
+        gui.window.bind("<Configure>", lambda _: self.__center_popup())
         self.__popup.protocol("WM_DELETE_WINDOW", self.destroy)
 
-        self.__center_popup(gui)
+        self.__center_popup()
         self.__lock_popup()
 
         self.__popup.transient(gui.window)
@@ -86,7 +86,7 @@ class Popup(abc.ABC):
 
         _logger.info("Popup has been destroyed.")
 
-    def __center_popup(self, gui):
+    def __center_popup(self):
         """
         Used to center popup against main application window.
         """

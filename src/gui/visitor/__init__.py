@@ -72,6 +72,13 @@ class Visitor(abc.ABC):
         pass
 
     @abstractmethod
+    def disable(self, gui: "_GUI"):
+        """
+        Should be used to disable all interactable elements.
+        """
+        pass
+
+    @abstractmethod
     def is_enabled(self):
         """
         Should be used to define whether current visitor should be executed.

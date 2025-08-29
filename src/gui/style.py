@@ -27,17 +27,6 @@ def adjust_color(hex_color: str, factor: float) -> str:
     return f"#{r:02x}{g:02x}{b:02x}"
 
 
-def add_button_movement_effect(button, pixel_offset=2):
-    """
-    Used to add elevation effect to button when it's being clicked.
-    """
-
-    original_y = button.winfo_y()
-
-    button.bind("<ButtonPress-1>", lambda e: e.widget.place_configure(y=original_y + pixel_offset))
-    button.bind("<ButtonRelease-1>", lambda e: e.widget.place_configure(y=original_y - pixel_offset))
-
-
 def init_gui_styles():
     """
     Used to initialize Tkinter custom styles.

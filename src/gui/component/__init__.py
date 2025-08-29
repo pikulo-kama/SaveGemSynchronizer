@@ -1,10 +1,10 @@
 
 
-def safe_get_prop(prop_name: str, default=None, **kwargs):
-    if prop_name not in kwargs:
+def safe_get_prop(prop_name: str, default=None, **kw):
+    if prop_name not in kw:
         return default
 
-    return kwargs[prop_name]
+    return kw[prop_name]
 
 
 def safe_delete_props(prop_list: list[str], **kwargs):

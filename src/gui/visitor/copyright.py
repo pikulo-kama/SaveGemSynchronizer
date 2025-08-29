@@ -29,6 +29,9 @@ class CopyrightVisitor(Visitor):
         self.__copyright.configure(text=copyright_label)
         _logger.debug("Copyright was reloaded. (%s)", copyright_label)
 
+    def disable(self, gui: "_GUI"):
+        pass
+
     def is_enabled(self):
         return True
 

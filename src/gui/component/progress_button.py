@@ -10,6 +10,7 @@ _PROGRES_PROP = "progress"
 _COMMAND_PROP = "command"
 _WIDTH_PROP = "width"
 _HEIGHT_PROP = "height"
+_STATE_PROP = "state"
 
 
 # TODO: Not really fond of this class... Need to think of the way to reorganize it.
@@ -20,7 +21,7 @@ class ProgressButton(tk.Frame):
     which could emulate progress bar animation on button.
     """
 
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, **kw):
 
         self.__state = ""
         self.__style_name = ""
@@ -30,9 +31,10 @@ class ProgressButton(tk.Frame):
         self.__command = None
         self.__width = None
         self.__height = None
+        self.__is_disabled = False
 
-        kwargs = self.__initialize(**kwargs)
-        super().__init__(master, **kwargs)
+        kw = self.__initialize(**kw)
+        super().__init__(master, **kw)
 
         self.__canvas = tk.Canvas(self, highlightthickness=0)
         self.__canvas.pack(fill="both", expand=True)
@@ -40,10 +42,10 @@ class ProgressButton(tk.Frame):
         self.__register_handlers()
         self.__draw()
 
-    def configure(self, cnf=None, **kwargs):
+    def configure(self, cnf=None, **kw):
 
-        kwargs = self.__initialize(**kwargs)
-        super().configure(cnf, **kwargs)
+        kw = self.__initialize(**kw)
+        super().configure(cnf, **kw)
 
         self.__register_handlers()
         self.__draw()
@@ -85,16 +87,21 @@ class ProgressButton(tk.Frame):
             font=self.__font
         )
 
-    def __initialize(self, **kwargs):
+    def __initialize(self, **kw):
         """
         Used to initialize custom component properties.
         Will only overwrite existing value if it's not None.
         """
 
-        text = safe_get_prop(_TEXT_PROP, **kwargs)
-        progress = safe_get_prop(_PROGRES_PROP, **kwargs)
-        command = safe_get_prop(_COMMAND_PROP, **kwargs)
-        style_name = safe_get_prop(_STYLE_PROP, **kwargs)
+        text = safe_get_prop(_TEXT_PROP, **kw)
+        progress = safe_get_prop(_PROGRES_PROP, **kw)
+        command = safe_get_prop(_COMMAND_PROP, **kw)
+        style_name = safe_get_prop(_STYLE_PROP, **kw)
+        state = safe_get_prop(_STATE_PROP, **kw)
+
+        if state is not None:
+            self.__state = state
+            self.__is_disabled = state == "disabled"
 
         if style_name is not None:
             self.__init_style(style_name)
@@ -115,8 +122,8 @@ class ProgressButton(tk.Frame):
         if self.__paddings is None:
             self.__paddings = (0, 0, 0, 0)
 
-        width = safe_get_prop(_WIDTH_PROP, **kwargs)
-        height = safe_get_prop(_HEIGHT_PROP, **kwargs)
+        width = safe_get_prop(_WIDTH_PROP, **kw)
+        height = safe_get_prop(_HEIGHT_PROP, **kw)
 
         if width is not None:
             self.__width = width
@@ -130,8 +137,9 @@ class ProgressButton(tk.Frame):
         if self.__height is None:
             self.__height = 1
 
-        # Remove custom properties before passing kwargs to parent class.
-        return safe_delete_props([_STYLE_PROP, _TEXT_PROP, _PROGRES_PROP, _COMMAND_PROP], **kwargs)
+        # Remove custom properties before passing kw to parent class.
+        props_to_delete = [_STYLE_PROP, _TEXT_PROP, _PROGRES_PROP, _COMMAND_PROP, _STATE_PROP]
+        return safe_delete_props(props_to_delete, **kw)
 
     def __get_style_value(self, prop_name: str, default_value=None):
         """
@@ -168,6 +176,10 @@ class ProgressButton(tk.Frame):
             """
 
             def handler(_):
+                if self.__is_disabled:
+                    self.__state = "disabled"
+                    return
+
                 self.__state = state
                 self.__draw()
 
@@ -179,6 +191,10 @@ class ProgressButton(tk.Frame):
             Tracks if mouse was released over the button.
             If it was then command would be executed, otherwise it would not.
             """
+
+            if self.__is_disabled:
+                self.__state = "disabled"
+                return
 
             width = self.__get_width()
             height = self.__get_height()

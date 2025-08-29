@@ -46,6 +46,9 @@ class SaveStatusVisitor(Visitor):
         self.__last_save_timestamp.configure(text=last_save_timestamp_label)
         _logger.debug("Last save information label was reloaded. (%s)", last_save_timestamp_label)
 
+    def disable(self, gui: "_GUI"):
+        pass
+
     def is_enabled(self):
         return True
 

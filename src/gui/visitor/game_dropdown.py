@@ -46,11 +46,14 @@ class GameDropdownVisitor(Visitor):
 
         self.__combobox.configure(
             values=game_names,
-            cursor=combobox_cursor,
             state=combobox_state,
+            cursor=combobox_cursor
         )
 
         self.__combobox.set(app.state.game_name)
+
+    def disable(self, gui: "_GUI"):
+        self.__combobox.configure(state="disabled", cursor="wait")
 
     def is_enabled(self):
         return True

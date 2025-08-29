@@ -2,7 +2,7 @@ import tkinter as tk
 
 from src.core.text_resource import tr
 from src.core.holders import prop
-from src.gui.visitor import load_visitors
+from src.gui.visitor import load_visitors, Visitor
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
@@ -25,7 +25,7 @@ class _GUI:
         from src.gui.style import init_gui_styles
         init_gui_styles()
 
-        self.__visitors = list()
+        self.__visitors: list[Visitor] = list()
         self.__before_destroy_callback = None
         self.__is_ui_blocked = False
 
@@ -42,6 +42,27 @@ class _GUI:
         Used to post initialize necessary resources for GUI.
         """
         self.__visitors = load_visitors()
+
+    @property
+    def is_blocked(self):
+        """
+        Used to check if UI is currently blocked to any interactions.
+        """
+        return self.__is_ui_blocked
+
+    @is_blocked.setter
+    def is_blocked(self, is_blocked: bool):
+        """
+        Used to block/unblock UI.
+        """
+        self.__is_ui_blocked = is_blocked
+
+        if is_blocked:
+            for visitor_obj in self.__visitors:
+                visitor_obj.disable(self)
+
+        else:
+            self.refresh()
 
     @property
     def window(self):
