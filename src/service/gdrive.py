@@ -128,9 +128,9 @@ class GDrive:
         if subscriber is not None:
 
             if done:
-                progress = 100
+                progress = 1
             elif status is not None:
-                progress = int(status.progress() * 100)
+                progress = status.progress()
             else:
                 progress = 0
 

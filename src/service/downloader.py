@@ -3,51 +3,61 @@ import shutil
 
 from constants import ZIP_MIME_TYPE, ZIP_EXTENSION
 from src.core import app
-from src.core.text_resource import tr
-from src.gui.popup.notification import notification
 from src.service.gdrive import GDrive
+from src.service.subscriptable import SubscriptableService, ErrorEvent, DoneEvent, EventKind
 from src.util.file import resolve_temp_file, cleanup_directory, save_file
-from src.gui import GUI
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
 
 
-class Downloader:
+class Downloader(SubscriptableService):
     """
     Used to download latest save files of selected game from Google Drive.
     """
 
-    @staticmethod
-    def download():
+    def download(self):
         """
         Used to download latest save from Google Drive
         also responsible for making backup of old save.
         """
 
+        # 1 - Download last save meta
+        # 2 - Download save archive
+        # 3 - Save archive in file system
+        # 4 - Backup existing save
+        # 5 - Extract downloaded archive
+        self._set_stages(5)
+
         saves_directory = app.games.current.local_path
         temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
+        _logger.debug("savesDirectory = %s", saves_directory)
+
         if not os.path.exists(saves_directory):
             _logger.error("Directory with saves is missing %s", saves_directory)
-            notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory))
+            self._send_event(ErrorEvent(EventKind.SAVES_DIRECTORY_IS_MISSING))
             return
 
         metadata = Downloader.get_last_save_metadata()
-        _logger.debug("savesDirectory = %s", saves_directory)
+        self._complete_stage()
 
         if metadata is None:
-            notification(tr("label_StorageIsEmpty"))
+            self._send_event(ErrorEvent(EventKind.LAST_SAVE_METADATA_IS_NONE))
             return
 
         app.last_save.identifier = metadata.get("name")
 
         # Download file and write it to zip file locally (in output directory)
         _logger.info("Downloading save archive.")
-        file = GDrive.download_file(metadata.get("id"), subscriber=Downloader.__download_subscriber).getvalue()
+        file = GDrive.download_file(
+            metadata.get("id"),
+            subscriber=lambda completion: self._complete_stage(completion)
+        ).getvalue()
 
         _logger.info("Storing file in output directory.")
         save_file(temp_zip_file_name, file, binary=True)
+        self._complete_stage()
 
         # Make backup of existing save, just in case.
         backup_dir = saves_directory + "_backup"
@@ -61,6 +71,7 @@ class Downloader:
 
         _logger.info("Copying old save to backup directory.")
         shutil.copytree(saves_directory, backup_dir)
+        self._complete_stage()
 
         # Extract archive contents to the target directory
         _logger.info("Extracting archive into saves directory.")
@@ -69,9 +80,9 @@ class Downloader:
             saves_directory,
             ZIP_EXTENSION
         )
+        self._complete_stage()
 
-        GUI.instance().refresh()
-        notification(tr("notification_NewSaveHasBeenDownloaded"))
+        self._send_event(DoneEvent(None))
 
     @staticmethod
     def get_last_save_metadata():
@@ -101,7 +112,3 @@ class Downloader:
             "createdTime": files[0]["createdTime"],
             "owner": files[0]["owners"][0]["displayName"]
         }
-
-    @staticmethod
-    def __download_subscriber(progress):
-        GUI.instance().widget("download_button").configure(text=f"{progress}%")

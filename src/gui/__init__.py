@@ -41,7 +41,6 @@ class GUI:
         """
 
         self.__visitors = load_visitors()
-        self.__widgets = dict()
         self.__before_destroy_callback = None
 
         self.__window = tk.Tk()
@@ -81,22 +80,6 @@ class GUI:
         This is needed since Tkinter doesn't work well with multithreading.
         """
         self.window().after(0, callback)
-
-    def widget(self, widget_name: str):
-        """
-        Used to get widget registered on UI.
-        """
-
-        if widget_name not in self.__widgets.keys():
-            raise RuntimeError(f"Requested widget was not registered in GUI - {widget_name}")
-
-        return self.__widgets.get(widget_name)
-
-    def add_widget(self, widget_name: str, widget):
-        """
-        Used to register widget on UI.
-        """
-        self.__widgets[widget_name] = widget
 
     def build(self):
         """
