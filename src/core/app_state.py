@@ -1,4 +1,5 @@
-from constants import STATE_SELECTED_GAME, STATE_SELECTED_LOCALE
+from typing import Final
+
 from src.core.app_data import AppData
 from src.core.editable_json_config_holder import EditableJsonConfigHolder
 from src.core.holders import locales, prop
@@ -7,6 +8,9 @@ from src.util.logger import get_logger
 
 
 _logger = get_logger(__name__)
+
+_STATE_SELECTED_GAME: Final = "game"
+_STATE_SELECTED_LOCALE: Final = "locale"
 
 
 class _AppState(AppData):
@@ -42,7 +46,7 @@ class _AppState(AppData):
         Get active game.
         """
 
-        game_name = self.__state.get_value(STATE_SELECTED_GAME)
+        game_name = self.__state.get_value(_STATE_SELECTED_GAME)
 
         if game_name not in self._app.games.names:
             default_game = self._app.games.names[0]
@@ -59,7 +63,7 @@ class _AppState(AppData):
         """
         Set game as active.
         """
-        self.__state.set_value(STATE_SELECTED_GAME, game_name)
+        self.__state.set_value(_STATE_SELECTED_GAME, game_name)
 
     @property
     def locale(self):
@@ -67,7 +71,7 @@ class _AppState(AppData):
         Get active locale.
         """
 
-        locale = self.__state.get_value(STATE_SELECTED_LOCALE)
+        locale = self.__state.get_value(_STATE_SELECTED_LOCALE)
 
         if locale not in locales:
             default_locale = prop("defaultLocale")
@@ -84,4 +88,4 @@ class _AppState(AppData):
         """
         Set active locale.
         """
-        self.__state.set_value(STATE_SELECTED_LOCALE, locale)
+        self.__state.set_value(_STATE_SELECTED_LOCALE, locale)

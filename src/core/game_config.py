@@ -2,7 +2,6 @@ import json
 import os
 from dataclasses import dataclass
 
-from constants import GAME_CONFIG_POINTER_FILE_NAME
 from src.core.app_data import AppData
 from src.service.gdrive import GDrive
 from src.util.file import resolve_project_data, read_file
@@ -65,7 +64,7 @@ class _GameConfig(AppData):
         Used to download game configuration from Google Drive.
         """
 
-        game_config_pointer_file = resolve_project_data(GAME_CONFIG_POINTER_FILE_NAME)
+        game_config_pointer_file = resolve_project_data("game-config-file-id.txt")
         game_config_file_id = read_file(game_config_pointer_file)
 
         _logger.info("Download game configuration from drive.")

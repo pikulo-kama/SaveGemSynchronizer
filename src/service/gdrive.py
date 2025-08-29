@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 
-from constants import GDRIVE_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME, ZIP_MIME_TYPE
+from constants import ZIP_MIME_TYPE
 from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
 from src.util.logger import get_logger
 from src.util.timer import measure_time
@@ -151,8 +151,8 @@ class GDrive:
         Used to authenticate to Google Cloud as well as refresh token if needed.
         """
 
-        token_file_name = resolve_app_data(GDRIVE_TOKEN_FILE_NAME)
-        credentials_file_name = resolve_project_data(CREDENTIALS_FILE_NAME)
+        token_file_name = resolve_app_data("token.json")
+        credentials_file_name = resolve_project_data("credentials.json")
         creds = None
 
         # Get credentials from file (possible if authentication was done previously)
