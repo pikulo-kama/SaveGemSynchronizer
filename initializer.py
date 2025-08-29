@@ -14,17 +14,15 @@ def init():
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-    from src.util.logger import initialize_logging
-    initialize_logging()
-
-    from src.core.game_config import GameConfig
-    GameConfig.download()
-
-    from src.core.app_state import AppState
+    from src.core import app
     from src.service.gdrive import GDrive
+    from src.util.logger import initialize_logging
+
+    initialize_logging()
+    app.games.download()
 
     user = GDrive.get_current_user()
-    AppState.set_user_email(user["emailAddress"])
+    app.state.user_email = user["emailAddress"]
 
 
 init()

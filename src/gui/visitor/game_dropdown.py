@@ -1,5 +1,4 @@
-from src.core.app_state import AppState
-from src.core.game_config import GameConfig
+from src.core import app
 from src.gui import GUI
 from src.gui.visitor import Visitor
 from tkinter import ttk, font
@@ -30,19 +29,13 @@ class GameDropdownVisitor(Visitor):
 
     def refresh(self, gui: GUI):
 
-        GameConfig.download()
+        app.games.download()
 
-        if len(GameConfig.games()) == 0:
+        if app.games.empty:
             logger.error("There are no games configured. Can't proceed.")
             raise RuntimeError("There are no games configured. Can't proceed.")
 
-        game_names = GameConfig.game_names()
-        default_game = game_names[0]
-        selected_game = AppState.get_game(default_game)
-
-        if selected_game not in game_names:
-            selected_game = default_game
-            AppState.set_game(default_game)
+        game_names = app.games.names
 
         combobox_state = "readonly"
         combobox_cursor = "hand2"
@@ -57,7 +50,7 @@ class GameDropdownVisitor(Visitor):
             state=combobox_state,
         )
 
-        self.__combobox.set(selected_game)
+        self.__combobox.set(app.state.game_name)
 
     def is_enabled(self):
         return True
@@ -71,7 +64,7 @@ class GameDropdownVisitor(Visitor):
             logger.info("Game selection changed.")
             logger.info("Selected game - %s", event.widget.get())
 
-            AppState.set_game(event.widget.get())
+            app.state.game_name = event.widget.get()
             gui.refresh()
 
         self.__combobox = ttk.Combobox(

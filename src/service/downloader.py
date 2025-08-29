@@ -1,14 +1,12 @@
 import os.path
 import shutil
 
-from constants import ZIP_MIME_TYPE, ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
-from src.core.app_state import AppState
-from src.core.editable_json_config_holder import EditableJsonConfigHolder
-from src.core.game_config import GameConfig
+from constants import ZIP_MIME_TYPE, ZIP_EXTENSION
+from src.core import app
 from src.core.text_resource import tr
 from src.gui.popup.notification import notification
 from src.service.gdrive import GDrive
-from src.util.file import resolve_temp_file, resolve_app_data, cleanup_directory, save_file
+from src.util.file import resolve_temp_file, cleanup_directory, save_file
 from src.gui import GUI
 from src.util.logger import get_logger
 
@@ -27,7 +25,7 @@ class Downloader:
         also responsible for making backup of old save.
         """
 
-        saves_directory = GameConfig.local_path()
+        saves_directory = app.games.current.local_path
         temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
@@ -42,8 +40,7 @@ class Downloader:
             notification(tr("label_StorageIsEmpty"))
             return
 
-        save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
-        save_versions.set_value(AppState.get_game(), metadata.get("name"))
+        app.last_save.identifier = metadata.get("name")
 
         # Download file and write it to zip file locally (in output directory)
         logger.info("Downloading save archive.")
@@ -85,7 +82,7 @@ class Downloader:
         files = GDrive.query_single(
             "files",
             "nextPageToken, files(id, name, owners, createdTime)",
-            f"mimeType='{ZIP_MIME_TYPE}' and '{GameConfig.gdrive_directory_id()}' in parents"
+            f"mimeType='{ZIP_MIME_TYPE}' and '{app.games.current.drive_directory}' in parents"
         )
 
         if files is None:
@@ -95,7 +92,7 @@ class Downloader:
             raise RuntimeError(message)
 
         if len(files) == 0:
-            logger.warn("There are no saves on Google Drive for %s.", AppState.get_game())
+            logger.warn("There are no saves on Google Drive for %s.", app.state.game_name)
             return None
 
         return {

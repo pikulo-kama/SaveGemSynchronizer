@@ -15,7 +15,6 @@ STATE_SELECTED_LOCALE = "locale"
 # File constants
 LOG_FILE_NAME = "application.log"
 LOGBACK_FILE_NAME = "logback.json"
-GAME_CONFIG_POINTER_FILE_NAME = "game-config-file-id.txt"
 GDRIVE_TOKEN_FILE_NAME = "token.json"
 CREDENTIALS_FILE_NAME = "credentials.json"
-SAVE_VERSION_FILE_NAME = "version_data.json"
+GAME_CONFIG_POINTER_FILE_NAME = "game-config-file-id.txt"

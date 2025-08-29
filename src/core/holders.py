@@ -7,7 +7,7 @@ from src.util.logger import get_logger
 
 logger = get_logger(__name__)
 
-main_config = JsonConfigHolder(resolve_config("main.json"))
+main_config = JsonConfigHolder(resolve_config("main"))
 locales = [file.replace(JSON_EXTENSION, "") for file in os.listdir(LOCALE_DIR)]
 
 logger.debug("Main config - %s", main_config)

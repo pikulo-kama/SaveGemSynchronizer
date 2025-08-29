@@ -2,9 +2,7 @@ import tkinter as tk
 
 from babel.localtime import get_localzone
 
-from constants import SAVE_VERSION_FILE_NAME
-from src.core.app_state import AppState
-from src.core.editable_json_config_holder import EditableJsonConfigHolder
+from src.core import app
 from src.core.text_resource import tr
 from src.core.holders import prop
 from src.gui import GUI
@@ -15,7 +13,6 @@ from babel.dates import format_datetime
 from pytz import timezone
 
 from src.service.downloader import Downloader
-from src.util.file import resolve_app_data
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)
@@ -87,8 +84,6 @@ class SaveStatusVisitor(Visitor):
         if last_save_meta is None:
             return ""
 
-        locale = AppState.get_locale(prop("defaultLocale"))
-
         time_zone = str(get_localzone())
         date_format = "d MMMM"
 
@@ -99,7 +94,7 @@ class SaveStatusVisitor(Visitor):
             # Only show year if it's not current one, just to avoid extra information.
             date_format = "d MMMM YYYY"
 
-        creation_date = format_datetime(creation_datetime, date_format, locale=locale)
+        creation_date = format_datetime(creation_datetime, date_format, locale=app.state.locale)
         creation_time = creation_datetime.strftime("%H:%M")
 
         return tr(
@@ -115,16 +110,13 @@ class SaveStatusVisitor(Visitor):
         Used to get local save status label.
         """
 
-        save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
-        last_downloaded_version = save_versions.get_value(AppState.get_game())
-
         if last_save_meta is None:
             return tr("label_StorageIsEmpty")
 
-        elif last_downloaded_version is None:
+        elif app.last_save.identifier is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")
 
-        elif last_downloaded_version == last_save_meta["name"]:
+        elif app.last_save.identifier == last_save_meta["name"]:
             return tr("info_SaveIsUpToDate")
 
         else:

@@ -1,5 +1,7 @@
 from constants import STATE_SELECTED_GAME, STATE_SELECTED_LOCALE
+from src.core.app_data import AppData
 from src.core.editable_json_config_holder import EditableJsonConfigHolder
+from src.core.holders import locales, prop
 from src.util.file import resolve_app_data
 from src.util.logger import get_logger
 
@@ -7,72 +9,79 @@ from src.util.logger import get_logger
 logger = get_logger(__name__)
 
 
-class AppState:
+class _AppState(AppData):
     """
     Used to retrieve and operate with application dynamic state.
     e.g. locale or selected game.
     """
 
-    __state = EditableJsonConfigHolder(resolve_app_data("state"))
-    # This shouldn't be part of state since it would be a security issue.
-    __user_email: str = None
+    def __init__(self):
+        super().__init__()
+        self.__state = EditableJsonConfigHolder(resolve_app_data("state"))
+        # This shouldn't be part of state since it would be a security issue.
+        self.__user_email = None
 
-    @classmethod
-    def set_user_email(cls, user_email: str):
+    @property
+    def user_email(self):
+        """
+        Used to get email address of currently authenticated user.
+        """
+        return self.__user_email
+
+    @user_email.setter
+    def user_email(self, user_email: str):
         """
         Used to set email of currently authenticated user in memory.
         This will not be written to state.json.
         """
-        cls.__user_email = user_email
+        self.__user_email = user_email
 
-    @classmethod
-    def get_user_email(cls):
-        """
-        Used to get email address of currently authenticated user.
-        """
-        return cls.__user_email
-
-    @classmethod
-    def set_game(cls, game_name: str):
-        """
-        Set game as active.
-        """
-        cls.__state.set_value(STATE_SELECTED_GAME, game_name)
-
-    @classmethod
-    def get_game(cls, default_value: str = None):
+    @property
+    def game_name(self):
         """
         Get active game.
         """
-        return cls.__get_value(STATE_SELECTED_GAME, default_value)
 
-    @classmethod
-    def set_locale(cls, locale: str):
-        """
-        Set active locale.
-        """
-        cls.__state.set_value(STATE_SELECTED_LOCALE, locale)
+        game_name = self.__state.get_value(STATE_SELECTED_GAME)
 
-    @classmethod
-    def get_locale(cls, default_value: str = None):
+        if game_name not in self._app.games.names:
+            default_game = self._app.games.names[0]
+            logger.warn("Game '%s' was not found. Using game '%s' as default.", str(game_name), default_game)
+
+            game_name = default_game
+            self.game_name = default_game
+
+        logger.debug("Current game = %s", game_name)
+        return game_name
+
+    @game_name.setter
+    def game_name(self, game_name: str):
+        """
+        Set game as active.
+        """
+        self.__state.set_value(STATE_SELECTED_GAME, game_name)
+
+    @property
+    def locale(self):
         """
         Get active locale.
         """
-        return cls.__get_value(STATE_SELECTED_LOCALE, default_value)
 
-    @classmethod
-    def __get_value(cls, key: str, default_value):
+        locale = self.__state.get_value(STATE_SELECTED_LOCALE)
+
+        if locale not in locales:
+            default_locale = prop("defaultLocale")
+            logger.warn("Locale '%s' was not found. Using default locale '%s'.", str(locale), default_locale)
+
+            locale = default_locale
+            self.locale = default_locale
+
+        logger.debug("Current locale = %s", locale)
+        return locale
+
+    @locale.setter
+    def locale(self, locale: str):
         """
-        For internal use.
-        Used to get value from state, if value is not in state
-        then it would be populated with default one and persisted.
+        Set active locale.
         """
-        state_value = cls.__state.get_value(key)
-
-        if state_value is None:
-            logger.warn("Value for '%s' is missing in state. Using '%s' as default value.", key, default_value)
-            cls.__state.set_value(key, default_value)
-            return default_value
-
-        logger.debug("State value %s=%s", key, state_value)
-        return state_value
+        self.__state.set_value(STATE_SELECTED_LOCALE, locale)

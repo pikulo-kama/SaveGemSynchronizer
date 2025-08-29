@@ -4,16 +4,14 @@ import shutil
 
 from googleapiclient.errors import HttpError
 
-from src.core.game_config import GameConfig
+from src.core import app
 from src.gui import GUI
 
-from constants import ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
-from src.core.app_state import AppState
-from src.core.editable_json_config_holder import EditableJsonConfigHolder
+from constants import ZIP_EXTENSION
 from src.core.text_resource import tr
 from src.service.gdrive import GDrive
 from src.gui.popup.notification import notification
-from src.util.file import resolve_temp_file, resolve_app_data, file_name_from_path, remove_extension_from_path
+from src.util.file import resolve_temp_file, file_name_from_path, remove_extension_from_path
 from src.util.logger import get_logger
 
 logger = get_logger(__name__)
@@ -31,7 +29,7 @@ class Uploader:
         Save files are being archived before being uploaded.
         """
 
-        saves_directory = GameConfig.local_path()
+        saves_directory = app.games.current.local_path
         file_path = resolve_temp_file(f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
@@ -45,14 +43,13 @@ class Uploader:
 
         try:
             logger.info("Uploading archive to cloud.")
-            GDrive.upload_file(file_path, GameConfig.gdrive_directory_id(), subscriber=Uploader.__upload_subscriber)
+            GDrive.upload_file(file_path, app.games.current.drive_directory, subscriber=Uploader.__upload_subscriber)
 
         except HttpError:
             notification(tr("notification_ErrorUploadingToDrive"))
 
         # Update last version of save locally.
-        save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
-        save_versions.set_value(AppState.get_game(), file_name_from_path(file_path))
+        app.last_save.identifier = file_name_from_path(file_path)
 
         # Show success notification in application.
         GUI.instance().refresh()

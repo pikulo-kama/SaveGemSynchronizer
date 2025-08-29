@@ -1,8 +1,8 @@
 import tkinter as tk
 
-from src.core.app_state import AppState
+from src.core import app
 from src.core.text_resource import tr
-from src.core.holders import prop, locales
+from src.core.holders import locales
 from src.gui import GUI
 from src.gui.component.wait_button import WaitButton
 from src.gui.style import add_button_movement_effect
@@ -66,8 +66,7 @@ class LanguageSwitchVisitor(Visitor):
         Used as callback function when language switch button is being clicked.
         """
 
-        current_locale = AppState.get_locale(prop("defaultLocale"))
-        next_locale_index = locales.index(current_locale) + 1
+        next_locale_index = locales.index(app.state.locale) + 1
 
         if next_locale_index == len(locales):
             next_locale_index = 0
@@ -77,5 +76,5 @@ class LanguageSwitchVisitor(Visitor):
         logger.info("Language has been changed.")
         logger.info("Selected language - %s", new_locale)
 
-        AppState.set_locale(new_locale)
+        app.state.locale = new_locale
         gui.refresh()
