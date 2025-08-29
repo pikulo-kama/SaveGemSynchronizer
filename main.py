@@ -3,7 +3,7 @@
 import initializer
 from cleanup import teardown
 
-from src.gui import GUI
+from src.gui import gui
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -16,7 +16,7 @@ def main():
 
     _logger.info("Initializing application.")
 
-    gui = GUI.instance()
+    gui.initialize()
     gui.before_destroy(teardown)
     gui.build()
 

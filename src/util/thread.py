@@ -1,5 +1,5 @@
 from threading import Thread
-from src.gui import GUI
+from src.gui import gui
 
 
 def execute_in_thread(function):
@@ -7,8 +7,6 @@ def execute_in_thread(function):
     Used to execute operation in separate thread.
     Will update UI cursor to display that operation is being performed.
     """
-
-    gui = GUI.instance()
 
     def task():
         function()

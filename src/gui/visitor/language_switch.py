@@ -3,7 +3,7 @@ import tkinter as tk
 from src.core import app
 from src.core.text_resource import tr
 from src.core.holders import locales
-from src.gui import GUI
+from src.gui import _GUI
 from src.gui.component.wait_button import WaitButton
 from src.gui.style import add_button_movement_effect
 from src.gui.visitor import Visitor
@@ -22,10 +22,10 @@ class LanguageSwitchVisitor(Visitor):
     def __init__(self):
         self.__language_switch = None
 
-    def visit(self, gui: GUI):
+    def visit(self, gui: _GUI):
         self.__add_language_switch_control(gui)
 
-    def refresh(self, gui: GUI):
+    def refresh(self, gui: _GUI):
         language_id = tr("languageId")
 
         # Limit language code to 2 characters.
@@ -39,7 +39,7 @@ class LanguageSwitchVisitor(Visitor):
         # Only show control when there are multiple locales configured.
         return len(locales) > 1
 
-    def __add_language_switch_control(self, gui: GUI):
+    def __add_language_switch_control(self, gui: _GUI):
         """
         Used to render language switch control.
         """
@@ -48,7 +48,7 @@ class LanguageSwitchVisitor(Visitor):
             LanguageSwitchVisitor.__switch_language(gui)
 
         self.__language_switch = WaitButton(
-            gui.window(),
+            gui.window,
             command=lambda: execute_in_thread(switch_language),
             cursor="hand2",
             style="SquareSecondary.16.TButton",
@@ -61,7 +61,7 @@ class LanguageSwitchVisitor(Visitor):
         self.__language_switch.place(relx=.05, rely=.13, anchor=tk.N)
 
     @staticmethod
-    def __switch_language(gui: GUI):
+    def __switch_language(gui: _GUI):
         """
         Used as callback function when language switch button is being clicked.
         """

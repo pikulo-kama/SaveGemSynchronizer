@@ -5,7 +5,7 @@ from babel.localtime import get_localzone
 from src.core import app
 from src.core.text_resource import tr
 from src.core.holders import prop
-from src.gui import GUI
+from src.gui import _GUI
 from src.gui.visitor import Visitor
 from datetime import date, datetime
 
@@ -31,10 +31,10 @@ class SaveStatusVisitor(Visitor):
         self.__save_status = None
         self.__last_save_timestamp = None
 
-    def visit(self, gui: GUI):
+    def visit(self, gui: _GUI):
         self.__add_save_information(gui)
 
-    def refresh(self, gui: GUI):
+    def refresh(self, gui: _GUI):
         last_save_meta = Downloader.get_last_save_metadata()
 
         save_status_label = self.__get_last_download_version_text(last_save_meta)
@@ -54,7 +54,7 @@ class SaveStatusVisitor(Visitor):
         Used to render both local and Google Drive save status labels.
         """
 
-        info_frame = tk.Frame(gui.body())
+        info_frame = tk.Frame(gui.body)
 
         # Text is empty for fields at this moment
         # They would be populated later by GUI component.

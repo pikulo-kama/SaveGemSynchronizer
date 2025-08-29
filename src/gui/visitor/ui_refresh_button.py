@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from src.gui import GUI
+from src.gui import _GUI
 from src.gui.component.wait_button import WaitButton
 from src.gui.style import add_button_movement_effect
 from src.gui.visitor import Visitor
@@ -16,10 +16,10 @@ class UIRefreshButtonVisitor(Visitor):
     def __init__(self):
         self.__refresh_button = None
 
-    def visit(self, gui: GUI):
+    def visit(self, gui: _GUI):
         self.__add_refresh_button(gui)
 
-    def refresh(self, gui: GUI):
+    def refresh(self, gui: _GUI):
         self.__refresh_button.configure(text="⟳")
 
     def is_enabled(self):
@@ -31,7 +31,7 @@ class UIRefreshButtonVisitor(Visitor):
         """
 
         self.__refresh_button = WaitButton(
-            gui.window(),
+            gui.window,
             command=lambda: execute_in_thread(gui.refresh),
             cursor="hand2",
             padding=(4, 7),

@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 from src.util.logger import get_logger
 
 if TYPE_CHECKING:
-    from src.gui import GUI
+    from src.gui import _GUI
 
 _logger = get_logger(__name__)
 
@@ -57,7 +57,7 @@ class Visitor(abc.ABC):
         return 100
 
     @abstractmethod
-    def visit(self, gui: "GUI"):
+    def visit(self, gui: "_GUI"):
         """
         Should be used to build UI elements.
         Invoked only once when application starts.
@@ -65,7 +65,7 @@ class Visitor(abc.ABC):
         pass
 
     @abstractmethod
-    def refresh(self, gui: "GUI"):
+    def refresh(self, gui: "_GUI"):
         """
         Should be used to refresh dynamic elements when state changes.
         """

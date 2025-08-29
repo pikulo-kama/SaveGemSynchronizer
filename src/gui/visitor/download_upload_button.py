@@ -2,7 +2,7 @@ import tkinter as tk
 
 from src.core import app
 from src.core.text_resource import tr
-from src.gui import GUI
+from src.gui import _GUI, gui
 from src.gui.component.progress_button import ProgressButton
 from src.gui.popup.confirmation import confirmation
 from src.gui.popup.notification import notification
@@ -36,10 +36,10 @@ class DownloadUploadButtonVisitor(Visitor):
         self.__downloader.subscribe(self.__error_subscriber)
         self.__uploader.subscribe(self.__error_subscriber)
 
-    def visit(self, gui: GUI):
+    def visit(self, gui: _GUI):
         self.__add_buttons(gui)
 
-    def refresh(self, gui: GUI):
+    def refresh(self, gui: _GUI):
 
         upload_button_label = tr("label_UploadSaveToDrive")
         download_button_label = tr("label_DownloadSaveFromDrive")
@@ -58,7 +58,7 @@ class DownloadUploadButtonVisitor(Visitor):
         Used to render upload and download buttons.
         """
 
-        button_frame = tk.Frame(gui.body())
+        button_frame = tk.Frame(gui.body)
 
         self.__upload_button = ProgressButton(
             button_frame,
@@ -94,7 +94,7 @@ class DownloadUploadButtonVisitor(Visitor):
 
         def subscriber(event: Event):
             if event.type == EventType.DONE:
-                GUI.instance().refresh()
+                gui.refresh()
                 notification(tr(message))
 
         return subscriber

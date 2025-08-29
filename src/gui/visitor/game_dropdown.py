@@ -1,5 +1,5 @@
 from src.core import app
-from src.gui import GUI
+from src.gui import _GUI
 from src.gui.visitor import Visitor
 from tkinter import ttk, font
 import tkinter as tk
@@ -24,10 +24,10 @@ class GameDropdownVisitor(Visitor):
         # Needs to be initialized first.
         return 0
 
-    def visit(self, gui: GUI):
+    def visit(self, gui: _GUI):
         self.__add_game_selection_dropdown(gui)
 
-    def refresh(self, gui: GUI):
+    def refresh(self, gui: _GUI):
 
         app.games.download()
 
@@ -55,7 +55,7 @@ class GameDropdownVisitor(Visitor):
     def is_enabled(self):
         return True
 
-    def __add_game_selection_dropdown(self, gui: GUI):
+    def __add_game_selection_dropdown(self, gui: _GUI):
         """
         Used to render game selection dropdown.
         """
@@ -68,7 +68,7 @@ class GameDropdownVisitor(Visitor):
             gui.refresh()
 
         self.__combobox = ttk.Combobox(
-            gui.window(),
+            gui.window,
             font=("Helvetica", 10, font.BOLD),
             width=20,
             style="Secondary.TCombobox"

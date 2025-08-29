@@ -1,7 +1,7 @@
 from tkinter import ttk
 
 from src.core.text_resource import tr
-from src.gui import GUI
+from src.gui import gui
 from src.gui.popup import Popup
 
 
@@ -9,7 +9,7 @@ def notification(message: str):
     """
     Used to display notification message.
     """
-    GUI.instance().schedule_operation(lambda: Notification().show(message))
+    gui.schedule_operation(lambda: Notification().show(message))
 
 
 class Notification(Popup):

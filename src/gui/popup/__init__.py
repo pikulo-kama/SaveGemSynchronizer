@@ -4,7 +4,7 @@ import tkinter as tk
 
 from src.core.text_resource import tr
 from src.core.holders import prop
-from src.gui import GUI
+from src.gui import gui
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
@@ -17,19 +17,18 @@ class Popup(abc.ABC):
     """
 
     def __init__(self, title_text_resource, icon):
-        gui = GUI.instance()
 
-        self.__popup = tk.Toplevel(gui.window())
+        self.__popup = tk.Toplevel(gui.window)
         self.__offset_x = None
         self.__offset_y = None
 
-        gui.window().bind("<Configure>", lambda _: self.__center_popup(gui))
+        gui.window.bind("<Configure>", lambda _: self.__center_popup(gui))
         self.__popup.protocol("WM_DELETE_WINDOW", self.destroy)
 
         self.__center_popup(gui)
         self.__lock_popup()
 
-        self.__popup.transient(gui.window())
+        self.__popup.transient(gui.window)
         self.__popup.grab_set()
         self.__popup.focus_set()
 
@@ -82,7 +81,7 @@ class Popup(abc.ABC):
         Used to destroy window context.
         """
 
-        GUI.instance().window().unbind("<Configure>")
+        gui.window.unbind("<Configure>")
         self.__popup.destroy()
 
         _logger.info("Popup has been destroyed.")
@@ -96,9 +95,9 @@ class Popup(abc.ABC):
         popup_height = prop("popupHeight")
         window_width = prop("windowWidth")
 
-        window_x = gui.window().winfo_rootx()
+        window_x = gui.window.winfo_rootx()
         self.__offset_x = window_x + ((window_width - popup_width) / 2)
-        self.__offset_y = gui.window().winfo_rooty()
+        self.__offset_y = gui.window.winfo_rooty()
 
         _logger.debug("popupXPosition = %d", self.__offset_x)
         _logger.debug("popupYPosition = %d", self.__offset_y)
