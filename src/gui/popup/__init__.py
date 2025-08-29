@@ -8,7 +8,7 @@ from src.gui import GUI
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class Popup(abc.ABC):
@@ -42,10 +42,10 @@ class Popup(abc.ABC):
         Used to display popup with provided message.
         """
 
-        logger.info("Initializing popup.")
+        _logger.info("Initializing popup.")
 
-        logger.debug("popupTitle = %s", self.__title_text_resource)
-        logger.debug("popupMessage = %s", message)
+        _logger.debug("popupTitle = %s", self.__title_text_resource)
+        _logger.debug("popupMessage = %s", message)
 
         self.__popup.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
         self.__popup.title(tr(self.__title_text_resource))
@@ -85,7 +85,7 @@ class Popup(abc.ABC):
         GUI.instance().window().unbind("<Configure>")
         self.__popup.destroy()
 
-        logger.info("Popup has been destroyed.")
+        _logger.info("Popup has been destroyed.")
 
     def __center_popup(self, gui):
         """
@@ -100,8 +100,8 @@ class Popup(abc.ABC):
         self.__offset_x = window_x + ((window_width - popup_width) / 2)
         self.__offset_y = gui.window().winfo_rooty()
 
-        logger.debug("popupXPosition = %d", self.__offset_x)
-        logger.debug("popupYPosition = %d", self.__offset_y)
+        _logger.debug("popupXPosition = %d", self.__offset_x)
+        _logger.debug("popupYPosition = %d", self.__offset_y)
 
         self.__popup.geometry("%dx%d+%d+%d" % (
             popup_width,

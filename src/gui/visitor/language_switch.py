@@ -10,7 +10,7 @@ from src.gui.visitor import Visitor
 from src.util.logger import get_logger
 from src.util.thread import execute_in_thread
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class LanguageSwitchVisitor(Visitor):
@@ -32,7 +32,7 @@ class LanguageSwitchVisitor(Visitor):
         if len(language_id) > 2:
             language_id = language_id[:2]
 
-        logger.debug("Refreshing language switch (%s)", language_id)
+        _logger.debug("Refreshing language switch (%s)", language_id)
         self.__language_switch.configure(text=language_id)
 
     def is_enabled(self):
@@ -73,8 +73,8 @@ class LanguageSwitchVisitor(Visitor):
 
         new_locale = locales[next_locale_index]
 
-        logger.info("Language has been changed.")
-        logger.info("Selected language - %s", new_locale)
+        _logger.info("Language has been changed.")
+        _logger.info("Selected language - %s", new_locale)
 
         app.state.locale = new_locale
         gui.refresh()

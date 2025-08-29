@@ -3,8 +3,11 @@ from datetime import date
 
 from src.core.holders import prop
 from src.core.text_resource import tr
-from src.gui import GUI, logger
+from src.gui import GUI
 from src.gui.visitor import Visitor
+from src.util.logger import get_logger
+
+_logger = get_logger(__name__)
 
 
 class CopyrightVisitor(Visitor):
@@ -24,7 +27,7 @@ class CopyrightVisitor(Visitor):
         copyright_label = tr("window_Copyright", prop("version"), period)
 
         self.__copyright.configure(text=copyright_label)
-        logger.debug("Copyright was reloaded. (%s)", copyright_label)
+        _logger.debug("Copyright was reloaded. (%s)", copyright_label)
 
     def is_enabled(self):
         return True

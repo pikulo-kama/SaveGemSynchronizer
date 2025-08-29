@@ -10,7 +10,7 @@ from src.util.file import resolve_temp_file, cleanup_directory, save_file
 from src.gui import GUI
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class Downloader:
@@ -29,12 +29,12 @@ class Downloader:
         temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
-            logger.error("Directory with saves is missing %s", saves_directory)
+            _logger.error("Directory with saves is missing %s", saves_directory)
             notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory))
             return
 
         metadata = Downloader.get_last_save_metadata()
-        logger.debug("savesDirectory = %s", saves_directory)
+        _logger.debug("savesDirectory = %s", saves_directory)
 
         if metadata is None:
             notification(tr("label_StorageIsEmpty"))
@@ -43,27 +43,27 @@ class Downloader:
         app.last_save.identifier = metadata.get("name")
 
         # Download file and write it to zip file locally (in output directory)
-        logger.info("Downloading save archive.")
+        _logger.info("Downloading save archive.")
         file = GDrive.download_file(metadata.get("id"), subscriber=Downloader.__download_subscriber).getvalue()
 
-        logger.info("Storing file in output directory.")
+        _logger.info("Storing file in output directory.")
         save_file(temp_zip_file_name, file, binary=True)
 
         # Make backup of existing save, just in case.
         backup_dir = saves_directory + "_backup"
-        logger.debug("backupDirectory = %s", backup_dir)
+        _logger.debug("backupDirectory = %s", backup_dir)
 
         # Need to remove directory if it exists since shutil wil create it.
         if os.path.exists(backup_dir):
-            logger.info("Removing backup directory and its contents.")
+            _logger.info("Removing backup directory and its contents.")
             cleanup_directory(backup_dir)
             os.removedirs(backup_dir)
 
-        logger.info("Copying old save to backup directory.")
+        _logger.info("Copying old save to backup directory.")
         shutil.copytree(saves_directory, backup_dir)
 
         # Extract archive contents to the target directory
-        logger.info("Extracting archive into saves directory.")
+        _logger.info("Extracting archive into saves directory.")
         shutil.unpack_archive(
             temp_zip_file_name,
             saves_directory,
@@ -88,11 +88,11 @@ class Downloader:
         if files is None:
             message = "Error downloading metadata. Either configuration is incorrect or you don't have access."
 
-            logger.error(message)
+            _logger.error(message)
             raise RuntimeError(message)
 
         if len(files) == 0:
-            logger.warn("There are no saves on Google Drive for %s.", app.state.game_name)
+            _logger.warn("There are no saves on Google Drive for %s.", app.state.game_name)
             return None
 
         return {

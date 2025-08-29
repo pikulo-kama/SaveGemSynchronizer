@@ -12,7 +12,7 @@ from src.util.logger import get_logger
 if TYPE_CHECKING:
     from src.gui import GUI
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 def load_visitors():
@@ -34,11 +34,11 @@ def load_visitors():
             visitor: Visitor = member()
 
             if not visitor.is_enabled():
-                logger.warn("Skipping disabled visitor '%s'.", member_name)
+                _logger.warn("Skipping disabled visitor '%s'.", member_name)
                 continue
 
             visitors.append(visitor)
-            logger.info("Registered visitor '%s', order=%d", member_name, visitor.order)
+            _logger.info("Registered visitor '%s', order=%d", member_name, visitor.order)
 
     return sorted(visitors, key=lambda v: v.order)
 

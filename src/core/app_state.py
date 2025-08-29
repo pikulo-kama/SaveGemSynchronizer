@@ -6,7 +6,7 @@ from src.util.file import resolve_app_data
 from src.util.logger import get_logger
 
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class _AppState(AppData):
@@ -46,12 +46,12 @@ class _AppState(AppData):
 
         if game_name not in self._app.games.names:
             default_game = self._app.games.names[0]
-            logger.warn("Game '%s' was not found. Using game '%s' as default.", str(game_name), default_game)
+            _logger.warn("Game '%s' was not found. Using game '%s' as default.", str(game_name), default_game)
 
             game_name = default_game
             self.game_name = default_game
 
-        logger.debug("Current game = %s", game_name)
+        _logger.debug("Current game = %s", game_name)
         return game_name
 
     @game_name.setter
@@ -71,12 +71,12 @@ class _AppState(AppData):
 
         if locale not in locales:
             default_locale = prop("defaultLocale")
-            logger.warn("Locale '%s' was not found. Using default locale '%s'.", str(locale), default_locale)
+            _logger.warn("Locale '%s' was not found. Using default locale '%s'.", str(locale), default_locale)
 
             locale = default_locale
             self.locale = default_locale
 
-        logger.debug("Current locale = %s", locale)
+        _logger.debug("Current locale = %s", locale)
         return locale
 
     @locale.setter

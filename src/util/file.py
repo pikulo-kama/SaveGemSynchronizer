@@ -1,15 +1,17 @@
 import json
 import os.path
 import shutil
+from typing import Final
 
 from constants import PROJECT_ROOT, APP_DATA_ROOT
 
-CONFIG_DIR = os.path.join(PROJECT_ROOT, "config")
-LOCALE_DIR = os.path.join(PROJECT_ROOT, "locale")
-RESOURCE_DIR = os.path.join(PROJECT_ROOT, "resources")
 
-OUTPUT_DIR = os.path.join(APP_DATA_ROOT, "output")
-LOGS_DIR = os.path.join(APP_DATA_ROOT, "logs")
+CONFIG_DIR: Final = os.path.join(PROJECT_ROOT, "config")
+LOCALE_DIR: Final = os.path.join(PROJECT_ROOT, "locale")
+RESOURCE_DIR: Final = os.path.join(PROJECT_ROOT, "resources")
+
+OUTPUT_DIR: Final = os.path.join(APP_DATA_ROOT, "output")
+LOGS_DIR: Final = os.path.join(APP_DATA_ROOT, "logs")
 
 
 def resolve_config(config_name: str):

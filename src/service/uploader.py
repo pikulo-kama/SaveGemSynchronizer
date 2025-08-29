@@ -14,7 +14,7 @@ from src.gui.popup.notification import notification
 from src.util.file import resolve_temp_file, file_name_from_path, remove_extension_from_path
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class Uploader:
@@ -33,16 +33,16 @@ class Uploader:
         file_path = resolve_temp_file(f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
-            logger.error("Directory with saves is missing %s", saves_directory)
+            _logger.error("Directory with saves is missing %s", saves_directory)
             notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory))
             return
 
         # Archive save contents to mitigate impact on drive storage.
-        logger.info("Archiving save files that need to be uploaded.")
+        _logger.info("Archiving save files that need to be uploaded.")
         shutil.make_archive(remove_extension_from_path(file_path), ZIP_EXTENSION, saves_directory)
 
         try:
-            logger.info("Uploading archive to cloud.")
+            _logger.info("Uploading archive to cloud.")
             GDrive.upload_file(file_path, app.games.current.drive_directory, subscriber=Uploader.__upload_subscriber)
 
         except HttpError:

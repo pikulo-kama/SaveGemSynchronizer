@@ -4,7 +4,7 @@ from tkinter.ttk import Style
 from src.core.holders import prop
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 def init_gui_styles():
@@ -149,7 +149,7 @@ def log_style(style_name: str):
     """
     Just a wrapper to log event when custom style is being registered.
     """
-    logger.info("Adding custom style '%s'", style_name)
+    _logger.info("Adding custom style '%s'", style_name)
 
 
 def expand_property(value):

@@ -14,8 +14,8 @@ from src.util.file import resolve_app_data, resolve_project_data, file_name_from
 from src.util.logger import get_logger
 from src.util.timer import measure_time
 
-logger = get_logger(__name__)
-SCOPES = [
+_logger = get_logger(__name__)
+_SCOPES = [
     "https://www.googleapis.com/auth/docs",
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/drive.appdata"
@@ -58,7 +58,7 @@ class GDrive:
             return request.execute().get(target_field)
 
         except HttpError as e:
-            logger.error("Error downloading save metadata", e)
+            _logger.error("Error downloading save metadata", e)
             return None
 
     @staticmethod
@@ -78,7 +78,7 @@ class GDrive:
                 _, done = GDrive.__next_chunk(downloader, subscriber)
 
         except HttpError as error:
-            logger.error("Failed to download file from drive", error)
+            _logger.error("Failed to download file from drive", error)
             return None
         
         return file
@@ -113,7 +113,7 @@ class GDrive:
                 _, done = GDrive.__next_chunk(request, subscriber)
 
         except HttpError as error:
-            logger.error("Error uploading file to drive", error)
+            _logger.error("Error uploading file to drive", error)
             raise error
 
     @staticmethod
@@ -157,31 +157,31 @@ class GDrive:
 
         # Get credentials from file (possible if authentication was done previously)
         if os.path.exists(token_file_name):
-            logger.info("Token was found. Application will use credentials from token.")
-            creds = Credentials.from_authorized_user_file(token_file_name, SCOPES)
+            _logger.info("Token was found. Application will use credentials from token.")
+            creds = Credentials.from_authorized_user_file(token_file_name, _SCOPES)
 
             if creds and creds.valid:
                 return creds
 
         # If they're just expired then try to refresh them
         if creds and creds.expired and creds.refresh_token:
-            logger.warn("Credentials expired, performing refresh.")
+            _logger.warn("Credentials expired, performing refresh.")
             creds.refresh(Request())
 
         # Authenticate with credentials and then store them for future use
         elif os.path.exists(credentials_file_name):
-            logger.info("Attempting authentication using credentials.")
+            _logger.info("Attempting authentication using credentials.")
 
-            flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, _SCOPES)
             creds = flow.run_local_server(port=0)
 
-            logger.info("Authentication completed.")
+            _logger.info("Authentication completed.")
 
-            logger.info("Saving Google Cloud access token for later use.")
+            _logger.info("Saving Google Cloud access token for later use.")
             save_file(token_file_name, creds.to_json())
 
         else:
-            logger.critical("credentials.json is missing.")
+            _logger.critical("credentials.json is missing.")
             raise RuntimeError("Google Cloud credentials are missing in root of the project. Add credentials.json.")
 
         return creds

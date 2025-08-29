@@ -11,7 +11,7 @@ from src.service.uploader import Uploader
 from src.util.logger import get_logger
 from src.util.thread import execute_in_thread
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class DownloadUploadButtonVisitor(Visitor):
@@ -29,10 +29,10 @@ class DownloadUploadButtonVisitor(Visitor):
         download_button_label = tr("label_DownloadSaveFromDrive")
 
         gui.widget("upload_button").configure(text=upload_button_label)
-        logger.debug("Upload button reloaded (%s)", upload_button_label)
+        _logger.debug("Upload button reloaded (%s)", upload_button_label)
 
         gui.widget("download_button").configure(text=download_button_label)
-        logger.debug("Download button reloaded (%s)", download_button_label)
+        _logger.debug("Download button reloaded (%s)", download_button_label)
 
     def is_enabled(self):
         return True

@@ -3,7 +3,7 @@ from src.core.json_config_holder import JsonConfigHolder
 from src.util.file import resolve_locale
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 def tr(key: str, *args) -> str:
@@ -29,15 +29,15 @@ class TextResource:
         """
 
         if cls.__current_locale != locale:
-            logger.info("Locale selection has been changed. Initializing holder for %s", locale)
+            _logger.info("Locale selection has been changed. Initializing holder for %s", locale)
             cls.__current_locale = locale
             cls.__holder = JsonConfigHolder(resolve_locale(locale))
 
         label = str(cls.__holder.get_value(key))
-        logger.debug("TextResource '%s.%s' = %s", locale, key, label)
+        _logger.debug("TextResource '%s.%s' = %s", locale, key, label)
 
         if len(args) > 0:
-            logger.debug("TextResource Args = %s", args)
+            _logger.debug("TextResource Args = %s", args)
             label = label.format(*args)
 
         return label

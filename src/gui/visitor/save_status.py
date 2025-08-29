@@ -15,7 +15,7 @@ from pytz import timezone
 from src.service.downloader import Downloader
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class SaveStatusVisitor(Visitor):
@@ -41,10 +41,10 @@ class SaveStatusVisitor(Visitor):
         last_save_timestamp_label = self.__get_last_save_info_text(last_save_meta)
 
         self.__save_status.configure(text=save_status_label)
-        logger.debug("Save status label was reloaded. (%s)", save_status_label)
+        _logger.debug("Save status label was reloaded. (%s)", save_status_label)
 
         self.__last_save_timestamp.configure(text=last_save_timestamp_label)
-        logger.debug("Last save information label was reloaded. (%s)", last_save_timestamp_label)
+        _logger.debug("Last save information label was reloaded. (%s)", last_save_timestamp_label)
 
     def is_enabled(self):
         return True

@@ -8,7 +8,7 @@ from src.service.gdrive import GDrive
 from src.util.file import resolve_project_data, read_file
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 _GAME_NAME = "name"
@@ -68,13 +68,13 @@ class _GameConfig(AppData):
         game_config_pointer_file = resolve_project_data(GAME_CONFIG_POINTER_FILE_NAME)
         game_config_file_id = read_file(game_config_pointer_file)
 
-        logger.info("Download game configuration from drive.")
+        _logger.info("Download game configuration from drive.")
         game_config = GDrive.download_file(game_config_file_id)
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
 
-            logger.error(message)
+            _logger.error(message)
             raise RuntimeError(message)
 
         game_config.seek(0)
@@ -86,7 +86,7 @@ class _GameConfig(AppData):
             drive_directory = game[_PARENT_DIR]
 
             if _HIDDEN in game and game[_HIDDEN] is True:
-                logger.info("Skipping game '%s' since it's marked as hidden.", name)
+                _logger.info("Skipping game '%s' since it's marked as hidden.", name)
                 continue
 
             if _PLAYERS in game and self._app.state.user_email not in game[_PLAYERS]:
@@ -94,7 +94,7 @@ class _GameConfig(AppData):
 
             self.__games_by_name[name] = _Game(name, local_path, drive_directory)
 
-        logger.info("Configuration for following game(s) was found = %s", ", ".join(self.names))
+        _logger.info("Configuration for following game(s) was found = %s", ", ".join(self.names))
 
     @property
     def empty(self) -> bool:

@@ -7,7 +7,7 @@ from src.gui.visitor import load_visitors
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class GUI:
@@ -104,7 +104,7 @@ class GUI:
         Will use defined visitors to build all elements.
         """
 
-        logger.info("Building UI.")
+        _logger.info("Building UI.")
 
         for visitor_obj in self.__visitors:
             visitor_obj.visit(self)
@@ -112,7 +112,7 @@ class GUI:
         self.body().place(relx=.5, rely=.3, anchor=tk.CENTER)
         self.refresh()
 
-        logger.info("Application loop has been started.")
+        _logger.info("Application loop has been started.")
         self.window().mainloop()
 
     def refresh(self):
@@ -120,7 +120,7 @@ class GUI:
         Used to refresh dynamic UI elements.
         """
 
-        logger.info("Refreshing UI.")
+        _logger.info("Refreshing UI.")
         for visitor_obj in self.__visitors:
             visitor_obj.refresh(self)
 

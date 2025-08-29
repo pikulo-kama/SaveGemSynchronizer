@@ -7,7 +7,7 @@ import tkinter as tk
 from src.util.logger import get_logger
 from src.util.thread import execute_in_thread
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class GameDropdownVisitor(Visitor):
@@ -32,7 +32,7 @@ class GameDropdownVisitor(Visitor):
         app.games.download()
 
         if app.games.empty:
-            logger.error("There are no games configured. Can't proceed.")
+            _logger.error("There are no games configured. Can't proceed.")
             raise RuntimeError("There are no games configured. Can't proceed.")
 
         game_names = app.games.names
@@ -61,8 +61,8 @@ class GameDropdownVisitor(Visitor):
         """
 
         def on_game_selection_change(event):
-            logger.info("Game selection changed.")
-            logger.info("Selected game - %s", event.widget.get())
+            _logger.info("Game selection changed.")
+            _logger.info("Selected game - %s", event.widget.get())
 
             app.state.game_name = event.widget.get()
             gui.refresh()
