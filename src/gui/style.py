@@ -14,7 +14,7 @@ def adjust_color(hex_color: str, factor: float) -> str:
     Example: adjust_color("#6699ff", 0.8) -> "#527acc"
     """
 
-    hex_color = hex_color.lstrip('#')
+    hex_color = hex_color.lstrip("#")
 
     r = int(hex_color[0:2], 16)
     g = int(hex_color[2:4], 16)
@@ -146,6 +146,7 @@ def _add_square_button(button, font_size: int):
 
     style.map(
         style_name,
+        foreground=_expand_property(prop("primaryColor")),
         background=[
             ("active", prop(f"{button}.colorHover")),
             ("pressed", prop(f"{button}.colorStatic"))
