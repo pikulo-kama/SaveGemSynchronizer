@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import font
 
-from src.gui.component import safe_delete_props, unwrap_paddings, parse_font, safe_get_prop
+from src.gui.component import safe_delete_props, unwrap_paddings, parse_font, safe_get_prop, Component
 from src.gui.style import style, adjust_color
 
 _STYLE_PROP = "style"
@@ -15,7 +15,7 @@ _STATE_PROP = "state"
 
 # TODO: Not really fond of this class... Need to think of the way to reorganize it.
 
-class ProgressButton(tk.Frame):
+class ProgressButton(Component):
     """
     Button component that allows to set progress property
     which could emulate progress bar animation on button.
@@ -32,6 +32,7 @@ class ProgressButton(tk.Frame):
         self.__width = None
         self.__height = None
         self.__is_disabled = False
+        self.__radius = 0
 
         kw = self.__initialize(**kw)
         super().__init__(master, **kw)
@@ -65,16 +66,20 @@ class ProgressButton(tk.Frame):
         self.__canvas.configure(width=width, height=height)
 
         # Draw button itself.
-        self.__canvas.create_rectangle(
+        self.create_polygon(
             0, 0, width, height,
+            widget=self.__canvas,
+            radius=self.__radius,
             fill=background,
             outline=""
         )
 
         # Add progres bar on top.
-        if self.__progress is not None:
-            self.__canvas.create_rectangle(
+        if self.__progress is not None and self.__progress > 0:
+            self.create_polygon(
                 0, 0, width * self.__progress, height,
+                widget=self.__canvas,
+                radius=self.__radius,
                 fill=adjust_color(background, 0.95),
                 outline=""
             )
@@ -227,6 +232,7 @@ class ProgressButton(tk.Frame):
         self.__paddings = unwrap_paddings(style.lookup(style_name, "padding"))
         self.__foreground = style.lookup(style_name, "foreground")
         self.__background = style.lookup(style_name, "background")
+        self.__radius = style.lookup(style_name, "radius")
 
     def __get_width(self):
         """

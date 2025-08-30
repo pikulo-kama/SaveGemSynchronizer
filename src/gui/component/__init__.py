@@ -1,3 +1,4 @@
+import tkinter as tk
 
 
 def safe_get_prop(prop_name: str, default=None, **kw):
@@ -47,3 +48,38 @@ def parse_font(font_str: str):
         return font_name, int(font_parts[0]), font_parts[1]
 
     return font_name
+
+
+class Component(tk.Frame):
+
+    def create_polygon(self, x1, y1, width, height, radius=0, widget=None, **kw):
+
+        x2 = x1 + width
+        y2 = y1 + height
+
+        points = [
+            # Bottom left
+            x1 + radius, y1,
+            x1, y1,
+            x1, y1 + radius,
+
+            # Top left
+            x1, y2 - radius,
+            x1, y2,
+            x1 + radius, y2,
+
+            # Top right
+            x2 - radius, y2,
+            x2, y2,
+            x2, y2 - radius,
+
+            # Bottom right
+            x2, y1 + radius,
+            x2, y1,
+            x2 - radius, y1
+        ]
+
+        if widget is None:
+            widget = self
+
+        return widget.create_polygon(points, smooth=True, **kw)
