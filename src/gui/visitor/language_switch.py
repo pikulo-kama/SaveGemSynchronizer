@@ -5,6 +5,7 @@ from src.core.text_resource import tr
 from src.core.holders import locales
 from src.gui import _GUI
 from src.gui.component.wait_button import WaitButton
+from src.gui.constants import TkState, TkCursor
 from src.gui.visitor import Visitor
 from src.util.logger import get_logger
 from src.util.thread import execute_in_thread
@@ -32,10 +33,14 @@ class LanguageSwitchVisitor(Visitor):
             language_id = language_id[:2]
 
         _logger.debug("Refreshing language switch (%s)", language_id)
-        self.__language_switch.configure(text=language_id, state="", cursor="hand2")
+        self.__language_switch.configure(
+            text=language_id,
+            state=TkState.Default,
+            cursor=TkCursor.Hand
+        )
 
     def disable(self, gui: "_GUI"):
-        self.__language_switch.configure(state="disabled", cursor="wait")
+        self.__language_switch.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
 
     def is_enabled(self):
         # Only show control when there are multiple locales configured.
@@ -52,12 +57,11 @@ class LanguageSwitchVisitor(Visitor):
         self.__language_switch = WaitButton(
             gui.window,
             command=lambda: execute_in_thread(switch_language),
-            style="SquareSecondary.16.TButton",
-            takefocus=False
+            style="SquareSecondary.18.TButton"
         )
 
         self.__language_switch.pack()
-        self.__language_switch.place(relx=.05, rely=.13, anchor=tk.N)
+        self.__language_switch.place(relx=.05, rely=.14, anchor=tk.N)
 
     @staticmethod
     def __switch_language(gui: _GUI):

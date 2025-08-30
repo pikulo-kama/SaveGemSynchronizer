@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import font
 from tkinter.ttk import Style
 from src.core.holders import prop
+from src.gui.constants import TkState
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -84,7 +85,7 @@ def _add_button(button: str):
         relief=tk.SOLID,
         foreground=prop("primaryColor"),
         background=prop(f"{button}.colorStatic"),
-        padding=20,
+        padding=(18, 20),
         font=("Segoe UI Semibold", 18),
         radius=10
     )
@@ -92,8 +93,8 @@ def _add_button(button: str):
     style.map(
         style_name,
         background=[
-            ("active", prop(f"{button}.colorHover")),
-            ("pressed", prop(f"{button}.colorStatic"))
+            (TkState.Active, prop(f"{button}.colorHover")),
+            (TkState.Pressed, prop(f"{button}.colorStatic"))
         ]
     )
 
@@ -112,15 +113,16 @@ def _add_small_button(button):
         relief=tk.SOLID,
         foreground=prop("secondaryColor"),
         background=prop(f"{button}.colorStatic"),
-        padding=(5, 5),
-        font=4
+        padding=8,
+        font=12,
+        radius=3
     )
 
     style.map(
         style_name,
         background=[
-            ("active", prop(f"{button}.colorHover")),
-            ("pressed", prop(f"{button}.colorStatic"))
+            (TkState.Active, prop(f"{button}.colorHover")),
+            (TkState.Pressed, prop(f"{button}.colorStatic"))
         ]
     )
 
@@ -142,24 +144,18 @@ def _add_square_button(button, font_size: int):
         height=1,
         foreground=prop("primaryColor"),
         background=prop(f"{button}.colorStatic"),
-        padding=(7, 10)
+        radius=5,
+        padding=(8, 12)
     )
 
     style.map(
         style_name,
         foreground=_expand_property(prop("primaryColor")),
         background=[
-            ("active", prop(f"{button}.colorHover")),
-            ("pressed", prop(f"{button}.colorStatic"))
+            (TkState.Active, prop(f"{button}.colorHover")),
+            (TkState.Pressed, prop(f"{button}.colorStatic"))
         ]
     )
-
-
-def _log_style(style_name: str):
-    """
-    Just a wrapper to log event when custom style is being registered.
-    """
-    _logger.info("Adding custom style '%s'", style_name)
 
 
 def _expand_property(value):
@@ -168,4 +164,11 @@ def _expand_property(value):
     Needed for scenarios where property should be the same
     regardless of current state.
     """
-    return [("readonly", value), ("disabled", value)]
+    return [(TkState.Readonly, value), (TkState.Disabled, value)]
+
+
+def _log_style(style_name: str):
+    """
+    Just a wrapper to log event when custom style is being registered.
+    """
+    _logger.info("Adding custom style '%s'", style_name)

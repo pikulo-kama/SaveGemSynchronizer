@@ -93,8 +93,8 @@ class SaveStatusVisitor(Visitor):
         creation_datetime = datetime.strptime(last_save_meta["createdTime"], "%Y-%m-%dT%H:%M:%S.%fZ")
         creation_datetime += timezone(time_zone).utcoffset(creation_datetime)
 
+        # Only show year if it's not current one, just to avoid extra information.
         if creation_datetime.year != date.today().year:
-            # Only show year if it's not current one, just to avoid extra information.
             date_format = "d MMMM YYYY"
 
         creation_date = format_datetime(creation_datetime, date_format, locale=app.state.locale)

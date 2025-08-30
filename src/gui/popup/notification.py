@@ -1,7 +1,6 @@
-from tkinter import ttk
-
 from src.core.text_resource import tr
-from src.gui import gui
+from src.gui import gui, TkCursor
+from src.gui.component.button import Button
 from src.gui.popup import Popup
 
 
@@ -21,15 +20,13 @@ class Notification(Popup):
         super().__init__("popup_NotificationTitle", "notification.ico")
 
     def _show_internal(self):
-
-        close_btn = ttk.Button(
+        close_btn = Button(
             self._container,
             text=tr("popup_NotificationButtonClose"),
-            cursor="hand2",
+            cursor=TkCursor.Hand,
             width=20,
             command=self.destroy,
-            style="SmallPrimary.TButton",
-            takefocus=False
+            style="SmallPrimary.TButton"
         )
 
         close_btn.grid(row=1, column=0)

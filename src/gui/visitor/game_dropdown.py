@@ -1,5 +1,6 @@
 from src.core import app
 from src.gui import _GUI
+from src.gui.constants import TkState, TkCursor, TkEvent
 from src.gui.visitor import Visitor
 from tkinter import ttk, font
 import tkinter as tk
@@ -37,12 +38,12 @@ class GameDropdownVisitor(Visitor):
 
         game_names = app.games.names
 
-        combobox_state = "readonly"
-        combobox_cursor = "hand2"
+        combobox_state = TkState.Readonly
+        combobox_cursor = TkCursor.Hand
 
         if len(game_names) == 1:
-            combobox_state = "disabled"
-            combobox_cursor = "no"
+            combobox_state = TkState.Disabled
+            combobox_cursor = TkCursor.Forbidden
 
         self.__combobox.configure(
             values=game_names,
@@ -53,7 +54,7 @@ class GameDropdownVisitor(Visitor):
         self.__combobox.set(app.state.game_name)
 
     def disable(self, gui: "_GUI"):
-        self.__combobox.configure(state="disabled", cursor="wait")
+        self.__combobox.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
 
     def is_enabled(self):
         return True
@@ -79,4 +80,4 @@ class GameDropdownVisitor(Visitor):
 
         self.__combobox.pack()
         self.__combobox.place(relx=.9, rely=.05, width=150, height=30, anchor=tk.N)
-        self.__combobox.bind("<<ComboboxSelected>>", lambda e: execute_in_thread(lambda: on_game_selection_change(e)))
+        self.__combobox.bind(TkEvent.ComboboxSelected, lambda e: execute_in_thread(lambda: on_game_selection_change(e)))

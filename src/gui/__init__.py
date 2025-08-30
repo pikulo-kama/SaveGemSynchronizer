@@ -2,6 +2,7 @@ import tkinter as tk
 
 from src.core.text_resource import tr
 from src.core.holders import prop
+from src.gui.constants import TkCursor
 from src.gui.visitor import load_visitors, Visitor
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
@@ -79,7 +80,7 @@ class _GUI:
         """
         return self.__body
 
-    def set_cursor(self, cursor=""):
+    def set_cursor(self, cursor=TkCursor.Default):
         """
         Used to change main window cursor.
         """

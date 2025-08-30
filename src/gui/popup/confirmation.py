@@ -1,7 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
 
 from src.core.text_resource import tr
+from src.gui import TkCursor
+from src.gui.component.button import Button
 from src.gui.popup import Popup
 
 
@@ -40,24 +41,22 @@ class Confirmation(Popup):
 
             self.destroy()
 
-        confirm_btn = ttk.Button(
+        confirm_btn = Button(
             button_frame,
             text=tr("popup_ConfirmationButtonConfirm"),
-            cursor="hand2",
+            cursor=TkCursor.Hand,
             width=12,
             command=confirm_callback,
-            style="SmallPrimary.TButton",
-            takefocus=False
+            style="SmallPrimary.TButton"
         )
 
-        close_btn = ttk.Button(
+        close_btn = Button(
             button_frame,
             text=tr("popup_ConfirmationButtonClose"),
-            cursor="hand2",
+            cursor=TkCursor.Hand,
             width=10,
             command=self.destroy,
-            style="SmallSecondary.TButton",
-            takefocus=False
+            style="SmallSecondary.TButton"
         )
 
         confirm_btn.grid(row=0, column=0, padx=(10, 10))

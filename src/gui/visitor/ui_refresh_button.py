@@ -2,6 +2,7 @@ import tkinter as tk
 
 from src.gui import _GUI
 from src.gui.component.wait_button import WaitButton
+from src.gui.constants import TkState, TkCursor
 from src.gui.visitor import Visitor
 from src.util.thread import execute_in_thread
 
@@ -19,10 +20,10 @@ class UIRefreshButtonVisitor(Visitor):
         self.__add_refresh_button(gui)
 
     def refresh(self, gui: _GUI):
-        self.__refresh_button.configure(text="⟳", state="", cursor="hand2")
+        self.__refresh_button.configure(text="⟳", state=TkState.Default, cursor=TkCursor.Hand)
 
     def disable(self, gui: "_GUI"):
-        self.__refresh_button.configure(state="disabled", cursor="wait")
+        self.__refresh_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
 
     def is_enabled(self):
         return True
@@ -38,9 +39,7 @@ class UIRefreshButtonVisitor(Visitor):
             # there is no need to pass gui.refresh here since it will result in
             # UI refreshing twice.
             command=lambda: execute_in_thread(lambda: None),
-            padding=(4, 7),
-            style="SquarePrimary.18.TButton",
-            takefocus=False
+            style="SquarePrimary.18.TButton"
         )
 
         self.__refresh_button.pack()
