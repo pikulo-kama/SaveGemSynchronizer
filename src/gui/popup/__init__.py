@@ -4,11 +4,11 @@ import tkinter as tk
 
 from src.core.text_resource import tr
 from src.core.holders import prop
-from src.gui import GUI
+from src.gui import gui
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class Popup(abc.ABC):
@@ -17,19 +17,18 @@ class Popup(abc.ABC):
     """
 
     def __init__(self, title_text_resource, icon):
-        gui = GUI.instance()
 
-        self.__popup = tk.Toplevel(gui.window())
+        self.__popup = tk.Toplevel(gui.window)
         self.__offset_x = None
         self.__offset_y = None
 
-        gui.window().bind("<Configure>", lambda _: self.__center_popup(gui))
+        gui.window.bind("<Configure>", lambda _: self.__center_popup())
         self.__popup.protocol("WM_DELETE_WINDOW", self.destroy)
 
-        self.__center_popup(gui)
+        self.__center_popup()
         self.__lock_popup()
 
-        self.__popup.transient(gui.window())
+        self.__popup.transient(gui.window)
         self.__popup.grab_set()
         self.__popup.focus_set()
 
@@ -42,10 +41,10 @@ class Popup(abc.ABC):
         Used to display popup with provided message.
         """
 
-        logger.info("Initializing popup.")
+        _logger.info("Initializing popup.")
 
-        logger.debug("popupTitle = %s", self.__title_text_resource)
-        logger.debug("popupMessage = %s", message)
+        _logger.debug("popupTitle = %s", self.__title_text_resource)
+        _logger.debug("popupMessage = %s", message)
 
         self.__popup.geometry(f"{prop("popupWidth")}x{prop("popupHeight")}")
         self.__popup.title(tr(self.__title_text_resource))
@@ -82,12 +81,12 @@ class Popup(abc.ABC):
         Used to destroy window context.
         """
 
-        GUI.instance().window().unbind("<Configure>")
+        gui.window.unbind("<Configure>")
         self.__popup.destroy()
 
-        logger.info("Popup has been destroyed.")
+        _logger.info("Popup has been destroyed.")
 
-    def __center_popup(self, gui):
+    def __center_popup(self):
         """
         Used to center popup against main application window.
         """
@@ -96,12 +95,12 @@ class Popup(abc.ABC):
         popup_height = prop("popupHeight")
         window_width = prop("windowWidth")
 
-        window_x = gui.window().winfo_rootx()
+        window_x = gui.window.winfo_rootx()
         self.__offset_x = window_x + ((window_width - popup_width) / 2)
-        self.__offset_y = gui.window().winfo_rooty()
+        self.__offset_y = gui.window.winfo_rooty()
 
-        logger.debug("popupXPosition = %d", self.__offset_x)
-        logger.debug("popupYPosition = %d", self.__offset_y)
+        _logger.debug("popupXPosition = %d", self.__offset_x)
+        _logger.debug("popupYPosition = %d", self.__offset_y)
 
         self.__popup.geometry("%dx%d+%d+%d" % (
             popup_width,

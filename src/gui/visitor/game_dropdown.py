@@ -1,13 +1,13 @@
-from src.core.app_state import AppState
-from src.core.game_config import GameConfig
-from src.gui import GUI
+from src.core import app
+from src.gui import _GUI
 from src.gui.visitor import Visitor
 from tkinter import ttk, font
 import tkinter as tk
 
 from src.util.logger import get_logger
+from src.util.thread import execute_in_thread
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
 class GameDropdownVisitor(Visitor):
@@ -19,24 +19,23 @@ class GameDropdownVisitor(Visitor):
     def __init__(self):
         self.__combobox = None
 
-    def visit(self, gui: GUI):
+    @property
+    def order(self) -> int:
+        # Needs to be initialized first.
+        return 0
+
+    def visit(self, gui: _GUI):
         self.__add_game_selection_dropdown(gui)
 
-    def refresh(self, gui: GUI):
+    def refresh(self, gui: _GUI):
 
-        GameConfig.download()
+        app.games.download()
 
-        if len(GameConfig.games()) == 0:
-            logger.error("There are no games configured. Can't proceed.")
+        if app.games.empty:
+            _logger.error("There are no games configured. Can't proceed.")
             raise RuntimeError("There are no games configured. Can't proceed.")
 
-        game_names = GameConfig.game_names()
-        default_game = game_names[0]
-        selected_game = AppState.get_game(default_game)
-
-        if selected_game not in game_names:
-            selected_game = default_game
-            AppState.set_game(default_game)
+        game_names = app.games.names
 
         combobox_state = "readonly"
         combobox_cursor = "hand2"
@@ -47,29 +46,32 @@ class GameDropdownVisitor(Visitor):
 
         self.__combobox.configure(
             values=game_names,
-            cursor=combobox_cursor,
             state=combobox_state,
+            cursor=combobox_cursor
         )
 
-        self.__combobox.set(selected_game)
+        self.__combobox.set(app.state.game_name)
+
+    def disable(self, gui: "_GUI"):
+        self.__combobox.configure(state="disabled", cursor="wait")
 
     def is_enabled(self):
         return True
 
-    def __add_game_selection_dropdown(self, gui: GUI):
+    def __add_game_selection_dropdown(self, gui: _GUI):
         """
         Used to render game selection dropdown.
         """
 
         def on_game_selection_change(event):
-            logger.info("Game selection changed.")
-            logger.info("Selected game - %s", event.widget.get())
+            _logger.info("Game selection changed.")
+            _logger.info("Selected game - %s", event.widget.get())
 
-            AppState.set_game(event.widget.get())
+            app.state.game_name = event.widget.get()
             gui.refresh()
 
         self.__combobox = ttk.Combobox(
-            gui.window(),
+            gui.window,
             font=("Helvetica", 10, font.BOLD),
             width=20,
             style="Secondary.TCombobox"
@@ -77,4 +79,4 @@ class GameDropdownVisitor(Visitor):
 
         self.__combobox.pack()
         self.__combobox.place(relx=.9, rely=.05, width=150, height=30, anchor=tk.N)
-        self.__combobox.bind("<<ComboboxSelected>>", on_game_selection_change)
+        self.__combobox.bind("<<ComboboxSelected>>", lambda e: execute_in_thread(lambda: on_game_selection_change(e)))

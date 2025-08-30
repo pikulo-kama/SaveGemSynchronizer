@@ -1,21 +1,10 @@
 import os
+from typing import Final
 
-# Frequently accessed directories
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-APP_DATA_ROOT = os.path.join(os.getenv("APPDATA"), "SaveGem")
 
-JSON_EXTENSION = ".json"
-ZIP_EXTENSION = "zip"
-ZIP_MIME_TYPE = "application/zip"
+PROJECT_ROOT: Final = os.path.dirname(os.path.abspath(__file__))
+APP_DATA_ROOT: Final = os.path.join(os.getenv("APPDATA"), "SaveGem")
 
-# Global state properties
-STATE_SELECTED_GAME = "game"
-STATE_SELECTED_LOCALE = "locale"
-
-# File constants
-LOG_FILE_NAME = "application.log"
-LOGBACK_FILE_NAME = "logback.json"
-GAME_CONFIG_POINTER_FILE_NAME = "game-config-file-id.txt"
-GDRIVE_TOKEN_FILE_NAME = "token.json"
-CREDENTIALS_FILE_NAME = "credentials.json"
-SAVE_VERSION_FILE_NAME = "version_data.json"
+JSON_EXTENSION: Final = ".json"
+ZIP_EXTENSION: Final = "zip"
+ZIP_MIME_TYPE: Final = "application/zip"

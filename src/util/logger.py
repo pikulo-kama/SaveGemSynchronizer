@@ -3,22 +3,25 @@ import os.path
 import re
 from logging.handlers import TimedRotatingFileHandler
 
-from constants import LOG_FILE_NAME, LOGBACK_FILE_NAME
 from src.core.editable_json_config_holder import EditableJsonConfigHolder
 from src.core.json_config_holder import JsonConfigHolder
 from src.util.file import resolve_log, resolve_config, resolve_app_data
 
 
-local_logback_file_path = resolve_config(LOGBACK_FILE_NAME)
-app_data_logback_file_path = resolve_app_data(LOGBACK_FILE_NAME)
+_LOGBACK_FILE_NAME = "logback.json"
+
+_local_logback_file_path = resolve_config(_LOGBACK_FILE_NAME)
+_app_data_logback_file_path = resolve_app_data(_LOGBACK_FILE_NAME)
 
 # Copy logback.json to app data if it's missing.
-if not os.path.exists(app_data_logback_file_path):
-    local_logback = JsonConfigHolder(local_logback_file_path)
-    logback = EditableJsonConfigHolder(app_data_logback_file_path)
-    logback.set(local_logback.get())
+if not os.path.exists(_app_data_logback_file_path):
 
-logback = JsonConfigHolder(app_data_logback_file_path)
+    _local_logback = JsonConfigHolder(_local_logback_file_path)
+
+    _logback = EditableJsonConfigHolder(_app_data_logback_file_path)
+    _logback.set(_local_logback.get())
+
+_logback = JsonConfigHolder(_app_data_logback_file_path)
 log_levels = {
     "INFO": logging.INFO,
     "WARN": logging.WARN,
@@ -34,7 +37,7 @@ def initialize_logging():
     """
 
     handler = TimedRotatingFileHandler(
-        resolve_log(LOG_FILE_NAME),
+        resolve_log("application.log"),
         when="midnight",
         interval=1,
         backupCount=5,
@@ -57,7 +60,7 @@ def get_log_level(logger_name: str):
     If log level is not configured 'INFO' would be used as default.
     """
 
-    level = logback.get_value(logger_name)
+    level = _logback.get_value(logger_name)
 
     if level is not None:
         return log_levels[level]

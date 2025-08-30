@@ -1,4 +1,5 @@
 import io
+import logging
 import os.path
 
 from google.oauth2.credentials import Credentials
@@ -8,12 +9,13 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 
-from constants import GDRIVE_TOKEN_FILE_NAME, CREDENTIALS_FILE_NAME, ZIP_MIME_TYPE
+from constants import ZIP_MIME_TYPE
 from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
 from src.util.logger import get_logger
+from src.util.timer import measure_time
 
-logger = get_logger(__name__)
-SCOPES = [
+_logger = get_logger(__name__)
+_SCOPES = [
     "https://www.googleapis.com/auth/docs",
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/drive.appdata"
@@ -24,6 +26,19 @@ class GDrive:
     """
     Class that has most of the Google Drive interaction logic defined.
     """
+
+    __CHUNK_SIZE = 10 * 1024 * 1024
+
+    @staticmethod
+    def get_current_user():
+        """
+        Used to get information about authenticated user.
+        """
+        response = GDrive.__drive().about() \
+            .get(fields="user") \
+            .execute()
+
+        return response["user"]
 
     @staticmethod
     def query_single(target_field: str, fields: str, q: str):
@@ -43,56 +58,85 @@ class GDrive:
             return request.execute().get(target_field)
 
         except HttpError as e:
-            logger.error("Error downloading save metadata", e)
+            _logger.error("Error downloading save metadata", e)
             return None
 
     @staticmethod
-    def download_file(file_id):
+    @measure_time(when=logging.DEBUG)
+    def download_file(file_id, subscriber=None):
         """
         Used to in the first place to download archives.
         """
 
-        request = GDrive.__drive().files().get_media(fileId=file_id)
-        file = io.BytesIO()
-
-        downloader = MediaIoBaseDownload(file, request)
         done = False
+        file = io.BytesIO()
+        request = GDrive.__drive().files().get_media(fileId=file_id)
+        downloader = MediaIoBaseDownload(file, request, chunksize=GDrive.__CHUNK_SIZE)
 
         try:
             while not done:
-                status, done = downloader.next_chunk()
-
-            return file
+                _, done = GDrive.__next_chunk(downloader, subscriber)
 
         except HttpError as error:
-            logger.error("Failed to download file from drive", error)
+            _logger.error("Failed to download file from drive", error)
+            return None
         
-        return None
+        return file
 
     @staticmethod
-    def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE):
+    @measure_time(when=logging.DEBUG)
+    def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE, subscriber=None):
         """
         Used to upload file to Google Drive into provided directory.
         """
 
-        media = MediaFileUpload(file_path, mimetype=mime_type)
+        done = False
+        media = MediaFileUpload(
+            file_path,
+            mimetype=mime_type,
+            resumable=True,
+            chunksize=GDrive.__CHUNK_SIZE
+        )
         metadata = {
             "name": file_name_from_path(file_path),
             "parents": [parent_directory_id]
         }
 
         try:
-            # Upload archive to Google Drive.
-            logger.info("Uploading archive to drive.")
-            GDrive.__drive().files().create(
+            request = GDrive.__drive().files().create(
                 body=metadata,
                 media_body=media,
                 fields="id"
-            ).execute()
+            )
+
+            while not done:
+                _, done = GDrive.__next_chunk(request, subscriber)
 
         except HttpError as error:
-            logger.error("Error uploading archive to drive", error)
+            _logger.error("Error uploading file to drive", error)
             raise error
+
+    @staticmethod
+    def __next_chunk(request, subscriber=None):
+        """
+        Wrapper method which formats progress into percentage number from 0 to 100.
+        Accepts subscriber callback which could be used to respond to download/upload progress.
+        """
+
+        status, done = request.next_chunk()
+
+        if subscriber is not None:
+
+            if done:
+                progress = 1
+            elif status is not None:
+                progress = status.progress()
+            else:
+                progress = 0
+
+            subscriber(progress)
+
+        return status, done
 
     @staticmethod
     def __drive():
@@ -107,37 +151,37 @@ class GDrive:
         Used to authenticate to Google Cloud as well as refresh token if needed.
         """
 
-        token_file_name = resolve_app_data(GDRIVE_TOKEN_FILE_NAME)
-        credentials_file_name = resolve_project_data(CREDENTIALS_FILE_NAME)
+        token_file_name = resolve_app_data("token.json")
+        credentials_file_name = resolve_project_data("credentials.json")
         creds = None
 
         # Get credentials from file (possible if authentication was done previously)
         if os.path.exists(token_file_name):
-            logger.info("Token was found. Application will use credentials from token.")
-            creds = Credentials.from_authorized_user_file(token_file_name, SCOPES)
+            _logger.info("Token was found. Application will use credentials from token.")
+            creds = Credentials.from_authorized_user_file(token_file_name, _SCOPES)
 
             if creds and creds.valid:
                 return creds
 
         # If they're just expired then try to refresh them
         if creds and creds.expired and creds.refresh_token:
-            logger.warn("Credentials expired, performing refresh.")
+            _logger.warn("Credentials expired, performing refresh.")
             creds.refresh(Request())
 
         # Authenticate with credentials and then store them for future use
         elif os.path.exists(credentials_file_name):
-            logger.info("Attempting authentication using credentials.")
+            _logger.info("Attempting authentication using credentials.")
 
-            flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, _SCOPES)
             creds = flow.run_local_server(port=0)
 
-            logger.info("Authentication completed.")
+            _logger.info("Authentication completed.")
 
-            logger.info("Saving Google Cloud access token for later use.")
+            _logger.info("Saving Google Cloud access token for later use.")
             save_file(token_file_name, creds.to_json())
 
         else:
-            logger.critical("credentials.json is missing.")
+            _logger.critical("credentials.json is missing.")
             raise RuntimeError("Google Cloud credentials are missing in root of the project. Add credentials.json.")
 
         return creds

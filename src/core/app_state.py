@@ -1,61 +1,91 @@
-from constants import STATE_SELECTED_GAME, STATE_SELECTED_LOCALE
+from typing import Final
+
+from src.core.app_data import AppData
 from src.core.editable_json_config_holder import EditableJsonConfigHolder
+from src.core.holders import locales, prop
 from src.util.file import resolve_app_data
 from src.util.logger import get_logger
 
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
+
+_STATE_SELECTED_GAME: Final = "game"
+_STATE_SELECTED_LOCALE: Final = "locale"
 
 
-class AppState:
+class _AppState(AppData):
     """
     Used to retrieve and operate with application dynamic state.
     e.g. locale or selected game.
     """
 
-    __state = EditableJsonConfigHolder(resolve_app_data("state"))
+    def __init__(self):
+        super().__init__()
+        self.__state = EditableJsonConfigHolder(resolve_app_data("state"))
+        # This shouldn't be part of state since it would be a security issue.
+        self.__user_email = None
 
-    @staticmethod
-    def set_game(game_name: str):
+    @property
+    def user_email(self):
         """
-        Set game as active.
+        Used to get email address of currently authenticated user.
         """
-        AppState.__state.set_value(STATE_SELECTED_GAME, game_name)
+        return self.__user_email
 
-    @staticmethod
-    def get_game(default_value: str = None):
+    @user_email.setter
+    def user_email(self, user_email: str):
+        """
+        Used to set email of currently authenticated user in memory.
+        This will not be written to state.json.
+        """
+        self.__user_email = user_email
+
+    @property
+    def game_name(self):
         """
         Get active game.
         """
-        return AppState.__get_value(STATE_SELECTED_GAME, default_value)
 
-    @staticmethod
-    def set_locale(locale: str):
-        """
-        Set active locale.
-        """
-        AppState.__state.set_value(STATE_SELECTED_LOCALE, locale)
+        game_name = self.__state.get_value(_STATE_SELECTED_GAME)
 
-    @staticmethod
-    def get_locale(default_value: str = None):
+        if game_name not in self._app.games.names:
+            default_game = self._app.games.names[0]
+            _logger.warn("Game '%s' was not found. Using game '%s' as default.", str(game_name), default_game)
+
+            game_name = default_game
+            self.game_name = default_game
+
+        _logger.debug("Current game = %s", game_name)
+        return game_name
+
+    @game_name.setter
+    def game_name(self, game_name: str):
+        """
+        Set game as active.
+        """
+        self.__state.set_value(_STATE_SELECTED_GAME, game_name)
+
+    @property
+    def locale(self):
         """
         Get active locale.
         """
-        return AppState.__get_value(STATE_SELECTED_LOCALE, default_value)
 
-    @staticmethod
-    def __get_value(key: str, default_value):
+        locale = self.__state.get_value(_STATE_SELECTED_LOCALE)
+
+        if locale not in locales:
+            default_locale = prop("defaultLocale")
+            _logger.warn("Locale '%s' was not found. Using default locale '%s'.", str(locale), default_locale)
+
+            locale = default_locale
+            self.locale = default_locale
+
+        _logger.debug("Current locale = %s", locale)
+        return locale
+
+    @locale.setter
+    def locale(self, locale: str):
         """
-        For internal use.
-        Used to get value from state, if value is not in state
-        then it would be populated with default one and persisted.
+        Set active locale.
         """
-        state_value = AppState.__state.get_value(key)
-
-        if state_value is None:
-            logger.warn("Value for '%s' is missing in state. Using '%s' as default value.", key, default_value)
-            AppState.__state.set_value(key, default_value)
-            return default_value
-
-        logger.debug("State value %s=%s", key, state_value)
-        return state_value
+        self.__state.set_value(_STATE_SELECTED_LOCALE, locale)

@@ -4,56 +4,60 @@ import shutil
 
 from googleapiclient.errors import HttpError
 
-from src.core.game_config import GameConfig
-from src.gui import GUI
+from src.core import app
 
-from constants import ZIP_EXTENSION, SAVE_VERSION_FILE_NAME
-from src.core.app_state import AppState
-from src.core.editable_json_config_holder import EditableJsonConfigHolder
-from src.core.text_resource import tr
+from constants import ZIP_EXTENSION
 from src.service.gdrive import GDrive
-from src.gui.popup.notification import notification
-from src.util.file import resolve_temp_file, resolve_app_data, file_name_from_path, remove_extension_from_path
+from src.service.subscriptable import SubscriptableService, DoneEvent, ErrorEvent, EventKind
+from src.util.file import resolve_temp_file, file_name_from_path, remove_extension_from_path
 from src.util.logger import get_logger
 
-logger = get_logger(__name__)
+_logger = get_logger(__name__)
 
 
-class Uploader:
+class Uploader(SubscriptableService):
     """
     Used to upload current save files of selected game to Google Drive.
     """
 
-    @staticmethod
-    def upload():
+    def upload(self):
         """
         Used to upload current save files of selected game to Google Drive.
         Save files are being archived before being uploaded.
         """
 
-        gui = GUI.instance()
-        saves_directory = GameConfig.local_path()
+        # 1 - Archive
+        # 2 - Upload
+        # 3 - Update save version
+        self._set_stages(3)
+
+        saves_directory = app.games.current.local_path
         file_path = resolve_temp_file(f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
-            logger.error("Directory with saves is missing %s", saves_directory)
-            gui.schedule_operation(lambda: notification(tr("notification_ErrorSaveDirectoryMissing", saves_directory)))
+            _logger.error("Directory with saves is missing %s", saves_directory)
+            self._send_event(ErrorEvent(EventKind.SAVES_DIRECTORY_IS_MISSING))
             return
 
         # Archive save contents to mitigate impact on drive storage.
-        logger.info("Archiving save files that need to be uploaded.")
+        _logger.info("Archiving save files that need to be uploaded.")
         shutil.make_archive(remove_extension_from_path(file_path), ZIP_EXTENSION, saves_directory)
+        self._complete_stage()
 
         try:
-            GDrive.upload_file(file_path, GameConfig.gdrive_directory_id())
+            _logger.info("Uploading archive to cloud.")
+            GDrive.upload_file(
+                file_path,
+                app.games.current.drive_directory,
+                subscriber=lambda completion: self._complete_stage(completion)
+            )
 
         except HttpError:
-            gui.schedule_operation(lambda: notification(tr("notification_ErrorUploadingToDrive")))
+            self._send_event(ErrorEvent(EventKind.ERROR_UPLOADING_TO_DRIVE))
+            return
 
         # Update last version of save locally.
-        save_versions = EditableJsonConfigHolder(resolve_app_data(SAVE_VERSION_FILE_NAME))
-        save_versions.set_value(AppState.get_game(), file_name_from_path(file_path))
+        app.last_save.identifier = file_name_from_path(file_path)
+        self._complete_stage()
 
-        # Show success notification in application.
-        gui.refresh()
-        gui.schedule_operation(lambda: notification(tr("notification_SaveHasBeenUploaded")))
+        self._send_event(DoneEvent(None))
