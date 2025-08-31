@@ -1,10 +1,11 @@
 import json
 import os
 from dataclasses import dataclass
+from typing import Final
 
 from src.core.app_data import AppData
 from src.service.gdrive import GDrive
-from src.util.file import resolve_project_data, read_file
+from src.util.file import resolve_project_data, read_file, save_file
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -19,6 +20,8 @@ class _Game:
     __name: str
     __local_path: str
     __drive_directory: str
+
+    __SAVE_VERSION_FILE_NAME: Final = "SaveGem-SaveVersion.txt"
 
     @property
     def name(self):
@@ -40,6 +43,20 @@ class _Game:
         ID of Google Drive directory where save files located
         """
         return self.__drive_directory
+
+    @property
+    def save_version(self):
+        file_path = os.path.join(self.local_path, self.__SAVE_VERSION_FILE_NAME)
+
+        if not os.path.exists(file_path):
+            return None
+
+        return read_file(file_path)
+
+    @save_version.setter
+    def save_version(self, version):
+        file_path = str(os.path.join(self.local_path, self.__SAVE_VERSION_FILE_NAME))
+        save_file(file_path, version)
 
 
 class _GameConfig(AppData):

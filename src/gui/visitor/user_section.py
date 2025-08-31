@@ -70,7 +70,6 @@ class UserSectionVisitor(Visitor):
 
         # Delete all user specific data.
         delete_file(resolve_app_data("state.json"))
-        delete_file(resolve_app_data("version_data.json"))
         delete_file(resolve_app_data("token.json"))
 
         gui.destroy()

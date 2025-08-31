@@ -111,13 +111,15 @@ class SaveStatusVisitor(Visitor):
         Used to get local save status label.
         """
 
+        last_save_version = app.games.current.save_version
+
         if last_save_meta is None:
             return tr("label_StorageIsEmpty")
 
-        elif app.last_save.identifier is None:
+        elif last_save_version is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")
 
-        elif app.last_save.identifier == last_save_meta.get("name"):
+        elif last_save_version in last_save_meta.get("name"):
             return tr("info_SaveIsUpToDate")
 
         else:

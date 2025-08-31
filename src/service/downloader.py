@@ -46,8 +46,6 @@ class Downloader(SubscriptableService):
             self._send_event(ErrorEvent(EventKind.LAST_SAVE_METADATA_IS_NONE))
             return
 
-        app.last_save.identifier = metadata.get("name")
-
         # Download file and write it to zip file locally (in output directory)
         _logger.info("Downloading save archive.")
         file = GDrive.download_file(

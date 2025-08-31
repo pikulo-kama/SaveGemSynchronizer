@@ -9,7 +9,7 @@ from src.core import app
 from constants import ZIP_EXTENSION
 from src.service.gdrive import GDrive
 from src.service.subscriptable import SubscriptableService, DoneEvent, ErrorEvent, EventKind
-from src.util.file import resolve_temp_file, file_name_from_path, remove_extension_from_path
+from src.util.file import resolve_temp_file, remove_extension_from_path
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -27,17 +27,22 @@ class Uploader(SubscriptableService):
         """
 
         # 1 - Archive
-        # 2 - Upload
-        # 3 - Update save version
+        # 2 - Set save version
+        # 3 - Upload
         self._set_stages(3)
 
         saves_directory = app.games.current.local_path
-        file_path = resolve_temp_file(f"save-{datetime.now().strftime("%Y%m%d%H%M%S")}.{ZIP_EXTENSION}")
+        save_version = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        file_path = resolve_temp_file(f"save-{save_version}.{ZIP_EXTENSION}")
 
         if not os.path.exists(saves_directory):
             _logger.error("Directory with saves is missing %s", saves_directory)
             self._send_event(ErrorEvent(EventKind.SAVES_DIRECTORY_IS_MISSING))
             return
+
+        # Set save version into archive before uploading it.
+        app.games.current.save_version = save_version
+        self._complete_stage()
 
         # Archive save contents to mitigate impact on drive storage.
         _logger.info("Archiving save files that need to be uploaded.")
@@ -55,9 +60,5 @@ class Uploader(SubscriptableService):
         except HttpError:
             self._send_event(ErrorEvent(EventKind.ERROR_UPLOADING_TO_DRIVE))
             return
-
-        # Update last version of save locally.
-        app.last_save.identifier = file_name_from_path(file_path)
-        self._complete_stage()
 
         self._send_event(DoneEvent(None))
