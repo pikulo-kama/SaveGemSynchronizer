@@ -33,7 +33,9 @@ class Component(tk.Frame):
         self._init()
         self.__sync_props()
 
-        self._bind_events()
+        if self._get_value(TkAttr.State) != TkState.Disabled:
+            self._bind_events()
+
         self._draw()
 
     def configure(self, cnf=None, **kw):
@@ -45,7 +47,9 @@ class Component(tk.Frame):
         super().configure(cnf, **kw)
         self.__sync_props()
 
-        self._bind_events()
+        if self._get_value(TkAttr.State) != TkState.Disabled:
+            self._bind_events()
+
         self._draw()
 
     def destroy(self):

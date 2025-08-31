@@ -54,12 +54,17 @@ def _add_secondary_combobox():
     Used to add custom Combobox styles with secondary color accent.
     """
 
-    style_name = "Secondary.TCombobox"
+    style_name = "Secondary.TDropdown"
     _log_style(style_name)
 
     style.configure(
         style_name,
-        padding=(10, 0, 0, 0)
+        background=prop("secondaryButton.colorStatic"),
+        foreground=prop("secondaryColor"),
+        font=("Segoe UI Semibold", 10, font.BOLD),
+        cursor=TkCursor.Hand,
+        radius=6,
+        padding=5
     )
 
     style.map(

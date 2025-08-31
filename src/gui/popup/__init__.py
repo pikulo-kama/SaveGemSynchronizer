@@ -1,6 +1,7 @@
 import abc
 from abc import abstractmethod
 import tkinter as tk
+from tkinter import font
 
 from src.core.text_resource import tr
 from src.core.holders import prop
@@ -58,7 +59,7 @@ class Popup(abc.ABC):
             self._container,
             text=message,
             fg=prop("secondaryColor"),
-            font=("Helvetica", 10, "bold")
+            font=("Helvetica", 10, font.BOLD)
         )
 
         self._show_internal()

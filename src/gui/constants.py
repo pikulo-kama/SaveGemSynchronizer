@@ -21,6 +21,8 @@ class TkAttr:
     Radius: Final = "radius"
     Progress: Final = "progress"
     Image: Final = "image"
+    Values: Final = "values"
+    Prefix: Final = "prefix"
 
 
 class TkState:
@@ -46,6 +48,7 @@ class TkEvent:
     Enter: Final = "<Enter>"
     Leave: Final = "<Leave>"
     ComboboxSelected: Final = "<<ComboboxSelected>>"
+    ListboxSelected: Final = "<<ListboxSelect>>"
 
 
 class TkCursor:

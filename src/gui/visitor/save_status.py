@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 
 from babel.localtime import get_localzone
 
@@ -67,7 +68,7 @@ class SaveStatusVisitor(Visitor):
         self.__last_save_timestamp = tk.Label(
             info_frame,
             fg=prop("secondaryColor"),
-            font=("Helvetica", 11, "bold")
+            font=("Helvetica", 11, font.BOLD)
         )
 
         self.__save_status.grid(row=0, column=0)

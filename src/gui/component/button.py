@@ -31,10 +31,6 @@ class Button(Component):
         pass
 
     def _bind_events(self):
-        # Buttons should be non interactable when they are disabled.
-        if self._get_value(TkAttr.State) == TkState.Disabled:
-            return
-
         self._canvas.bind(TkEvent.LMBClick, self.__set_state(TkState.Pressed))
         self._canvas.bind(TkEvent.Enter, self.__set_state(TkState.Active))
         self._canvas.bind(TkEvent.Leave, self.__set_state(TkState.Default))
