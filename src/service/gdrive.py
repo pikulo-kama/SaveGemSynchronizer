@@ -1,4 +1,5 @@
 import io
+import json
 import logging
 import os.path
 
@@ -38,7 +39,7 @@ class GDrive:
             .get(fields="user") \
             .execute()
 
-        return response["user"]
+        return response.get("user")
 
     @staticmethod
     def query_single(target_field: str, fields: str, q: str):
@@ -176,9 +177,8 @@ class GDrive:
             creds = flow.run_local_server(port=0)
 
             _logger.info("Authentication completed.")
-
             _logger.info("Saving Google Cloud access token for later use.")
-            save_file(token_file_name, creds.to_json())
+            save_file(token_file_name, json.loads(creds.to_json()), as_json=True)
 
         else:
             _logger.critical("credentials.json is missing.")

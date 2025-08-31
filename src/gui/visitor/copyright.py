@@ -32,13 +32,10 @@ class CopyrightVisitor(Visitor):
     def disable(self, gui: "_GUI"):
         pass
 
-    def is_enabled(self):
-        return True
-
     def __add_copyright(self, gui: _GUI):
         """
         Used to render copyright label.
         """
 
-        self.__copyright = tk.Label(gui.window)
-        self.__copyright.place(relx=.5, rely=.9, anchor=tk.N)
+        self.__copyright = tk.Label(gui.bottom)
+        self.__copyright.pack(expand=True)

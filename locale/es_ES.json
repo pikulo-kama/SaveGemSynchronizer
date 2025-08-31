@@ -11,7 +11,7 @@
   "label_UploadingSaveToDrive" : "Subiendo ⌛",
   "label_DownloadSaveFromDrive" : "🠋",
   "label_NoInformationAboutCurrentSaveVersion" : "No estamos seguros de cuál guardado es más reciente, pero...",
-  "label_StorageIsEmpty" : "El almacenamiento está vacío. Suba un archivo para continuar.",
+  "label_StorageIsEmpty" : "El almacenamiento está vacío.\n Suba un archivo para continuar.",
   "info_SaveIsUpToDate" : "Nada nuevo... Tu guardado está lo más actualizado posible.",
   "info_SaveNeedsToBeDownloaded" : "Bueno bueno bueno, mira nada más...",
   "info_NewestSaveOnDriveInformation" : "el último guardado fue subido el {0} a las {1} por {2}",
@@ -19,5 +19,6 @@
   "notification_NewSaveHasBeenDownloaded" : "Guardado descargado con éxito.",
   "notification_ErrorUploadingToDrive" : "Ocurrió un error al subir al almacenamiento.",
   "notification_ErrorSaveDirectoryMissing" : "Carpeta de guardado no encontrada. \n{0}",
-  "confirmation_ConfirmToDownloadSave" : "¿Seguro? Esto borrará el guardado existente."
+  "confirmation_ConfirmToDownloadSave" : "¿Seguro? Esto borrará el guardado existente.",
+  "confirmation_ConfirmLogout_es" : "¿Desea cerrar sesión?"
 }

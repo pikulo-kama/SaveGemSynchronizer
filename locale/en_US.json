@@ -11,7 +11,7 @@
   "label_UploadingSaveToDrive" : "Uploading ⌛",
   "label_DownloadSaveFromDrive" : "🠋",
   "label_NoInformationAboutCurrentSaveVersion" : "We're not sure which save is newer, but..",
-  "label_StorageIsEmpty" : "Storage is empty. Upload is required to proceed.",
+  "label_StorageIsEmpty" : "Storage is empty.\n Upload is required to proceed.",
   "info_SaveIsUpToDate" : "Nothing new... Your save is as fresh as it could be.",
   "info_SaveNeedsToBeDownloaded" : "Well well well, would you look at that..",
   "info_NewestSaveOnDriveInformation" : "last save was uploaded on {0} at {1} by {2}",
@@ -19,5 +19,6 @@
   "notification_NewSaveHasBeenDownloaded" : "Save has been downloaded successfully.",
   "notification_ErrorUploadingToDrive" : "Error occurred when uploading to drive.",
   "notification_ErrorSaveDirectoryMissing" : "Save directory not found. \n{0}",
-  "confirmation_ConfirmToDownloadSave" : "Sure? This will erase existing save you have."
+  "confirmation_ConfirmToDownloadSave" : "Sure? This will erase existing save you have.",
+  "confirmation_ConfirmLogout" : "Do you want to logout?"
 }

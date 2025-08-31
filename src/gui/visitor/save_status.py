@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 
 from babel.localtime import get_localzone
 
@@ -49,15 +50,12 @@ class SaveStatusVisitor(Visitor):
     def disable(self, gui: "_GUI"):
         pass
 
-    def is_enabled(self):
-        return True
-
     def __add_save_information(self, gui):
         """
         Used to render both local and Google Drive save status labels.
         """
 
-        info_frame = tk.Frame(gui.body)
+        info_frame = tk.Frame(gui.center)
 
         # Text is empty for fields at this moment
         # They would be populated later by GUI component.
@@ -70,13 +68,13 @@ class SaveStatusVisitor(Visitor):
         self.__last_save_timestamp = tk.Label(
             info_frame,
             fg=prop("secondaryColor"),
-            font=("Helvetica", 11, "bold")
+            font=("Helvetica", 11, font.BOLD)
         )
 
-        self.__save_status.grid(row=0, column=0, pady=5)
-        self.__last_save_timestamp.grid(row=1, column=0, pady=5)
+        self.__save_status.grid(row=0, column=0)
+        self.__last_save_timestamp.grid(row=1, column=0)
 
-        info_frame.grid(row=0, column=0, pady=150)
+        info_frame.grid(row=0, column=0, pady=(0, 100))
 
     @staticmethod
     def __get_last_save_info_text(last_save_meta):
@@ -90,11 +88,11 @@ class SaveStatusVisitor(Visitor):
         time_zone = str(get_localzone())
         date_format = "d MMMM"
 
-        creation_datetime = datetime.strptime(last_save_meta["createdTime"], "%Y-%m-%dT%H:%M:%S.%fZ")
+        creation_datetime = datetime.strptime(last_save_meta.get("createdTime"), "%Y-%m-%dT%H:%M:%S.%fZ")
         creation_datetime += timezone(time_zone).utcoffset(creation_datetime)
 
+        # Only show year if it's not current one, just to avoid extra information.
         if creation_datetime.year != date.today().year:
-            # Only show year if it's not current one, just to avoid extra information.
             date_format = "d MMMM YYYY"
 
         creation_date = format_datetime(creation_datetime, date_format, locale=app.state.locale)
@@ -104,7 +102,7 @@ class SaveStatusVisitor(Visitor):
             "info_NewestSaveOnDriveInformation",
             creation_date,
             creation_time,
-            last_save_meta["owner"]
+            last_save_meta.get("owner")
         )
 
     @staticmethod
@@ -113,13 +111,15 @@ class SaveStatusVisitor(Visitor):
         Used to get local save status label.
         """
 
+        last_save_version = app.games.current.save_version
+
         if last_save_meta is None:
             return tr("label_StorageIsEmpty")
 
-        elif app.last_save.identifier is None:
+        elif last_save_version is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")
 
-        elif app.last_save.identifier == last_save_meta["name"]:
+        elif last_save_version in last_save_meta.get("name"):
             return tr("info_SaveIsUpToDate")
 
         else:

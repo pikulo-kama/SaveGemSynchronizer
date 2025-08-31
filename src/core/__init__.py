@@ -1,6 +1,6 @@
 from src.core.app_state import _AppState
 from src.core.game_config import _GameConfig
-from src.core.last_save_info_config import _LastSaveInfoConfig
+from src.core.user import _UserState
 
 
 class _ApplicationContext:
@@ -12,34 +12,33 @@ class _ApplicationContext:
     """
 
     def __init__(self):
-        self._state = _AppState()
-        self._game_config = _GameConfig()
-        self._last_save_info = _LastSaveInfoConfig()
+        self.__state = _AppState()
+        self.__game_config = _GameConfig()
+        self.__user_state = _UserState()
 
-        self._state.link(self)
-        self._game_config.link(self)
-        self._last_save_info.link(self)
+        self.__state.link(self)
+        self.__game_config.link(self)
 
     @property
     def state(self) -> _AppState:
         """
         Application state
         """
-        return self._state
+        return self.__state
 
     @property
     def games(self) -> _GameConfig:
         """
         Available games' configurations.
         """
-        return self._game_config
+        return self.__game_config
 
     @property
-    def last_save(self) -> _LastSaveInfoConfig:
+    def user(self) -> _UserState:
         """
-        Last save uploaded/downloaded save information.
+        Information about authenticated user.
         """
-        return self._last_save_info
+        return self.__user_state
 
 
 app = _ApplicationContext()

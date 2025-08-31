@@ -1,39 +1,24 @@
-from tkinter import ttk
-
-from src.gui.component import safe_get_prop
-
-
-_COMMAND_PROP = "command"
-_DEFAULT_WAIT_SYMBOL = "⌛"
+from src.gui.component.button import Button
+from src.gui.constants import TkAttr
 
 
-class WaitButton(ttk.Button):
+class WaitButton(Button):
     """
     Implementation of ttk.Button.
     When command attached to button is being executed button text would be replaced
-    with wait symbol (⌛).
+    with hourglass symbol.
     """
 
-    def __init__(self, master=None, **kw):
-        kw = self.__initialize(**kw)
-        super().__init__(master, **kw)
+    __DEFAULT_WAIT_SYMBOL = "⌛"
 
-    def configure(self, cnf=None, **kw):
-        kw = self.__initialize(**kw)
-        super().configure(cnf, **kw)
+    def _pre_init(self):
+        original_command = self._get_value(TkAttr.Command)
 
-    def __initialize(self, **kw):
-        """
-        Used to initialize instance custom attributes and behaviours before propagating to TTK.
-        """
+        if original_command is None:
+            return
 
-        original_command = safe_get_prop(_COMMAND_PROP, **kw)
+        def command():
+            self.configure(text=self.__DEFAULT_WAIT_SYMBOL)
+            original_command()
 
-        if original_command is not None:
-            def command():
-                self.configure(text=_DEFAULT_WAIT_SYMBOL)
-                original_command()
-
-            kw[_COMMAND_PROP] = command
-
-        return kw
+        self._set_value(TkAttr.Command, command)

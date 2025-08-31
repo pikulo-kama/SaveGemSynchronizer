@@ -1,10 +1,12 @@
 import abc
 from abc import abstractmethod
 import tkinter as tk
+from tkinter import font
 
 from src.core.text_resource import tr
 from src.core.holders import prop
 from src.gui import gui
+from src.gui.constants import TkEvent
 from src.util.file import resolve_resource
 from src.util.logger import get_logger
 
@@ -22,7 +24,7 @@ class Popup(abc.ABC):
         self.__offset_x = None
         self.__offset_y = None
 
-        gui.window.bind("<Configure>", lambda _: self.__center_popup())
+        gui.window.bind(TkEvent.MoveResize, lambda _: self.__center_popup())
         self.__popup.protocol("WM_DELETE_WINDOW", self.destroy)
 
         self.__center_popup()
@@ -57,7 +59,7 @@ class Popup(abc.ABC):
             self._container,
             text=message,
             fg=prop("secondaryColor"),
-            font=("Helvetica", 10, "bold")
+            font=("Helvetica", 10, font.BOLD)
         )
 
         self._show_internal()
@@ -81,7 +83,7 @@ class Popup(abc.ABC):
         Used to destroy window context.
         """
 
-        gui.window.unbind("<Configure>")
+        gui.window.unbind(TkEvent.MoveResize)
         self.__popup.destroy()
 
         _logger.info("Popup has been destroyed.")
@@ -116,4 +118,4 @@ class Popup(abc.ABC):
         def keep_position(_):
             self.__popup.geometry(f"+{int(self.__offset_x)}+{int(self.__offset_y)}")
 
-        self.__popup.bind("<Configure>", keep_position)
+        self.__popup.bind(TkEvent.MoveResize, keep_position)

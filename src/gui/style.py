@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import font
 from tkinter.ttk import Style
 from src.core.holders import prop
+from src.gui.constants import TkState, TkCursor
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -40,11 +41,12 @@ def init_gui_styles():
     _add_small_button("primaryButton")
     _add_small_button("secondaryButton")
 
-    for font_size in [16, 18]:
+    for font_size in [10, 18]:
         _add_square_button("primaryButton", font_size)
         _add_square_button("secondaryButton", font_size)
 
     _add_secondary_combobox()
+    _add_secondary_chip()
 
 
 def _add_secondary_combobox():
@@ -52,12 +54,17 @@ def _add_secondary_combobox():
     Used to add custom Combobox styles with secondary color accent.
     """
 
-    style_name = "Secondary.TCombobox"
+    style_name = "Secondary.TDropdown"
     _log_style(style_name)
 
     style.configure(
         style_name,
-        padding=(10, 0, 0, 0)
+        background=prop("secondaryButton.colorStatic"),
+        foreground=prop("secondaryColor"),
+        font=("Segoe UI Semibold", 10, font.BOLD),
+        cursor=TkCursor.Hand,
+        radius=6,
+        padding=5
     )
 
     style.map(
@@ -67,6 +74,24 @@ def _add_secondary_combobox():
         foreground=_expand_property(prop("secondaryColor")),
         selectforeground=_expand_property(prop("secondaryColor")),
         background=_expand_property(prop("secondaryButton.colorStatic"))
+    )
+
+
+def _add_secondary_chip():
+    """
+    Used to add secondary style to custom Chip component.
+    """
+
+    style_name = "Primary.TChip"
+    _log_style(style_name)
+
+    style.configure(
+        style_name,
+        height=2,
+        radius=5,
+        font=("Segoe UI Semibold", 10),
+        foreground=prop("primaryColor"),
+        background=prop("primaryButton.colorStatic")
     )
 
 
@@ -84,15 +109,17 @@ def _add_button(button: str):
         relief=tk.SOLID,
         foreground=prop("primaryColor"),
         background=prop(f"{button}.colorStatic"),
-        padding=15,
-        font=("Segoe UI Semibold", 15)
+        padding=(18, 20),
+        cursor=TkCursor.Hand,
+        font=("Segoe UI Semibold", 18),
+        radius=10
     )
 
     style.map(
         style_name,
         background=[
-            ("active", prop(f"{button}.colorHover")),
-            ("pressed", prop(f"{button}.colorStatic"))
+            (TkState.Active, prop(f"{button}.colorHover")),
+            (TkState.Pressed, prop(f"{button}.colorStatic"))
         ]
     )
 
@@ -111,15 +138,17 @@ def _add_small_button(button):
         relief=tk.SOLID,
         foreground=prop("secondaryColor"),
         background=prop(f"{button}.colorStatic"),
-        padding=(5, 5),
-        font=4
+        padding=8,
+        cursor=TkCursor.Hand,
+        font=12,
+        radius=3
     )
 
     style.map(
         style_name,
         background=[
-            ("active", prop(f"{button}.colorHover")),
-            ("pressed", prop(f"{button}.colorStatic"))
+            (TkState.Active, prop(f"{button}.colorHover")),
+            (TkState.Pressed, prop(f"{button}.colorStatic"))
         ]
     )
 
@@ -141,24 +170,19 @@ def _add_square_button(button, font_size: int):
         height=1,
         foreground=prop("primaryColor"),
         background=prop(f"{button}.colorStatic"),
-        padding=(7, 10)
+        padding=(8, 12),
+        cursor=TkCursor.Hand,
+        radius=5,
     )
 
     style.map(
         style_name,
         foreground=_expand_property(prop("primaryColor")),
         background=[
-            ("active", prop(f"{button}.colorHover")),
-            ("pressed", prop(f"{button}.colorStatic"))
+            (TkState.Active, prop(f"{button}.colorHover")),
+            (TkState.Pressed, prop(f"{button}.colorStatic"))
         ]
     )
-
-
-def _log_style(style_name: str):
-    """
-    Just a wrapper to log event when custom style is being registered.
-    """
-    _logger.info("Adding custom style '%s'", style_name)
 
 
 def _expand_property(value):
@@ -167,4 +191,11 @@ def _expand_property(value):
     Needed for scenarios where property should be the same
     regardless of current state.
     """
-    return [("readonly", value), ("disabled", value)]
+    return [(TkState.Readonly, value), (TkState.Disabled, value)]
+
+
+def _log_style(style_name: str):
+    """
+    Just a wrapper to log event when custom style is being registered.
+    """
+    _logger.info("Adding custom style '%s'", style_name)

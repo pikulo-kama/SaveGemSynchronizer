@@ -1,14 +1,14 @@
 import os
 
-from constants import JSON_EXTENSION
+from constants import JSON_EXTENSION, Directory
 from src.core.json_config_holder import JsonConfigHolder
-from src.util.file import resolve_config, LOCALE_DIR
+from src.util.file import resolve_config
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
 
 _main_config = JsonConfigHolder(resolve_config("main"))
-locales = [file.replace(JSON_EXTENSION, "") for file in os.listdir(LOCALE_DIR)]
+locales = [file.replace(JSON_EXTENSION, "") for file in os.listdir(Directory.Locale)]
 
 _logger.debug("Main config - %s", _main_config)
 _logger.debug("Locale list - %s", locales)

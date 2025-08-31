@@ -4,6 +4,7 @@ This project uses third-party libraries:
 - pytz ([MIT](https://opensource.org/licenses/MIT))
 - xbox-webapi ([MIT](https://opensource.org/licenses/MIT))
 - pyinstaller ([GPL v2+ with exception](https://pyinstaller.org/en/stable/license.html))
+- pillow ([MIT-CMU](https://github.com/python-pillow/Pillow/blob/main/LICENSE))
 
 
 Icons used in SaveGem™:

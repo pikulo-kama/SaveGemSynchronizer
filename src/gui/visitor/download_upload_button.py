@@ -4,6 +4,7 @@ from src.core import app
 from src.core.text_resource import tr
 from src.gui import _GUI
 from src.gui.component.progress_button import ProgressButton
+from src.gui.constants import TkState, TkCursor
 from src.gui.popup.confirmation import confirmation
 from src.gui.popup.notification import notification
 from src.gui.visitor import Visitor
@@ -44,32 +45,38 @@ class DownloadUploadButtonVisitor(Visitor):
         upload_button_label = tr("label_UploadSaveToDrive")
         download_button_label = tr("label_DownloadSaveFromDrive")
 
-        self.__upload_button.configure(text=upload_button_label, state="", cursor="hand2", progress=0)
+        self.__upload_button.configure(
+            text=upload_button_label,
+            state=TkState.Default,
+            cursor=TkCursor.Hand,
+            progress=0
+        )
         _logger.debug("Upload button reloaded (%s)", upload_button_label)
 
-        self.__download_button.configure(text=download_button_label, state="", cursor="hand2", progress=0)
+        self.__download_button.configure(
+            text=download_button_label,
+            state=TkState.Default,
+            cursor=TkCursor.Hand,
+            progress=0
+        )
         _logger.debug("Download button reloaded (%s)", download_button_label)
 
     def disable(self, gui: "_GUI"):
-        self.__upload_button.configure(state="disabled", cursor="wait")
-        self.__download_button.configure(state="disabled", cursor="wait")
-
-    def is_enabled(self):
-        return True
+        self.__upload_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
+        self.__download_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
 
     def __add_buttons(self, gui):
         """
         Used to render upload and download buttons.
         """
 
-        button_frame = tk.Frame(gui.body)
+        button_frame = tk.Frame(gui.center)
 
         self.__upload_button = ProgressButton(
             button_frame,
             width=35,
             command=lambda: execute_in_thread(self.__uploader.upload),
-            style="Primary.TButton",
-            takefocus=False
+            style="Primary.TButton"
         )
 
         self.__download_button = ProgressButton(
@@ -79,8 +86,7 @@ class DownloadUploadButtonVisitor(Visitor):
                 tr("confirmation_ConfirmToDownloadSave"),
                 lambda: execute_in_thread(self.__downloader.download)
             ),
-            style="Secondary.TButton",
-            takefocus=False
+            style="Secondary.TButton"
         )
 
         self.__uploader.subscribe(self.__progress_subscriber(self.__upload_button))
