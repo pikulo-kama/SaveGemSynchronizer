@@ -25,9 +25,6 @@ class UIRefreshButtonVisitor(Visitor):
     def disable(self, gui: "_GUI"):
         self.__refresh_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
 
-    def is_enabled(self):
-        return True
-
     def __add_refresh_button(self, gui):
         """
         Used to render UI refresh button.

@@ -10,43 +10,36 @@ from src.util.logger import get_logger
 _logger = get_logger(__name__)
 
 
-_GAME_NAME = "name"
-_LOCAL_PATH = "localPath"
-_PARENT_DIR = "gdriveParentDirectoryId"
-_HIDDEN = "hidden"
-_PLAYERS = "players"
-
-
 @dataclass
 class _Game:
     """
     Represents a game.
     """
 
-    _name: str
-    _local_path: str
-    _drive_directory: str
+    __name: str
+    __local_path: str
+    __drive_directory: str
 
     @property
     def name(self):
         """
         Unique name of the game.
         """
-        return self._name
+        return self.__name
 
     @property
     def local_path(self):
         """
         Path to the game on local filesystem.
         """
-        return os.path.expandvars(self._local_path)
+        return os.path.expandvars(self.__local_path)
 
     @property
     def drive_directory(self):
         """
         ID of Google Drive directory where save files located
         """
-        return self._drive_directory
+        return self.__drive_directory
 
 
 class _GameConfig(AppData):
@@ -54,6 +47,12 @@ class _GameConfig(AppData):
     Used to download and retrieve information from game configuration
     which is stored on Google Drive.
     """
+
+    __GAME_NAME = "name"
+    __LOCAL_PATH = "localPath"
+    __PARENT_DIR = "gdriveParentDirectoryId"
+    __HIDDEN = "hidden"
+    __PLAYERS = "players"
 
     def __init__(self):
         super().__init__()
@@ -80,15 +79,15 @@ class _GameConfig(AppData):
         self.__games_by_name.clear()
 
         for game in json.load(game_config):
-            name = game[_GAME_NAME]
-            local_path = game[_LOCAL_PATH]
-            drive_directory = game[_PARENT_DIR]
+            name = game[self.__GAME_NAME]
+            local_path = game[self.__LOCAL_PATH]
+            drive_directory = game[self.__PARENT_DIR]
 
-            if _HIDDEN in game and game[_HIDDEN] is True:
+            if self.__HIDDEN in game and game[self.__HIDDEN] is True:
                 _logger.info("Skipping game '%s' since it's marked as hidden.", name)
                 continue
 
-            if _PLAYERS in game and self._app.state.user_email not in game[_PLAYERS]:
+            if self.__PLAYERS in game and self._app.user.email not in game[self.__PLAYERS]:
                 continue
 
             self.__games_by_name[name] = _Game(name, local_path, drive_directory)

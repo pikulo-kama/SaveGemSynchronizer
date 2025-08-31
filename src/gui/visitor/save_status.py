@@ -49,9 +49,6 @@ class SaveStatusVisitor(Visitor):
     def disable(self, gui: "_GUI"):
         pass
 
-    def is_enabled(self):
-        return True
-
     def __add_save_information(self, gui):
         """
         Used to render both local and Google Drive save status labels.

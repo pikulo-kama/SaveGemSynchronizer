@@ -65,9 +65,6 @@ class DownloadUploadButtonVisitor(Visitor):
         self.__upload_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
         self.__download_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
 
-    def is_enabled(self):
-        return True
-
     def __add_buttons(self, gui):
         """
         Used to render upload and download buttons.

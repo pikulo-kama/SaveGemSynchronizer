@@ -9,9 +9,6 @@ from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
 
-_STATE_SELECTED_GAME: Final = "game"
-_STATE_SELECTED_LOCALE: Final = "locale"
-
 
 class _AppState(AppData):
     """
@@ -19,26 +16,12 @@ class _AppState(AppData):
     e.g. locale or selected game.
     """
 
+    __STATE_SELECTED_GAME: Final = "game"
+    __STATE_SELECTED_LOCALE: Final = "locale"
+
     def __init__(self):
         super().__init__()
         self.__state = EditableJsonConfigHolder(resolve_app_data("state"))
-        # This shouldn't be part of state since it would be a security issue.
-        self.__user_email = None
-
-    @property
-    def user_email(self):
-        """
-        Used to get email address of currently authenticated user.
-        """
-        return self.__user_email
-
-    @user_email.setter
-    def user_email(self, user_email: str):
-        """
-        Used to set email of currently authenticated user in memory.
-        This will not be written to state.json.
-        """
-        self.__user_email = user_email
 
     @property
     def game_name(self):
@@ -46,7 +29,7 @@ class _AppState(AppData):
         Get active game.
         """
 
-        game_name = self.__state.get_value(_STATE_SELECTED_GAME)
+        game_name = self.__state.get_value(self.__STATE_SELECTED_GAME)
 
         if game_name not in self._app.games.names:
             default_game = self._app.games.names[0]
@@ -63,7 +46,7 @@ class _AppState(AppData):
         """
         Set game as active.
         """
-        self.__state.set_value(_STATE_SELECTED_GAME, game_name)
+        self.__state.set_value(self.__STATE_SELECTED_GAME, game_name)
 
     @property
     def locale(self):
@@ -71,7 +54,7 @@ class _AppState(AppData):
         Get active locale.
         """
 
-        locale = self.__state.get_value(_STATE_SELECTED_LOCALE)
+        locale = self.__state.get_value(self.__STATE_SELECTED_LOCALE)
 
         if locale not in locales:
             default_locale = prop("defaultLocale")
@@ -88,4 +71,4 @@ class _AppState(AppData):
         """
         Set active locale.
         """
-        self.__state.set_value(_STATE_SELECTED_LOCALE, locale)
+        self.__state.set_value(self.__STATE_SELECTED_LOCALE, locale)

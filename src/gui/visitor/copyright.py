@@ -32,9 +32,6 @@ class CopyrightVisitor(Visitor):
     def disable(self, gui: "_GUI"):
         pass
 
-    def is_enabled(self):
-        return True
-
     def __add_copyright(self, gui: _GUI):
         """
         Used to render copyright label.

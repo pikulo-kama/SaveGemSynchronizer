@@ -78,9 +78,8 @@ class Visitor(abc.ABC):
         """
         pass
 
-    @abstractmethod
     def is_enabled(self):
         """
         Should be used to define whether current visitor should be executed.
         """
-        pass
+        return True

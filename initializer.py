@@ -20,9 +20,7 @@ def init():
 
     initialize_logging()
     app.games.download()
-
-    user = GDrive.get_current_user()
-    app.state.user_email = user["emailAddress"]
+    app.user.initialize(GDrive.get_current_user())
 
 
 init()

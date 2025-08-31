@@ -56,9 +56,6 @@ class GameDropdownVisitor(Visitor):
     def disable(self, gui: "_GUI"):
         self.__combobox.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
 
-    def is_enabled(self):
-        return True
-
     def __add_game_selection_dropdown(self, gui: _GUI):
         """
         Used to render game selection dropdown.
@@ -73,11 +70,11 @@ class GameDropdownVisitor(Visitor):
 
         self.__combobox = ttk.Combobox(
             gui.window,
-            font=("Helvetica", 10, font.BOLD),
             width=20,
+            font=("Helvetica", 10, font.BOLD),
             style="Secondary.TCombobox"
         )
 
         self.__combobox.pack()
-        self.__combobox.place(relx=.9, rely=.05, width=150, height=30, anchor=tk.N)
+        self.__combobox.place(relx=.9, rely=.15, width=150, height=30, anchor=tk.N)
         self.__combobox.bind(TkEvent.ComboboxSelected, lambda e: execute_in_thread(lambda: on_game_selection_change(e)))

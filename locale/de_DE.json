@@ -11,7 +11,7 @@
   "label_UploadingSaveToDrive" : "Hochladen ⌛",
   "label_DownloadSaveFromDrive" : "🠋",
   "label_NoInformationAboutCurrentSaveVersion" : "Wir sind uns nicht sicher, welcher Spielstand neuer ist, aber...",
-  "label_StorageIsEmpty" : "Der Speicher ist leer. Ein Hochladen ist erforderlich, um fortzufahren.",
+  "label_StorageIsEmpty" : "Der Speicher ist leer.\n Ein Hochladen ist erforderlich, um fortzufahren.",
   "info_SaveIsUpToDate" : "Nichts Neues... Dein Spielstand ist so aktuell wie möglich.",
   "info_SaveNeedsToBeDownloaded" : "Na, schau einer an...",
   "info_NewestSaveOnDriveInformation" : "der letzte Spielstand wurde am {0} um {1} von {2} hochgeladen",
