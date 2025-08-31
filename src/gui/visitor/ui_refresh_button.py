@@ -1,5 +1,3 @@
-import tkinter as tk
-
 from src.gui import _GUI
 from src.gui.component.wait_button import WaitButton
 from src.gui.constants import TkState, TkCursor
@@ -31,7 +29,7 @@ class UIRefreshButtonVisitor(Visitor):
         """
 
         self.__refresh_button = WaitButton(
-            gui.window,
+            gui.top_left,
             # This is funny part... Since execute_in_thread already refresh UI
             # there is no need to pass gui.refresh here since it will result in
             # UI refreshing twice.
@@ -39,5 +37,4 @@ class UIRefreshButtonVisitor(Visitor):
             style="SquarePrimary.18.TButton"
         )
 
-        self.__refresh_button.pack()
-        self.__refresh_button.place(relx=.05, rely=.05, anchor=tk.N)
+        self.__refresh_button.grid(row=0, column=0, padx=20, pady=(20, 0))

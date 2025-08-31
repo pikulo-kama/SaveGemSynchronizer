@@ -1,5 +1,3 @@
-import tkinter as tk
-
 from src.core import app
 from src.core.text_resource import tr
 from src.core.holders import locales
@@ -55,13 +53,12 @@ class LanguageSwitchVisitor(Visitor):
             LanguageSwitchVisitor.__switch_language(gui)
 
         self.__language_switch = WaitButton(
-            gui.window,
+            gui.top_left,
             command=lambda: execute_in_thread(switch_language),
             style="SquareSecondary.18.TButton"
         )
 
-        self.__language_switch.pack()
-        self.__language_switch.place(relx=.05, rely=.14, anchor=tk.N)
+        self.__language_switch.grid(row=1, column=0, padx=20, pady=(10, 0))
 
     @staticmethod
     def __switch_language(gui: _GUI):

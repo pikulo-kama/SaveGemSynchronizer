@@ -1,9 +1,9 @@
+import tkinter as tk
 from src.core import app
 from src.gui import _GUI
 from src.gui.constants import TkState, TkCursor, TkEvent
 from src.gui.visitor import Visitor
 from tkinter import ttk, font
-import tkinter as tk
 
 from src.util.logger import get_logger
 from src.util.thread import execute_in_thread
@@ -69,12 +69,11 @@ class GameDropdownVisitor(Visitor):
             gui.refresh()
 
         self.__combobox = ttk.Combobox(
-            gui.window,
+            gui.top_right,
             width=20,
             font=("Helvetica", 10, font.BOLD),
             style="Secondary.TCombobox"
         )
 
-        self.__combobox.pack()
-        self.__combobox.place(relx=.9, rely=.15, width=150, height=30, anchor=tk.N)
         self.__combobox.bind(TkEvent.ComboboxSelected, lambda e: execute_in_thread(lambda: on_game_selection_change(e)))
+        self.__combobox.place(relx=1, rely=.2, x=-20, y=20, anchor=tk.NE)

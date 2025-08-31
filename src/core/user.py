@@ -1,8 +1,5 @@
-import io
 import urllib.request
-
-import requests
-from PIL import Image, ImageDraw, ImageTk
+from PIL import Image, ImageDraw
 
 from src.core.app_data import AppData
 from src.core.holders import prop
@@ -52,22 +49,25 @@ class _UserState(AppData):
         if photo_link is None:
             return None
 
-        hex_color = prop("primaryColor")
-        bg_color = tuple(int(hex_color[i:i + 2], 16) for i in (1, 3, 5)) + (255,)
         size = 25
 
+        # Download the image.
         image_path = resolve_app_data("profile.jpg")
         urllib.request.urlretrieve(photo_link, image_path)
 
+        # Load and resize the image.
         image = Image.open(image_path) \
             .convert("RGBA") \
             .resize((size, size), Image.Resampling.LANCZOS)
 
+        # Create background.
+        hex_color = prop("primaryColor")
+        bg_color = tuple(int(hex_color[i:i + 2], 16) for i in (1, 3, 5)) + (255,)
+        background = Image.new("RGBA", (size, size), bg_color)
+
+        # Create circular mask.
         mask = Image.new("L", (size, size), 0)
         ImageDraw.Draw(mask) \
             .ellipse((0, 0, size, size), fill=255)
 
-        background = Image.new("RGBA", (size, size), bg_color)
-
-        # image.putalpha(mask)
         return Image.composite(image, background, mask)

@@ -54,7 +54,7 @@ class SaveStatusVisitor(Visitor):
         Used to render both local and Google Drive save status labels.
         """
 
-        info_frame = tk.Frame(gui.body)
+        info_frame = tk.Frame(gui.center)
 
         # Text is empty for fields at this moment
         # They would be populated later by GUI component.
@@ -70,10 +70,10 @@ class SaveStatusVisitor(Visitor):
             font=("Helvetica", 11, "bold")
         )
 
-        self.__save_status.grid(row=0, column=0, pady=5)
-        self.__last_save_timestamp.grid(row=1, column=0, pady=5)
+        self.__save_status.grid(row=0, column=0)
+        self.__last_save_timestamp.grid(row=1, column=0)
 
-        info_frame.grid(row=0, column=0, pady=150)
+        info_frame.grid(row=0, column=0, pady=(0, 100))
 
     @staticmethod
     def __get_last_save_info_text(last_save_meta):

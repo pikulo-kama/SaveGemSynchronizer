@@ -70,7 +70,7 @@ class DownloadUploadButtonVisitor(Visitor):
         Used to render upload and download buttons.
         """
 
-        button_frame = tk.Frame(gui.body)
+        button_frame = tk.Frame(gui.center)
 
         self.__upload_button = ProgressButton(
             button_frame,

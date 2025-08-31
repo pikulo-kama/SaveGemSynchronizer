@@ -21,7 +21,16 @@ class _GUI:
         """
 
         self.__window = tk.Tk()
-        self.__body = tk.Frame(self.window)
+
+        self.__top_left = tk.Frame(self.window)
+        self.__top = tk.Frame(self.window)
+        self.__top_right = tk.Frame(self.window)
+        self.__left = tk.Frame(self.window)
+        self.__center = tk.Frame(self.window)
+        self.__right = tk.Frame(self.window)
+        self.__bottom_left = tk.Frame(self.window)
+        self.__bottom = tk.Frame(self.window)
+        self.__bottom_right = tk.Frame(self.window)
 
         from src.gui.style import init_gui_styles
         init_gui_styles()
@@ -73,12 +82,67 @@ class _GUI:
         return self.__window
 
     @property
-    def body(self):
+    def top_left(self):
         """
-        Used to get main widget which is direct child of root.
-        Works with more central area of the window (compared to root)
+        Used to get top left area of widget.
         """
-        return self.__body
+        return self.__top_left
+
+    @property
+    def top(self):
+        """
+        Used to get top area of widget.
+        """
+        return self.__top
+
+    @property
+    def top_right(self):
+        """
+        Used to get top right area of widget.
+        """
+        return self.__top_right
+
+    @property
+    def left(self):
+        """
+        Used to get left area of widget.
+        """
+        return self.__left
+
+    @property
+    def center(self):
+        """
+        Used to get center area of widget.
+        """
+        return self.__center
+
+    @property
+    def right(self):
+        """
+        Used to get right area of widget.
+        """
+        return self.__right
+
+    @property
+    def bottom_left(self):
+        """
+        Used to get bottom left area of widget.
+        """
+        return self.__bottom_left
+
+    @property
+    def bottom(self):
+        """
+        Used to get bottom area of widget.
+        """
+        return self.__bottom
+
+    @property
+    def bottom_right(self):
+        """
+        Used to get bottom right area of widget.
+        """
+        return self.__bottom_right
 
     def set_cursor(self, cursor=TkCursor.Default):
         """
@@ -104,7 +168,36 @@ class _GUI:
         for visitor_obj in self.__visitors:
             visitor_obj.visit(self)
 
-        self.body.place(relx=.5, rely=.3, anchor=tk.CENTER)
+        self.window.rowconfigure(0, weight=3)
+        self.window.rowconfigure(1, weight=5)
+        self.window.rowconfigure(2, weight=1)
+
+        self.window.columnconfigure(0, weight=5, minsize=100)
+        self.window.columnconfigure(1, weight=2, minsize=100)
+        self.window.columnconfigure(2, weight=5, minsize=100)
+
+        self.top_left.grid(row=0, column=0, sticky=tk.NSEW)
+        self.top.grid(row=0, column=1, sticky=tk.NSEW)
+        self.top_right.grid(row=0, column=2, sticky=tk.NSEW)
+        self.left.grid(row=1, column=0, sticky=tk.NSEW)
+        self.right.grid(row=1, column=2, sticky=tk.NSEW)
+        self.bottom_left.grid(row=2, column=0, sticky=tk.NSEW)
+        self.bottom.grid(row=2, column=1, sticky=tk.NSEW)
+        self.bottom_right.grid(row=2, column=2, sticky=tk.NSEW)
+
+        # Center could be quite large that's why it's not part
+        # of the main grid.
+        self.center.place(relx=.5, rely=.5, anchor=tk.CENTER)
+        self.center.lift()
+
+        self.top_left.grid_propagate(False)
+        self.left.grid_propagate(False)
+        self.bottom_left.grid_propagate(False)
+
+        self.top_right.grid_propagate(False)
+        self.right.grid_propagate(False)
+        self.bottom_right.grid_propagate(False)
+
         self.refresh()
 
         _logger.info("Application loop has been started.")
