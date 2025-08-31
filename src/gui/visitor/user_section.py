@@ -35,10 +35,14 @@ class UserSectionVisitor(Visitor):
         """
 
         user_section = tk.Frame(gui.top_right)
+        first_name = app.user.name.split(" ")[0]
+
+        if len(first_name) > 10:
+            first_name = f"{first_name[:10]}..."
 
         user_chip = Chip(
             user_section,
-            text=app.user.name,
+            text=first_name,
             image=app.user.photo,
             margin=(10, 0),
             width=20,
