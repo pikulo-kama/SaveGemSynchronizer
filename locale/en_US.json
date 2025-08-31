@@ -8,7 +8,6 @@
   "popup_ConfirmationButtonClose" : "Cancel",
   "popup_ConfirmationButtonConfirm" : "Agree",
   "label_UploadSaveToDrive" : "🠉 Upload",
-  "label_UploadingSaveToDrive" : "Uploading ⌛",
   "label_DownloadSaveFromDrive" : "🠋",
   "label_NoInformationAboutCurrentSaveVersion" : "We're not sure which save is newer, but..",
   "label_StorageIsEmpty" : "Storage is empty.\n Upload is required to proceed.",
