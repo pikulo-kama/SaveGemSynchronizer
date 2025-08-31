@@ -39,7 +39,7 @@ class GDrive:
             .get(fields="user") \
             .execute()
 
-        return response["user"]
+        return response.get("user")
 
     @staticmethod
     def query_single(target_field: str, fields: str, q: str):

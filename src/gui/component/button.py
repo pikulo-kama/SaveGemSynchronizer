@@ -1,41 +1,17 @@
 from src.gui.constants import TkState, TkEvent
 from src.gui.component import Component, TkAttr
-import tkinter as tk
-
-from src.util.graphics import create_polygon
 
 
 class Button(Component):
-
-    def _init(self):
-        self._canvas = tk.Canvas(self, highlightthickness=0)
-        self._canvas.pack(fill="both", expand=True)
-
-        self._set_prop_default_value(TkAttr.Text, "")
-        self._set_prop_default_value(TkAttr.Radius, 0)
-        self._set_prop_default_value(TkAttr.BgColor, "#ffffff")
-        self._set_prop_default_value(TkAttr.FgColor, "#000000")
+    """
+    Custom Tkinter button component.
+    """
 
     def _do_draw(self):
         width = self._get_width()
         height = self._get_height()
-
         text = self._get_value(TkAttr.Text)
-        radius = self._get_value(TkAttr.Radius)
-        background = self._get_value(TkAttr.BgColor)
         foreground = self._get_value(TkAttr.FgColor)
-
-        self._canvas.delete("all")
-        self._canvas.configure(width=width, height=height)
-
-        # Draw button body.
-        create_polygon(
-            0, 0, width, height,
-            widget=self._canvas,
-            radius=radius,
-            fill=background,
-            outline=""
-        )
 
         self._draw_on_body()
 

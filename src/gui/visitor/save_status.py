@@ -87,7 +87,7 @@ class SaveStatusVisitor(Visitor):
         time_zone = str(get_localzone())
         date_format = "d MMMM"
 
-        creation_datetime = datetime.strptime(last_save_meta["createdTime"], "%Y-%m-%dT%H:%M:%S.%fZ")
+        creation_datetime = datetime.strptime(last_save_meta.get("createdTime"), "%Y-%m-%dT%H:%M:%S.%fZ")
         creation_datetime += timezone(time_zone).utcoffset(creation_datetime)
 
         # Only show year if it's not current one, just to avoid extra information.
@@ -101,7 +101,7 @@ class SaveStatusVisitor(Visitor):
             "info_NewestSaveOnDriveInformation",
             creation_date,
             creation_time,
-            last_save_meta["owner"]
+            last_save_meta.get("owner")
         )
 
     @staticmethod
@@ -116,7 +116,7 @@ class SaveStatusVisitor(Visitor):
         elif app.last_save.identifier is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")
 
-        elif app.last_save.identifier == last_save_meta["name"]:
+        elif app.last_save.identifier == last_save_meta.get("name"):
             return tr("info_SaveIsUpToDate")
 
         else:

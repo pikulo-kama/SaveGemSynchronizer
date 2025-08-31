@@ -1,66 +1,56 @@
 import json
 import os.path
 import shutil
-from typing import Final
-
-from constants import PROJECT_ROOT, APP_DATA_ROOT
-
-
-CONFIG_DIR: Final = os.path.join(PROJECT_ROOT, "config")
-LOCALE_DIR: Final = os.path.join(PROJECT_ROOT, "locale")
-RESOURCE_DIR: Final = os.path.join(PROJECT_ROOT, "resources")
-
-OUTPUT_DIR: Final = os.path.join(APP_DATA_ROOT, "output")
-LOGS_DIR: Final = os.path.join(APP_DATA_ROOT, "logs")
+from constants import Directory
 
 
 def resolve_config(config_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}/config' directory.
     """
-    return os.path.join(CONFIG_DIR, config_name)
+    return os.path.join(Directory.Config, config_name)
 
 
 def resolve_locale(locale_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}/locale' directory.
     """
-    return os.path.join(LOCALE_DIR, locale_name)
+    return os.path.join(Directory.Locale, locale_name)
 
 
 def resolve_resource(resource_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}/resource' directory.
     """
-    return os.path.join(RESOURCE_DIR, resource_name)
+    return os.path.join(Directory.Resources, resource_name)
 
 
 def resolve_temp_file(file_name: str):
     """
     Used to resolve file in '{APP_DATA}/SaveGem/output' directory.
     """
-    return os.path.join(OUTPUT_DIR, file_name)
+    return os.path.join(Directory.Output, file_name)
 
 
 def resolve_app_data(file_name: str):
     """
     Used to resolve file in '{APP_DATA}' directory.
     """
-    return os.path.join(APP_DATA_ROOT, file_name)
+    return os.path.join(Directory.AppDataRoot, file_name)
 
 
 def resolve_log(file_name: str):
     """
     Used to resolve file in '{APP_DATA}/logs' directory.
     """
-    return os.path.join(LOGS_DIR, file_name)
+    return os.path.join(Directory.Logs, file_name)
 
 
 def resolve_project_data(file_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}' directory.
     """
-    return os.path.join(PROJECT_ROOT, file_name)
+    return os.path.join(Directory.ProjectRoot, file_name)
 
 
 def cleanup_directory(directory: str):
@@ -108,6 +98,15 @@ def save_file(file_path: str, data: any, as_json: bool = False, binary: bool = F
 
     with open(file_path, mode, encoding=encoding) as file:
         json.dump(data, file, indent=2) if as_json else file.write(data)
+
+
+def delete_file(file_path: str):
+    """
+    Used to remove file.
+    """
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
 
 
 def file_name_from_path(file_path: str):

@@ -15,10 +15,12 @@ class TkAttr:
     Width: Final = "width"
     Height: Final = "height"
     Padding: Final = "padding"
+    Margin: Final = "margin"
     FgColor: Final = "foreground"
     BgColor: Final = "background"
     Radius: Final = "radius"
     Progress: Final = "progress"
+    Image: Final = "image"
 
 
 class TkState:

@@ -2,14 +2,15 @@ import tkinter as tk
 from tkinter import font
 from tkinter.font import Font
 
-from src.gui.constants import TkAttr
+from src.gui.constants import TkAttr, TkState
 from src.gui.style import style
+from src.util.graphics import create_polygon
 
 
 class Component(tk.Frame):
     """
-    Wrapper for frame should be used as base
-    for all custom components.
+    Wrapper for Tkinter frame.
+    Should be used as base for all custom components.
     """
 
     __DEFAULT_FONT_NAME = "TkDefaultFont"
@@ -24,6 +25,9 @@ class Component(tk.Frame):
         self._pre_init()
         kw = self.__delete_custom_props(tk.Frame(master), **kw)
         super().__init__(master, **kw)
+
+        self._canvas = tk.Canvas(self, highlightthickness=0, bd=0, relief=tk.FLAT)
+        self._canvas.pack(fill=tk.BOTH, expand=True)
 
         self.__register_default_values()
         self._init()
@@ -58,6 +62,23 @@ class Component(tk.Frame):
 
         if self.__is_destroying:
             return
+
+        width = self._get_width()
+        height = self._get_height()
+        radius = self._get_value(TkAttr.Radius)
+        background = self._get_value(TkAttr.BgColor)
+
+        self._canvas.delete(tk.ALL)
+        self._canvas.configure(width=width, height=height)
+
+        # Draw component body.
+        create_polygon(
+            0, 0, width, height,
+            widget=self._canvas,
+            radius=radius,
+            fill=background,
+            outline=""
+        )
 
         self._do_draw()
 
@@ -121,6 +142,7 @@ class Component(tk.Frame):
         style_name = get_prop(TkAttr.Style)
         component_state = get_prop(TkAttr.State)
         widget_value = get_prop(prop_name)
+        default_value = self.__prop_default_values.get(prop_name)
 
         # If there is no style then use widget level value.
         if style_name is None or len(style_name) == 0:
@@ -131,12 +153,16 @@ class Component(tk.Frame):
             if state == component_state:
                 return dynamic_value
 
-        # If no dynamic data for property and style value also None
-        # then fallback to widget value.
+        # Value defined on widget level has higher priority than value in style.
+        if widget_value is not None and widget_value != default_value:
+            return widget_value
+
+        # If no dynamic data for property and widget value is None
+        # then get value defined on style.
         style_body = dict(style.configure(style_name))
         style_value = style_body.get(prop_name)
 
-        return style_value if style_value is not None else widget_value
+        return style_value if style_value is not None else default_value
 
     def _set_value(self, prop_name: str, prop_value):
         """
@@ -156,7 +182,7 @@ class Component(tk.Frame):
         Takes into consideration paddings.
         """
 
-        p_left, _, p_right, _ = self.__unwrap_padding(self._get_value(TkAttr.Padding))
+        p_left, _, p_right, _ = self._get_padding()
         char_width: int = self._get_value(TkAttr.Width)
         text: str = self._get_value(TkAttr.Text)
 
@@ -174,7 +200,7 @@ class Component(tk.Frame):
         Takes into consideration paddings.
         """
 
-        _, p_top, _, p_bottom = self.__unwrap_padding(self._get_value(TkAttr.Padding))
+        _, p_top, _, p_bottom = self._get_padding()
         height: int = self._get_value(TkAttr.Height)
         font_obj = self._get_font()
 
@@ -245,30 +271,48 @@ class Component(tk.Frame):
         Used to register default values for on root level.
         """
 
-        self._set_prop_default_value(TkAttr.State, "")
+        self._set_prop_default_value(TkAttr.State, TkState.Default)
         self._set_prop_default_value(TkAttr.Font, font.nametofont(self.__DEFAULT_FONT_NAME))
         self._set_prop_default_value(TkAttr.Height, 1)
+        self._set_prop_default_value(TkAttr.Text, "")
+        self._set_prop_default_value(TkAttr.Radius, 0)
+        self._set_prop_default_value(TkAttr.BgColor, "#ffffff")
+        self._set_prop_default_value(TkAttr.FgColor, "#000000")
+        self._set_prop_default_value(TkAttr.Padding, (0, 0, 0, 0))
+        self._set_prop_default_value(TkAttr.Margin, (0, 0, 0, 0))
+
+    def _get_padding(self):
+        """
+        Used to get padding tuple.
+        """
+        return self.__obj_to_tuple(self._get_value(TkAttr.Padding))
+
+    def _get_margin(self):
+        """
+        Used to get margin tuple.
+        """
+        return self.__obj_to_tuple(self._get_value(TkAttr.Margin))
 
     @staticmethod
-    def __unwrap_padding(padding):
+    def __obj_to_tuple(obj):
         """
-        Used to parse paddings object and format it
-        into tuple of 4 integers.
+        Used to unwrap padding/margin
+        object into tuple of 4 values.
         """
 
         # Handle string padding.
-        if isinstance(padding, str):
-            padding = tuple(int(value) for value in padding.split(" "))
+        if isinstance(obj, str):
+            obj = tuple(int(value) for value in obj.split(" "))
 
         # Handle single value.
-        if isinstance(padding, int):
-            return padding, padding, padding, padding
+        if isinstance(obj, int):
+            return obj, obj, obj, obj
 
-        if len(padding) == 2:
-            return padding[0], padding[1], padding[0], padding[1]
+        if len(obj) == 2:
+            return obj[0], obj[1], obj[0], obj[1]
 
-        elif len(padding) == 4:
-            return padding
+        elif len(obj) == 4:
+            return obj
 
         else:
             raise ValueError("Expected 1, 2, or 4 values")
@@ -280,6 +324,10 @@ class Component(tk.Frame):
         returning either style name, style name + font_size
         or style_name + font_size + boldness.
         """
+
+        # No need to do anything if it's already tuple.
+        if isinstance(font_obj, tuple):
+            return font_obj
 
         # If font is configured just as a number.
         if isinstance(font_obj, int):

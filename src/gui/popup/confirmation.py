@@ -36,10 +36,10 @@ class Confirmation(Popup):
         button_frame = tk.Frame(self._container)
 
         def confirm_callback():
+            self.destroy()
+
             if self.__confirm_callback is not None:
                 self.__confirm_callback()
-
-            self.destroy()
 
         confirm_btn = Button(
             button_frame,

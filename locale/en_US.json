@@ -19,5 +19,6 @@
   "notification_NewSaveHasBeenDownloaded" : "Save has been downloaded successfully.",
   "notification_ErrorUploadingToDrive" : "Error occurred when uploading to drive.",
   "notification_ErrorSaveDirectoryMissing" : "Save directory not found. \n{0}",
-  "confirmation_ConfirmToDownloadSave" : "Sure? This will erase existing save you have."
+  "confirmation_ConfirmToDownloadSave" : "Sure? This will erase existing save you have.",
+  "confirmation_ConfirmLogout" : "Do you want to logout?"
 }

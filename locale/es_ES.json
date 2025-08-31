@@ -19,5 +19,6 @@
   "notification_NewSaveHasBeenDownloaded" : "Guardado descargado con éxito.",
   "notification_ErrorUploadingToDrive" : "Ocurrió un error al subir al almacenamiento.",
   "notification_ErrorSaveDirectoryMissing" : "Carpeta de guardado no encontrada. \n{0}",
-  "confirmation_ConfirmToDownloadSave" : "¿Seguro? Esto borrará el guardado existente."
+  "confirmation_ConfirmToDownloadSave" : "¿Seguro? Esto borrará el guardado existente.",
+  "confirmation_ConfirmLogout_es" : "¿Desea cerrar sesión?"
 }

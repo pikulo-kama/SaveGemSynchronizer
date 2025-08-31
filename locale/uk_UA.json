@@ -19,5 +19,6 @@
   "notification_NewSaveHasBeenDownloaded" : "Свіженький сейв успішно завантажено.",
   "notification_ErrorUploadingToDrive" : "От халепа. Схоже щось пішло не так...",
   "notification_ErrorSaveDirectoryMissing" : "Папку з сейвами не знайдено. \n{0}",
-  "confirmation_ConfirmToDownloadSave" : "Впевнений? Це знищить твій існуючий сейв."
+  "confirmation_ConfirmToDownloadSave" : "Впевнений? Це знищить твій існуючий сейв.",
+  "confirmation_ConfirmLogout" : "Ви хочете вийти?"
 }

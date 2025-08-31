@@ -1,3 +1,5 @@
+from PIL import Image, ImageDraw
+
 
 def create_polygon(x1, y1, width, height, radius, widget, **kw):
     """
@@ -33,3 +35,30 @@ def create_polygon(x1, y1, width, height, radius, widget, **kw):
     ]
 
     return widget.create_polygon(points, smooth=True, **kw)
+
+
+def create_round_image(image_path: str, background_color: str, size: int):
+    """
+    Used to create rounded image.
+    Uses super sampling to achieve higher image quality.
+    """
+
+    original_size = int(size)
+    size *= 4
+
+    # Load and resize the image.
+    image = Image.open(image_path) \
+        .convert("RGBA") \
+        .resize((size, size), Image.Resampling.LANCZOS)
+
+    # Create background.
+    background_tuple = tuple(int(background_color[idx:idx + 2], 16) for idx in (1, 3, 5)) + (255,)
+    background = Image.new("RGBA", (size, size), background_tuple)
+
+    # Create circular mask.
+    mask = Image.new("L", (size, size), 0)
+    ImageDraw.Draw(mask) \
+        .ellipse((0, 0, size - 1, size - 1), fill=255)
+
+    return Image.composite(image, background, mask) \
+        .resize((original_size, original_size), Image.Resampling.LANCZOS)
