@@ -1,7 +1,7 @@
 from typing import Final
 from src.gui.component import Component
 import tkinter as tk
-from src.gui.constants import TkEvent, TkAttr, TkCursor
+from src.gui.constants import TkEvent, TkAttr, TkCursor, TkState
 
 
 # TODO: Without any exaggeration - I hate this file but I'm too lazy to make
@@ -10,7 +10,6 @@ class Dropdown(Component):
 
     __CHEVRON_SYMBOL: Final = "▼"
     __OPTION_PREFIX: Final = " • "
-    __OPTION_SEPARATOR: Final = "━"
 
     def __init__(self, master, **kw):
         self.__dropdown = None
@@ -27,10 +26,11 @@ class Dropdown(Component):
 
     def _init(self):
 
-        self._set_prop_default_value(TkAttr.Values, [None])
-
+        self._set_prop_default_value(TkAttr.Values, [])
         values = self._get_value(TkAttr.Values)
-        self.__selected_value.set(values[0])
+
+        if len(values) > 0:
+            self.__selected_value.set(values[0])
 
     def _do_draw(self):
         m_left, _, m_right, _ = self._get_margin()
@@ -41,7 +41,7 @@ class Dropdown(Component):
         prefix = self._get_value(TkAttr.Prefix)
         font = self._get_font()
 
-        text_width = font.measure(self.__selected_value.get()) + font.measure(prefix)
+        text_width = font.measure(prefix) + font.measure(self.__selected_value.get())
         chevron_width = font.measure(self.__CHEVRON_SYMBOL)
         components_width = text_width + chevron_width
 
@@ -95,55 +95,170 @@ class Dropdown(Component):
         self.__dropdown.wm_overrideredirect(True)
         self.__dropdown.lift()
 
-        x = self.winfo_rootx()
-        y = self.winfo_rooty() + self.winfo_height()
-        width = self._get_width()
-
-        # +1 For extra empty first line to create visual separation between options and main component.
-        height = font.metrics("linespace") * (len(values) * 2 + 1)
-
-        # +1 just in case there would be gap from separator.
-        char_width = int(width / font.measure(self.__OPTION_SEPARATOR)) + 1
-
-        self.__dropdown.geometry(f"{width}x{height}+{x}+{y}")
+        self.__dropdown.configure(background="green", bg="green")
+        width = self._get_value(TkAttr.Width)
 
         background = self._get_value(TkAttr.BgColor)
         foreground = self._get_value(TkAttr.FgColor)
 
-        listbox = tk.Listbox(
+        listbox = _CustomListbox(
             self.__dropdown,
-            bg=background,
-            fg=foreground,
-            relief=tk.FLAT,
             cursor=TkCursor.Hand,
-            font=font
+            width=width,
+            values=values,
+            command=self.__on_select,
+            background=background,
+            foreground=foreground,
+            prefix=self.__OPTION_PREFIX,
+            font=font,
+            style=self._get_value(TkAttr.Style) + ".TListbox"
         )
 
+        listbox.pack(fill=tk.X)
+
+        x = self.winfo_rootx()
+        y = self.winfo_rooty() + self.winfo_height()
+
+        # Need to do this to recalculate listbox height.
+        self.__dropdown.update_idletasks()
+        self.__dropdown.geometry(f"{self._get_width()}x{listbox.height}+{x}+{y}")
+
+    def __on_select(self, value: str):
+        """
+        Callback that handles option selection.
+        """
+
+        command = self._get_value(TkAttr.Command)
+
+        if command is not None:
+            command(value)
+
+        self.__selected_value.set(value)
+        self.__toggle_dropdown()
+
+
+class _CustomListbox(Component):
+    """
+    Represents actual dropdown (list with options).
+    Used only internally by Dropdown component.
+    """
+
+    def __init__(self, master, **kw):
+        self.__hovered_item = None
+        self.__options = []
+        self.__master = master
+        super().__init__(master, **kw)
+
+    def _init(self):
+        self.__body = tk.Frame(
+            self.__master,
+            borderwidth=0,
+            highlightthickness=0
+        )
+
+        self.__body.pack(side=tk.TOP, fill=tk.X, expand=True)
+        self._set_prop_default_value(TkAttr.Prefix, "")
+
+    @property
+    def height(self):
+        return self.__body.winfo_height()
+
+    def _draw(self):
+        original_state = self._get_value(TkAttr.State)
+        prefix = self._get_value(TkAttr.Prefix)
+        values = self._get_value(TkAttr.Values)
+
         for idx, value in enumerate(values):
-            separator = ""
+            label = self.__options[idx]
 
-            if idx > 0:
-                separator = self.__OPTION_SEPARATOR * char_width
+            # We dynamically change state per option
+            # to be able to retrieve colors from dynamic map.
+            if self.__hovered_item == value:
+                self._set_value(TkAttr.State, TkState.Active)
+            else:
+                self._set_value(TkAttr.State, TkState.Default)
 
-            listbox.insert(tk.END, separator)
-            listbox.insert(tk.END, f"{self.__OPTION_PREFIX}{value}")
+            background = self._get_value(TkAttr.BgColor)
+            foreground = self._get_value(TkAttr.FgColor)
 
-        listbox.pack(fill=tk.BOTH, expand=True)
-        listbox.bind(TkEvent.ListboxSelected, self.__on_select)
+            label.configure(
+                bg=background,
+                fg=foreground,
+                text=prefix + value
+            )
+
+        # Restore state
+        self._set_value(TkAttr.State, original_state)
+
+    def _post_init(self):
+        values = self._get_value(TkAttr.Values)
+        font = self._get_font()
+
+        self.__clear()
+
+        for _ in values:
+            label = tk.Label(
+                self.__body,
+                anchor=tk.NW,
+                pady=5,
+                cursor=TkCursor.Hand,
+                font=font
+            )
+
+            label.pack(fill=tk.X, expand=True)
+            self.__options.append(label)
+
+    def _bind_events(self):
+
+        values = self._get_value(TkAttr.Values)
+        for idx, option in enumerate(self.__options):
+            value = values[idx]
+
+            option.bind(TkEvent.LMBClick, self.__on_select)
+            option.bind(TkEvent.Enter, self.__set_state_and_selection(value, TkState.Active))
+            option.bind(TkEvent.Leave, self.__set_state_and_selection(value, TkState.Default))
+
+    def _unbind_events(self):
+
+        for option in self.__options:
+            option.unbind(TkEvent.LMBClick)
+            option.unbind(TkEvent.Enter)
+            option.unbind(TkEvent.Leave)
+
+    def __clear(self):
+        """Clear all items"""
+        for item in self.__options:
+            item.destroy()
+
+        self.__options.clear()
 
     def __on_select(self, event):
         """
         Callback that handles option selection.
         """
 
-        widget = event.widget
         command = self._get_value(TkAttr.Command)
 
-        selection = widget.get(widget.curselection())
-        selection = str(selection).replace(self.__OPTION_PREFIX, "")
-
         if command is not None:
-            command(event, selection)
+            value = event.widget.cget("text")
+            prefix = self._get_value(TkAttr.Prefix)
+            value = value.replace(prefix, "")
 
-        self.__selected_value.set(selection)
-        self.__toggle_dropdown()
+            command(value)
+
+    def __set_state_and_selection(self, selection, state):
+        """
+        Callback used to change state
+        and store name of hovered option.
+        """
+
+        def handler(_):
+            if state == TkState.Active:
+                self.__hovered_item = selection
+            else:
+                self.__hovered_item = None
+
+            state_callback = self._set_state_handler(state)
+            state_callback(_)
+
+        return handler

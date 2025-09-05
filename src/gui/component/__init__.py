@@ -32,6 +32,7 @@ class Component(tk.Frame):
         self.__register_default_values()
         self._init()
         self.__sync_props()
+        self._post_init()
 
         if self._get_value(TkAttr.State) != TkState.Disabled:
             self._bind_events()
@@ -46,6 +47,7 @@ class Component(tk.Frame):
         kw = self.__delete_custom_props(self, **kw)
         super().configure(cnf, **kw)
         self.__sync_props()
+        self._post_init()
 
         if self._get_value(TkAttr.State) != TkState.Disabled:
             self._bind_events()
@@ -101,6 +103,13 @@ class Component(tk.Frame):
         """
         pass
 
+    def _post_init(self):
+        """
+        This function is executed after Frame is created and
+        after all properties have been synchronized.
+        """
+        pass
+
     def _do_draw(self):
         """
         To be implemented in child classes.
@@ -121,6 +130,17 @@ class Component(tk.Frame):
         Doesn't get called on creation only when component is updated.
         """
         pass
+
+    def _set_state_handler(self, state: str):
+        """
+        Used to register simple events that simply change widget state.
+        """
+
+        def handler(_):
+            self._set_value(TkAttr.State, state)
+            self._draw()
+
+        return handler
 
     def _get_value(self, prop_name: str):
         """

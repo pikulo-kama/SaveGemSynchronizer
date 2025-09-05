@@ -45,20 +45,23 @@ def init_gui_styles():
         _add_square_button("primaryButton", font_size)
         _add_square_button("secondaryButton", font_size)
 
-    _add_secondary_combobox()
+    _add_secondary_dropdown()
     _add_secondary_chip()
 
 
-def _add_secondary_combobox():
+def _add_secondary_dropdown():
     """
     Used to add custom Combobox styles with secondary color accent.
     """
 
-    style_name = "Secondary.TDropdown"
-    _log_style(style_name)
+    dropdown_style = "Secondary.TDropdown"
+    listbox_style = dropdown_style + ".TListbox"
+
+    _log_style(dropdown_style)
+    _log_style(listbox_style)
 
     style.configure(
-        style_name,
+        dropdown_style,
         background=prop("secondaryButton.colorStatic"),
         foreground=prop("secondaryColor"),
         font=("Segoe UI Semibold", 10, font.BOLD),
@@ -67,13 +70,26 @@ def _add_secondary_combobox():
         padding=5
     )
 
+    style.configure(
+        listbox_style,
+        background=prop("secondaryButton.colorStatic"),
+        foreground=prop("secondaryColor"),
+        font=("Segoe UI Semibold", 8, font.BOLD),
+        cursor=TkCursor.Hand,
+        padding=5
+    )
+
     style.map(
-        style_name,
-        fieldbackground=_expand_property(prop("secondaryButton.colorHover")),
-        selectbackground=_expand_property(prop("secondaryButton.colorHover")),
-        foreground=_expand_property(prop("secondaryColor")),
-        selectforeground=_expand_property(prop("secondaryColor")),
+        dropdown_style,
         background=_expand_property(prop("secondaryButton.colorStatic"))
+    )
+
+    style.map(
+        listbox_style,
+        background=[
+            (TkState.Active, prop("primaryButton.colorHover")),
+            (TkState.Pressed, prop("secondaryButton.colorStatic"))
+        ]
     )
 
 

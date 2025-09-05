@@ -31,9 +31,9 @@ class Button(Component):
         pass
 
     def _bind_events(self):
-        self._canvas.bind(TkEvent.LMBClick, self.__set_state(TkState.Pressed))
-        self._canvas.bind(TkEvent.Enter, self.__set_state(TkState.Active))
-        self._canvas.bind(TkEvent.Leave, self.__set_state(TkState.Default))
+        self._canvas.bind(TkEvent.LMBClick, self._set_state_handler(TkState.Pressed))
+        self._canvas.bind(TkEvent.Enter, self._set_state_handler(TkState.Active))
+        self._canvas.bind(TkEvent.Leave, self._set_state_handler(TkState.Default))
         self._canvas.bind(TkEvent.LMBRelease, lambda e: self.__on_release(e))
 
     def _unbind_events(self):
@@ -41,17 +41,6 @@ class Button(Component):
         self._canvas.unbind(TkEvent.Enter)
         self._canvas.unbind(TkEvent.Leave)
         self._canvas.unbind(TkEvent.LMBRelease)
-
-    def __set_state(self, state: str):
-        """
-        Used to register simple events that simply change widget state.
-        """
-
-        def handler(_):
-            self._set_value(TkAttr.State, state)
-            self._draw()
-
-        return handler
 
     def __on_release(self, event):
         """
