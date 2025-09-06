@@ -35,12 +35,12 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 ### Install dependencies and Build
 #### Linux
 ```bash
-./scripts/build.sh
+./scripts/linux/build.sh
 ```
 ####
 Windows
 ```powershell
-./scripts/build.ps1
+./scripts/windows/build.ps1
 ```
 
 ## ⚖️ Licensing

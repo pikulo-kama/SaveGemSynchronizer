@@ -1,9 +1,9 @@
 /venv
 /dist
 /build
+/builds
 /.idea
 __pycache__/
 
 game-config-file-id.txt
 credentials.json
-*.exe
