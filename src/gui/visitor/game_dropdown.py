@@ -61,13 +61,12 @@ class GameDropdownVisitor(Visitor):
         Used to render game selection dropdown.
         """
 
-        def on_game_selection_change(_, selection):
-
+        def on_game_selection_change(value):
             def callback():
                 _logger.info("Game selection changed.")
-                _logger.info("Selected game - %s", selection)
+                _logger.info("Selected game - %s", value)
 
-                app.state.game_name = selection
+                app.state.game_name = value
                 gui.refresh()
 
             return execute_in_thread(callback)
