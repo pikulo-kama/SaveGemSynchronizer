@@ -22,7 +22,7 @@ SolidCompression=yes
 AllowRootDirectory=yes
 
 [Files]
-; Copy everything from your PyInstaller onedir output
+; Copy everything from your PyInstaller one dir output
 Source: "{#RootPath}dist\SaveGem\*"; DestDir: "{app}"; Flags: recursesubdirs
 
 [Icons]
