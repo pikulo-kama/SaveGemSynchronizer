@@ -49,7 +49,7 @@
 ;   → "SNAPSHOT" (otherwise)
 ;
 #define GetBuildType(str RepoPath) \
-  Local[0] = AddBackslash(GetEnv("TEMP")) + "buildtype.txt", \
+  Local[0] = AddBackslash(GetEnv("TEMP")) + "buildType.txt", \
   Local[1] = \
     "-ExecutionPolicy Bypass -Command """ + \
     "$branch = (git -C '" + RepoPath + "' rev-parse --abbrev-ref HEAD);" + \

@@ -9,7 +9,7 @@ from src.core import app
 from constants import ZIP_EXTENSION
 from src.service.gdrive import GDrive
 from src.service.subscriptable import SubscriptableService, DoneEvent, ErrorEvent, EventKind
-from src.util.file import resolve_temp_file, remove_extension_from_path
+from src.util.file import resolve_temp_file
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -26,33 +26,51 @@ class Uploader(SubscriptableService):
         Save files are being archived before being uploaded.
         """
 
-        # 1 - Archive
-        # 2 - Set save version
-        # 3 - Upload
-        self._set_stages(3)
+        # 1 - Create archive target directory to store files for upload
+        # 2 - Set save version in save files
+        # 3 - Filter save files and copy them to archive target directory
+        # 4 - Make archive
+        # 5 - Upload archive
+        self._set_stages(5)
 
-        saves_directory = app.games.current.local_path
+        saves_root_dir = app.games.current.local_path
         save_version = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        file_path = resolve_temp_file(f"save-{save_version}.{ZIP_EXTENSION}")
+        target_archive_path = resolve_temp_file(f"{app.state.game_name}-{save_version}")
 
-        if not os.path.exists(saves_directory):
-            _logger.error("Directory with saves is missing %s", saves_directory)
+        if not os.path.exists(saves_root_dir):
+            _logger.error("Directory with saves is missing %s", saves_root_dir)
             self._send_event(ErrorEvent(EventKind.SAVES_DIRECTORY_IS_MISSING))
             return
+
+        # Make directory to place all files that needs to be uploaded.
+        os.makedirs(target_archive_path)
+        self._complete_stage()
 
         # Set save version into archive before uploading it.
         app.games.current.save_version = save_version
         self._complete_stage()
 
+        patterns = app.games.current.filter_patterns
+
+        # Apply filtering to only upload necessary files instead of all.
+        for file_name in os.listdir(saves_root_dir):
+
+            if not any(p.match(file_name) for p in patterns):
+                continue
+
+            file_path = os.path.join(saves_root_dir, file_name)
+            shutil.copy(file_path, target_archive_path)
+        self._complete_stage()
+
         # Archive save contents to mitigate impact on drive storage.
         _logger.info("Archiving save files that need to be uploaded.")
-        shutil.make_archive(remove_extension_from_path(file_path), ZIP_EXTENSION, saves_directory)
+        shutil.make_archive(target_archive_path, ZIP_EXTENSION, target_archive_path)
         self._complete_stage()
 
         try:
             _logger.info("Uploading archive to cloud.")
             GDrive.upload_file(
-                file_path,
+                f"{target_archive_path}.{ZIP_EXTENSION}",
                 app.games.current.drive_directory,
                 subscriber=lambda completion: self._complete_stage(completion)
             )
