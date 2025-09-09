@@ -11,6 +11,7 @@
   "label_DownloadSaveFromDrive" : "🠋",
   "label_NoInformationAboutCurrentSaveVersion" : "Nous ne savons pas quelle sauvegarde est la plus récente, mais...",
   "label_StorageIsEmpty" : "Le stockage est vide.\n Un envoi est nécessaire pour continuer.",
+  "label_ActiveUsers" : "En train de jouer:",
   "info_SaveIsUpToDate" : "Rien de nouveau... Votre sauvegarde est déjà à jour.",
   "info_SaveNeedsToBeDownloaded" : "Eh bien, regardez-moi ça...",
   "info_NewestSaveOnDriveInformation" : "la dernière sauvegarde a été envoyée le {0} à {1} par {2}",

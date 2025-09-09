@@ -81,4 +81,4 @@ class GameDropdownVisitor(Visitor):
             style="Secondary.TDropdown"
         )
 
-        self.__dropdown.place(relx=1, rely=.2, x=-20, y=20, anchor=tk.NE)
+        self.__dropdown.place(relx=1, rely=.2, x=-20, y=10, anchor=tk.NE)

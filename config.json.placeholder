@@ -1,10 +1,21 @@
-This file is placeholder, please create game-config-file-id.txt in root of the project before building solution.
-This file should contain single line with Google Drive File ID that points to JSON with games configuration.
-e.g. 1Ks-7P1bsgLhXzcT2MAcwQ4Cev1T-HVVr
+This file is placeholder, please create config.json in root of the project before building project.
+This file should contain following keys.
+
+gameConfigFileId - ID of games' config file in Google Drive.
+activityLogFileId - ID of activity log file in Google Drive.
+
+Example:
+{
+  "gameConfigFileId": "1E-zkone11111CQrvToK5r3d1xZa-1111",
+  "activityLogFileId": "1mszBDdJ1111y24lGBMPvGZwbs0741111"
+}
 
 
-Configuration Legend:
+Activity Log:
+Create a JSON file with empty object as its contents ({}).
 
+
+Games' Configuration file Legend:
 * = mandatory field
 
 - *name (str) = serves as visual representation of game in dropdown as well as its unique ID

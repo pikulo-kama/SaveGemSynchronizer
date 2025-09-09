@@ -30,7 +30,7 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 - **Python 3.9+** (with `pip`)  
 - Google Cloud credentials (service account or OAuth client)  
 - In order to build EXE or just be able to use application you need file called `credentials.json` to be in root of the project
-- You also need `game-config.file-id.txt` to be present in root directory with ID of Google Drive game config. (See [placeholder file](./game-config-file-id.txt.placeholder)) 
+- You also need `game-config.file-id.txt` to be present in root directory with ID of Google Drive game config. (See [placeholder file](./config.json.placeholder)) 
 
 ### Install dependencies and Build
 #### Linux

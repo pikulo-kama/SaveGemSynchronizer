@@ -11,6 +11,7 @@
   "label_DownloadSaveFromDrive" : "🠋",
   "label_NoInformationAboutCurrentSaveVersion" : "No estamos seguros de cuál guardado es más reciente, pero...",
   "label_StorageIsEmpty" : "El almacenamiento está vacío.\n Suba un archivo para continuar.",
+  "label_ActiveUsers" : "Jugando ahora:",
   "info_SaveIsUpToDate" : "Nada nuevo... Tu guardado está lo más actualizado posible.",
   "info_SaveNeedsToBeDownloaded" : "Bueno bueno bueno, mira nada más...",
   "info_NewestSaveOnDriveInformation" : "el último guardado fue subido el {0} a las {1} por {2}",

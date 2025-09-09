@@ -1,5 +1,6 @@
 {
   "__main__" : "INFO",
+  "watcher" : "INFO",
   "src.core.app_state" : "ERROR",
   "src.core.json_config_holder" : "ERROR",
   "src.core.editable_json_config_holder" : "ERROR",

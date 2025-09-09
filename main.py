@@ -9,7 +9,7 @@ from src.util.logger import get_logger
 _logger = get_logger(__name__)
 
 
-def main():
+def _main():
     """
     Application entry point.
     """
@@ -24,4 +24,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    _main()

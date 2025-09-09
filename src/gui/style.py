@@ -63,7 +63,7 @@ def _add_secondary_dropdown():
     style.configure(
         dropdown_style,
         background=prop("secondaryButton.colorStatic"),
-        foreground=prop("secondaryColor"),
+        foreground=prop("primaryColor"),
         font=("Segoe UI Semibold", 10, font.BOLD),
         cursor=TkCursor.Hand,
         radius=6,
@@ -73,7 +73,7 @@ def _add_secondary_dropdown():
     style.configure(
         listbox_style,
         background=prop("secondaryButton.colorStatic"),
-        foreground=prop("secondaryColor"),
+        foreground=prop("primaryColor"),
         font=("Segoe UI Semibold", 8, font.BOLD),
         cursor=TkCursor.Hand,
         padding=5
@@ -152,7 +152,7 @@ def _add_small_button(button):
         style_name,
         borderwidth=0,
         relief=tk.SOLID,
-        foreground=prop("secondaryColor"),
+        foreground=prop("primaryColor"),
         background=prop(f"{button}.colorStatic"),
         padding=8,
         cursor=TkCursor.Hand,

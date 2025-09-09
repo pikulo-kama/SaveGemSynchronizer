@@ -6,7 +6,7 @@ from typing import Final
 
 from src.core.app_data import AppData
 from src.service.gdrive import GDrive
-from src.util.file import resolve_project_data, read_file, save_file
+from src.util.file import read_file, save_file
 from src.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -22,6 +22,7 @@ class _Game:
     __local_path: str
     __drive_directory: str
     __files_filter: list[str]
+    __process_name: str
 
     __SAVE_VERSION_FILE_NAME: Final = "SaveGem-SaveVersion.txt"
     __ALL_FILES: Final = ".*"
@@ -32,6 +33,14 @@ class _Game:
         Unique name of the game.
         """
         return self.__name
+
+    @property
+    def process_name(self):
+        """
+        Name of EXE file of the game
+        the way it's displayed in Task Manager.
+        """
+        return self.__process_name
 
     @property
     def local_path(self):
@@ -95,6 +104,7 @@ class _GameConfig(AppData):
     __LOCAL_PATH: Final = "localPath"
     __PLAYERS: Final = "players"
     __GAME_NAME: Final = "name"
+    __PROCES_NAME: Final = "process"
     __HIDDEN: Final = "hidden"
 
     def __init__(self):
@@ -106,11 +116,8 @@ class _GameConfig(AppData):
         Used to download game configuration from Google Drive.
         """
 
-        game_config_pointer_file = resolve_project_data("game-config-file-id.txt")
-        game_config_file_id = read_file(game_config_pointer_file)
-
-        _logger.info("Download game configuration from drive.")
-        game_config = GDrive.download_file(game_config_file_id)
+        _logger.info("Downloading game configuration from drive.")
+        game_config = GDrive.download_file(self._app.config.games_config_file_id)
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
@@ -122,22 +129,29 @@ class _GameConfig(AppData):
         self.__games_by_name.clear()
 
         for game in json.load(game_config):
-            name = game[self.__GAME_NAME]
-            local_path = game[self.__LOCAL_PATH]
-            drive_directory = game[self.__PARENT_DIR]
+            name = game.get(self.__GAME_NAME)
+            local_path = game.get(self.__LOCAL_PATH)
+            drive_directory = game.get(self.__PARENT_DIR)
+            process_name = game.get(self.__PROCES_NAME)
             files_filter = []
 
-            if self.__HIDDEN in game and game[self.__HIDDEN] is True:
+            if self.__HIDDEN in game and game.get(self.__HIDDEN) is True:
                 _logger.info("Skipping game '%s' since it's marked as hidden.", name)
                 continue
 
-            if self.__PLAYERS in game and self._app.user.email not in game[self.__PLAYERS]:
+            if self.__PLAYERS in game and self._app.user.email not in game.get(self.__PLAYERS):
                 continue
 
             if self.__FILES_FILTER in game:
-                files_filter = game[self.__FILES_FILTER]
+                files_filter = game.get(self.__FILES_FILTER)
 
-            self.__games_by_name[name] = _Game(name, local_path, drive_directory, files_filter)
+            self.__games_by_name[name] = _Game(
+                name,
+                local_path,
+                drive_directory,
+                files_filter,
+                process_name
+            )
 
         _logger.info("Configuration for following game(s) was found = %s", ", ".join(self.names))
 
@@ -147,6 +161,14 @@ class _GameConfig(AppData):
         Used to get list of game configurations.
         """
         return len(self.__games_by_name) == 0
+
+    @property
+    def get(self):
+        """
+        Used to return list of all games currently
+        registered in application.
+        """
+        return list(self.__games_by_name.values())
 
     @property
     def names(self):
