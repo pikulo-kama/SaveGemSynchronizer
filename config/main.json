@@ -11,8 +11,8 @@
   "verticalMargin" : 200,
 
   "primaryColor" : "#009688",
-  "secondaryColor" : "#D3D3D3",
-  "accentColor" : "#FFE0C8",
+  "secondaryColor" : "#d3d3d3",
+  "accentColor" : "#e07b39",
 
   "primaryButton" : {
     "styleName" : "Primary",

@@ -194,13 +194,13 @@ class GDrive:
 
         # Authenticate with credentials and then store them for future use
         elif os.path.exists(credentials_file_name):
-            _logger.info("Attempting authentication using credentials.")
+            _logger.debug("Attempting authentication using credentials.")
 
             flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, _SCOPES)
             creds = flow.run_local_server(port=0)
 
-            _logger.info("Authentication completed.")
-            _logger.info("Saving Google Cloud access token for later use.")
+            _logger.debug("Authentication completed.")
+            _logger.debug("Saving Google Cloud access token for later use.")
             save_file(token_file_name, json.loads(creds.to_json()), as_json=True)
 
         else:

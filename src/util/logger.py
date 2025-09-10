@@ -42,11 +42,7 @@ def get_logger(logger_name: str):
     logger = logging.getLogger(logger_name)
     level = _get_log_level(logger_name)
     logger.setLevel(level)
-    log_file_name = "application"
-    running_service = remove_extension_from_path(os.path.basename(sys.argv[0]))
-
-    if running_service != "main":
-        log_file_name = running_service
+    log_file_name = remove_extension_from_path(os.path.basename(sys.argv[0]))
 
     handler = TimedRotatingFileHandler(
         resolve_log(f"{log_file_name}.log"),

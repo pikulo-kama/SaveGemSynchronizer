@@ -20,7 +20,7 @@ class ActivePlayersVisitor(Visitor):
 
     def __init__(self):
         self.__frame = None
-        self.__description_label = None
+        self.__status_label = None
         self.__active_players_label = None
 
     def visit(self, gui: _GUI):
@@ -29,28 +29,35 @@ class ActivePlayersVisitor(Visitor):
     def refresh(self, gui: _GUI):
         active_players = PlayerService.get_active_players(app.state.game_name)
 
+        # Do not display consider current user.
+        # Only show when other players are online.
         if app.user.name in active_players:
             active_players.remove(app.user.name)
 
-        description_label = ""
-        players_label = ""
-        border_thickness = 0
+        status_color = "secondaryColor"
+        active_players_color = "secondaryColor"
+        players_label = tr("label_Offline")
 
         if len(active_players) > 0:
-            description_label = tr("label_ActiveUsers")
-            border_thickness = 2
 
+            status_color = "accentColor"
+            active_players_color = "primaryColor"
             players_label = active_players.pop(0)
             remaining_players = len(active_players)
 
             if remaining_players > 0:
                 players_label += f" +{remaining_players}"
 
-        self.__frame.configure(highlightthickness=border_thickness)
-        self.__description_label.configure(text=description_label)
-        self.__active_players_label.configure(text=players_label)
+        self.__status_label.configure(
+            foreground=prop(status_color)
+        )
 
-        _logger.debug("Active users section was reloaded. (%s%s)", description_label, players_label)
+        self.__active_players_label.configure(
+            foreground=prop(active_players_color),
+            text=players_label
+        )
+
+        _logger.debug("Active users section was reloaded. (%s)", players_label)
 
     def disable(self, gui: "_GUI"):
         pass
@@ -60,28 +67,21 @@ class ActivePlayersVisitor(Visitor):
         Used to render active users section.
         """
 
-        self.__frame = tk.Frame(
-            gui.top,
-            highlightbackground=prop("secondaryColor"),
-            bd=0
+        self.__frame = tk.Frame(gui.top)
+
+        self.__status_label = tk.Label(
+            self.__frame,
+            text="⚫",
+            font=("Segoe UI Semibold", 10)
         )
 
-        self.__description_label = tk.Label(
-            self.__frame,
-            fg=prop("primaryColor"),
-            font=("Segoe UI Semibold", 10),
-            padx=5,
-            pady=5
-        )
         self.__active_players_label = tk.Label(
             self.__frame,
-            fg=prop("primaryColor"),
-            font=("Helvetica", 12, font.BOLD),
-            padx=5,
-            pady=5
+            foreground=prop("primaryColor"),
+            font=("Helvetica", 12, font.BOLD)
         )
 
-        self.__description_label.pack(side=tk.LEFT)
+        self.__status_label.pack(side=tk.LEFT)
         self.__active_players_label.pack(side=tk.LEFT)
 
         self.__frame.pack(anchor=tk.N, pady=(20, 0))
