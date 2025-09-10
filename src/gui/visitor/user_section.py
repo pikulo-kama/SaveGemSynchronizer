@@ -63,7 +63,8 @@ class UserSectionVisitor(Visitor):
 
         user_chip.grid(row=0, column=0, padx=(0, 10))
         self.__logout_button.grid(row=0, column=1)
-        user_section.place(relx=1, rely=0, x=-20, y=20, anchor=tk.NE)
+
+        user_section.grid(row=0, column=0, sticky=tk.E, padx=(0, 20), pady=(20, 0))
 
     @staticmethod
     def __logout(gui: "_GUI"):

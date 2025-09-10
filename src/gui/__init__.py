@@ -184,6 +184,8 @@ class _GUI:
         self.bottom.grid(row=2, column=1, sticky=tk.NSEW)
         self.bottom_right.grid(row=2, column=2, sticky=tk.NSEW)
 
+        self.top_right.columnconfigure(0, weight=1)
+
         # Center could be quite large that's why it's not part
         # of the main grid.
         self.center.place(relx=.5, rely=.5, anchor=tk.CENTER)
@@ -245,8 +247,8 @@ class _GUI:
         alt_width = screen_width - prop("horizontalMargin")
         alt_height = screen_height - prop("verticalMargin")
 
-        width = max(width, alt_width)
-        height = max(height, alt_height)
+        width = min(width, alt_width)
+        height = min(height, alt_height)
 
         x = (screen_width - width) / 2
         y = (screen_height - height) / 2
