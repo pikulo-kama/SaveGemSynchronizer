@@ -6,7 +6,7 @@ from cleanup import teardown
 from src.gui import gui
 from src.util.logger import get_logger
 
-_logger = get_logger(__name__)
+_logger = get_logger("main")
 
 
 def _main():
