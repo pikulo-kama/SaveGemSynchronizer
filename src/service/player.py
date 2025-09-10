@@ -58,7 +58,7 @@ class PlayerService:
             }
 
             _logger.debug("Log After: %s", activity_log)
-            GDrive.update_file(app.config.activity_log_file_id, json.dumps(activity_log))
+            GDrive.update_file(app.config.activity_log_file_id, json.dumps(activity_log, indent=2))
 
     @classmethod
     def __cleanup_log(cls, log_file: dict, cleanup_interval: int):
