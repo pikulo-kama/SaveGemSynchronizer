@@ -5,7 +5,7 @@ source ./scripts/linux/util.sh
 
 # Check if configuration files are present.
 verify_file_exists "credentials.json"
-verify_file_exists "game-config-file-id.txt"
+verify_file_exists "config.json"
 
 # Install dependencies
 pip install -r requirements.txt
