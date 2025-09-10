@@ -19,11 +19,14 @@ Games' Configuration file Legend:
 * = mandatory field
 
 - *name (str) = serves as visual representation of game in dropdown as well as its unique ID
+- *process (str) = name of game process in Task Manager
 - *localPath (str) = path to directory with save files, can contain env variables (suc as %LOCALAPPDATA%, %APPDATA%, etc.)
 - *gdriveParentDirectoryId (str) = ID of directory in google cloud were all saves would be stored
 - hidden (bool) = whether game should be visible in app or not, if field is not populated it would be treated as False.
 - players (list[str]) = list of user emails that should see game in dropdown, if field is missing all users will be able
 to see it.
+- filesFilter (list[str]) = list of files that needs to be uploaded to cloud (all files would be uploaded if
+not provided)
 
 
 Example of configuration file in Google Drive:
@@ -31,6 +34,7 @@ Example of configuration file in Google Drive:
 [
   {
     "name" : "First Game",
+    "process" : "firstgame.exe"
     "localPath" : "%LOCALAPPDATA%Low\\FirstGameDev\\FirstGame\\saves_local",
     "gdriveParentDirectoryId" : "11KNPgZ_pEXm1Ur0uqZMggaJi1111111",
     "hidden" : True,
@@ -42,7 +46,12 @@ Example of configuration file in Google Drive:
   },
   {
     "name" : "Second Game",
+    "process" : "second.exe"
     "localPath" : "%APPDATA%\\SecondGameData\\Saves",
     "gdriveParentDirectoryId" : "1ulAGvR27yALHFzG_vB3W3Bagy111111",
+    "filesFilter" : [
+        "^game\\.save$"
+        "^game_.+Cache$"
+    ]
   }
 ]
