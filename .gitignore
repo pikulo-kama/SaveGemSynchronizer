@@ -1,10 +1,7 @@
 /venv
-/dist
-/build
-/builds
-/installers
+/output
 /.idea
 __pycache__/
 
-game-config-file-id.txt
+config.json
 credentials.json

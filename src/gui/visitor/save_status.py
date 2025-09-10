@@ -67,7 +67,7 @@ class SaveStatusVisitor(Visitor):
 
         self.__last_save_timestamp = tk.Label(
             info_frame,
-            fg=prop("secondaryColor"),
+            fg=prop("primaryColor"),
             font=("Helvetica", 11, font.BOLD)
         )
 

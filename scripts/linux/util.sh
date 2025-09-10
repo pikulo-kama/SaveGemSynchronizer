@@ -10,24 +10,3 @@ verify_file_exists() {
         exit 1
     fi
 }
-
-# rename_file: used to rename EXE file to have version and type.
-# Usage: rename_file "file.exe" -> "file-1.1.1-SNAPSHOT.exe
-make_archive() {
-  local version
-  local branch
-  local zipName
-  local type="SNAPSHOT"
-
-  version="$(jq -r '.version' ./config/main.json)"
-  branch="$(git branch --show-current)"
-
-  if [[ "$branch" == "master" ]]; then
-    type="RELEASE"
-  fi
-
-  zipName="builds/SaveGem-$version-$type.zip"
-
-  zip -r "$zipName" "dist/SaveGem"
-  echo "Created archive: $zipName"
-}

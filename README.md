@@ -20,7 +20,7 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 - ✅ Download the latest save files from the drive  
 - ✅ Easy-to-use desktop UI (Tkinter)  
 - ✅ Works for any game where saves are stored locally  
-- ✅ Has XBOX Live integration to see if any friends are currently playing
+- ✅ Show if any players are currently in the game
 - ✅ Just to not mess anything up we do backup of your save before replacing it with the one from drive (just in case...)
 
 ---
@@ -30,9 +30,10 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 - **Python 3.9+** (with `pip`)  
 - Google Cloud credentials (service account or OAuth client)  
 - In order to build EXE or just be able to use application you need file called `credentials.json` to be in root of the project
-- You also need `game-config.file-id.txt` to be present in root directory with ID of Google Drive game config. (See [placeholder file](./game-config-file-id.txt.placeholder)) 
+- You also need `config.json` to be present in root directory with ID of Google Drive game config. (See [placeholder file](./config.json.placeholder)) 
 
 ### Install dependencies and Build
+Application is specific to **Windows** but you can build it on Linux.
 #### Linux
 ```bash
 ./scripts/linux/build.sh

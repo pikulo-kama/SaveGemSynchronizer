@@ -11,6 +11,7 @@
   "label_DownloadSaveFromDrive" : "🠋",
   "label_NoInformationAboutCurrentSaveVersion" : "Ми не знаємо де новіший сейв, але..",
   "label_StorageIsEmpty" : "Cховище порожнє.\n Потрібно виконати відвантаження.",
+  "label_Offline" : "Офлайн",
   "info_SaveIsUpToDate" : "Нічого нового... Твій сейв свіженький як ніколи.",
   "info_SaveNeedsToBeDownloaded" : "Здалося б оновитись..",
   "info_NewestSaveOnDriveInformation" : "останній сейв відвантажено {0} o {1} від {2}",

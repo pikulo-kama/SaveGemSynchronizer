@@ -58,7 +58,7 @@ class Popup(abc.ABC):
         message_label = tk.Label(
             self._container,
             text=message,
-            fg=prop("secondaryColor"),
+            fg=prop("primaryColor"),
             font=("Helvetica", 10, font.BOLD)
         )
 

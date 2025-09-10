@@ -1,6 +1,6 @@
 
 #include "helpers.iss"
-#define RootPath "..\..\..\"
+#define RootPath "..\..\"
 
 [Setup]
 ; --- App Info ---
@@ -13,7 +13,7 @@ DefaultDirName={pf}\SaveGem
 DefaultGroupName=SaveGem
 UninstallDisplayIcon={app}\SaveGem.exe
 OutputBaseFilename=SaveGemSetup-{#GetAppVersion(RootPath + "config\main.json")}-{#GetBuildType(RootPath)}
-OutputDir={#RootPath}installers
+OutputDir={#RootPath}output\installers
 DisableProgramGroupPage=no
 
 ; --- Installer Settings ---
@@ -22,10 +22,19 @@ SolidCompression=yes
 AllowRootDirectory=yes
 
 [Files]
-; Copy everything from your PyInstaller one dir output
-Source: "{#RootPath}dist\SaveGem\*"; DestDir: "{app}"; Flags: recursesubdirs
+; Copy everything from PyInstaller one dir output
+Source: "{#RootPath}output\dist\SaveGem\*"; DestDir: "{app}"; Flags: recursesubdirs
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{userappdata}\SaveGem"
+
+[UninstallRun]
+Filename: "taskkill"; Parameters: "/F /IM ProcessWatcher.exe"; Flags: runhidden
 
 [Icons]
+; Add watcher service to startup
+Name: "{userstartup}\SaveGem Process Watcher"; Filename: "{app}\ProcessWatcher.exe"
+
 ; Start Menu shortcut
 Name: "{group}\SaveGem"; Filename: "{app}\SaveGem.exe"; IconFilename: "{app}\_internal\resources\application.ico"
 
@@ -37,7 +46,20 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "startmenuicon"; Description: "{cm:CreateStartMenuShortcut}"; GroupDescription: "{cm:AdditionalIconsGroup}"
 
 [Run]
+; Add option to start application after installation.
 Filename: "{app}\SaveGem.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
+
+; Start ProcessWatcher automatically after installation.
+[Code]
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ResultCode: Integer;
+begin
+  if CurStep = ssPostInstall then
+  begin
+    Exec(ExpandConstant('{app}\ProcessWatcher.exe'), '', '', SW_HIDE, ewNoWait, ResultCode);
+  end;
+end;
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

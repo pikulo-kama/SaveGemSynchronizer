@@ -42,7 +42,6 @@ class _GUI:
         self.__center_window()
         self.window.title(tr("window_Title"))
         self.window.iconbitmap(resolve_resource("application.ico"))
-        self.window.geometry(f"{prop("windowWidth")}x{prop("windowHeight")}")
         self.window.resizable(False, False)
 
         self.window.protocol("WM_DELETE_WINDOW", self.destroy)
@@ -185,6 +184,8 @@ class _GUI:
         self.bottom.grid(row=2, column=1, sticky=tk.NSEW)
         self.bottom_right.grid(row=2, column=2, sticky=tk.NSEW)
 
+        self.top_right.columnconfigure(0, weight=1)
+
         # Center could be quite large that's why it's not part
         # of the main grid.
         self.center.place(relx=.5, rely=.5, anchor=tk.CENTER)
@@ -237,11 +238,17 @@ class _GUI:
         Will ensure that each time app opened it's in the center of screen.
         """
 
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+
         width = prop("windowWidth")
         height = prop("windowHeight")
 
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
+        alt_width = screen_width - prop("horizontalMargin")
+        alt_height = screen_height - prop("verticalMargin")
+
+        width = min(width, alt_width)
+        height = min(height, alt_height)
 
         x = (screen_width - width) / 2
         y = (screen_height - height) / 2

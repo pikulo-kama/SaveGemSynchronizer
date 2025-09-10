@@ -20,3 +20,4 @@ class Directory:
 JSON_EXTENSION: Final = ".json"
 ZIP_EXTENSION: Final = "zip"
 ZIP_MIME_TYPE: Final = "application/zip"
+JSON_MIME_TYPE: Final = "application/json"

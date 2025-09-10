@@ -8,9 +8,9 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
+from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload, MediaIoBaseUpload
 
-from constants import ZIP_MIME_TYPE
+from constants import ZIP_MIME_TYPE, JSON_MIME_TYPE
 from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
 from src.util.logger import get_logger
 from src.util.timer import measure_time
@@ -118,6 +118,29 @@ class GDrive:
             raise error
 
     @staticmethod
+    def update_file(file_id: str, data: str, mime_type=JSON_MIME_TYPE, subscriber=None):
+        """
+        Used to update existing file in Google Drive.
+        """
+
+        done = False
+        bytes_io = io.BytesIO(data.encode("utf-8"))
+        media = MediaIoBaseUpload(bytes_io, mime_type, resumable=True)
+
+        try:
+            request = GDrive.__drive().files().update(
+                fileId=file_id,
+                media_body=media
+            )
+
+            while not done:
+                _, done = GDrive.__next_chunk(request, subscriber)
+
+        except HttpError as error:
+            _logger.error("Error updating file in drive", error)
+            raise error
+
+    @staticmethod
     def __next_chunk(request, subscriber=None):
         """
         Wrapper method which formats progress into percentage number from 0 to 100.
@@ -158,7 +181,7 @@ class GDrive:
 
         # Get credentials from file (possible if authentication was done previously)
         if os.path.exists(token_file_name):
-            _logger.info("Token was found. Application will use credentials from token.")
+            _logger.debug("Token was found. Application will use credentials from token.")
             creds = Credentials.from_authorized_user_file(token_file_name, _SCOPES)
 
             if creds and creds.valid:
@@ -166,18 +189,18 @@ class GDrive:
 
         # If they're just expired then try to refresh them
         if creds and creds.expired and creds.refresh_token:
-            _logger.warn("Credentials expired, performing refresh.")
+            _logger.debug("Credentials expired, performing refresh.")
             creds.refresh(Request())
 
         # Authenticate with credentials and then store them for future use
         elif os.path.exists(credentials_file_name):
-            _logger.info("Attempting authentication using credentials.")
+            _logger.debug("Attempting authentication using credentials.")
 
             flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, _SCOPES)
             creds = flow.run_local_server(port=0)
 
-            _logger.info("Authentication completed.")
-            _logger.info("Saving Google Cloud access token for later use.")
+            _logger.debug("Authentication completed.")
+            _logger.debug("Saving Google Cloud access token for later use.")
             save_file(token_file_name, json.loads(creds.to_json()), as_json=True)
 
         else:

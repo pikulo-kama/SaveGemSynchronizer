@@ -14,9 +14,7 @@ def init():
 
     from src.core import app
     from src.service.gdrive import GDrive
-    from src.util.logger import initialize_logging
 
-    initialize_logging()
     app.games.download()
     app.user.initialize(GDrive.get_current_user())
 
