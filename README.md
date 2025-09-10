@@ -33,7 +33,7 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 - You also need `config.json` to be present in root directory with ID of Google Drive game config. (See [placeholder file](./config.json.placeholder)) 
 
 ### Install dependencies and Build
-Application is specific to **Windows** but you can build it on Linux.
+Application is specific to **Windows**, but you can build it on Linux.
 #### Linux
 ```bash
 ./scripts/linux/build.sh

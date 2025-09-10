@@ -88,25 +88,23 @@ class Downloader(SubscriptableService):
         Used to get metadata of last save in Google Drive.
         """
 
-        files = GDrive.query_single(
+        files_meta = GDrive.query_single(
             "files",
-            "nextPageToken, files(id, name, owners, createdTime)",
+            "nextPageToken, files(id, name, appProperties, createdTime)",
             f"mimeType='{ZIP_MIME_TYPE}' and '{app.games.current.drive_directory}' in parents"
         )
 
-        if files is None:
+        if files_meta is None:
             message = "Error downloading metadata. Either configuration is incorrect or you don't have access."
 
             _logger.error(message)
             raise RuntimeError(message)
 
-        if len(files) == 0:
+        if len(files_meta) == 0:
             _logger.warn("There are no saves on Google Drive for %s.", app.state.game_name)
             return None
 
-        return {
-            "id": files[0]["id"],
-            "name": files[0]["name"],
-            "createdTime": files[0]["createdTime"],
-            "owner": files[0]["owners"][0]["displayName"]
-        }
+        file_meta = files_meta[0]
+        properties = file_meta.get("appProperties") or {}
+
+        return {**file_meta, **properties}

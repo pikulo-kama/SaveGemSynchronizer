@@ -86,7 +86,8 @@ class GDrive:
 
     @staticmethod
     @measure_time(when=logging.DEBUG)
-    def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE, subscriber=None):
+    def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE,
+                    properties: dict = None, subscriber=None):
         """
         Used to upload file to Google Drive into provided directory.
         """
@@ -100,7 +101,8 @@ class GDrive:
         )
         metadata = {
             "name": file_name_from_path(file_path),
-            "parents": [parent_directory_id]
+            "parents": [parent_directory_id],
+            "appProperties": properties
         }
 
         try:

@@ -119,7 +119,7 @@ class SaveStatusVisitor(Visitor):
         elif last_save_version is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")
 
-        elif last_save_version in last_save_meta.get("name"):
+        elif last_save_version == last_save_meta.get("version"):
             return tr("info_SaveIsUpToDate")
 
         else:

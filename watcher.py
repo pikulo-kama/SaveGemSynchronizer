@@ -22,12 +22,17 @@ def _main():
     to Google Drive activity log file.
     """
 
-    _config = JsonConfigHolder(resolve_config("watcher"))
-    cleanup_interval = _config.get_value("cleanupIntervalSeconds")
-    interval = _config.get_value("pollingRateSeconds")
+    config = JsonConfigHolder(resolve_config("watcher"))
+    cleanup_interval = config.get_value("cleanupIntervalSeconds")
+    interval = config.get_value("pollingRateSeconds")
+    startup_delay = config.get_value("startupDelaySeconds")
 
     _logger.info("Started process watcher with interval %d second(s).", interval)
     _logger.info("Will remove all data with timestamp older than %d seconds.", cleanup_interval)
+
+    if startup_delay > 0:
+        _logger.info("Startup delay is configured. Will start work in %d seconds.", startup_delay)
+        time.sleep(startup_delay)
 
     while True:
         app.user.initialize(GDrive.get_current_user())

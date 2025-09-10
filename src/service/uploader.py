@@ -67,11 +67,17 @@ class Uploader(SubscriptableService):
         shutil.make_archive(target_archive_path, ZIP_EXTENSION, target_archive_path)
         self._complete_stage()
 
+        archive_props = {
+            "owner": app.user.name,
+            "version": save_version
+        }
+
         try:
             _logger.info("Uploading archive to cloud.")
             GDrive.upload_file(
                 f"{target_archive_path}.{ZIP_EXTENSION}",
                 app.games.current.drive_directory,
+                properties=archive_props,
                 subscriber=lambda completion: self._complete_stage(completion)
             )
 
