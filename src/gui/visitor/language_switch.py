@@ -59,6 +59,7 @@ class LanguageSwitchVisitor(Visitor):
         )
 
         self.__language_switch.grid(row=1, column=0, padx=20, pady=(10, 0))
+        _logger.debug("Locale list - %s", locales)
 
     @staticmethod
     def __switch_language(gui: _GUI):

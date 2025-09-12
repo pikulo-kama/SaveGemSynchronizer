@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload, MediaIoBaseUpload
 
-from constants import ZIP_MIME_TYPE, JSON_MIME_TYPE
+from constants import ZIP_MIME_TYPE, JSON_MIME_TYPE, File
 from src.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
 from src.util.logger import get_logger
 from src.util.timer import measure_time
@@ -191,8 +191,8 @@ class GDrive:
         Used to authenticate to Google Cloud as well as refresh token if needed.
         """
 
-        token_file_name = resolve_app_data("token.json")
-        credentials_file_name = resolve_project_data("credentials.json")
+        token_file_name = resolve_app_data(File.GDriveToken)
+        credentials_file_name = resolve_project_data(File.GDriveCreds)
         creds = None
 
         # Get credentials from file (possible if authentication was done previously)
@@ -220,7 +220,7 @@ class GDrive:
             save_file(token_file_name, json.loads(creds.to_json()), as_json=True)
 
         else:
-            _logger.critical("credentials.json is missing.")
-            raise RuntimeError("Google Cloud credentials are missing in root of the project. Add credentials.json.")
+            _logger.critical(f"{File.GDriveCreds} is missing.")
+            raise RuntimeError(f"Google Cloud credentials are missing in root of the project. Add {File.GDriveCreds}.")
 
         return creds

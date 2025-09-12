@@ -1,3 +1,4 @@
+from constants import File
 from src.core import app
 from src.core.text_resource import tr
 from src.gui import Visitor, _GUI, TkCursor
@@ -74,7 +75,7 @@ class UserSectionVisitor(Visitor):
         """
 
         # Delete all user specific data.
-        delete_file(resolve_app_data("state.json"))
-        delete_file(resolve_app_data("token.json"))
+        delete_file(resolve_app_data(File.AppState))
+        delete_file(resolve_app_data(File.GDriveToken))
 
         gui.destroy()
