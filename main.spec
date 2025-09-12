@@ -1,12 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+
+datas=[
+    ('credentials.json', '.'),
+    ('config.json', '.')
+]
+
 a_main = Analysis(
     ['main.py'],
     binaries=[],
-    datas=[
-        ('credentials.json', '.'),
-        ('config.json', '.')
-    ],
+    datas=datas,
     hookspath=['hooks'],
     hooksconfig={},
     excludes=[],
@@ -17,10 +20,7 @@ a_main = Analysis(
 a_watcher = Analysis(
     ['watcher.py'],
     binaries=[],
-    datas=[
-        ('credentials.json', '.'),
-        ('config.json', '.')
-    ],
+    datas=datas,
     hookspath=[],
     hooksconfig={},
     excludes=[],

@@ -25,48 +25,52 @@ def _main():
     config = JsonConfigHolder(resolve_config("watcher"))
     cleanup_interval = config.get_value("cleanupIntervalSeconds")
     interval = config.get_value("pollingRateSeconds")
-    startup_delay = config.get_value("startupDelaySeconds")
 
     _logger.info("Started process watcher with interval %d second(s).", interval)
     _logger.info("Will remove all data with timestamp older than %d seconds.", cleanup_interval)
 
-    if startup_delay > 0:
-        _logger.info("Startup delay is configured. Will start work in %d seconds.", startup_delay)
-        time.sleep(startup_delay)
-
     while True:
-        app.user.initialize(GDrive.get_current_user())
-        app.games.download()
-        active_games = []
 
-        for game in app.games.get:
-            if _is_running(game.process_name):
-                active_games.append(game.name)
+        try:
+            app.user.initialize(GDrive.get_current_user())
+            app.games.download()
 
-        PlayerService.update_activity_data(active_games, cleanup_interval)
+            active_games = _get_running_games()
+            PlayerService.update_activity_data(active_games, cleanup_interval)
+
+        except Exception as error:  # noqa: E722
+            _logger.error("Exception in watcher service", error)
+
         time.sleep(interval)
 
 
-def _is_running(process_name: str):
+def _get_running_games():
     """
-    Used to check if process with provided name
-    is currently running.
+    Used to get list of game names that are currently running.
     """
+
+    active_games = []
+    games_by_processes = {game.process_name.lower(): game.name for game in app.games.get}
 
     for process in psutil.process_iter(['name']):
+
+        # No need to continue scanning processes if we already
+        # found processes for all the games (though it's not very realistic scenario)
+        if len(active_games) == len(games_by_processes):
+            break
+
         try:
-            if process.name().lower() == process_name.lower():
-                return True
+            process_name = process.name().lower()
+
+            if process_name in games_by_processes.keys():
+                game_name = games_by_processes.get(process_name)
+                active_games.append(game_name)
 
         except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
+            pass
 
-    return False
+    return active_games
 
 
 if __name__ == '__main__':
-    try:
-        _main()
-
-    except Exception as error:  # noqa: E722
-        _logger.error("Exception in watcher service:\n%s", error)
+    _main()

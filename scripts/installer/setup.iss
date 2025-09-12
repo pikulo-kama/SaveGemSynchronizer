@@ -1,18 +1,20 @@
 
 #include "helpers.iss"
+
 #define RootPath "..\..\"
+#define AppVersion GetAppVersion(RootPath + "config\main.json")
 
 [Setup]
 ; --- App Info ---
 AppName=SaveGem
 UninstallDisplayName=SaveGem
 AppPublisher=Artur Parkour
-AppVersion={#GetAppVersion(RootPath + "config\main.json")}
+AppVersion={#AppVersion}
 SetupIconFile={#RootPath}resources\application.ico
 DefaultDirName={pf}\SaveGem
 DefaultGroupName=SaveGem
 UninstallDisplayIcon={app}\SaveGem.exe
-OutputBaseFilename=SaveGemSetup-{#GetAppVersion(RootPath + "config\main.json")}-{#GetBuildType(RootPath)}
+OutputBaseFilename=SaveGemSetup-{#AppVersion}-{#GetBuildType(RootPath)}
 OutputDir={#RootPath}output\installers
 DisableProgramGroupPage=no
 
@@ -23,33 +25,67 @@ AllowRootDirectory=yes
 
 [Files]
 ; Copy everything from PyInstaller one dir output
-Source: "{#RootPath}output\dist\SaveGem\*"; DestDir: "{app}"; Flags: recursesubdirs
+Source: "{#RootPath}output\dist\SaveGem\*"; \
+    DestDir: "{app}"; \
+    Flags: recursesubdirs
+
+; Copy watcher.bat to root.
+Source: "{#RootPath}start_watcher.bat"; \
+    DestDir: "{app}"
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{userappdata}\SaveGem"
+Type: filesandordirs; \
+    Name: "{userappdata}\SaveGem"
 
 [UninstallRun]
-Filename: "taskkill"; Parameters: "/F /IM ProcessWatcher.exe"; Flags: runhidden
+; Kill main application if opened.
+Filename: "taskkill"; \
+    Parameters: "/f /im SaveGem.exe"; \
+    Flags: runhidden
+
+; Kill watcher starter BAT file.
+Filename: "taskkill"; \
+    Parameters: "/f /im start_watcher.bat"; \
+    Flags: runhidden
+
+; Kill service watcher if opened.
+Filename: "taskkill"; \
+    Parameters: "/f /im SaveGemWatcher.exe"; \
+    Flags: runhidden
 
 [Icons]
-; Add watcher service to startup
-Name: "{userstartup}\SaveGem Process Watcher"; Filename: "{app}\ProcessWatcher.exe"
-
 ; Start Menu shortcut
-Name: "{group}\SaveGem"; Filename: "{app}\SaveGem.exe"; IconFilename: "{app}\_internal\resources\application.ico"
+Name: "{group}\SaveGem"; \
+    Filename: "{app}\SaveGem.exe"; \
+    IconFilename: "{app}\_internal\resources\application.ico"
 
 ; Desktop shortcut (user chooses in installer)
-Name: "{commondesktop}\SaveGem"; Filename: "{app}\SaveGem.exe"; IconFilename: "{app}\_internal\resources\application.ico"; Tasks: desktopicon
+Name: "{commondesktop}\SaveGem"; \
+    Filename: "{app}\SaveGem.exe"; \
+    IconFilename: "{app}\_internal\resources\application.ico"; \
+    Tasks: desktopicon
+    
+; Add process watcher daemon to startup.
+Name: "{userstartup}\SaveGem Process Watcher"; \
+    Filename: "{app}\start_watcher.bat"; \
+    IconFilename: "{app}\_internal\resources\application.ico"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIconsGroup}"
-Name: "startmenuicon"; Description: "{cm:CreateStartMenuShortcut}"; GroupDescription: "{cm:AdditionalIconsGroup}"
+Name: "desktopicon"; \
+    Description: "{cm:CreateDesktopIcon}"; \
+    GroupDescription: "{cm:AdditionalIconsGroup}"
+
+Name: "startmenuicon"; \
+    Description: "{cm:CreateStartMenuShortcut}"; \
+    GroupDescription: "{cm:AdditionalIconsGroup}"
 
 [Run]
 ; Add option to start application after installation.
-Filename: "{app}\SaveGem.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\SaveGem.exe"; \
+    Description: "{cm:LaunchApp}"; \
+    Flags: nowait postinstall skipifsilent
 
-; Start ProcessWatcher automatically after installation.
+; Start ProcessWatcher starter BAT automatically after installation.
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
 var
@@ -57,7 +93,7 @@ var
 begin
   if CurStep = ssPostInstall then
   begin
-    Exec(ExpandConstant('{app}\ProcessWatcher.exe'), '', '', SW_HIDE, ewNoWait, ResultCode);
+    Exec(ExpandConstant('{app}\start_watcher.bat'), '', '', SW_HIDE, ewNoWait, ResultCode);
   end;
 end;
 

@@ -42,24 +42,38 @@ class GDrive:
         return response.get("user")
 
     @staticmethod
-    def query_single(target_field: str, fields: str, q: str):
+    def query_single(q: str, fields: str):
         """
         Used to query metadata of single file from Google Drive.
         """
 
         try:
-            request = GDrive.__drive().files().list(
+            return GDrive.__drive().files().list(
                 q=q,
                 spaces="drive",
                 fields=fields,
                 pageToken=None,
                 pageSize=1
-            )
-
-            return request.execute().get(target_field)
+            ).execute()
 
         except HttpError as e:
-            _logger.error("Error downloading save metadata", e)
+            _logger.error("Error querying file metadata", e)
+            return None
+
+    @staticmethod
+    def get_file_meta(file_id: str, fields: str):
+        """
+        Used to get metadata of file in Google Drive.
+        """
+
+        try:
+            return GDrive.__drive().files().get(
+                fileId=file_id,
+                fields=fields
+            ).execute()
+
+        except HttpError as e:
+            _logger.error("Error downloading file metadata", e)
             return None
 
     @staticmethod
