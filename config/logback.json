@@ -16,5 +16,6 @@
   "src.gui.style" : "INFO",
   "src.service.downloader" : "INFO",
   "src.service.uploader" : "INFO",
-  "src.service.gdrive" : "INFO"
+  "src.service.gdrive" : "INFO",
+  "src.service.player" : "INFO"
 }

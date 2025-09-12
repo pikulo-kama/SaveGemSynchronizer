@@ -1,5 +1,4 @@
 {
   "pollingRateSeconds" : 30,
-  "cleanupIntervalSeconds": 90,
-  "startupDelaySeconds" : 60
+  "cleanupIntervalSeconds": 90
 }
