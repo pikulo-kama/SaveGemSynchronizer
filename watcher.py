@@ -2,15 +2,16 @@
 # noinspection PyUnresolvedReferences
 import initializer
 import time
-
+import os.path
 import psutil
 
+from constants import File
 from src.service.player import PlayerService
 from src.util.logger import get_logger
 from src.core import app
 from src.core.json_config_holder import JsonConfigHolder
 from src.service.gdrive import GDrive
-from src.util.file import resolve_config
+from src.util.file import resolve_config, resolve_app_data
 
 _logger = get_logger("watcher")
 
@@ -22,7 +23,7 @@ def _main():
     to Google Drive activity log file.
     """
 
-    config = JsonConfigHolder(resolve_config("watcher"))
+    config = JsonConfigHolder(resolve_config(File.ProcessWatcherConfig))
     cleanup_interval = config.get_value("cleanupIntervalSeconds")
     interval = config.get_value("pollingRateSeconds")
 
@@ -30,6 +31,13 @@ def _main():
     _logger.info("Will remove all data with timestamp older than %d seconds.", cleanup_interval)
 
     while True:
+
+        # We don't want to trigger authentication flow once user installs
+        # application. Once user authenticates thorough UI it will create
+        # token file, only then watcher can start doing his job.
+        if not os.path.exists(resolve_app_data(File.GDriveToken)):
+            time.sleep(interval)
+            continue
 
         try:
             app.user.initialize(GDrive.get_current_user())

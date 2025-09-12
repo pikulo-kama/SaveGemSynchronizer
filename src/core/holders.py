@@ -1,29 +1,19 @@
 import os
 
-from constants import JSON_EXTENSION, Directory
+from constants import Directory, File
 from src.core.json_config_holder import JsonConfigHolder
-from src.util.file import resolve_config
-from src.util.logger import get_logger
+from src.util.file import resolve_config, remove_extension_from_path
 
-_logger = get_logger(__name__)
-
-_main_config = JsonConfigHolder(resolve_config("main"))
-locales = [file.replace(JSON_EXTENSION, "") for file in os.listdir(Directory.Locale)]
-
-_logger.debug("Main config - %s", _main_config)
-_logger.debug("Locale list - %s", locales)
+_main_config = JsonConfigHolder(resolve_config(File.GUIConfig))
+locales = [remove_extension_from_path(file) for file in os.listdir(Directory.Locale)]
 
 
 def prop(property_name: str):
     """
-    Used to get property value from main configuration file (config/main.json)
+    Used to get property value from main configuration file (config/gui.json)
     """
 
     parts = property_name.split(".")
-
-    if len(parts) == 1:
-        return _main_config.get_value(property_name)
-
     value = _main_config.get_value(parts.pop(0))
 
     for property_part in parts:

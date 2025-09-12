@@ -17,6 +17,22 @@ class Directory:
     Logs: Final = os.path.join(AppDataRoot, "logs")
 
 
+class File:
+    """
+    Contains names of files that are created/used by application.
+    """
+
+    GDriveToken: Final = "token.json"
+    GDriveCreds: Final = "credentials.json"
+    AppConfig: Final = "config.json"
+
+    GUIConfig: Final = "gui.json"
+    ProcessWatcherConfig: Final = "watcher.json"
+
+    AppState: Final = "state.json"
+    Logback: Final = "logback.json"
+
+
 JSON_EXTENSION: Final = ".json"
 ZIP_EXTENSION: Final = "zip"
 ZIP_MIME_TYPE: Final = "application/zip"

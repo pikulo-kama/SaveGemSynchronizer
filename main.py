@@ -16,6 +16,12 @@ def _main():
 
     _logger.info("Initializing application.")
 
+    from src.core import app
+    from src.service.gdrive import GDrive
+
+    app.user.initialize(GDrive.get_current_user())
+    app.games.download()
+
     gui.initialize()
     gui.before_destroy(teardown)
     gui.build()

@@ -4,34 +4,17 @@ import re
 import sys
 from logging.handlers import TimedRotatingFileHandler
 
-from src.core.editable_json_config_holder import EditableJsonConfigHolder
-from src.core.json_config_holder import JsonConfigHolder
-from src.util.file import resolve_log, resolve_config, resolve_app_data, remove_extension_from_path
+from constants import File
+from src.util.file import resolve_log, resolve_app_data, remove_extension_from_path, read_file
 
-_LOGBACK_FILE_NAME = "logback.json"
-
-_local_logback_file_path = resolve_config(_LOGBACK_FILE_NAME)
-_app_data_logback_file_path = resolve_app_data(_LOGBACK_FILE_NAME)
-
-# Copy logback.json to app data if it's missing.
-if not os.path.exists(_app_data_logback_file_path):
-
-    _local_logback = JsonConfigHolder(_local_logback_file_path)
-
-    _logback = EditableJsonConfigHolder(_app_data_logback_file_path)
-    _logback.set(_local_logback.get())
-
-_logback = JsonConfigHolder(_app_data_logback_file_path)
-
-log_levels = {
+_logback = read_file(resolve_app_data(File.Logback), as_json=True)
+_log_levels = {
     "INFO": logging.INFO,
     "WARN": logging.WARN,
     "ERROR": logging.ERROR,
     "DEBUG": logging.DEBUG,
     "FATAL": logging.FATAL
 }
-
-_logging_service = "application"
 
 
 def get_logger(logger_name: str):
@@ -64,13 +47,13 @@ def get_logger(logger_name: str):
 
 def _get_log_level(logger_name: str):
     """
-    Used to query logback.xml and get configured log level for provided log name.
+    Used to query logback.json and get configured log level for provided log name.
     If log level is not configured 'INFO' would be used as default.
     """
 
-    level = _logback.get_value(logger_name)
+    level = _logback.get(logger_name)
 
     if level is not None:
-        return log_levels[level]
+        return _log_levels[level]
 
     return logging.INFO

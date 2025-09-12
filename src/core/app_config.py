@@ -1,3 +1,4 @@
+from constants import File
 from src.core.app_data import AppData
 from src.core.json_config_holder import JsonConfigHolder
 from src.util.file import resolve_project_data
@@ -11,7 +12,7 @@ class _AppConfig(AppData):
 
     def __init__(self):
         super().__init__()
-        self.__config = JsonConfigHolder(resolve_project_data("config"))
+        self.__config = JsonConfigHolder(resolve_project_data(File.AppConfig))
 
     @property
     def games_config_file_id(self):
