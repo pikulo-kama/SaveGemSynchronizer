@@ -6,7 +6,7 @@ datas=[
     ('config.json', '.')
 ]
 
-a_main = Analysis(
+gui = Analysis(
     ['main.py'],
     binaries=[],
     datas=datas,
@@ -17,7 +17,7 @@ a_main = Analysis(
     optimize=0
 )
 
-a_watcher = Analysis(
+watcher = Analysis(
     ['watcher.py'],
     binaries=[],
     datas=datas,
@@ -28,14 +28,26 @@ a_watcher = Analysis(
     optimize=0
 )
 
-pyz_main = PYZ(a_main.pure)
-pyz_watcher = PYZ(a_watcher.pure)
+watcher_launcher = Analysis(
+    ['watcher_launcher.py'],
+    binaries=[],
+    datas=[],
+    hookspath=[],
+    hooksconfig={},
+    excludes=[],
+    noarchive=False,
+    optimize=0
+)
+
+pyz_main = PYZ(gui.pure)
+pyz_watcher = PYZ(watcher.pure)
+pyz_watcher_launcher = PYZ(watcher_launcher.pure)
 
 # GUI application
-main_exe = EXE(
+gui_exe = EXE(
     pyz_main,
-    a_main.scripts,
-    a_main.binaries,
+    gui.scripts,
+    gui.binaries,
     exclude_binaries=True,
     name='SaveGem',
     console=False,
@@ -45,19 +57,30 @@ main_exe = EXE(
 # Watcher service
 watcher_exe = EXE(
     pyz_watcher,
-    a_watcher.scripts,
-    a_watcher.binaries,
+    watcher.scripts,
+    watcher.binaries,
     exclude_binaries=True,
     name='ProcessWatcher',
     console=False,
     icon='resources\\application.ico'
 )
 
+# launcher for watcher service.
+watcher_launcher_exe = EXE(
+    pyz_watcher_launcher,
+    watcher_launcher.scripts,
+    watcher_launcher.binaries,
+    exclude_binaries=True,
+    name='ProcessWatcherLauncher',
+    console=False,
+    icon='resources\\application.ico'
+)
+
 # Collect everything into one folder
 coll = COLLECT(
-    main_exe, watcher_exe,
-    a_main.binaries, a_main.datas,
-    a_watcher.binaries, a_watcher.datas,
+    gui_exe, watcher_exe, watcher_launcher_exe,
+    gui.binaries, gui.datas,
+    watcher.binaries, watcher.datas,
     Tree('..\\SaveGemSynchronizer\\resources', prefix='resources\\'),
     Tree('..\\SaveGemSynchronizer\\config', prefix='config\\'),
     Tree('..\\SaveGemSynchronizer\\locale', prefix='locale\\'),

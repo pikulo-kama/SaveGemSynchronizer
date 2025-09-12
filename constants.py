@@ -24,9 +24,9 @@ class File:
 
     GDriveToken: Final = "token.json"
     GDriveCreds: Final = "credentials.json"
-    AppConfig: Final = "config.json"
+    GDriveConfig: Final = "config.json"
 
-    GUIConfig: Final = "gui.json"
+    AppConfig: Final = "app.json"
     ProcessWatcherConfig: Final = "watcher.json"
 
     AppState: Final = "state.json"

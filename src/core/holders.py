@@ -4,13 +4,13 @@ from constants import Directory, File
 from src.core.json_config_holder import JsonConfigHolder
 from src.util.file import resolve_config, remove_extension_from_path
 
-_main_config = JsonConfigHolder(resolve_config(File.GUIConfig))
+_main_config = JsonConfigHolder(resolve_config(File.AppConfig))
 locales = [remove_extension_from_path(file) for file in os.listdir(Directory.Locale)]
 
 
 def prop(property_name: str):
     """
-    Used to get property value from main configuration file (config/gui.json)
+    Used to get property value from main configuration file (config/app.json)
     """
 
     parts = property_name.split(".")
