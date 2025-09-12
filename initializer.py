@@ -1,6 +1,6 @@
 import os
 from constants import Directory, File
-from src.util.file import resolve_config, resolve_app_data
+from src.util.file import resolve_config, resolve_app_data, read_file, save_file
 
 
 def init():
@@ -34,14 +34,8 @@ def _copy_logback():
     if os.path.exists(app_data_logback_path):
         return
 
-    from src.core.editable_json_config_holder import EditableJsonConfigHolder
-    from src.core.json_config_holder import JsonConfigHolder
-
-    local_logback = JsonConfigHolder(logback_path)
-
-    # Copy local logback to AppData directory of application.
-    EditableJsonConfigHolder(app_data_logback_path) \
-        .set(local_logback.get())
+    local_logback = read_file(logback_path, as_json=True)
+    save_file(app_data_logback_path, local_logback, as_json=True)
 
 
 init()

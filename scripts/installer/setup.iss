@@ -2,7 +2,7 @@
 #include "helpers.iss"
 
 #define RootPath "..\..\"
-#define AppVersion GetAppVersion(RootPath + "config\main.json")
+#define AppVersion GetAppVersion(RootPath + "config\app.json")
 
 [Setup]
 ; --- App Info ---
@@ -29,10 +29,6 @@ Source: "{#RootPath}output\dist\SaveGem\*"; \
     DestDir: "{app}"; \
     Flags: recursesubdirs
 
-; Copy watcher.bat to root.
-Source: "{#RootPath}start_watcher.bat"; \
-    DestDir: "{app}"
-
 [UninstallDelete]
 Type: filesandordirs; \
     Name: "{userappdata}\SaveGem"
@@ -43,14 +39,14 @@ Filename: "taskkill"; \
     Parameters: "/f /im SaveGem.exe"; \
     Flags: runhidden
 
-; Kill watcher starter BAT file.
+; Kill watcher launcher.
 Filename: "taskkill"; \
-    Parameters: "/f /im start_watcher.bat"; \
+    Parameters: "/f /im ProcessWatcherLauncher.exe"; \
     Flags: runhidden
 
-; Kill service watcher if opened.
+; Kill process watcher.
 Filename: "taskkill"; \
-    Parameters: "/f /im SaveGemWatcher.exe"; \
+    Parameters: "/f /im ProcessWatcher.exe"; \
     Flags: runhidden
 
 [Icons]
@@ -65,9 +61,9 @@ Name: "{commondesktop}\SaveGem"; \
     IconFilename: "{app}\_internal\resources\application.ico"; \
     Tasks: desktopicon
     
-; Add process watcher daemon to startup.
-Name: "{userstartup}\SaveGem Process Watcher"; \
-    Filename: "{app}\start_watcher.bat"; \
+; Add process watcher launcher to startup.
+Name: "{userstartup}\SaveGem Process Watcher Launcher"; \
+    Filename: "{app}\ProcessWatcherLauncher.exe"; \
     IconFilename: "{app}\_internal\resources\application.ico"
 
 [Tasks]
@@ -93,7 +89,7 @@ var
 begin
   if CurStep = ssPostInstall then
   begin
-    Exec(ExpandConstant('{app}\start_watcher.bat'), '', '', SW_HIDE, ewNoWait, ResultCode);
+    Exec(ExpandConstant('{app}\ProcessWatcherLauncher.exe'), '', '', SW_HIDE, ewNoWait, ResultCode);
   end;
 end;
 

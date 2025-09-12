@@ -12,7 +12,7 @@ class _AppConfig(AppData):
 
     def __init__(self):
         super().__init__()
-        self.__config = JsonConfigHolder(resolve_project_data(File.AppConfig))
+        self.__config = JsonConfigHolder(resolve_project_data(File.GDriveConfig))
 
     @property
     def games_config_file_id(self):
