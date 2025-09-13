@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os.path
 import shutil
@@ -107,6 +108,20 @@ def delete_file(file_path: str):
 
     if os.path.exists(file_path):
         os.remove(file_path)
+
+
+def file_checksum(file_path: str, algorithm: str = "sha256", block_size: int = 8192):
+    """
+    Used to get checksum of file.
+    """
+
+    file_hash = hashlib.new(algorithm)
+
+    with open(file_path, "rb") as file:
+        for chunk in iter(lambda: file.read(block_size), b""):
+            file_hash.update(chunk)
+
+    return file_hash.hexdigest()
 
 
 def file_name_from_path(file_path: str):

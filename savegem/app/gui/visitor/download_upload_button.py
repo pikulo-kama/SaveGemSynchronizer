@@ -75,7 +75,7 @@ class DownloadUploadButtonVisitor(Visitor):
         self.__upload_button = ProgressButton(
             button_frame,
             width=35,
-            command=lambda: execute_in_thread(self.__uploader.upload),
+            command=lambda: execute_in_thread(lambda: self.__uploader.upload(app.games.current)),
             style="Primary.TButton"
         )
 
@@ -84,7 +84,7 @@ class DownloadUploadButtonVisitor(Visitor):
             width=5,
             command=lambda: confirmation(
                 tr("confirmation_ConfirmToDownloadSave"),
-                lambda: execute_in_thread(self.__downloader.download)
+                lambda: execute_in_thread(lambda: self.__downloader.download(app.games.current))
             ),
             style="Secondary.TButton"
         )

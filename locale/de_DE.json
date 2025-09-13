@@ -19,6 +19,8 @@
   "notification_NewSaveHasBeenDownloaded" : "Spielstand erfolgreich heruntergeladen.",
   "notification_ErrorUploadingToDrive" : "Fehler beim Hochladen auf den Drive.",
   "notification_ErrorSaveDirectoryMissing" : "Speicherordner nicht gefunden. \n{0}",
+  "notification_AutoModeOn" : "Automatischer Modus aktiviert.",
+  "notification_AutoModeOff" : "Automatischer Modus deaktiviert.",
   "confirmation_ConfirmToDownloadSave" : "Sicher? Dies überschreibt deinen vorhandenen Spielstand.",
   "confirmation_ConfirmLogout" : "Möchten Sie sich abmelden?"
 }

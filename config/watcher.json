@@ -1,4 +1,4 @@
 {
-  "pollingRateSeconds" : 30,
-  "cleanupIntervalSeconds": 90
+  "iterationIntervalSeconds" : 10,
+  "logCleanupIntervalSeconds": 90
 }

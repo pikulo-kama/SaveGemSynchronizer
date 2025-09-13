@@ -2,7 +2,7 @@ import os.path
 import shutil
 
 from constants import ZIP_MIME_TYPE, ZIP_EXTENSION
-from savegem.common.core import app
+from savegem.common.core.game_config import Game
 from savegem.common.service.gdrive import GDrive
 from savegem.common.service.subscriptable import SubscriptableService, ErrorEvent, DoneEvent, EventKind
 from savegem.common.util.file import resolve_temp_file, cleanup_directory, save_file
@@ -16,7 +16,7 @@ class Downloader(SubscriptableService):
     Used to download latest save files of selected game from Google Drive.
     """
 
-    def download(self):
+    def download(self, game: Game):
         """
         Used to download latest save from Google Drive
         also responsible for making backup of old save.
@@ -29,7 +29,7 @@ class Downloader(SubscriptableService):
         # 5 - Extract downloaded archive
         self._set_stages(5)
 
-        saves_directory = app.games.current.local_path
+        saves_directory = game.local_path
         temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
         _logger.debug("savesDirectory = %s", saves_directory)
@@ -39,7 +39,7 @@ class Downloader(SubscriptableService):
             self._send_event(ErrorEvent(EventKind.SAVES_DIRECTORY_IS_MISSING))
             return
 
-        metadata = Downloader.get_last_save_metadata()
+        metadata = Downloader.get_last_save_metadata(game)
         self._complete_stage()
 
         if metadata is None:
@@ -83,13 +83,13 @@ class Downloader(SubscriptableService):
         self._send_event(DoneEvent(None))
 
     @staticmethod
-    def get_last_save_metadata():
+    def get_last_save_metadata(game: Game):
         """
         Used to get metadata of last save in Google Drive.
         """
 
         metadata = GDrive.query_single(
-            f"mimeType='{ZIP_MIME_TYPE}' and '{app.games.current.drive_directory}' in parents",
+            f"mimeType='{ZIP_MIME_TYPE}' and '{game.drive_directory}' in parents",
             "files(id, name, appProperties, createdTime)"
         )
 
@@ -102,7 +102,7 @@ class Downloader(SubscriptableService):
         files_meta = metadata.get("files")
 
         if len(files_meta) == 0:
-            _logger.warn("There are no saves on Google Drive for %s.", app.state.game_name)
+            _logger.warn("There are no saves on Google Drive for %s.", game.name)
             return None
 
         file_meta = files_meta[0]

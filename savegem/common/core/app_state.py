@@ -1,5 +1,6 @@
 from typing import Final
 
+from constants import File
 from savegem.common.core.app_data import AppData
 from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
 from savegem.common.core.holders import locales, prop
@@ -22,7 +23,7 @@ class _AppState(AppData):
 
     def __init__(self):
         super().__init__()
-        self.__state = EditableJsonConfigHolder(resolve_app_data("state"))
+        self.__state = EditableJsonConfigHolder(resolve_app_data(File.AppState))
 
     @property
     def game_name(self):
@@ -79,7 +80,15 @@ class _AppState(AppData):
         """
         Used to check if auto download/upload mode is enabled.
         """
-        return self.__state.get_value(self.__STATE_IS_AUTO_MODE) or False
+
+        # This is a little trick. Since app state is a singleton object
+        # it will read data from state only once, and it's okay for most of the
+        # state properties since they're not being by anything else except UI
+        # which gets constantly reloaded. But since auto mode is used by
+        # process watcher we need to read file each time property is requested.
+
+        self.__state = EditableJsonConfigHolder(resolve_app_data(File.AppState))
+        return self.__state.get_value(self.__STATE_IS_AUTO_MODE, False)
 
     @is_auto_mode.setter
     def is_auto_mode(self, is_auto_mode):

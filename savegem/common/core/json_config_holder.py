@@ -21,14 +21,15 @@ class JsonConfigHolder:
         # Can't use property from config since it wil result in circular dependency.
         self._data = read_file(self._config_path, as_json=True)
 
-    def get_value(self, property_name):
+    def get_value(self, property_name, default_value=None):
         """
         Used to get property value from configuration.
         """
-        if property_name not in self._data:
-            return None
 
-        return self._data[property_name]
+        if property_name not in self._data:
+            return default_value
+
+        return self._data.get(property_name)
 
     def get(self):
         """

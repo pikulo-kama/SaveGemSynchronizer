@@ -19,6 +19,8 @@
   "notification_NewSaveHasBeenDownloaded" : "Sauvegarde téléchargée avec succès.",
   "notification_ErrorUploadingToDrive" : "Erreur lors de l'envoi sur le drive.",
   "notification_ErrorSaveDirectoryMissing" : "Dossier de sauvegarde introuvable. \n{0}",
+  "notification_AutoModeOn" : "Mode automatique activé.",
+  "notification_AutoModeOff" : "Mode automatique désactivé.",
   "confirmation_ConfirmToDownloadSave" : "Êtes-vous sûr ? Cela écrasera la sauvegarde existante.",
   "confirmation_ConfirmLogout" : "Voulez-vous vous déconnecter?"
 }

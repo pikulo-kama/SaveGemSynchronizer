@@ -7,6 +7,7 @@ from googleapiclient.errors import HttpError
 from savegem.common.core import app
 
 from constants import ZIP_EXTENSION
+from savegem.common.core.game_config import Game
 from savegem.common.service.gdrive import GDrive
 from savegem.common.service.subscriptable import SubscriptableService, DoneEvent, ErrorEvent, EventKind
 from savegem.common.util.file import resolve_temp_file
@@ -20,22 +21,22 @@ class Uploader(SubscriptableService):
     Used to upload current save files of selected game to Google Drive.
     """
 
-    def upload(self):
+    def upload(self, game: Game):
         """
         Used to upload current save files of selected game to Google Drive.
         Save files are being archived before being uploaded.
         """
 
         # 1 - Create archive target directory to store files for upload
-        # 2 - Set save version in save files
-        # 3 - Filter save files and copy them to archive target directory
+        # 3 - Copy save files to archive target directory
+        # 2 - Update metadata and copy to archive target directory
         # 4 - Make archive
         # 5 - Upload archive
         self._set_stages(5)
 
-        saves_root_dir = app.games.current.local_path
+        saves_root_dir = game.local_path
         save_version = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        target_archive_path = resolve_temp_file(f"{app.state.game_name}-{save_version}")
+        target_archive_path = resolve_temp_file(f"{game.name}-{save_version}")
 
         if not os.path.exists(saves_root_dir):
             _logger.error("Directory with saves is missing %s", saves_root_dir)
@@ -46,20 +47,16 @@ class Uploader(SubscriptableService):
         os.makedirs(target_archive_path)
         self._complete_stage()
 
-        # Set save version into archive before uploading it.
-        app.games.current.save_version = save_version
+        # Copy game files to archive directory.
+        for file_path in game.file_list:
+            shutil.copy(file_path, target_archive_path)
         self._complete_stage()
 
-        patterns = app.games.current.filter_patterns
+        # Set checksum and version then copy to target directory.
+        game.checksum = game.calculate_checksum()
+        game.save_version = save_version
 
-        # Apply filtering to only upload necessary files instead of all.
-        for file_name in os.listdir(saves_root_dir):
-
-            if not any(p.match(file_name) for p in patterns):
-                continue
-
-            file_path = os.path.join(saves_root_dir, file_name)
-            shutil.copy(file_path, target_archive_path)
+        shutil.copy(game.metadata_file_path, target_archive_path)
         self._complete_stage()
 
         # Archive save contents to mitigate impact on drive storage.
@@ -69,14 +66,15 @@ class Uploader(SubscriptableService):
 
         archive_props = {
             "owner": app.user.name,
-            "version": save_version
+            "version": save_version,
+            "checksum": game.checksum
         }
 
         try:
             _logger.info("Uploading archive to cloud.")
             GDrive.upload_file(
                 f"{target_archive_path}.{ZIP_EXTENSION}",
-                app.games.current.drive_directory,
+                game.drive_directory,
                 properties=archive_props,
                 subscriber=lambda completion: self._complete_stage(completion)
             )

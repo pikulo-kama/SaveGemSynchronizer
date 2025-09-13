@@ -36,7 +36,7 @@ class SaveStatusVisitor(Visitor):
         self.__add_save_information(gui)
 
     def refresh(self, gui: _GUI):
-        last_save_meta = Downloader.get_last_save_metadata()
+        last_save_meta = Downloader.get_last_save_metadata(app.games.current)
 
         save_status_label = self.__get_last_download_version_text(last_save_meta)
         last_save_timestamp_label = self.__get_last_save_info_text(last_save_meta)

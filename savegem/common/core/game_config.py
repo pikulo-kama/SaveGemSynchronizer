@@ -1,31 +1,44 @@
+import hashlib
 import json
 import os
 import re
-from dataclasses import dataclass
 from typing import Final
 
 from savegem.common.core.app_data import AppData
+from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
 from savegem.common.service.gdrive import GDrive
-from savegem.common.util.file import read_file, save_file
+from savegem.common.util.file import file_checksum
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
 
 
-@dataclass
-class _Game:
+class Game:
     """
     Represents a game.
     """
 
-    __name: str
-    __local_path: str
-    __drive_directory: str
-    __files_filter: list[str]
-    __process_name: str
-
-    __SAVE_VERSION_FILE_NAME: Final = "SaveGem-SaveVersion.txt"
+    __SAVE_META_FILE_NAME: Final = "SaveGemMetadata.json"
     __ALL_FILES: Final = ".*"
+
+    __META_VERSION_ATTR = "version"
+    __META_CHECKSUM_ATTR = "checksum"
+
+    def __init__(self,
+                 name: str,
+                 process_name: str,
+                 local_path: str,
+                 drive_directory: str,
+                 files_filter: list[str],
+                 auto_mode_allowed: bool):
+        self.__name = name
+        self.__local_path = local_path
+        self.__drive_directory = drive_directory
+        self.__files_filter = files_filter
+        self.__process_name = process_name
+        self.__auto_mode_allowed = auto_mode_allowed
+
+        self.__metadata = EditableJsonConfigHolder(self.metadata_file_path)
 
     @property
     def name(self):
@@ -57,17 +70,33 @@ class _Game:
         return self.__drive_directory
 
     @property
+    def auto_mode_allowed(self):
+        return self.__auto_mode_allowed
+
+    @property
+    def file_list(self):
+        """
+        Used to get list of save file paths
+        that are being managed for game.
+        """
+
+        save_directory = self.local_path
+
+        for file_name in sorted(os.listdir(save_directory)):
+            # Only include files that are present in game config.
+            if any(p.match(file_name) for p in self.filter_patterns):
+                yield os.path.join(save_directory, file_name)
+
+    @property
     def filter_patterns(self):
         """
         Returns list of REGEXP that is used to filter
         save files.
         """
 
-        if len(self.__files_filter) > 0:
-            patterns = list(self.__files_filter)
-            patterns.append(self.__SAVE_VERSION_FILE_NAME)
+        patterns = list(self.__files_filter)
 
-        else:
+        if len(patterns) == 0:
             patterns = [self.__ALL_FILES]
 
         return [re.compile(pattern) for pattern in patterns]
@@ -77,20 +106,49 @@ class _Game:
         """
         Used to get version of current save file.
         """
-        file_path = os.path.join(self.local_path, self.__SAVE_VERSION_FILE_NAME)
-
-        if not os.path.exists(file_path):
-            return None
-
-        return read_file(file_path)
+        return self.__metadata.get_value(self.__META_VERSION_ATTR)
 
     @save_version.setter
     def save_version(self, version):
         """
-        Used to store specified version inside save files.
+        Used to set version of save inside metadata file.
         """
-        file_path = str(os.path.join(self.local_path, self.__SAVE_VERSION_FILE_NAME))
-        save_file(file_path, version)
+        self.__metadata.set_value(self.__META_VERSION_ATTR, version)
+
+    @property
+    def checksum(self):
+        """
+        Used to get checksum of save files store in metadata file.
+        """
+        return self.__metadata.get_value(self.__META_CHECKSUM_ATTR)
+
+    @checksum.setter
+    def checksum(self, checksum):
+        """
+        Used to set checksum of save files inside metadata file.
+        """
+        self.__metadata.set_value(self.__META_CHECKSUM_ATTR, checksum)
+
+    def calculate_checksum(self):
+        """
+        Used to calculate checksum of save files.
+        """
+
+        checksum = hashlib.new("sha256")
+
+        for file_path in self.file_list:
+            checksum.update(file_checksum(file_path).encode())
+
+        return checksum.hexdigest()
+
+    @property
+    def metadata_file_path(self):
+        """
+        Used to get path to metadata file
+        specific to the game.
+        """
+
+        return os.path.join(self.local_path, Game.__SAVE_META_FILE_NAME)
 
 
 class _GameConfig(AppData):
@@ -106,10 +164,11 @@ class _GameConfig(AppData):
     __GAME_NAME: Final = "name"
     __PROCES_NAME: Final = "process"
     __HIDDEN: Final = "hidden"
+    __AUTO_MODE_ALLOWED: Final = "allowAutoMode"
 
     def __init__(self):
         super().__init__()
-        self.__games_by_name: dict[str, _Game] = dict()
+        self.__games_by_name: dict[str, Game] = dict()
 
     def download(self):
         """
@@ -133,6 +192,7 @@ class _GameConfig(AppData):
             local_path = game.get(self.__LOCAL_PATH)
             drive_directory = game.get(self.__PARENT_DIR)
             process_name = game.get(self.__PROCES_NAME)
+            allow_auto_mode = True
             files_filter = []
 
             if self.__HIDDEN in game and game.get(self.__HIDDEN) is True:
@@ -142,15 +202,19 @@ class _GameConfig(AppData):
             if self.__PLAYERS in game and self._app.user.email not in game.get(self.__PLAYERS):
                 continue
 
+            if self.__AUTO_MODE_ALLOWED in game:
+                allow_auto_mode = game.get(self.__AUTO_MODE_ALLOWED)
+
             if self.__FILES_FILTER in game:
                 files_filter = game.get(self.__FILES_FILTER)
 
-            self.__games_by_name[name] = _Game(
+            self.__games_by_name[name] = Game(
                 name,
+                process_name,
                 local_path,
                 drive_directory,
                 files_filter,
-                process_name
+                allow_auto_mode
             )
 
         _logger.info("Configuration for following game(s) was found = %s", ", ".join(self.names))
@@ -171,17 +235,22 @@ class _GameConfig(AppData):
         return list(self.__games_by_name.values())
 
     @property
+    def current(self):
+        """
+        Used to get currently selected game configuration.
+        """
+        return self.by_name(self._app.state.game_name)
+
+    def by_name(self, game_name):
+        """
+        Used to get game configuration by its name.
+        """
+        return self.__games_by_name.get(game_name)
+
+    @property
     def names(self):
         """
         Used to get list of game names that are
         available for the user.
         """
-
         return list(self.__games_by_name.keys())
-
-    @property
-    def current(self):
-        """
-        Used to get currently selected game configuration.
-        """
-        return self.__games_by_name[self._app.state.game_name]
