@@ -5,6 +5,8 @@ from savegem.common.cleanup import teardown
 
 from savegem.app.gui import gui
 from savegem.common.util.logger import get_logger
+from savegem.common.service.gdrive import GDrive
+from savegem.common.core import app
 
 _logger = get_logger("main")
 
@@ -15,9 +17,6 @@ def _main():
     """
 
     _logger.info("Initializing application.")
-
-    from savegem.common.core import app
-    from savegem.common.service.gdrive import GDrive
 
     app.user.initialize(GDrive.get_current_user())
     app.games.download()
