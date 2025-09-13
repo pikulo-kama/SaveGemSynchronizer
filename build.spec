@@ -7,7 +7,7 @@ datas=[
 ]
 
 gui = Analysis(
-    ['app/main.py'],
+    ['savegem/app/main.py'],
     binaries=[],
     datas=datas,
     hookspath=['hooks'],
@@ -18,7 +18,7 @@ gui = Analysis(
 )
 
 watcher = Analysis(
-    ['watcher/main.py'],
+    ['savegem/watcher/main.py'],
     binaries=[],
     datas=datas,
     hookspath=[],
@@ -29,7 +29,7 @@ watcher = Analysis(
 )
 
 watcher_launcher = Analysis(
-    ['watcher/watcher_launcher.py'],
+    ['savegem/watcher/watcher_launcher.py'],
     binaries=[],
     datas=[],
     hookspath=[],
