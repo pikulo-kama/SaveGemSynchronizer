@@ -2,19 +2,30 @@
 #include "helpers.iss"
 
 #define RootPath "..\..\"
+
+#define AppName "SaveGem"
+#define Author "Artur Parkour"
+#define AppExeName "SaveGem.exe"
 #define AppVersion GetAppVersion(RootPath + "config\app.json")
+
+#define WatchdogName "SaveGem Watchdog"
+#define WatchdogExeName "SaveGemWatchdog.exe"
+
+#define ProcessWatcherExeName "_SaveGemProcessWatcher.exe"
+#define GDriveWatcherExeName "_SaveGemGDriveWatcher.exe"
 
 [Setup]
 ; --- App Info ---
-AppName=SaveGem
-UninstallDisplayName=SaveGem
-AppPublisher=Artur Parkour
+AppId=271448C6-303C-4B7F-924E-0170DD4C8560
+AppName={#AppName}
+UninstallDisplayName={#AppName}
+AppPublisher={#Author}
 AppVersion={#AppVersion}
 SetupIconFile={#RootPath}resources\application.ico
-DefaultDirName={pf}\SaveGem
-DefaultGroupName=SaveGem
-UninstallDisplayIcon={app}\SaveGem.exe
-OutputBaseFilename=SaveGemSetup-{#AppVersion}-{#GetBuildType(RootPath)}
+DefaultDirName={pf}\{#AppName}
+DefaultGroupName={#AppName}
+UninstallDisplayIcon={app}\{#AppExeName}
+OutputBaseFilename={#AppName}Setup-{#AppVersion}-{#GetBuildType(RootPath)}
 OutputDir={#RootPath}output\installers
 DisableProgramGroupPage=no
 
@@ -25,63 +36,44 @@ AllowRootDirectory=yes
 
 [Files]
 ; Copy everything from PyInstaller one dir output
-Source: "{#RootPath}output\dist\SaveGem\*"; \
+Source: "{#RootPath}output\dist\{#AppName}\*"; \
     DestDir: "{app}"; \
     Flags: recursesubdirs
+    
+[Tasks]
+Name: "desktopicon"; \
+    Description: "{cm:CreateDesktopIcon}"; \
+    GroupDescription: "{cm:AdditionalIcons}"
 
-[UninstallDelete]
-Type: filesandordirs; \
-    Name: "{userappdata}\SaveGem"
-
-[UninstallRun]
-; Kill main application if opened.
-Filename: "taskkill"; \
-    Parameters: "/f /im SaveGem.exe"; \
-    Flags: runhidden
-
-; Kill watcher launcher.
-Filename: "taskkill"; \
-    Parameters: "/f /im ProcessWatcherLauncher.exe"; \
-    Flags: runhidden
-
-; Kill process watcher.
-Filename: "taskkill"; \
-    Parameters: "/f /im ProcessWatcher.exe"; \
-    Flags: runhidden
+Name: "startmenuicon"; \
+    Description: "{cm:CreateStartMenuShortcut}"; \
+    GroupDescription: "{cm:AdditionalIcons}"
 
 [Icons]
 ; Start Menu shortcut
-Name: "{group}\SaveGem"; \
-    Filename: "{app}\SaveGem.exe"; \
-    IconFilename: "{app}\_internal\resources\application.ico"
+Name: "{group}\{#AppName}"; \
+    Filename: "{app}\{#AppExeName}"; \
+    IconFilename: "{app}\_internal\resources\application.ico"; \
+    Tasks: startmenuicon
 
 ; Desktop shortcut (user chooses in installer)
-Name: "{commondesktop}\SaveGem"; \
-    Filename: "{app}\SaveGem.exe"; \
+Name: "{commondesktop}\{#AppName}"; \
+    Filename: "{app}\{#AppExeName}"; \
     IconFilename: "{app}\_internal\resources\application.ico"; \
     Tasks: desktopicon
     
 ; Add process watcher launcher to startup.
-Name: "{userstartup}\SaveGem Process Watcher Launcher"; \
-    Filename: "{app}\ProcessWatcherLauncher.exe"; \
+Name: "{userstartup}\{#WatchdogName}"; \
+    Filename: "{app}\{#WatchdogExeName}"; \
     IconFilename: "{app}\_internal\resources\application.ico"
-
-[Tasks]
-Name: "desktopicon"; \
-    Description: "{cm:CreateDesktopIcon}"; \
-    GroupDescription: "{cm:AdditionalIconsGroup}"
-
-Name: "startmenuicon"; \
-    Description: "{cm:CreateStartMenuShortcut}"; \
-    GroupDescription: "{cm:AdditionalIconsGroup}"
 
 [Run]
 ; Add option to start application after installation.
-Filename: "{app}\SaveGem.exe"; \
-    Description: "{cm:LaunchApp}"; \
+Filename: "{app}\{#AppExeName}"; \
+    Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; \
     Flags: nowait postinstall skipifsilent
 
-; Start ProcessWatcher starter BAT automatically after installation.
+; Start SaveGem Watchdog automatically after installation.
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
 var
@@ -89,21 +81,41 @@ var
 begin
   if CurStep = ssPostInstall then
   begin
-    Exec(ExpandConstant('{app}\ProcessWatcherLauncher.exe'), '', '', SW_HIDE, ewNoWait, ResultCode);
+    Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
   end;
 end;
 
+[UninstallRun]
+; Kill main application.
+Filename: "taskkill"; \
+    Parameters: "/f /im {#AppExeName}"; \
+    Flags: runhidden
+
+; Kill watchdog.
+Filename: "taskkill"; \
+    Parameters: "/f /im {#WatchdogExeName}"; \
+    Flags: runhidden
+
+; Kill Google Drive watcher.
+Filename: "taskkill"; \
+    Parameters: "/f /im {#GDriveWatcherExeName}"; \
+    Flags: runhidden
+
+; Kill process watcher.
+Filename: "taskkill"; \
+    Parameters: "/f /im {#ProcessWatcherExeName}"; \
+    Flags: runhidden
+    
+[UninstallDelete]
+; Remove installation directory if it's empty.
+Type: dirifempty; \
+    Name: "{app}"
+
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+Name: "en"; MessagesFile: "compiler:Default.isl"
+Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 
 [CustomMessages]
-english.AdditionalIconsGroup=Additional icons:
-english.CreateDesktopIcon=Create a desktop icon
-english.CreateStartMenuShortcut=Create a Start Menu shortcut
-english.LaunchApp=Launch SaveGem
-ukrainian.AdditionalIconsGroup=Додаткові значки:
-ukrainian.CreateDesktopIcon=Створити значок на робочому столі
-ukrainian.CreateStartMenuShortcut=Створити ярлик у меню Пуск
-ukrainian.LaunchApp=Запустити SaveGem
+en.CreateStartMenuShortcut=Create a Start Menu shortcut
+uk.CreateStartMenuShortcut=Створити ярлик у меню Пуск
 

@@ -7,10 +7,12 @@ import sys
 from abc import abstractmethod
 
 from typing import TYPE_CHECKING
+
+from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.util.logger import get_logger
 
 if TYPE_CHECKING:
-    pass
+    from savegem.app.gui.window import _GUI
 
 _logger = get_logger(__name__)
 
@@ -49,12 +51,25 @@ class Visitor(abc.ABC):
     Represents visitor which are used to render and refresh controls on application screen.
     """
 
+    def __init__(self, *events):
+        self.__events = list(events)
+
     @property
     def order(self) -> int:
         """
         Defines in what order visitor would be executed.
         """
         return 100
+
+    @property
+    def events(self) -> list[str]:
+        """
+        Should be used to define on what refresh events
+        visitor should be invoked.
+        """
+
+        self.__events.append(UIRefreshEvent.Always)
+        return list(set(self.__events))
 
     @abstractmethod
     def visit(self, gui: "_GUI"):
@@ -68,6 +83,13 @@ class Visitor(abc.ABC):
     def refresh(self, gui: "_GUI"):
         """
         Should be used to refresh dynamic elements when state changes.
+        """
+        pass
+
+    @abstractmethod
+    def enable(self, gui: "_GUI"):
+        """
+        Should be used to enable all interactable elements.
         """
         pass
 

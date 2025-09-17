@@ -21,7 +21,6 @@ class Game:
     __SAVE_META_FILE_NAME: Final = "SaveGemMetadata.json"
     __ALL_FILES: Final = ".*"
 
-    __META_VERSION_ATTR = "version"
     __META_CHECKSUM_ATTR = "checksum"
 
     def __init__(self,
@@ -102,20 +101,6 @@ class Game:
         return [re.compile(pattern) for pattern in patterns]
 
     @property
-    def save_version(self):
-        """
-        Used to get version of current save file.
-        """
-        return self.__metadata.get_value(self.__META_VERSION_ATTR)
-
-    @save_version.setter
-    def save_version(self, version):
-        """
-        Used to set version of save inside metadata file.
-        """
-        self.__metadata.set_value(self.__META_VERSION_ATTR, version)
-
-    @property
     def checksum(self):
         """
         Used to get checksum of save files store in metadata file.
@@ -137,9 +122,21 @@ class Game:
         checksum = hashlib.new("sha256")
 
         for file_path in self.file_list:
+
+            # Don't include metadata when calculating checksum.
+            if file_path == self.metadata_file_path:
+                continue
+
             checksum.update(file_checksum(file_path).encode())
 
         return checksum.hexdigest()
+
+    def reload_metadata(self):
+        """
+        Used to read metadata file in case
+        it was updated by another process.
+        """
+        self.__metadata = EditableJsonConfigHolder(self.metadata_file_path)
 
     @property
     def metadata_file_path(self):
@@ -227,7 +224,7 @@ class _GameConfig(AppData):
         return len(self.__games_by_name) == 0
 
     @property
-    def get(self):
+    def list(self):
         """
         Used to return list of all games currently
         registered in application.
@@ -241,11 +238,11 @@ class _GameConfig(AppData):
         """
         return self.by_name(self._app.state.game_name)
 
-    def by_name(self, game_name):
+    def by_name(self, game_name: str):
         """
-        Used to get game configuration by its name.
+        Used to get game by its name.
         """
-        return self.__games_by_name.get(game_name)
+        return self.__games_by_name[game_name]
 
     @property
     def names(self):
@@ -254,3 +251,12 @@ class _GameConfig(AppData):
         available for the user.
         """
         return list(self.__games_by_name.keys())
+
+    def reload(self):
+        """
+        Used to reload metadata for all
+        registered games.
+        """
+
+        for game in self.list:
+            game.reload_metadata()

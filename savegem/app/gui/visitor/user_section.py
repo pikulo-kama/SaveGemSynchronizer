@@ -1,7 +1,9 @@
 from constants import File
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
-from savegem.app.gui import Visitor, TkCursor
+from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.window import _GUI
+from savegem.app.gui.constants import TkCursor
 import tkinter as tk
 
 from savegem.app.gui.component.button import Button
@@ -19,12 +21,16 @@ class UserSectionVisitor(Visitor):
     """
 
     def __init__(self):
+        super().__init__()
         self.__logout_button = None
 
     def visit(self, gui: "_GUI"):
         self.__add_user_section(gui)
 
     def refresh(self, gui: "_GUI"):
+        pass
+
+    def enable(self, gui: "_GUI"):
         self.__logout_button.configure(state=TkState.Default, cursor=TkCursor.Hand)
 
     def disable(self, gui: "_GUI"):
@@ -36,14 +42,10 @@ class UserSectionVisitor(Visitor):
         """
 
         user_section = tk.Frame(gui.top_right)
-        first_name = app.user.name.split(" ")[0]
-
-        if len(first_name) > 10:
-            first_name = f"{first_name[:10]}..."
 
         user_chip = Chip(
             user_section,
-            text=first_name,
+            text=app.user.short_name,
             image=app.user.photo,
             margin=(10, 0),
             width=20,
@@ -74,8 +76,6 @@ class UserSectionVisitor(Visitor):
         Used to perform user cleanup action and destroy main window.
         """
 
-        # Delete all user specific data.
-        delete_file(resolve_app_data(File.AppState))
+        # Delete auth token.
         delete_file(resolve_app_data(File.GDriveToken))
-
         gui.destroy()

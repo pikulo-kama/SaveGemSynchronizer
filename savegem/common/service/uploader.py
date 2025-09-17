@@ -35,8 +35,8 @@ class Uploader(SubscriptableService):
         self._set_stages(5)
 
         saves_root_dir = game.local_path
-        save_version = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        target_archive_path = resolve_temp_file(f"{game.name}-{save_version}")
+        current_date = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        target_archive_path = resolve_temp_file(f"{game.name}-{current_date}")
 
         if not os.path.exists(saves_root_dir):
             _logger.error("Directory with saves is missing %s", saves_root_dir)
@@ -52,9 +52,8 @@ class Uploader(SubscriptableService):
             shutil.copy(file_path, target_archive_path)
         self._complete_stage()
 
-        # Set checksum and version then copy to target directory.
+        # Set checksum then copy metadata file to target directory.
         game.checksum = game.calculate_checksum()
-        game.save_version = save_version
 
         shutil.copy(game.metadata_file_path, target_archive_path)
         self._complete_stage()
@@ -66,7 +65,6 @@ class Uploader(SubscriptableService):
 
         archive_props = {
             "owner": app.user.name,
-            "version": save_version,
             "checksum": game.checksum
         }
 

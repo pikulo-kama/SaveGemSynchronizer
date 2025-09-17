@@ -2,6 +2,12 @@
   "version" : "3.11.0",
   "defaultLocale" : "en_US",
 
+  "ipc" : {
+    "uiSocketPort" : 53541,
+    "processWatcherSocketPort" : 53542,
+    "gdriveWatcherSocketPort" : 53543
+  },
+
   "windowWidth" : 1080,
   "windowHeight" : 720,
   "popupWidth" : 400,

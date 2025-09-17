@@ -1,21 +1,35 @@
 {
-  "main" : "INFO",
-  "watcher" : "INFO",
-  "src.core.app_state" : "ERROR",
-  "src.core.json_config_holder" : "ERROR",
-  "src.core.editable_json_config_holder" : "ERROR",
-  "src.core.text_resource" : "ERROR",
-  "src.core.holders" : "ERROR",
-  "src.core.game_config" : "INFO",
-  "src.gui.popup" : "ERROR",
-  "src.gui.visitor.core_visitor" : "WARN",
-  "src.gui.visitor.download_upload_button" : "WARN",
-  "src.gui.visitor.game_dropdown" : "WARN",
-  "src.gui.visitor.language_switch" : "WARN",
-  "src.gui" : "INFO",
-  "src.gui.style" : "INFO",
-  "src.service.downloader" : "INFO",
-  "src.service.uploader" : "INFO",
-  "src.service.gdrive" : "INFO",
-  "src.service.player" : "INFO"
+  "app" : "INFO",
+  "savegem.app.gui.window" : "INFO",
+  "savegem.app.gui.popup" : "INFO",
+  "savegem.app.gui.style" : "INFO",
+  "savegem.app.gui.ipc_socket" : "INFO",
+
+  "savegem.app.gui.visitor" : "INFO",
+  "savegem.app.gui.visitor.active_players" : "WARN",
+  "savegem.app.gui.visitor.auto_mode" : "WARN",
+  "savegem.app.gui.visitor.copyright" : "WARN",
+  "savegem.app.gui.visitor.download_upload_button" : "WARN",
+  "savegem.app.gui.visitor.game_dropdown" : "WARN",
+  "savegem.app.gui.visitor.language_switch" : "WARN",
+  "savegem.app.gui.visitor.save_status" : "WARN",
+
+  "process_watcher" : "INFO",
+
+  "gdrive_watcher" : "INFO",
+  "savegem.gdrive_watcher.ipc_socket" : "INFO",
+
+  "watchdog" : "INFO",
+
+  "savegem.common.core.app_state" : "ERROR",
+  "savegem.common.core.game_config" : "INFO",
+  "savegem.common.core.ipc_socket" : "ERROR",
+  "savegem.common.core.text_resource" : "ERROR",
+
+  "savegem.common.service.downloader" : "INFO",
+  "savegem.common.service.uploader" : "INFO",
+  "savegem.common.service.gdrive" : "INFO",
+  "savegem.common.service.player" : "INFO",
+
+  "savegem.common.util.process": "INFO"
 }

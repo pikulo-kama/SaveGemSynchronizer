@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload, MediaIoBaseUpload
 
-from constants import ZIP_MIME_TYPE, JSON_MIME_TYPE, File
+from constants import ZIP_MIME_TYPE, JSON_MIME_TYPE, File, UTF_8
 from savegem.common.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
 from savegem.common.util.logger import get_logger
 from savegem.common.util.timer import measure_time
@@ -58,22 +58,6 @@ class GDrive:
 
         except HttpError as e:
             _logger.error("Error querying file metadata", e)
-            return None
-
-    @staticmethod
-    def get_file_meta(file_id: str, fields: str):
-        """
-        Used to get metadata of file in Google Drive.
-        """
-
-        try:
-            return GDrive.__drive().files().get(
-                fileId=file_id,
-                fields=fields
-            ).execute()
-
-        except HttpError as e:
-            _logger.error("Error downloading file metadata", e)
             return None
 
     @staticmethod
@@ -140,7 +124,7 @@ class GDrive:
         """
 
         done = False
-        bytes_io = io.BytesIO(data.encode("utf-8"))
+        bytes_io = io.BytesIO(data.encode(UTF_8))
         media = MediaIoBaseUpload(bytes_io, mime_type, resumable=True)
 
         try:
@@ -155,6 +139,32 @@ class GDrive:
         except HttpError as error:
             _logger.error("Error updating file in drive", error)
             raise error
+
+    @staticmethod
+    def get_start_page_token():
+        """
+        Used to get start page token to query Google Drive Changes API.
+        """
+        return
+
+    @staticmethod
+    def get_changes(start_page_token):
+        """
+        Used to get changes from specified.
+        Start page token used to specify starting point
+        of changes that needs to be retrieved.
+        """
+
+        if start_page_token is None:
+            start_page_token = GDrive.__drive().changes() \
+                .getStartPageToken() \
+                .execute() \
+                .get("startPageToken")
+
+        return GDrive.__drive().changes().list(
+            pageToken=start_page_token,
+            fields="changes(file(id, name, parents), removed), newStartPageToken"
+        ).execute()
 
     @staticmethod
     def __next_chunk(request, subscriber=None):

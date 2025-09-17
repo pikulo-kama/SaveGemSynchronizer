@@ -5,7 +5,7 @@ from tkinter import font
 
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
-from savegem.app.gui import gui
+from savegem.app.gui.window import gui
 from savegem.app.gui.constants import TkEvent
 from savegem.common.util.file import resolve_resource
 from savegem.common.util.logger import get_logger

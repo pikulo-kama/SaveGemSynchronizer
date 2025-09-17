@@ -14,6 +14,7 @@
   "label_Offline" : "Desconectado",
   "info_SaveIsUpToDate" : "Nada nuevo... Tu guardado está lo más actualizado posible.",
   "info_SaveNeedsToBeDownloaded" : "Bueno bueno bueno, mira nada más...",
+  "info_SaveNeedsToBeUploaded" : "Bueno, ¿lo enviamos?",
   "info_NewestSaveOnDriveInformation" : "el último guardado fue subido el {0} a las {1} por {2}",
   "notification_SaveHasBeenUploaded" : "Guardado subido con éxito.",
   "notification_NewSaveHasBeenDownloaded" : "Guardado descargado con éxito.",

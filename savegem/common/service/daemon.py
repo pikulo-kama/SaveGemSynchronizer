@@ -1,12 +1,14 @@
 import abc
 import os.path
+import sys
 import time
 from typing import Final
 
-from constants import JSON_EXTENSION
+from constants import JSON_EXTENSION, File
 from savegem.common.core.json_config_holder import JsonConfigHolder
-from savegem.common.util.file import resolve_config
+from savegem.common.util.file import resolve_config, resolve_app_data
 from savegem.common.util.logger import get_logger
+from savegem.common.util.process import get_running_processes, is_process_already_running
 
 
 class Daemon(abc.ABC):
@@ -15,20 +17,29 @@ class Daemon(abc.ABC):
     with certain interval.
     """
 
-    __DEFAULT_POLLING_RATE: Final = 60
+    __DEFAULT_INTERVAL: Final = 60
 
-    def __init__(self, service_name: str):
+    def __init__(self, service_name: str, requires_auth: bool):
 
         self._logger = get_logger(service_name)
-        self.__interval = self.__DEFAULT_POLLING_RATE
+        self.__interval = self.__DEFAULT_INTERVAL
         self.__service_name = service_name
+        self.__requires_auth = requires_auth
         config_path = resolve_config(service_name + JSON_EXTENSION)
 
         if os.path.exists(config_path):
             config = JsonConfigHolder(config_path)
+            process_name = config.get_value("processName")
+            self.__interval = config.get_value("iterationIntervalSeconds", self.__DEFAULT_INTERVAL)
+
+            self._logger.debug("Process name for service %s = %s", self.__service_name, process_name)
+
+            # If instance of process is already running then exit silently.
+            if is_process_already_running(process_name):
+                self._logger.error("Instance of %s is already running. Exiting.", process_name)
+                sys.exit(0)
 
             self._initialize(config)
-            self.__interval = config.get_value("iterationIntervalSeconds", self.__DEFAULT_POLLING_RATE)
 
     def start(self):
         """
@@ -39,9 +50,22 @@ class Daemon(abc.ABC):
 
         while True:
             try:
+
+                # There are scenarios where we don't want to trigger authentication flow once user installs
+                # application and background processes start.
+                # Once user authenticates thorough UI it will create
+                # token file, only then service can start doing their job.
+                if self.__requires_auth and not os.path.exists(resolve_app_data(File.GDriveToken)):
+                    self._logger.debug(
+                        "Authentication has not been completed. Sleeping for %d second(s).",
+                        self.interval
+                    )
+                    time.sleep(self.__interval)
+                    continue
+
                 self._work()
             except Exception as error:  # noqa: E722
-                self._logger.error("Exception in watcher service", error)
+                self._logger.error("Exception in '%s' service: %s", self.__service_name, error, exc_info=True)
 
             time.sleep(self.__interval)
 

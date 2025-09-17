@@ -2,7 +2,7 @@ import hashlib
 import json
 import os.path
 import shutil
-from constants import Directory
+from constants import Directory, UTF_8
 
 
 def resolve_config(config_name: str):
@@ -85,7 +85,7 @@ def read_file(file_path: str, as_json: bool = False):
     if not os.path.exists(file_path):
         raise RuntimeError(f"File {file_path} doesn't exist.")
 
-    with open(file_path, "r", encoding="utf-8") as file:
+    with open(file_path, "r", encoding=UTF_8) as file:
         return json.load(file) if as_json else file.read()
 
 
@@ -95,7 +95,7 @@ def save_file(file_path: str, data: any, as_json: bool = False, binary: bool = F
     """
 
     mode = "wb" if binary else "w"
-    encoding = None if binary else "utf-8"
+    encoding = None if binary else UTF_8
 
     with open(file_path, mode, encoding=encoding) as file:
         json.dump(data, file, indent=2) if as_json else file.write(data)

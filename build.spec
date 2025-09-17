@@ -17,8 +17,8 @@ gui = Analysis(
     optimize=0
 )
 
-watcher = Analysis(
-    ['savegem/watcher/main.py'],
+process_watcher = Analysis(
+    ['savegem/process_watcher/main.py'],
     binaries=[],
     datas=datas,
     hookspath=[],
@@ -28,8 +28,19 @@ watcher = Analysis(
     optimize=0
 )
 
-watcher_launcher = Analysis(
-    ['savegem/watcher/watcher_launcher.py'],
+gdrive_watcher = Analysis(
+    ['savegem/gdrive_watcher/main.py'],
+    binaries=[],
+    datas=datas,
+    hookspath=[],
+    hooksconfig={},
+    excludes=[],
+    noarchive=False,
+    optimize=0
+)
+
+watchdog = Analysis(
+    ['savegem/watchdog/main.py'],
     binaries=[],
     datas=[],
     hookspath=[],
@@ -40,8 +51,9 @@ watcher_launcher = Analysis(
 )
 
 pyz_main = PYZ(gui.pure)
-pyz_watcher = PYZ(watcher.pure)
-pyz_watcher_launcher = PYZ(watcher_launcher.pure)
+pyz_process_watcher = PYZ(process_watcher.pure)
+pyz_gdrive_watcher = PYZ(gdrive_watcher.pure)
+pyz_watchdog = PYZ(watchdog.pure)
 
 # GUI application
 gui_exe = EXE(
@@ -54,33 +66,45 @@ gui_exe = EXE(
     icon='resources\\application.ico'
 )
 
-# Watcher service
-watcher_exe = EXE(
-    pyz_watcher,
-    watcher.scripts,
-    watcher.binaries,
+# Process Watcher service
+process_watcher_exe = EXE(
+    pyz_process_watcher,
+    process_watcher.scripts,
+    process_watcher.binaries,
     exclude_binaries=True,
-    name='ProcessWatcher',
+    name='_SaveGemProcessWatcher',
     console=False,
-    icon='resources\\application.ico'
+    icon='NONE'
+)
+
+# Google Drive Watcher service
+gdrive_watcher_exe = EXE(
+    pyz_gdrive_watcher,
+    gdrive_watcher.scripts,
+    gdrive_watcher.binaries,
+    exclude_binaries=True,
+    name='_SaveGemGDriveWatcher',
+    console=False,
+    icon='NONE'
 )
 
 # launcher for watcher service.
-watcher_launcher_exe = EXE(
-    pyz_watcher_launcher,
-    watcher_launcher.scripts,
-    watcher_launcher.binaries,
+watchdog_exe = EXE(
+    pyz_watchdog,
+    watchdog.scripts,
+    watchdog.binaries,
     exclude_binaries=True,
-    name='ProcessWatcherLauncher',
+    name='SaveGemWatchdog',
     console=False,
-    icon='resources\\application.ico'
+    icon='NONE'
 )
 
 # Collect everything into one folder
 coll = COLLECT(
-    gui_exe, watcher_exe, watcher_launcher_exe,
+    gui_exe, process_watcher_exe, gdrive_watcher_exe, watchdog_exe,
     gui.binaries, gui.datas,
-    watcher.binaries, watcher.datas,
+    process_watcher.binaries, process_watcher.datas,
+    gdrive_watcher.binaries, gdrive_watcher.datas,
     Tree('..\\SaveGemSynchronizer\\resources', prefix='resources\\'),
     Tree('..\\SaveGemSynchronizer\\config', prefix='config\\'),
     Tree('..\\SaveGemSynchronizer\\locale', prefix='locale\\'),

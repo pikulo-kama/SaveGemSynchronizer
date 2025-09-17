@@ -27,13 +27,16 @@ class File:
     GDriveConfig: Final = "config.json"
 
     AppConfig: Final = "app.json"
-    ProcessWatcherConfig: Final = "watcher.json"
+    ProcessWatcherConfig: Final = "process_watcher.json"
 
     AppState: Final = "state.json"
     Logback: Final = "logback.json"
+    GUIInitializedFlag: Final = "gui_init.flag"
 
 
 JSON_EXTENSION: Final = ".json"
 ZIP_EXTENSION: Final = "zip"
 ZIP_MIME_TYPE: Final = "application/zip"
 JSON_MIME_TYPE: Final = "application/json"
+
+UTF_8: Final = "utf-8"

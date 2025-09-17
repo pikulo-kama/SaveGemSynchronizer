@@ -1,4 +1,6 @@
+import socket
 import urllib.request
+import uuid
 
 from savegem.common.core.app_data import AppData
 from savegem.common.util.file import resolve_temp_file
@@ -28,11 +30,24 @@ class _UserState(AppData):
         return self.__email
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         User name.
         """
         return self.__name
+
+    @property
+    def short_name(self):
+        """
+        Shortened user name.
+        """
+
+        first_name = self.name.split(" ")[0]
+
+        if len(first_name) > 10:
+            first_name = f"{first_name[:10]}..."
+
+        return first_name
 
     @property
     def photo(self):
@@ -40,6 +55,10 @@ class _UserState(AppData):
         Local path to user's profile picture.
         """
         return self.__photo_link
+
+    @property
+    def machine_id(self):
+        return f"{socket.gethostname()}-{uuid.getnode()}"
 
     @staticmethod
     def __download_photo(photo_link: str):
@@ -55,3 +74,6 @@ class _UserState(AppData):
         urllib.request.urlretrieve(photo_link, image_path)
 
         return image_path
+
+    def reload(self):
+        pass

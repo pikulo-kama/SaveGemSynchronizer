@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from savegem.common.core.text_resource import tr
-from savegem.app.gui import TkCursor
+from savegem.app.gui.constants import TkCursor
 from savegem.app.gui.component.button import Button
 from savegem.app.gui.popup import Popup
 

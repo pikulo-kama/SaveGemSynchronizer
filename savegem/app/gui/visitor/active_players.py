@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import font
 
+from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.core import app
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
-from savegem.app.gui import _GUI
+from savegem.app.gui.window import _GUI
 from savegem.app.gui.visitor import Visitor
 from savegem.common.service.player import PlayerService
 from savegem.common.util.logger import get_logger
@@ -19,6 +20,12 @@ class ActivePlayersVisitor(Visitor):
     """
 
     def __init__(self):
+        super().__init__(
+            UIRefreshEvent.ActivityLogUpdate,
+            UIRefreshEvent.GameSelectionChange,
+            UIRefreshEvent.LanguageChange
+        )
+
         self.__frame = None
         self.__status_label = None
         self.__active_players_label = None
@@ -27,12 +34,7 @@ class ActivePlayersVisitor(Visitor):
         self.__add_section(gui)
 
     def refresh(self, gui: _GUI):
-        active_players = PlayerService.get_active_players(app.state.game_name)
-
-        # Do not display consider current user.
-        # Only show when other players are online.
-        if app.user.name in active_players:
-            active_players.remove(app.user.name)
+        active_players = PlayerService.get_active_players(app.games.current.name)
 
         status_color = "secondaryColor"
         active_players_color = "secondaryColor"
@@ -58,6 +60,9 @@ class ActivePlayersVisitor(Visitor):
         )
 
         _logger.debug("Active users section was reloaded. (%s)", players_label)
+
+    def enable(self, gui: "_GUI"):
+        pass
 
     def disable(self, gui: "_GUI"):
         pass

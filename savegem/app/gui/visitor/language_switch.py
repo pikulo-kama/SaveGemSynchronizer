@@ -1,12 +1,12 @@
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import locales
-from savegem.app.gui import _GUI
+from savegem.app.gui.window import _GUI
 from savegem.app.gui.component.wait_button import WaitButton
-from savegem.app.gui.constants import TkState, TkCursor
+from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
 from savegem.app.gui.visitor import Visitor
 from savegem.common.util.logger import get_logger
-from savegem.common.util.thread import execute_in_thread
+from savegem.common.util.thread import execute_in_blocking_thread
 
 _logger = get_logger(__name__)
 
@@ -18,6 +18,7 @@ class LanguageSwitchVisitor(Visitor):
     """
 
     def __init__(self):
+        super().__init__(UIRefreshEvent.LanguageChange)
         self.__language_switch = None
 
     def visit(self, gui: _GUI):
@@ -31,11 +32,10 @@ class LanguageSwitchVisitor(Visitor):
             language_id = language_id[:2]
 
         _logger.debug("Refreshing language switch (%s)", language_id)
-        self.__language_switch.configure(
-            text=language_id,
-            state=TkState.Default,
-            cursor=TkCursor.Hand
-        )
+        self.__language_switch.configure(text=language_id)
+
+    def enable(self, gui: "_GUI"):
+        self.__language_switch.configure(state=TkState.Default, cursor=TkCursor.Hand)
 
     def disable(self, gui: "_GUI"):
         self.__language_switch.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
@@ -49,12 +49,9 @@ class LanguageSwitchVisitor(Visitor):
         Used to render language switch control.
         """
 
-        def switch_language():
-            LanguageSwitchVisitor.__switch_language(gui)
-
         self.__language_switch = WaitButton(
             gui.top_left,
-            command=lambda: execute_in_thread(switch_language),
+            command=lambda: execute_in_blocking_thread(lambda: self.__next_language(gui)),
             style="SquareSecondary.18.TButton"
         )
 
@@ -62,7 +59,7 @@ class LanguageSwitchVisitor(Visitor):
         _logger.debug("Locale list - %s", locales)
 
     @staticmethod
-    def __switch_language(gui: _GUI):
+    def __next_language(gui: _GUI):
         """
         Used as callback function when language switch button is being clicked.
         """
@@ -78,4 +75,4 @@ class LanguageSwitchVisitor(Visitor):
         _logger.info("Selected language - %s", new_locale)
 
         app.state.locale = new_locale
-        gui.refresh()
+        gui.refresh(UIRefreshEvent.LanguageChange)

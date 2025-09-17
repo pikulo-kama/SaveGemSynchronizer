@@ -1,6 +1,21 @@
 from typing import Final
 
 
+class UIRefreshEvent:
+    """
+    Represents UI refresh event.
+    """
+
+    Always: Final = "always"
+
+    LanguageChange: Final = "language_change"
+    ActivityLogUpdate: Final = "activity_log_update"
+    GameConfigChange: Final = "game_config_change"
+    CloudSaveFilesChange: Final = "cloud_files_change"
+    GameSelectionChange: Final = "game_selection_change"
+    AfterUploadDownloadComplete: Final = "after_upload_download"
+
+
 class TkAttr:
     """
     Contains names of built-in and custom

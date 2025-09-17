@@ -2,9 +2,9 @@ import tkinter as tk
 
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
-from savegem.app.gui import _GUI
+from savegem.app.gui.window import _GUI
 from savegem.app.gui.component.progress_button import ProgressButton
-from savegem.app.gui.constants import TkState, TkCursor
+from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
 from savegem.app.gui.popup.confirmation import confirmation
 from savegem.app.gui.popup.notification import notification
 from savegem.app.gui.visitor import Visitor
@@ -12,7 +12,7 @@ from savegem.common.service.downloader import Downloader
 from savegem.common.service.subscriptable import Event, EventType, EventKind, ProgressEvent
 from savegem.common.service.uploader import Uploader
 from savegem.common.util.logger import get_logger
-from savegem.common.util.thread import execute_in_thread
+from savegem.common.util.thread import execute_in_blocking_thread
 
 _logger = get_logger(__name__)
 
@@ -24,6 +24,10 @@ class DownloadUploadButtonVisitor(Visitor):
     """
 
     def __init__(self):
+        super().__init__(
+            UIRefreshEvent.LanguageChange,
+            UIRefreshEvent.AfterUploadDownloadComplete
+        )
 
         self.__download_button = None
         self.__upload_button = None
@@ -47,19 +51,19 @@ class DownloadUploadButtonVisitor(Visitor):
 
         self.__upload_button.configure(
             text=upload_button_label,
-            state=TkState.Default,
-            cursor=TkCursor.Hand,
             progress=0
         )
         _logger.debug("Upload button reloaded (%s)", upload_button_label)
 
         self.__download_button.configure(
             text=download_button_label,
-            state=TkState.Default,
-            cursor=TkCursor.Hand,
             progress=0
         )
         _logger.debug("Download button reloaded (%s)", download_button_label)
+
+    def enable(self, gui: "_GUI"):
+        self.__upload_button.configure(state=TkState.Default, cursor=TkCursor.Hand)
+        self.__download_button.configure(state=TkState.Default, cursor=TkCursor.Hand)
 
     def disable(self, gui: "_GUI"):
         self.__upload_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
@@ -72,10 +76,18 @@ class DownloadUploadButtonVisitor(Visitor):
 
         button_frame = tk.Frame(gui.center)
 
+        def upload_callback():
+            self.__uploader.upload(app.games.current)
+            gui.refresh(UIRefreshEvent.AfterUploadDownloadComplete)
+
+        def download_callback():
+            self.__downloader.download(app.games.current)
+            gui.refresh(UIRefreshEvent.AfterUploadDownloadComplete)
+
         self.__upload_button = ProgressButton(
             button_frame,
             width=35,
-            command=lambda: execute_in_thread(lambda: self.__uploader.upload(app.games.current)),
+            command=lambda: execute_in_blocking_thread(upload_callback),
             style="Primary.TButton"
         )
 
@@ -84,7 +96,7 @@ class DownloadUploadButtonVisitor(Visitor):
             width=5,
             command=lambda: confirmation(
                 tr("confirmation_ConfirmToDownloadSave"),
-                lambda: execute_in_thread(lambda: self.__downloader.download(app.games.current))
+                lambda: execute_in_blocking_thread(download_callback)
             ),
             style="Secondary.TButton"
         )

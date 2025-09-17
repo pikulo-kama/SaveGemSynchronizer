@@ -1,12 +1,15 @@
 import tkinter as tk
+
+from savegem.app.gui.ipc_socket import ui_socket
 from savegem.common.core import app
-from savegem.app.gui import _GUI
+from savegem.app.gui.window import _GUI
 from savegem.app.gui.component.dropdown import Dropdown
-from savegem.app.gui.constants import TkState, TkCursor
+from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
 from savegem.app.gui.visitor import Visitor
+from savegem.common.core.ipc_socket import IPCCommand
 
 from savegem.common.util.logger import get_logger
-from savegem.common.util.thread import execute_in_thread
+from savegem.common.util.thread import execute_in_blocking_thread
 
 _logger = get_logger(__name__)
 
@@ -18,6 +21,10 @@ class GameDropdownVisitor(Visitor):
     """
 
     def __init__(self):
+        super().__init__(
+            UIRefreshEvent.GameConfigChange,
+            UIRefreshEvent.GameSelectionChange
+        )
         self.__dropdown = None
 
     @property
@@ -36,22 +43,20 @@ class GameDropdownVisitor(Visitor):
             _logger.error("There are no games configured. Can't proceed.")
             raise RuntimeError("There are no games configured. Can't proceed.")
 
-        game_names = app.games.names
+        self.__dropdown.configure(values=app.games.names)
+        self.__dropdown.set(app.games.current.name)
 
-        combobox_state = TkState.Readonly
-        combobox_cursor = TkCursor.Hand
+        self.enable(gui)
 
-        if len(game_names) == 1:
-            combobox_state = TkState.Disabled
-            combobox_cursor = TkCursor.Forbidden
+    def enable(self, gui: "_GUI"):
+        state = TkState.Readonly
+        cursor = TkCursor.Hand
 
-        self.__dropdown.configure(
-            values=game_names,
-            state=combobox_state,
-            cursor=combobox_cursor
-        )
+        if len(app.games.names) == 1:
+            state = TkState.Disabled
+            cursor = TkCursor.Forbidden
 
-        self.__dropdown.set(app.state.game_name)
+        self.__dropdown.configure(state=state, cursor=cursor)
 
     def disable(self, gui: "_GUI"):
         self.__dropdown.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
@@ -67,9 +72,10 @@ class GameDropdownVisitor(Visitor):
                 _logger.info("Selected game - %s", value)
 
                 app.state.game_name = value
-                gui.refresh()
+                ui_socket.notify_children(IPCCommand.StateChanged)
+                gui.refresh(UIRefreshEvent.GameSelectionChange)
 
-            return execute_in_thread(callback)
+            return execute_in_blocking_thread(callback)
 
         self.__dropdown = Dropdown(
             gui.top_right,

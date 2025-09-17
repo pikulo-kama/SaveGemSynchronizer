@@ -14,6 +14,7 @@
   "label_Offline" : "Offline",
   "info_SaveIsUpToDate" : "Nichts Neues... Dein Spielstand ist so aktuell wie möglich.",
   "info_SaveNeedsToBeDownloaded" : "Na, schau einer an...",
+  "info_SaveNeedsToBeUploaded" : "Na, verschicken wir?",
   "info_NewestSaveOnDriveInformation" : "der letzte Spielstand wurde am {0} um {1} von {2} hochgeladen",
   "notification_SaveHasBeenUploaded" : "Spielstand erfolgreich hochgeladen.",
   "notification_NewSaveHasBeenDownloaded" : "Spielstand erfolgreich heruntergeladen.",

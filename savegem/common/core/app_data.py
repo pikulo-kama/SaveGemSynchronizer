@@ -1,10 +1,11 @@
+import abc
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    pass
+    from savegem.common.core import _ApplicationContext
 
 
-class AppData:
+class AppData(abc.ABC):
     """
     Represents root level context object.
     Has application context ap property.
@@ -18,3 +19,10 @@ class AppData:
         Used to link application context to app data.
         """
         self._app = app
+
+    @abc.abstractmethod
+    def reload(self):
+        """
+        Should be used to reinitialize app data.
+        """
+        pass

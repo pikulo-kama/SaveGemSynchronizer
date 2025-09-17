@@ -12,4 +12,5 @@ pip install -r requirements.txt
 apt install jq zip
 
 # Build executable with pyinstaller
-python -m PyInstaller --distpath output/dist --workpath output/build --clean --noconfirm build.spec
+python -m PyInstaller --distpath output/dist --workpath output --clean --noconfirm build.spec
+rm -fr output/build

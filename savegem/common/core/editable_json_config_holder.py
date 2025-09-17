@@ -26,5 +26,9 @@ class EditableJsonConfigHolder(JsonConfigHolder):
         save_file(self._config_path, self._data, as_json=True)
 
     def _before_file_open(self):
+
+        # Create any missing intermediate directories.
+        os.makedirs(os.path.dirname(self._config_path), exist_ok=True)
+
         if not os.path.exists(self._config_path):
             save_file(self._config_path, {}, as_json=True)

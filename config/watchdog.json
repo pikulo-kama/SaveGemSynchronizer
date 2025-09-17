@@ -1,0 +1,8 @@
+{
+  "iterationIntervalSeconds" : 15,
+  "processName" : "SaveGemWatchdog.exe",
+  "childProcesses" : [
+    "_SaveGemProcessWatcher.exe",
+    "_SaveGemGDriveWatcher.exe"
+  ]
+}

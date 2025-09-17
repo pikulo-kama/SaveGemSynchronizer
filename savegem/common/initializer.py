@@ -28,13 +28,12 @@ def _copy_logback():
     is missing.
     """
 
-    logback_path = resolve_config(File.Logback)
     app_data_logback_path = resolve_app_data(File.Logback)
 
     if os.path.exists(app_data_logback_path):
         return
 
-    local_logback = read_file(logback_path, as_json=True)
+    local_logback = read_file(resolve_config(File.Logback), as_json=True)
     save_file(app_data_logback_path, local_logback, as_json=True)
 
 

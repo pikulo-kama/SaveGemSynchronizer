@@ -27,10 +27,11 @@ class Downloader(SubscriptableService):
         # 3 - Save archive in file system
         # 4 - Backup existing save
         # 5 - Extract downloaded archive
-        self._set_stages(5)
+        # 6 - Update in-memory save files metadata.
+        self._set_stages(6)
 
         saves_directory = game.local_path
-        temp_zip_file_name = resolve_temp_file(f"save.{ZIP_EXTENSION}")
+        temp_zip_file_path = resolve_temp_file(f"save.{ZIP_EXTENSION}")
 
         _logger.debug("savesDirectory = %s", saves_directory)
 
@@ -54,8 +55,35 @@ class Downloader(SubscriptableService):
         ).getvalue()
 
         _logger.info("Storing file in output directory.")
-        save_file(temp_zip_file_name, file, binary=True)
+        save_file(temp_zip_file_path, file, binary=True)
         self._complete_stage()
+
+        # Make backup of existing save files, just in case.
+        self.__backup_directory(saves_directory)
+        self._complete_stage()
+
+        # Extract archive contents to the target directory
+        _logger.info("Extracting archive into saves directory.")
+        shutil.unpack_archive(
+            temp_zip_file_path,
+            saves_directory,
+            ZIP_EXTENSION
+        )
+        self._complete_stage()
+
+        # Update metadata in memory.
+        game.checksum = metadata.get("checksum")
+        self._complete_stage()
+
+        self._send_event(DoneEvent(None))
+
+    @staticmethod
+    def __backup_directory(saves_directory: str):
+        """
+        Used to create backup of provided directory
+        will copy directory in the same location and add
+        '_backup' prefix.
+        """
 
         # Make backup of existing save, just in case.
         backup_dir = saves_directory + "_backup"
@@ -69,18 +97,6 @@ class Downloader(SubscriptableService):
 
         _logger.info("Copying old save to backup directory.")
         shutil.copytree(saves_directory, backup_dir)
-        self._complete_stage()
-
-        # Extract archive contents to the target directory
-        _logger.info("Extracting archive into saves directory.")
-        shutil.unpack_archive(
-            temp_zip_file_name,
-            saves_directory,
-            ZIP_EXTENSION
-        )
-        self._complete_stage()
-
-        self._send_event(DoneEvent(None))
 
     @staticmethod
     def get_last_save_metadata(game: Game):
@@ -89,8 +105,8 @@ class Downloader(SubscriptableService):
         """
 
         metadata = GDrive.query_single(
-            f"mimeType='{ZIP_MIME_TYPE}' and '{game.drive_directory}' in parents",
-            "files(id, name, appProperties, createdTime)"
+            f"mimeType='{ZIP_MIME_TYPE}' and '{game.drive_directory}' in parents and trashed=false",
+            "files(id, appProperties, createdTime)"
         )
 
         if metadata is None:

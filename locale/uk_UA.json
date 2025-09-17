@@ -14,6 +14,7 @@
   "label_Offline" : "Офлайн",
   "info_SaveIsUpToDate" : "Нічого нового... Твій сейв свіженький як ніколи.",
   "info_SaveNeedsToBeDownloaded" : "Здалося б оновитись..",
+  "info_SaveNeedsToBeUploaded" : "Ну що? Відвантажимо?",
   "info_NewestSaveOnDriveInformation" : "останній сейв відвантажено {0} o {1} від {2}",
   "notification_SaveHasBeenUploaded" : "Сейв успішно відвантажено.",
   "notification_NewSaveHasBeenDownloaded" : "Свіженький сейв успішно завантажено.",

@@ -1,9 +1,10 @@
 import tkinter as tk
 from datetime import date
 
+from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
-from savegem.app.gui import _GUI
+from savegem.app.gui.window import _GUI
 from savegem.app.gui.visitor import Visitor
 from savegem.common.util.logger import get_logger
 
@@ -17,6 +18,7 @@ class CopyrightVisitor(Visitor):
     """
 
     def __init__(self):
+        super().__init__(UIRefreshEvent.LanguageChange)
         self.__copyright = None
 
     def visit(self, gui: _GUI):
@@ -28,6 +30,9 @@ class CopyrightVisitor(Visitor):
 
         self.__copyright.configure(text=copyright_label)
         _logger.debug("Copyright was reloaded. (%s)", copyright_label)
+
+    def enable(self, gui: "_GUI"):
+        pass
 
     def disable(self, gui: "_GUI"):
         pass

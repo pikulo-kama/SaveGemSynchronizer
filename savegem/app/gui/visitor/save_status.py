@@ -3,10 +3,11 @@ from tkinter import font
 
 from babel.localtime import get_localzone
 
+from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
-from savegem.app.gui import _GUI
+from savegem.app.gui.window import _GUI
 from savegem.app.gui.visitor import Visitor
 from datetime import date, datetime
 
@@ -29,6 +30,14 @@ class SaveStatusVisitor(Visitor):
     """
 
     def __init__(self):
+        super().__init__(
+            UIRefreshEvent.LanguageChange,
+            UIRefreshEvent.GameConfigChange,
+            UIRefreshEvent.CloudSaveFilesChange,
+            UIRefreshEvent.GameSelectionChange,
+            UIRefreshEvent.AfterUploadDownloadComplete
+        )
+
         self.__save_status = None
         self.__last_save_timestamp = None
 
@@ -46,6 +55,9 @@ class SaveStatusVisitor(Visitor):
 
         self.__last_save_timestamp.configure(text=last_save_timestamp_label)
         _logger.debug("Last save information label was reloaded. (%s)", last_save_timestamp_label)
+
+    def enable(self, gui: "_GUI"):
+        pass
 
     def disable(self, gui: "_GUI"):
         pass
@@ -106,21 +118,26 @@ class SaveStatusVisitor(Visitor):
         )
 
     @staticmethod
-    def __get_last_download_version_text(last_save_meta):
+    def __get_last_download_version_text(latest_cloud_save_meta):
         """
         Used to get local save status label.
         """
 
-        last_save_version = app.games.current.save_version
-
-        if last_save_meta is None:
+        if latest_cloud_save_meta is None:
             return tr("label_StorageIsEmpty")
 
-        elif last_save_version is None:
+        last_save_checksum = app.games.current.checksum
+        local_save_checksum = app.games.current.calculate_checksum()
+        cloud_save_checksum = latest_cloud_save_meta.get("checksum")
+
+        if last_save_checksum is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")
 
-        elif last_save_version == last_save_meta.get("version"):
+        elif last_save_checksum == local_save_checksum and last_save_checksum == cloud_save_checksum:
             return tr("info_SaveIsUpToDate")
 
-        else:
+        elif last_save_checksum != cloud_save_checksum:
             return tr("info_SaveNeedsToBeDownloaded")
+
+        elif local_save_checksum != cloud_save_checksum:
+            return tr("info_SaveNeedsToBeUploaded")

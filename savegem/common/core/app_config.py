@@ -30,3 +30,8 @@ class _AppConfig(AppData):
         being played by other players.
         """
         return self.__config.get_value("activityLogFileId")
+
+    def reload(self):
+        # No need to reload config since it
+        # is not modified by application.
+        pass

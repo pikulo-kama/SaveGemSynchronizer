@@ -1,10 +1,12 @@
+from savegem.app.gui.component.button import Button
+from savegem.app.gui.ipc_socket import ui_socket
 from savegem.app.gui.popup.notification import notification
 from savegem.common.core import app
 from savegem.common.core.holders import prop
-from savegem.app.gui import _GUI, TkCursor
-from savegem.app.gui.component.wait_button import WaitButton
-from savegem.app.gui.constants import TkState
+from savegem.app.gui.window import _GUI
+from savegem.app.gui.constants import TkState, TkCursor
 from savegem.app.gui.visitor import Visitor
+from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.core.text_resource import tr
 from savegem.common.util.logger import get_logger
 
@@ -18,6 +20,7 @@ class AutoModeVisitor(Visitor):
     """
 
     def __init__(self):
+        super().__init__()
         self.__auto_mode_button = None
 
     def visit(self, gui: _GUI):
@@ -35,15 +38,16 @@ class AutoModeVisitor(Visitor):
         self.__auto_mode_button.configure(
             text="A",
             background=prop(background),
-            foreground=prop(foreground),
-            state=TkState.Default,
-            cursor=TkCursor.Hand
+            foreground=prop(foreground)
         )
 
         _logger.debug(
             "Auto mode updated, current state = %s",
             "ON" if app.state.is_auto_mode else "OFF"
         )
+
+    def enable(self, gui: "_GUI"):
+        self.__auto_mode_button.configure(state=TkState.Default, cursor=TkCursor.Hand)
 
     def disable(self, gui: "_GUI"):
         self.__auto_mode_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
@@ -63,15 +67,17 @@ class AutoModeVisitor(Visitor):
                 app.state.is_auto_mode = True
                 message = tr("notification_AutoModeOn")
 
+            # Since auto mode is being used by Google Drive
+            ui_socket.notify_children(IPCCommand.StateChanged)
             # No need to fully reload the UI since no other visual components
             # would be affected.
             self.refresh(gui)
             notification(message)
 
-        self.__auto_mode_button = WaitButton(
+        self.__auto_mode_button = Button(
             gui.top_left,
             command=callback,
             style="SquareSecondary.18.TButton"
         )
 
-        self.__auto_mode_button.grid(row=0, column=1, padx=(10, 0), pady=(20, 0))
+        self.__auto_mode_button.grid(row=0, column=0, padx=(20, 0), pady=(20, 0))

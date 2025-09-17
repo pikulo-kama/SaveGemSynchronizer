@@ -4,7 +4,7 @@ import re
 import sys
 from logging.handlers import TimedRotatingFileHandler
 
-from constants import File
+from constants import File, UTF_8
 from savegem.common.util.file import resolve_log, resolve_app_data, remove_extension_from_path, read_file
 
 _logback = read_file(resolve_app_data(File.Logback), as_json=True)
@@ -25,6 +25,18 @@ def get_logger(logger_name: str):
     logger = logging.getLogger(logger_name)
     level = _get_log_level(logger_name)
     logger.setLevel(level)
+
+    if not logger.hasHandlers():
+        _add_handlers(logger)
+
+    return logger
+
+
+def _add_handlers(logger: logging.Logger):
+    """
+    Used to assign handlers to logger.
+    """
+
     log_file_name = remove_extension_from_path(os.path.basename(sys.argv[0]))
 
     handler = TimedRotatingFileHandler(
@@ -32,7 +44,7 @@ def get_logger(logger_name: str):
         when="midnight",
         interval=1,
         backupCount=5,
-        encoding="utf-8"
+        encoding=UTF_8
     )
 
     handler.suffix = "%Y-%m-%d.log"
@@ -42,7 +54,6 @@ def get_logger(logger_name: str):
     ))
 
     logger.addHandler(handler)
-    return logger
 
 
 def _get_log_level(logger_name: str):

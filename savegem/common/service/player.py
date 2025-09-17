@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 
 from savegem.common.core import app
 from savegem.common.service.gdrive import GDrive
@@ -14,7 +13,7 @@ class PlayerService:
     file which is stored on Google Drive.
     """
 
-    __TIMESTAMP_PROP = "timestamp"
+    __NAME_PROP = "name"
     __GAMES_PROP = "games"
 
     @classmethod
@@ -30,14 +29,20 @@ class PlayerService:
             log_bytes.seek(0)
             activity_log: dict = json.load(log_bytes)
 
-            for user_email, activity in activity_log.items():
+            for machine_id, activity in activity_log.items():
+
+                # Do not display current user.
+                # Only list other players that are online.
+                if machine_id == app.user.machine_id:
+                    continue
+
                 if game_name in activity.get(cls.__GAMES_PROP):
-                    players.append(user_email)
+                    players.append(activity.get(cls.__NAME_PROP, ""))
 
         return players
 
     @classmethod
-    def update_activity_data(cls, game_names: list[str], cleanup_interval: int = 60):
+    def update_activity_data(cls, game_names: list[str]):
         """
         Used to update activity log file on Google Drive.
         Will set provided languages for currently authenticated user.
@@ -50,31 +55,17 @@ class PlayerService:
             activity_log: dict = json.load(log_bytes)
 
             _logger.debug("Log Before: %s", activity_log)
-            cls.__cleanup_log(activity_log, cleanup_interval)
 
-            activity_log[app.user.name] = {
-                cls.__TIMESTAMP_PROP: datetime.now().isoformat(),
-                cls.__GAMES_PROP: game_names
-            }
+            if len(game_names) > 0:
+                activity_log[app.user.machine_id] = {
+                    cls.__NAME_PROP: app.user.name,
+                    cls.__GAMES_PROP: game_names
+                }
+
+            # If there are no games running then remove
+            # user entry from activity log.
+            elif app.user.machine_id in activity_log:
+                del activity_log[app.user.machine_id]
 
             _logger.debug("Log After: %s", activity_log)
             GDrive.update_file(app.config.activity_log_file_id, json.dumps(activity_log, indent=2))
-
-    @classmethod
-    def __cleanup_log(cls, log_file: dict, cleanup_interval: int):
-        """
-        Used to remove old records from activity log.
-        """
-
-        now = datetime.now()
-
-        for user_email in list(log_file.keys()):
-
-            data = log_file.get(user_email)
-            timestamp = datetime.fromisoformat(data.get(cls.__TIMESTAMP_PROP))
-            elapsed_seconds = (now - timestamp).total_seconds()
-
-            _logger.debug("user=%s, elapsed_time=%d", user_email, elapsed_seconds)
-
-            if elapsed_seconds >= cleanup_interval:
-                del log_file[user_email]

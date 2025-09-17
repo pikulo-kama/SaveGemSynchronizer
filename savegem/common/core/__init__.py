@@ -1,4 +1,5 @@
 from savegem.common.core.app_config import _AppConfig
+from savegem.common.core.app_data import AppData
 from savegem.common.core.app_state import _AppState
 from savegem.common.core.game_config import _GameConfig
 from savegem.common.core.user import _UserState
@@ -13,15 +14,18 @@ class _ApplicationContext:
     """
 
     def __init__(self):
+
+        self.__linked_entities: list[AppData] = []
+
         self.__state = _AppState()
         self.__app_config = _AppConfig()
         self.__game_config = _GameConfig()
         self.__user_state = _UserState()
 
-        self.__state.link(self)
-        self.__app_config.link(self)
-        self.__game_config.link(self)
-        self.__user_state.link(self)
+        self.__link(self.__state)
+        self.__link(self.__app_config)
+        self.__link(self.__game_config)
+        self.__link(self.__user_state)
 
     @property
     def state(self) -> _AppState:
@@ -50,6 +54,14 @@ class _ApplicationContext:
         Application configurations.
         """
         return self.__app_config
+
+    def __link(self, entity: AppData):
+        entity.link(self)
+        self.__linked_entities.append(entity)
+
+    def reload(self):
+        for entity in self.__linked_entities:
+            entity.reload()
 
 
 app = _ApplicationContext()
