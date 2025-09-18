@@ -1,6 +1,3 @@
-# Needs to be first thing that is being imported when application starts.
-# noinspection PyUnresolvedReferences
-from savegem.common import initializer
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.ipc_socket import ui_socket
 from savegem.common.core import app

@@ -13,8 +13,8 @@ class Directory:
     Resources: Final = os.path.join(ProjectRoot, "resources")
 
     AppDataRoot = os.path.join(os.getenv("APPDATA"), "SaveGem")
-    Output: Final = os.path.join(AppDataRoot, "output")
-    Logs: Final = os.path.join(AppDataRoot, "logs")
+    Output: Final = os.path.join(AppDataRoot, "Output")
+    Logs: Final = os.path.join(AppDataRoot, "Logs")
 
 
 class File:

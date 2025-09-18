@@ -1,6 +1,3 @@
-# Needs to be first thing that is being imported when application starts.
-# noinspection PyUnresolvedReferences
-from savegem.common import initializer
 from savegem.common.core.json_config_holder import JsonConfigHolder
 from savegem.common.service.daemon import Daemon
 

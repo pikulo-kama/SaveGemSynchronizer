@@ -1,12 +1,10 @@
-# Needs to be first thing that is being imported when application starts.
-# noinspection PyUnresolvedReferences
-from savegem.common import initializer
-from savegem.common.cleanup import teardown
 import threading
 
+from constants import Directory
 from savegem.app.gui.window import gui
 from savegem.app.gui.ipc_socket import ui_socket
 from savegem.common.core.ipc_socket import IPCCommand
+from savegem.common.util.file import cleanup_directory
 from savegem.common.util.logger import get_logger
 from savegem.common.service.gdrive import GDrive
 from savegem.common.core import app
@@ -27,10 +25,15 @@ def _main():
 
     gui.initialize()
     gui.after_init(lambda: google_drive_watcher_socket.send(IPCCommand.GUIInitialized))
-    gui.before_destroy(teardown)
+    gui.before_destroy(_teardown)
     gui.build()
 
     _logger.info("Application shut down.")
+
+
+def _teardown():
+    _logger.info("Cleaning up 'output' directory.")
+    cleanup_directory(Directory.Output)
 
 
 if __name__ == "__main__":

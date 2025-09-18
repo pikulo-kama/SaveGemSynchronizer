@@ -1,6 +1,3 @@
-# Needs to be first thing that is being imported when application starts.
-# noinspection PyUnresolvedReferences
-from savegem.common import initializer
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.downloader import Downloader
 from savegem.common.service.player import PlayerService

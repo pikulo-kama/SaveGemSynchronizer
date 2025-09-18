@@ -1,4 +1,6 @@
 {
+  "name" : "SaveGem Google Drive Watcher",
+  "description" : "SaveGem Google Drive Watcher",
   "processName" : "_SaveGemGDriveWatcher.exe",
   "iterationIntervalSeconds" : 10
 }

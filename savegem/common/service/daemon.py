@@ -8,7 +8,7 @@ from constants import JSON_EXTENSION, File
 from savegem.common.core.json_config_holder import JsonConfigHolder
 from savegem.common.util.file import resolve_config, resolve_app_data
 from savegem.common.util.logger import get_logger
-from savegem.common.util.process import get_running_processes, is_process_already_running
+from savegem.common.util.process import is_process_already_running
 
 
 class Daemon(abc.ABC):

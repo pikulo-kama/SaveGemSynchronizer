@@ -1,7 +1,7 @@
 {
   "languageId" : "FR",
-  "window_Title" : "Synchroniseur SaveGem",
-  "window_Copyright" : "SaveGem™ v{0} © {1} Artur Parkour. Sous licence GPLv3.",
+  "window_Title" : "Synchroniseur {0}",
+  "window_Copyright" : "{0}™ v{1} © {2} {3}. Sous licence GPLv3.",
   "popup_NotificationTitle" : "Information",
   "popup_NotificationButtonClose" : "OK",
   "popup_ConfirmationTitle" : "Attention",

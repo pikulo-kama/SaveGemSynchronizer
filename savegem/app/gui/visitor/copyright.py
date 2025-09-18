@@ -26,7 +26,13 @@ class CopyrightVisitor(Visitor):
 
     def refresh(self, gui: _GUI):
         period = "2023" if date.today().year == 2023 else f"2023-{date.today().year}"
-        copyright_label = tr("window_Copyright", prop("version"), period)
+        copyright_label = tr(
+            "window_Copyright",
+            prop("name"),
+            prop("version"),
+            period,
+            prop("author")
+        )
 
         self.__copyright.configure(text=copyright_label)
         _logger.debug("Copyright was reloaded. (%s)", copyright_label)

@@ -41,7 +41,7 @@ class _GUI:
         self.__is_ui_blocked = False
 
         self.__center_window()
-        self.window.title(tr("window_Title"))
+        self.window.title(tr("window_Title", prop("name")))
         self.window.iconbitmap(resolve_resource("application.ico"))
         self.window.resizable(False, False)
 
@@ -232,7 +232,7 @@ class _GUI:
             if any(event in visitor_obj.events for event in events):
                 visitor_obj.refresh(self)
 
-        self.window.title(tr("window_Title"))
+        self.window.title(tr("window_Title", prop("name")))
 
     def destroy(self):
         """
