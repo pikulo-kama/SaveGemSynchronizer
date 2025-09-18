@@ -3,7 +3,7 @@ import tkinter as tk
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
 from savegem.app.gui.constants import UIRefreshEvent
-from savegem.app.gui.visitor import load_visitors, Visitor
+from savegem.app.gui.builder import load_builders, UIBuilder
 from savegem.common.util.file import resolve_resource
 from savegem.common.util.logger import get_logger
 
@@ -35,7 +35,7 @@ class _GUI:
         from savegem.app.gui.style import init_gui_styles
         init_gui_styles()
 
-        self.__visitors: list[Visitor] = list()
+        self.__builders: list[UIBuilder] = list()
         self.__before_destroy_callback = None
         self.__after_init_callback = None
         self.__is_ui_blocked = False
@@ -51,7 +51,7 @@ class _GUI:
         """
         Used to post initialize necessary resources for GUI.
         """
-        self.__visitors = load_visitors()
+        self.__builders = load_builders()
 
     @property
     def window(self):
@@ -139,13 +139,13 @@ class _GUI:
     def build(self):
         """
         Used to build GUI.
-        Will use defined visitors to build all elements.
+        Will use defined builders to build all elements.
         """
 
         _logger.info("Building UI.")
 
-        for visitor_obj in self.__visitors:
-            visitor_obj.visit(self)
+        for builder_obj in self.__builders:
+            builder_obj.build(self)
 
         self.window.rowconfigure(0, weight=3)
         self.window.rowconfigure(1, weight=5)
@@ -209,12 +209,12 @@ class _GUI:
         """
         self.__is_ui_blocked = is_blocked
 
-        for visitor_obj in self.__visitors:
+        for builder_obj in self.__builders:
 
             if is_blocked:
-                visitor_obj.disable(self)
+                builder_obj.disable(self)
             else:
-                visitor_obj.enable(self)
+                builder_obj.enable(self)
 
     def refresh(self, *events):
         """
@@ -227,10 +227,10 @@ class _GUI:
             events = [UIRefreshEvent.Always]
 
         _logger.info("Refreshing UI.")
-        for visitor_obj in self.__visitors:
+        for builder_obj in self.__builders:
 
-            if any(event in visitor_obj.events for event in events):
-                visitor_obj.refresh(self)
+            if any(event in builder_obj.events for event in events):
+                builder_obj.refresh(self)
 
         self.window.title(tr("window_Title", prop("name")))
 

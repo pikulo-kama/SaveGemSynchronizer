@@ -17,12 +17,12 @@ if TYPE_CHECKING:
 _logger = get_logger(__name__)
 
 
-def load_visitors():
+def load_builders():
     """
-    Used to get all enabled visitors in their execution order.
+    Used to get all enabled builders in their execution order.
     """
 
-    visitors: list[Visitor] = []
+    builders: list[UIBuilder] = []
     package = sys.modules[__package__]
 
     for _, module_name, _ in pkgutil.iter_modules(package.__path__):
@@ -30,25 +30,25 @@ def load_visitors():
 
         for member_name, member in inspect.getmembers(module, inspect.isclass):
 
-            if not issubclass(member, Visitor) or member is Visitor:
+            if not issubclass(member, UIBuilder) or member is UIBuilder:
                 continue
 
-            visitor: Visitor = member()
+            builder: UIBuilder = member()
 
-            if not visitor.is_enabled():
-                _logger.warn("Skipping disabled visitor '%s'.", member_name)
+            if not builder.is_enabled():
+                _logger.warn("Skipping disabled builder '%s'.", member_name)
                 continue
 
-            visitors.append(visitor)
-            _logger.info("Registered visitor '%s', order=%d", member_name, visitor.order)
+            builders.append(builder)
+            _logger.info("Registered builder '%s', order=%d", member_name, builder.order)
 
-    return sorted(visitors, key=lambda v: v.order)
+    return sorted(builders, key=lambda v: v.order)
 
 
-class Visitor(abc.ABC):
+class UIBuilder(abc.ABC):
     """
     Abstract class.
-    Represents visitor which are used to render and refresh controls on application screen.
+    Represents builder which is used to render and refresh controls on application screen.
     """
 
     def __init__(self, *events):
@@ -57,7 +57,7 @@ class Visitor(abc.ABC):
     @property
     def order(self) -> int:
         """
-        Defines in what order visitor would be executed.
+        Defines in what order builder would be executed.
         """
         return 100
 
@@ -65,14 +65,14 @@ class Visitor(abc.ABC):
     def events(self) -> list[str]:
         """
         Should be used to define on what refresh events
-        visitor should be invoked.
+        builder should be invoked.
         """
 
         self.__events.append(UIRefreshEvent.Always)
         return list(set(self.__events))
 
     @abstractmethod
-    def visit(self, gui: "_GUI"):
+    def build(self, gui: "_GUI"):
         """
         Should be used to build UI elements.
         Invoked only once when application starts.
@@ -102,6 +102,6 @@ class Visitor(abc.ABC):
 
     def is_enabled(self):
         """
-        Should be used to define whether current visitor should be executed.
+        Should be used to define whether current builder should be executed.
         """
         return True

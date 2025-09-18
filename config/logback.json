@@ -5,14 +5,14 @@
   "savegem.app.gui.style" : "INFO",
   "savegem.app.gui.ipc_socket" : "INFO",
 
-  "savegem.app.gui.visitor" : "INFO",
-  "savegem.app.gui.visitor.active_players" : "WARN",
-  "savegem.app.gui.visitor.auto_mode" : "WARN",
-  "savegem.app.gui.visitor.copyright" : "WARN",
-  "savegem.app.gui.visitor.download_upload_button" : "WARN",
-  "savegem.app.gui.visitor.game_dropdown" : "WARN",
-  "savegem.app.gui.visitor.language_switch" : "WARN",
-  "savegem.app.gui.visitor.save_status" : "WARN",
+  "savegem.app.gui.builder" : "INFO",
+  "savegem.app.gui.builder.active_players" : "WARN",
+  "savegem.app.gui.builder.auto_mode" : "WARN",
+  "savegem.app.gui.builder.copyright" : "WARN",
+  "savegem.app.gui.builder.download_upload_button" : "WARN",
+  "savegem.app.gui.builder.game_dropdown" : "WARN",
+  "savegem.app.gui.builder.language_switch" : "WARN",
+  "savegem.app.gui.builder.save_status" : "WARN",
 
   "process_watcher" : "INFO",
 

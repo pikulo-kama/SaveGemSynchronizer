@@ -5,13 +5,13 @@ from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.window import _GUI
-from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.builder import UIBuilder
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
 
 
-class CopyrightVisitor(Visitor):
+class CopyrightBuilder(UIBuilder):
     """
     Used to build copyright label.
     Always enabled.
@@ -21,7 +21,7 @@ class CopyrightVisitor(Visitor):
         super().__init__(UIRefreshEvent.LanguageChange)
         self.__copyright = None
 
-    def visit(self, gui: _GUI):
+    def build(self, gui: _GUI):
         self.__add_copyright(gui)
 
     def refresh(self, gui: _GUI):

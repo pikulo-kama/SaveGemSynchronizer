@@ -4,14 +4,14 @@ from savegem.common.core.holders import locales
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.component.wait_button import WaitButton
 from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
-from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.builder import UIBuilder
 from savegem.common.util.logger import get_logger
 from savegem.common.util.thread import execute_in_blocking_thread
 
 _logger = get_logger(__name__)
 
 
-class LanguageSwitchVisitor(Visitor):
+class LanguageSwitchBuilder(UIBuilder):
     """
     Used to render language switch button.
     Enabled only if there are at least two languages configured.
@@ -21,7 +21,7 @@ class LanguageSwitchVisitor(Visitor):
         super().__init__(UIRefreshEvent.LanguageChange)
         self.__language_switch = None
 
-    def visit(self, gui: _GUI):
+    def build(self, gui: _GUI):
         self.__add_language_switch_control(gui)
 
     def refresh(self, gui: _GUI):

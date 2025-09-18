@@ -8,7 +8,7 @@ from savegem.common.core import app
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
 from savegem.app.gui.window import _GUI
-from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.builder import UIBuilder
 from datetime import date, datetime
 
 from babel.dates import format_datetime
@@ -20,7 +20,7 @@ from savegem.common.util.logger import get_logger
 _logger = get_logger(__name__)
 
 
-class SaveStatusVisitor(Visitor):
+class SaveStatusBuilder(UIBuilder):
     """
     Used to build elements displaying:
     - Last drive save information
@@ -41,7 +41,7 @@ class SaveStatusVisitor(Visitor):
         self.__save_status = None
         self.__last_save_timestamp = None
 
-    def visit(self, gui: _GUI):
+    def build(self, gui: _GUI):
         self.__add_save_information(gui)
 
     def refresh(self, gui: _GUI):

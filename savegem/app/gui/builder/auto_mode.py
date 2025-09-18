@@ -1,11 +1,11 @@
 from savegem.app.gui.component.button import Button
-from savegem.app.gui.ipc_socket import ui_socket
+from savegem.app.ipc_socket import ui_socket
 from savegem.app.gui.popup.notification import notification
 from savegem.common.core import app
 from savegem.common.core.holders import prop
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.constants import TkState, TkCursor
-from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.builder import UIBuilder
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.core.text_resource import tr
 from savegem.common.util.logger import get_logger
@@ -13,7 +13,7 @@ from savegem.common.util.logger import get_logger
 _logger = get_logger(__name__)
 
 
-class AutoModeVisitor(Visitor):
+class AutoModeBuilder(UIBuilder):
     """
     Used to build button to enable auto download/upload mode.
     Always enabled.
@@ -23,7 +23,7 @@ class AutoModeVisitor(Visitor):
         super().__init__()
         self.__auto_mode_button = None
 
-    def visit(self, gui: _GUI):
+    def build(self, gui: _GUI):
         self.__add_auto_mode_button(gui)
 
     def refresh(self, gui: _GUI):

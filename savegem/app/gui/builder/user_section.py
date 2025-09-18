@@ -1,7 +1,7 @@
 from constants import File
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
-from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.builder import UIBuilder
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.constants import TkCursor
 import tkinter as tk
@@ -13,7 +13,7 @@ from savegem.app.gui.popup.confirmation import confirmation
 from savegem.common.util.file import delete_file, resolve_app_data
 
 
-class UserSectionVisitor(Visitor):
+class UserSectionBuilder(UIBuilder):
     """
     Used to render user section.
     Contains user chip with name and picture
@@ -24,7 +24,7 @@ class UserSectionVisitor(Visitor):
         super().__init__()
         self.__logout_button = None
 
-    def visit(self, gui: "_GUI"):
+    def build(self, gui: "_GUI"):
         self.__add_user_section(gui)
 
     def refresh(self, gui: "_GUI"):

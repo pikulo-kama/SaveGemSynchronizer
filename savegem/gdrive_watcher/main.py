@@ -1,5 +1,5 @@
 from savegem.app.gui.constants import UIRefreshEvent
-from savegem.app.gui.ipc_socket import ui_socket
+from savegem.app.ipc_socket import ui_socket
 from savegem.common.core import app
 from constants import File
 import threading

@@ -7,7 +7,7 @@ from savegem.app.gui.component.progress_button import ProgressButton
 from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
 from savegem.app.gui.popup.confirmation import confirmation
 from savegem.app.gui.popup.notification import notification
-from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.builder import UIBuilder
 from savegem.common.service.downloader import Downloader
 from savegem.common.service.subscriptable import Event, EventType, EventKind, ProgressEvent
 from savegem.common.service.uploader import Uploader
@@ -17,7 +17,7 @@ from savegem.common.util.thread import execute_in_blocking_thread
 _logger = get_logger(__name__)
 
 
-class DownloadUploadButtonVisitor(Visitor):
+class DownloadUploadButtonBuilder(UIBuilder):
     """
     Used to build upload and download buttons.
     Always enabled.
@@ -41,7 +41,7 @@ class DownloadUploadButtonVisitor(Visitor):
         self.__downloader.subscribe(self.__error_subscriber)
         self.__uploader.subscribe(self.__error_subscriber)
 
-    def visit(self, gui: _GUI):
+    def build(self, gui: _GUI):
         self.__add_buttons(gui)
 
     def refresh(self, gui: _GUI):

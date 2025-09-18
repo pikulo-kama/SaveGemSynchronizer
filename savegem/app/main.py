@@ -2,7 +2,7 @@ import threading
 
 from constants import Directory
 from savegem.app.gui.window import gui
-from savegem.app.gui.ipc_socket import ui_socket
+from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.util.file import cleanup_directory
 from savegem.common.util.logger import get_logger

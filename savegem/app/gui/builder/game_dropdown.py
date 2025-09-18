@@ -1,11 +1,11 @@
 import tkinter as tk
 
-from savegem.app.gui.ipc_socket import ui_socket
+from savegem.app.ipc_socket import ui_socket
 from savegem.common.core import app
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.component.dropdown import Dropdown
 from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
-from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.builder import UIBuilder
 from savegem.common.core.ipc_socket import IPCCommand
 
 from savegem.common.util.logger import get_logger
@@ -14,7 +14,7 @@ from savegem.common.util.thread import execute_in_blocking_thread
 _logger = get_logger(__name__)
 
 
-class GameDropdownVisitor(Visitor):
+class GameDropdownBuilder(UIBuilder):
     """
     Used to build game selection dropdown.
     Always enabled. If there are no games configured app will crash.
@@ -32,7 +32,7 @@ class GameDropdownVisitor(Visitor):
         # Needs to be initialized first.
         return 0
 
-    def visit(self, gui: _GUI):
+    def build(self, gui: _GUI):
         self.__add_game_selection_dropdown(gui)
 
     def refresh(self, gui: _GUI):

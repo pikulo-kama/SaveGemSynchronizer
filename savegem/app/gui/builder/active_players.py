@@ -6,14 +6,14 @@ from savegem.common.core import app
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.window import _GUI
-from savegem.app.gui.visitor import Visitor
+from savegem.app.gui.builder import UIBuilder
 from savegem.common.service.player import PlayerService
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
 
 
-class ActivePlayersVisitor(Visitor):
+class ActivePlayersBuilder(UIBuilder):
     """
     Used to display section with users
     that currently playing selected game.
@@ -30,7 +30,7 @@ class ActivePlayersVisitor(Visitor):
         self.__status_label = None
         self.__active_players_label = None
 
-    def visit(self, gui: _GUI):
+    def build(self, gui: _GUI):
         self.__add_section(gui)
 
     def refresh(self, gui: _GUI):
