@@ -3,16 +3,16 @@
 
 #define RootPath "..\..\"
 
-#define AppName "SaveGem"
-#define Author "Artur Parkour"
-#define AppExeName "SaveGem.exe"
-#define AppVersion GetAppVersion(RootPath + "config\app.json")
+#define AppName GetProperty(RootPath + "config\app.json", "name")
+#define Author GetProperty(RootPath + "config\app.json", "author")
+#define AppExeName GetProperty(RootPath + "config\app.json", "processName")
+#define AppVersion GetProperty(RootPath + "config\app.json", "version")
 
-#define WatchdogName "SaveGem Watchdog"
-#define WatchdogExeName "SaveGemWatchdog.exe"
+#define WatchdogName GetProperty(RootPath + "config\watchdog.json", "name")
+#define WatchdogExeName GetProperty(RootPath + "config\watchdog.json", "processName")
 
-#define ProcessWatcherExeName "_SaveGemProcessWatcher.exe"
-#define GDriveWatcherExeName "_SaveGemGDriveWatcher.exe"
+#define ProcessWatcherExeName GetProperty(RootPath + "config\process_watcher.json", "processName")
+#define GDriveWatcherExeName GetProperty(RootPath + "config\gdrive_watcher.json", "processName")
 
 [Setup]
 ; --- App Info ---
@@ -34,11 +34,31 @@ Compression=lzma
 SolidCompression=yes
 AllowRootDirectory=yes
 
+; ------------------------------------------------------------------------- ;
+; INSTALL SECTION
+; ------------------------------------------------------------------------- ;
+
+[Dirs]
+; AppData root
+Name: "{userappdata}\{#AppName}"
+
+; Output dir
+Name: "{userappdata}\{#AppName}\Output"
+
+; Logs dir
+Name: "{userappdata}\{#AppName}\Logs"
+
 [Files]
 ; Copy everything from PyInstaller one dir output
 Source: "{#RootPath}output\dist\{#AppName}\*"; \
     DestDir: "{app}"; \
     Flags: recursesubdirs
+
+; Copy local logback to AppData if missing
+Source: "{#RootPath}config\logback.json"; \
+    DestDir: "{userappdata}\{#AppName}"; \
+    DestName: "logback.json"; \
+    Flags: ignoreversion
     
 [Tasks]
 Name: "desktopicon"; \
@@ -73,17 +93,9 @@ Filename: "{app}\{#AppExeName}"; \
     Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; \
     Flags: nowait postinstall skipifsilent
 
-; Start SaveGem Watchdog automatically after installation.
-[Code]
-procedure CurStepChanged(CurStep: TSetupStep);
-var
-  ResultCode: Integer;
-begin
-  if CurStep = ssPostInstall then
-  begin
-    Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
-  end;
-end;
+; ------------------------------------------------------------------------- ;
+; UNINSTALL SECTION
+; ------------------------------------------------------------------------- ;
 
 [UninstallRun]
 ; Kill main application.
@@ -111,11 +123,57 @@ Filename: "taskkill"; \
 Type: dirifempty; \
     Name: "{app}"
 
+; ------------------------------------------------------------------------- ;
+; LANGUAGES SECTION
+; ------------------------------------------------------------------------- ;
+
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [CustomMessages]
 en.CreateStartMenuShortcut=Create a Start Menu shortcut
-uk.CreateStartMenuShortcut=Створити ярлик у меню Пуск
+en.RemoveUserDataPrompt=Do you want to remove all %1 user data?
 
+uk.CreateStartMenuShortcut=Створити ярлики у меню Пуск
+uk.RemoveUserDataPrompt=Бажаєте видалити всі дані користувача %1?
+
+fr.CreateStartMenuShortcut=Créer un raccourci dans le menu Démarrer
+fr.RemoveUserDataPrompt=Voulez-vous supprimer toutes les données utilisateur de %1?
+
+de.CreateStartMenuShortcut=Verknüpfung im Startmenü erstellen
+de.RemoveUserDataPrompt=Möchten Sie alle Benutzerdaten von %1 löschen?
+
+es.CreateStartMenuShortcut=Crear un acceso directo en el menú Inicio
+es.RemoveUserDataPrompt=¿Desea eliminar todos los datos de usuario de %1?
+
+; ------------------------------------------------------------------------- ;
+; CODE SECTION
+; ------------------------------------------------------------------------- ;
+
+[Code]
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  Prompt: String;
+begin
+
+  if CurUninstallStep = usUninstall then
+  begin
+    Prompt := FmtMessage(CustomMessage('RemoveUserDataPrompt'), ['{#AppName}'])
+
+    if MsgBox(Prompt, mbConfirmation, MB_YESNO) = IDYES then
+      DelTree(ExpandConstant('{userappdata}\{#AppName}'), True, True, True);
+  end;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ExitCode: Integer;
+begin
+  if CurStep = ssPostInstall then
+    // Immediately start watchdog process.
+    Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ExitCode);
+end;
