@@ -6,6 +6,8 @@ from datetime import date
 from PyInstaller.building.api import PYZ, EXE, COLLECT
 from PyInstaller.building.build_main import Analysis
 from PyInstaller.building.datastruct import Tree
+# For some reason these are not being picked by IDE, even though they're available at runtime/
+# noinspection PyUnresolvedReferences
 from PyInstaller.utils.win32.versioninfo import VSVersionInfo, VarFileInfo, VarStruct, StringFileInfo, StringTable, \
     StringStruct, FixedFileInfo
 

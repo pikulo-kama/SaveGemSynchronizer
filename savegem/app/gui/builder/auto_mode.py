@@ -1,5 +1,4 @@
 from savegem.app.gui.component.button import Button
-from savegem.app.gui.component.wait_button import WaitButton
 from savegem.app.gui.style import style
 from savegem.app.ipc_socket import ui_socket
 from savegem.app.gui.popup.notification import notification
@@ -79,7 +78,7 @@ class AutoModeBuilder(UIBuilder):
             self.refresh(gui)
             notification(message)
 
-        self.__auto_mode_button = WaitButton(
+        self.__auto_mode_button = Button(
             gui.top_left,
             command=callback,
             style=self.__style_name
