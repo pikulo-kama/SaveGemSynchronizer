@@ -52,7 +52,7 @@ class LanguageSwitchBuilder(UIBuilder):
         self.__language_switch = WaitButton(
             gui.top_left,
             command=lambda: execute_in_blocking_thread(lambda: self.__next_language(gui)),
-            style="SquareSecondary.18.TButton"
+            style="SquarePrimary.18.TButton"
         )
 
         self.__language_switch.grid(row=1, column=0, padx=(20, 0), pady=(10, 0))

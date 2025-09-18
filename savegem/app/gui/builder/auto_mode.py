@@ -1,10 +1,12 @@
 from savegem.app.gui.component.button import Button
+from savegem.app.gui.component.wait_button import WaitButton
+from savegem.app.gui.style import style
 from savegem.app.ipc_socket import ui_socket
 from savegem.app.gui.popup.notification import notification
 from savegem.common.core import app
 from savegem.common.core.holders import prop
 from savegem.app.gui.window import _GUI
-from savegem.app.gui.constants import TkState, TkCursor
+from savegem.app.gui.constants import TkState, TkCursor, TkAttr
 from savegem.app.gui.builder import UIBuilder
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.core.text_resource import tr
@@ -21,6 +23,7 @@ class AutoModeBuilder(UIBuilder):
 
     def __init__(self):
         super().__init__()
+        self.__style_name = "SquareSecondary.18.TButton"
         self.__auto_mode_button = None
 
     def build(self, gui: _GUI):
@@ -28,17 +31,19 @@ class AutoModeBuilder(UIBuilder):
 
     def refresh(self, gui: _GUI):
 
-        background = "secondaryColor"
-        foreground = "primaryButton.colorHover"
-
         if app.state.is_auto_mode:
-            background = "primaryButton.colorStatic"
-            foreground = "primaryColor"
+            style_props = style.configure(self.__style_name)
+            background = style_props.get(TkAttr.BgColor)
+            foreground = style_props.get(TkAttr.FgColor)
+
+        else:
+            background = prop("secondaryColor")
+            foreground = prop("primaryButton.colorHover")
 
         self.__auto_mode_button.configure(
             text="A",
-            background=prop(background),
-            foreground=prop(foreground)
+            background=background,
+            foreground=foreground
         )
 
         _logger.debug(
@@ -74,10 +79,10 @@ class AutoModeBuilder(UIBuilder):
             self.refresh(gui)
             notification(message)
 
-        self.__auto_mode_button = Button(
+        self.__auto_mode_button = WaitButton(
             gui.top_left,
             command=callback,
-            style="SquareSecondary.18.TButton"
+            style=self.__style_name
         )
 
         self.__auto_mode_button.grid(row=0, column=0, padx=(20, 0), pady=(20, 0))
