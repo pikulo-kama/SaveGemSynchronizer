@@ -1,3 +1,4 @@
+import cProfile, pstats
 import functools
 import logging
 import sys
@@ -32,3 +33,22 @@ def measure_time(when=logging.DEBUG):
         return wrapper
 
     return decorator
+
+
+def profile(function):
+    """
+    Used to measure execution time
+    of provided function.
+    """
+
+    profiler = cProfile.Profile()
+    profiler.enable()
+
+    function()
+
+    profiler.disable()
+
+    stats = pstats.Stats(profiler)
+    stats.strip_dirs()
+    stats.sort_stats('cumtime')
+    stats.print_stats(20)

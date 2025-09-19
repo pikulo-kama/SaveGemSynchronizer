@@ -17,14 +17,13 @@ def get_running_game_processes():
     global _previous_game_names
 
     processes = []
-    current_games = _get_active_games()
-    current_game_names = [game.name for game in current_games]
+    current_game_names = _get_active_games()
     all_game_names = list(set(_previous_game_names + current_game_names))
 
     for game_name in all_game_names:
         status = _ProcessState.Running
 
-        if game_name in current_games and game_name not in _previous_game_names:
+        if game_name in current_game_names and game_name not in _previous_game_names:
             status = _ProcessState.Started
 
         elif game_name in _previous_game_names and game_name not in current_game_names:
@@ -42,7 +41,7 @@ def _get_active_games():
     and return list of games that are currently running.
     """
 
-    games_by_processes = {game.process_name: game for game in app.games.list}
+    games_by_processes = {game.process_name: game.name for game in app.games.list}
     running_processes = get_running_processes(list(games_by_processes.keys()))
 
     return [games_by_processes.get(proc.name()) for proc in running_processes]

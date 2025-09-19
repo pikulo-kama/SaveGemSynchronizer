@@ -172,7 +172,7 @@ class _GameConfig(AppData):
         Used to download game configuration from Google Drive.
         """
 
-        _logger.info("Downloading game configuration from drive.")
+        _logger.debug("Downloading game configuration from drive.")
         game_config = GDrive.download_file(self._app.config.games_config_file_id)
 
         if game_config is None:
@@ -193,7 +193,7 @@ class _GameConfig(AppData):
             files_filter = []
 
             if self.__HIDDEN in game and game.get(self.__HIDDEN) is True:
-                _logger.info("Skipping game '%s' since it's marked as hidden.", name)
+                _logger.debug("Skipping game '%s' since it's marked as hidden.", name)
                 continue
 
             if self.__PLAYERS in game and self._app.user.email not in game.get(self.__PLAYERS):
@@ -214,7 +214,7 @@ class _GameConfig(AppData):
                 allow_auto_mode
             )
 
-        _logger.info("Configuration for following game(s) was found = %s", ", ".join(self.names))
+        _logger.debug("Configuration for following game(s) was found = %s", ", ".join(self.names))
 
     @property
     def empty(self) -> bool:

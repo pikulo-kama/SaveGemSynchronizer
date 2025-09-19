@@ -13,7 +13,7 @@ from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload, MediaIoBa
 from constants import ZIP_MIME_TYPE, JSON_MIME_TYPE, File, UTF_8
 from savegem.common.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
 from savegem.common.util.logger import get_logger
-from savegem.common.util.timer import measure_time
+from savegem.common.util.profiler import measure_time
 
 _logger = get_logger(__name__)
 _SCOPES = [
@@ -29,26 +29,27 @@ class GDrive:
     """
 
     __CHUNK_SIZE = 10 * 1024 * 1024
+    __drive = None
 
-    @staticmethod
-    def get_current_user():
+    @classmethod
+    def get_current_user(cls):
         """
         Used to get information about authenticated user.
         """
-        response = GDrive.__drive().about() \
+        response = cls.__get_drive().about() \
             .get(fields="user") \
             .execute()
 
         return response.get("user")
 
-    @staticmethod
-    def query_single(q: str, fields: str):
+    @classmethod
+    def query_single(cls, q: str, fields: str):
         """
         Used to query metadata of single file from Google Drive.
         """
 
         try:
-            return GDrive.__drive().files().list(
+            return cls.__get_drive().files().list(
                 q=q,
                 spaces="drive",
                 fields=fields,
@@ -60,21 +61,21 @@ class GDrive:
             _logger.error("Error querying file metadata", e)
             return None
 
-    @staticmethod
+    @classmethod
     @measure_time(when=logging.DEBUG)
-    def download_file(file_id, subscriber=None):
+    def download_file(cls, file_id, subscriber=None):
         """
         Used to in the first place to download archives.
         """
 
         done = False
         file = io.BytesIO()
-        request = GDrive.__drive().files().get_media(fileId=file_id)
-        downloader = MediaIoBaseDownload(file, request, chunksize=GDrive.__CHUNK_SIZE)
+        request = cls.__get_drive().files().get_media(fileId=file_id)
+        downloader = MediaIoBaseDownload(file, request, chunksize=cls.__CHUNK_SIZE)
 
         try:
             while not done:
-                _, done = GDrive.__next_chunk(downloader, subscriber)
+                _, done = cls.__next_chunk(downloader, subscriber)
 
         except HttpError as error:
             _logger.error("Failed to download file from drive", error)
@@ -82,9 +83,9 @@ class GDrive:
         
         return file
 
-    @staticmethod
+    @classmethod
     @measure_time(when=logging.DEBUG)
-    def upload_file(file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE,
+    def upload_file(cls, file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE,
                     properties: dict = None, subscriber=None):
         """
         Used to upload file to Google Drive into provided directory.
@@ -95,7 +96,7 @@ class GDrive:
             file_path,
             mimetype=mime_type,
             resumable=True,
-            chunksize=GDrive.__CHUNK_SIZE
+            chunksize=cls.__CHUNK_SIZE
         )
         metadata = {
             "name": file_name_from_path(file_path),
@@ -104,21 +105,21 @@ class GDrive:
         }
 
         try:
-            request = GDrive.__drive().files().create(
+            request = cls.__get_drive().files().create(
                 body=metadata,
                 media_body=media,
                 fields="id"
             )
 
             while not done:
-                _, done = GDrive.__next_chunk(request, subscriber)
+                _, done = cls.__next_chunk(request, subscriber)
 
         except HttpError as error:
             _logger.error("Error uploading file to drive", error)
             raise error
 
-    @staticmethod
-    def update_file(file_id: str, data: str, mime_type=JSON_MIME_TYPE, subscriber=None):
+    @classmethod
+    def update_file(cls, file_id: str, data: str, mime_type=JSON_MIME_TYPE, subscriber=None):
         """
         Used to update existing file in Google Drive.
         """
@@ -128,13 +129,13 @@ class GDrive:
         media = MediaIoBaseUpload(bytes_io, mime_type, resumable=True)
 
         try:
-            request = GDrive.__drive().files().update(
+            request = cls.__get_drive().files().update(
                 fileId=file_id,
                 media_body=media
             )
 
             while not done:
-                _, done = GDrive.__next_chunk(request, subscriber)
+                _, done = cls.__next_chunk(request, subscriber)
 
         except HttpError as error:
             _logger.error("Error updating file in drive", error)
@@ -147,8 +148,8 @@ class GDrive:
         """
         return
 
-    @staticmethod
-    def get_changes(start_page_token):
+    @classmethod
+    def get_changes(cls, start_page_token):
         """
         Used to get changes from specified.
         Start page token used to specify starting point
@@ -156,12 +157,12 @@ class GDrive:
         """
 
         if start_page_token is None:
-            start_page_token = GDrive.__drive().changes() \
+            start_page_token = cls.__get_drive().changes() \
                 .getStartPageToken() \
                 .execute() \
                 .get("startPageToken")
 
-        return GDrive.__drive().changes().list(
+        return cls.__get_drive().changes().list(
             pageToken=start_page_token,
             fields="changes(file(id, name, parents), removed), newStartPageToken"
         ).execute()
@@ -188,12 +189,16 @@ class GDrive:
 
         return status, done
 
-    @staticmethod
-    def __drive():
+    @classmethod
+    def __get_drive(cls):
         """
         Used to get raw Google Drive service.
         """
-        return build("drive", "v3", credentials=GDrive.__get_credentials())
+
+        if cls.__drive is None:
+            cls.__drive = build("drive", "v3", credentials=cls.__get_credentials())
+
+        return cls.__drive
 
     @staticmethod
     def __get_credentials():

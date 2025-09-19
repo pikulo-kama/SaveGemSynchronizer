@@ -1,3 +1,5 @@
+from savegem.app.gui.push_notification import push_notification
+from savegem.common.core.text_resource import tr
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.downloader import Downloader
 from savegem.common.service.player import PlayerService
@@ -51,7 +53,7 @@ class ProcessWatcher(Daemon):
             # Do not perform anything if auto mode is forcefully
             # disabled for the game in configuration.
             if not process.game.auto_mode_allowed:
-                self._logger.debug("Auto mode is disabled for %s", process.game.name)
+                self._logger.info("Auto mode is disabled for %s", process.game.name)
                 continue
 
             save_meta = Downloader.get_last_save_metadata(process.game)
@@ -60,7 +62,7 @@ class ProcessWatcher(Daemon):
             local_checksum = process.game.calculate_checksum()
 
             if local_checksum == drive_checksum:
-                self._logger.debug(
+                self._logger.info(
                     "Skipping upload/download since checksum hasn't changed (%s:%s)",
                     process.game.name,
                     local_checksum
@@ -68,18 +70,20 @@ class ProcessWatcher(Daemon):
                 continue
 
             if process.has_started:
-                self._logger.debug(
+                self._logger.info(
                     "Automatically downloading save files for %s since checksum has changed.",
                     process.game.name
                 )
                 self.__downloader.download(process.game)
+                push_notification(tr("notification_NewSaveHasBeenDownloaded"))
 
             elif process.has_closed:
-                self._logger.debug(
+                self._logger.info(
                     "Automatically uploading save files for %s since checksum has changed.",
                     process.game.name
                 )
                 self.__uploader.upload(process.game)
+                push_notification(tr("notification_SaveHasBeenUploaded"))
 
 
 if __name__ == "__main__":

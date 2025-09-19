@@ -34,6 +34,16 @@ class File:
     GUIInitializedFlag: Final = "gui_init.flag"
 
 
+class Resource:
+    """
+    Contains name of resource files
+    """
+
+    ApplicationIco: Final = "application.ico"
+    NotificationIco: Final = "notification.ico"
+    ConfirmationIco: Final = "confirmation.ico"
+
+
 JSON_EXTENSION: Final = ".json"
 ZIP_EXTENSION: Final = "zip"
 ZIP_MIME_TYPE: Final = "application/zip"

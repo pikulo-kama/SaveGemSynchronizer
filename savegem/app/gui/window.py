@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from constants import Resource
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
 from savegem.app.gui.constants import UIRefreshEvent
@@ -42,7 +43,7 @@ class _GUI:
 
         self.__center_window()
         self.window.title(tr("window_Title", prop("name")))
-        self.window.iconbitmap(resolve_resource("application.ico"))
+        self.window.iconbitmap(resolve_resource(Resource.ApplicationIco))
         self.window.resizable(False, False)
 
         self.window.protocol("WM_DELETE_WINDOW", self.destroy)

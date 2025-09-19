@@ -22,9 +22,9 @@ class Watchdog(Daemon):
         # be watched.
         for process_name in config.get_value("childProcesses"):
             thread = threading.Thread(target=self.__watch_process, args=(process_name,), daemon=True)
-            thread.start()
-
             self._logger.info("Registered process %s in watchdog.", process_name)
+
+            thread.start()
 
     def _work(self):
         # All processes would be watched

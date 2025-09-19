@@ -1,3 +1,4 @@
+from constants import Resource
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.window import gui
 from savegem.app.gui.constants import TkCursor
@@ -18,7 +19,7 @@ class Notification(Popup):
     """
 
     def __init__(self):
-        super().__init__("popup_NotificationTitle", "notification.ico")
+        super().__init__("popup_NotificationTitle", Resource.NotificationIco)
 
     def _show_internal(self):
         close_btn = Button(

@@ -110,29 +110,32 @@ common_data = [
     ('config.json', '.')
 ]
 
-gui, gui_analysis = build_exe(
+gui, gui_a = build_exe(
     service_name="app",
     hooks=["hooks"],
     datas=common_data,
     icon='resources/application.ico'
 )
 
-process_watcher, process_watcher_analysis = build_exe(service_name="process_watcher", datas=common_data)
-gdrive_watcher, gdrive_watcher_analysis = build_exe(service_name="gdrive_watcher", datas=common_data)
-watchdog, watchdog_analysis = build_exe(service_name="watchdog")
+process_watcher, process_watcher_a = build_exe(service_name="process_watcher", datas=common_data)
+gdrive_watcher, gdrive_watcher_a = build_exe(service_name="gdrive_watcher", datas=common_data)
+watchdog, watchdog_a = build_exe(service_name="watchdog")
 
 # Collect everything into one folder
-coll = COLLECT(
-    gui, process_watcher, gdrive_watcher, watchdog,
+COLLECT(
+    gui,
+    process_watcher,
+    gdrive_watcher,
+    watchdog,
 
-    gui_analysis.binaries +
-    process_watcher_analysis.binaries +
-    gdrive_watcher_analysis.binaries +
-    watchdog_analysis.binaries,
+    gui_a.binaries +
+    process_watcher_a.binaries +
+    gdrive_watcher_a.binaries +
+    watchdog_a.binaries,
 
-    gui_analysis.datas +
-    process_watcher_analysis.datas +
-    gdrive_watcher_analysis.datas,
+    gui_a.datas +
+    process_watcher_a.datas +
+    gdrive_watcher_a.datas,
 
     Tree('..\\SaveGemSynchronizer\\resources', prefix='resources\\'),
     Tree('..\\SaveGemSynchronizer\\config', prefix='config\\'),

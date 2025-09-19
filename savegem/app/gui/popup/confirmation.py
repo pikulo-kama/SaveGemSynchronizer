@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from constants import Resource
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.constants import TkCursor
 from savegem.app.gui.component.button import Button
@@ -21,7 +22,7 @@ class Confirmation(Popup):
     """
 
     def __init__(self):
-        super().__init__("popup_ConfirmationTitle", "confirmation.ico")
+        super().__init__("popup_ConfirmationTitle", Resource.ConfirmationIco)
         self.__confirm_callback = None
 
     def set_confirm_callback(self, callback):
