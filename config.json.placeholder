@@ -23,6 +23,8 @@ Games' Configuration file Legend:
 - *localPath (str) = path to directory with save files, can contain env variables (suc as %LOCALAPPDATA%, %APPDATA%, etc.)
 - *gdriveParentDirectoryId (str) = ID of directory in google cloud were all saves would be stored
 - hidden (bool) = whether game should be visible in app or not, if field is not populated it would be treated as False.
+- allowAutoMode (bool) = whether game supports auto mode (if game has large save files +25MB it's better to disable
+auto mode for game to avoid data corruption.
 - players (list[str]) = list of user emails that should see game in dropdown, if field is missing all users will be able
 to see it.
 - filesFilter (list[str]) = list of files that needs to be uploaded to cloud (all files would be uploaded if
@@ -49,6 +51,7 @@ Example of configuration file in Google Drive:
     "process" : "second.exe"
     "localPath" : "%APPDATA%\\SecondGameData\\Saves",
     "gdriveParentDirectoryId" : "1ulAGvR27yALHFzG_vB3W3Bagy111111",
+    "allowAutoMode" : false,
     "filesFilter" : [
         "^game\\.save$"
         "^game_.+Cache$"
