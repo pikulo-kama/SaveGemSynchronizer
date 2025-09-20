@@ -1,7 +1,7 @@
 {
   "languageId" : "FR",
-  "window_Title" : "Synchroniseur SaveGem",
-  "window_Copyright" : "SaveGem™ v{0} © {1} Artur Parkour. Sous licence GPLv3.",
+  "window_Title" : "Synchroniseur {0}",
+  "window_Copyright" : "{0}™ v{1} © {2} {3}. Sous licence GPLv3.",
   "popup_NotificationTitle" : "Information",
   "popup_NotificationButtonClose" : "OK",
   "popup_ConfirmationTitle" : "Attention",
@@ -14,11 +14,14 @@
   "label_Offline" : "Hors ligne",
   "info_SaveIsUpToDate" : "Rien de nouveau... Votre sauvegarde est déjà à jour.",
   "info_SaveNeedsToBeDownloaded" : "Eh bien, regardez-moi ça...",
+  "info_SaveNeedsToBeUploaded" : "Alors, on envoie?",
   "info_NewestSaveOnDriveInformation" : "la dernière sauvegarde a été envoyée le {0} à {1} par {2}",
   "notification_SaveHasBeenUploaded" : "Sauvegarde envoyée avec succès.",
   "notification_NewSaveHasBeenDownloaded" : "Sauvegarde téléchargée avec succès.",
   "notification_ErrorUploadingToDrive" : "Erreur lors de l'envoi sur le drive.",
   "notification_ErrorSaveDirectoryMissing" : "Dossier de sauvegarde introuvable. \n{0}",
+  "notification_AutoModeOn" : "Mode automatique activé.",
+  "notification_AutoModeOff" : "Mode automatique désactivé.",
   "confirmation_ConfirmToDownloadSave" : "Êtes-vous sûr ? Cela écrasera la sauvegarde existante.",
   "confirmation_ConfirmLogout" : "Voulez-vous vous déconnecter?"
 }

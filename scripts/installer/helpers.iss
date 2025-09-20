@@ -1,26 +1,27 @@
 
 ; --------------------------------------------------------
-; GetAppVersion(FileName)
+; GetProperty(FileName, Property)
 ; --------------------------------------------------------
-; Reads a JSON file (e.g. config\main.json) and extracts
-; the "version" field using PowerShell.
+; Reads a JSON file and extracts
+; provided field using PowerShell.
 ;
 ; Parameters:
 ;   FileName - Path to the JSON file.
+;   Property - Name of JSON property to extract.
 ;
 ; Returns:
-;   The value of "version", e.g. "1.2.3".
+;   The value of property.
 ;
 ; Example:
-;   AppVersion={#GetAppVersion("config\main.json")}
+;   AppVersion={#GetProperty("config\main.json", "version")}
 ;   → AppVersion=1.2.3
 ;
-#define GetAppVersion(str fileName) \
-  Local[0] = AddBackslash(GetEnv("TEMP")) + "version.txt", \
+#define GetProperty(str fileName, str property) \
+  Local[0] = AddBackslash(GetEnv("TEMP")) + "buffer.txt", \
   Local[1] = \
     "-ExecutionPolicy Bypass -Command """ + \
     "$json = Get-Content '" + FileName + "' | ConvertFrom-Json;" + \
-    "Set-Content -Path '" + Local[0] + "' -Value $json.version;" + \
+    "Set-Content -Path '" + Local[0] + "' -Value $json." + property + ";" + \
     """", \
   Exec("powershell.exe", Local[1], SourcePath, , SW_HIDE), \
   Local[2] = FileOpen(Local[0]), \

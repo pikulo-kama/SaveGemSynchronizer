@@ -1,6 +1,16 @@
 {
-  "version" : "3.10.1",
+  "name": "SaveGem",
+  "version": "3.11.0",
+  "description": "SaveGem UI Application",
+  "processName": "SaveGem.exe",
+  "author": "Artur Parkour",
   "defaultLocale" : "en_US",
+
+  "ipc" : {
+    "uiSocketPort" : 53541,
+    "processWatcherSocketPort" : 53542,
+    "gdriveWatcherSocketPort" : 53543
+  },
 
   "windowWidth" : 1080,
   "windowHeight" : 720,

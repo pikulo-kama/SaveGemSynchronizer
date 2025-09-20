@@ -13,8 +13,8 @@ class Directory:
     Resources: Final = os.path.join(ProjectRoot, "resources")
 
     AppDataRoot = os.path.join(os.getenv("APPDATA"), "SaveGem")
-    Output: Final = os.path.join(AppDataRoot, "output")
-    Logs: Final = os.path.join(AppDataRoot, "logs")
+    Output: Final = os.path.join(AppDataRoot, "Output")
+    Logs: Final = os.path.join(AppDataRoot, "Logs")
 
 
 class File:
@@ -27,13 +27,26 @@ class File:
     GDriveConfig: Final = "config.json"
 
     AppConfig: Final = "app.json"
-    ProcessWatcherConfig: Final = "watcher.json"
+    ProcessWatcherConfig: Final = "process_watcher.json"
 
     AppState: Final = "state.json"
     Logback: Final = "logback.json"
+    GUIInitializedFlag: Final = "gui_init.flag"
+
+
+class Resource:
+    """
+    Contains name of resource files
+    """
+
+    ApplicationIco: Final = "application.ico"
+    NotificationIco: Final = "notification.ico"
+    ConfirmationIco: Final = "confirmation.ico"
 
 
 JSON_EXTENSION: Final = ".json"
 ZIP_EXTENSION: Final = "zip"
 ZIP_MIME_TYPE: Final = "application/zip"
 JSON_MIME_TYPE: Final = "application/json"
+
+UTF_8: Final = "utf-8"

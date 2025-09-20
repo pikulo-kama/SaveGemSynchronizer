@@ -1,7 +1,7 @@
 {
   "languageId" : "ES",
-  "window_Title" : "Sincronizador SaveGem",
-  "window_Copyright" : "SaveGem™ v{0} © {1} Artur Parkour. Licenciado bajo GPLv3.",
+  "window_Title" : "Sincronizador {0}",
+  "window_Copyright" : "{0}™ v{1} © {2} {3}. Licenciado bajo GPLv3.",
   "popup_NotificationTitle" : "Información",
   "popup_NotificationButtonClose" : "OK",
   "popup_ConfirmationTitle" : "Atención",
@@ -14,11 +14,14 @@
   "label_Offline" : "Desconectado",
   "info_SaveIsUpToDate" : "Nada nuevo... Tu guardado está lo más actualizado posible.",
   "info_SaveNeedsToBeDownloaded" : "Bueno bueno bueno, mira nada más...",
+  "info_SaveNeedsToBeUploaded" : "Bueno, ¿lo enviamos?",
   "info_NewestSaveOnDriveInformation" : "el último guardado fue subido el {0} a las {1} por {2}",
   "notification_SaveHasBeenUploaded" : "Guardado subido con éxito.",
   "notification_NewSaveHasBeenDownloaded" : "Guardado descargado con éxito.",
   "notification_ErrorUploadingToDrive" : "Ocurrió un error al subir al almacenamiento.",
   "notification_ErrorSaveDirectoryMissing" : "Carpeta de guardado no encontrada. \n{0}",
+  "notification_AutoModeOn" : "Modo automático activado.",
+  "notification_AutoModeOff" : "Modo automático desactivado.",
   "confirmation_ConfirmToDownloadSave" : "¿Seguro? Esto borrará el guardado existente.",
   "confirmation_ConfirmLogout_es" : "¿Desea cerrar sesión?"
 }

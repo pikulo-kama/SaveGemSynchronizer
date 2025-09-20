@@ -1,7 +1,7 @@
 {
   "languageId" : "UK",
-  "window_Title" : "Синхронізатор SaveGem",
-  "window_Copyright" : "SaveGem™ v{0} © {1} Artur Parkour. Ліцензовано за GPLv3.",
+  "window_Title" : "Синхронізатор {0}",
+  "window_Copyright" : "{0}™ v{1} © {2} {3}. Ліцензовано за GPLv3.",
   "popup_NotificationTitle" : "Інформасьйон",
   "popup_NotificationButtonClose" : "OK",
   "popup_ConfirmationTitle" : "Застереження",
@@ -14,11 +14,14 @@
   "label_Offline" : "Офлайн",
   "info_SaveIsUpToDate" : "Нічого нового... Твій сейв свіженький як ніколи.",
   "info_SaveNeedsToBeDownloaded" : "Здалося б оновитись..",
+  "info_SaveNeedsToBeUploaded" : "Ну що? Відвантажимо?",
   "info_NewestSaveOnDriveInformation" : "останній сейв відвантажено {0} o {1} від {2}",
   "notification_SaveHasBeenUploaded" : "Сейв успішно відвантажено.",
   "notification_NewSaveHasBeenDownloaded" : "Свіженький сейв успішно завантажено.",
   "notification_ErrorUploadingToDrive" : "От халепа. Схоже щось пішло не так...",
   "notification_ErrorSaveDirectoryMissing" : "Папку з сейвами не знайдено. \n{0}",
+  "notification_AutoModeOn" : "Автоматичний режим ввімкнено.",
+  "notification_AutoModeOff" : "Автоматичний режим вимкнено.",
   "confirmation_ConfirmToDownloadSave" : "Впевнений? Це знищить твій існуючий сейв.",
   "confirmation_ConfirmLogout" : "Ви хочете вийти?"
 }

@@ -16,16 +16,18 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 ---
 
 ## 🚀 Features
+- ✅ Works for any game where saves are stored locally
+- ✅ Easy-to-use desktop UI (Tkinter)
+- ✅ No manual reload! UI updates automatically
 - ✅ Upload local save files to Google Drive  
-- ✅ Download the latest save files from the drive  
-- ✅ Easy-to-use desktop UI (Tkinter)  
-- ✅ Works for any game where saves are stored locally  
-- ✅ Show if any players are currently in the game
-- ✅ Just to not mess anything up we do backup of your save before replacing it with the one from drive (just in case...)
+- ✅ Download the latest save files from the drive
+- ✅ Backs up previous save files before downloading save from cloud   
+- ✅ Shows if any players are currently in the game
+- ✅ Auto Mode. Allows to upload/download saves automatically!
 
 ---
 
-## 🛠️ Installation
+## 🛠️ Building
 ### Prerequisites
 - **Python 3.9+** (with `pip`)  
 - Google Cloud credentials (service account or OAuth client)  
@@ -43,6 +45,19 @@ Windows
 ```powershell
 ./scripts/windows/build.ps1
 ```
+
+## 📦 Installer (Inno Setup)
+
+The Windows installer for **SaveGem** is built using **[Inno Setup](https://jrsoftware.org/isinfo.php)**.  
+We provide an `.iss` script in the repository, so you can create your own installer if needed.
+
+### Build the Installer Yourself
+1. Download and install [Inno Setup 6+](https://jrsoftware.org/isdl.php).  
+2. Open `scripts/installer/setup.iss`.  
+3. Compile the script from within Inno Setup to generate the `.exe` installer.
+
+> ℹ️ **Note**: The `.iss` file is only a configuration script. Inno Setup itself is **not** distributed with SaveGem; you’ll need to install it separately if you want to build the installer.
+
 
 ## ⚖️ Licensing
 

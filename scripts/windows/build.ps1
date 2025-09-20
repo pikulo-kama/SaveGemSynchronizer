@@ -9,4 +9,5 @@ Assert-File-Exists "config.json"
 pip install -r requirements.txt
 
 # Build executable with pyinstaller and create archive.
-python -m PyInstaller --distpath output/dist --workpath output/build --clean --noconfirm build.spec
+python -m PyInstaller --distpath output/dist --workpath output --clean --noconfirm build.spec
+Remove-Item -Recurse -Force output/build

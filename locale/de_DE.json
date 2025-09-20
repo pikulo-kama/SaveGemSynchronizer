@@ -1,7 +1,7 @@
 {
   "languageId" : "DE",
-  "window_Title" : "SaveGem Synchronisierer",
-  "window_Copyright" : "SaveGem™ v{0} © {1} Artur Parkour. Lizenziert unter GPLv3.",
+  "window_Title" : "{0} Synchronisierer",
+  "window_Copyright" : "{0}™ v{1} © {2} {3}. Lizenziert unter GPLv3.",
   "popup_NotificationTitle" : "Information",
   "popup_NotificationButtonClose" : "OK",
   "popup_ConfirmationTitle" : "Achtung",
@@ -14,11 +14,14 @@
   "label_Offline" : "Offline",
   "info_SaveIsUpToDate" : "Nichts Neues... Dein Spielstand ist so aktuell wie möglich.",
   "info_SaveNeedsToBeDownloaded" : "Na, schau einer an...",
+  "info_SaveNeedsToBeUploaded" : "Na, verschicken wir?",
   "info_NewestSaveOnDriveInformation" : "der letzte Spielstand wurde am {0} um {1} von {2} hochgeladen",
   "notification_SaveHasBeenUploaded" : "Spielstand erfolgreich hochgeladen.",
   "notification_NewSaveHasBeenDownloaded" : "Spielstand erfolgreich heruntergeladen.",
   "notification_ErrorUploadingToDrive" : "Fehler beim Hochladen auf den Drive.",
   "notification_ErrorSaveDirectoryMissing" : "Speicherordner nicht gefunden. \n{0}",
+  "notification_AutoModeOn" : "Automatischer Modus aktiviert.",
+  "notification_AutoModeOff" : "Automatischer Modus deaktiviert.",
   "confirmation_ConfirmToDownloadSave" : "Sicher? Dies überschreibt deinen vorhandenen Spielstand.",
   "confirmation_ConfirmLogout" : "Möchten Sie sich abmelden?"
 }
