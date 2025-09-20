@@ -2,5 +2,5 @@
   "name" : "SaveGem Process Watcher",
   "description" : "SaveGem Process Watcher",
   "processName" : "_SaveGemProcessWatcher.exe",
-  "iterationIntervalSeconds" : 20
+  "iterationIntervalSeconds" : 5
 }

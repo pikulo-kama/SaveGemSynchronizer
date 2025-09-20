@@ -20,7 +20,8 @@ def _main():
 
     _logger.info("Initializing application.")
 
-    app.user.initialize(GDrive.get_current_user())
+    app.state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
+    app.user.initialize(GDrive.get_current_user)
     app.games.download()
 
     gui.initialize()

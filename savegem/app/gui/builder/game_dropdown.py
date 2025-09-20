@@ -1,12 +1,10 @@
 import tkinter as tk
 
-from savegem.app.ipc_socket import ui_socket
 from savegem.common.core import app
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.component.dropdown import Dropdown
 from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
 from savegem.app.gui.builder import UIBuilder
-from savegem.common.core.ipc_socket import IPCCommand
 
 from savegem.common.util.logger import get_logger
 from savegem.common.util.thread import execute_in_blocking_thread
@@ -72,7 +70,6 @@ class GameDropdownBuilder(UIBuilder):
                 _logger.info("Selected game - %s", value)
 
                 app.state.game_name = value
-                ui_socket.notify_children(IPCCommand.StateChanged)
                 gui.refresh(UIRefreshEvent.GameSelectionChange)
 
             return execute_in_blocking_thread(callback)

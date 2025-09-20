@@ -17,10 +17,19 @@ class _UserState(AppData):
         self.__name = None
         self.__photo_link = None
 
-    def initialize(self, user):
+        self.__initialized = False
+
+    def initialize(self, user_provider):
+
+        if self.__initialized:
+            return
+
+        user = user_provider()
+
         self.__email = user.get("emailAddress")
         self.__name = user.get("displayName")
         self.__photo_link = self.__download_photo(user.get("photoLink"))
+        self.__initialized = True
 
     @property
     def email(self):

@@ -1,13 +1,11 @@
 from savegem.app.gui.component.button import Button
 from savegem.app.gui.style import style
-from savegem.app.ipc_socket import ui_socket
 from savegem.app.gui.popup.notification import notification
 from savegem.common.core import app
 from savegem.common.core.holders import prop
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.constants import TkState, TkCursor, TkAttr
 from savegem.app.gui.builder import UIBuilder
-from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.core.text_resource import tr
 from savegem.common.util.logger import get_logger
 
@@ -71,8 +69,6 @@ class AutoModeBuilder(UIBuilder):
                 app.state.is_auto_mode = True
                 message = tr("notification_AutoModeOn")
 
-            # Since auto mode is being used by Google Drive
-            ui_socket.notify_children(IPCCommand.StateChanged)
             # No need to fully reload the UI since no other visual components
             # would be affected.
             self.refresh(gui)

@@ -25,14 +25,18 @@ class ProcessWatcher(Daemon):
         self.__uploader = Uploader()
 
     def _work(self):
-
-        app.user.initialize(GDrive.get_current_user())
+        app.user.initialize(GDrive.get_current_user)
         app.games.download()
 
         active_processes = get_running_game_processes()
-        # Only get games that are still running, we don't need to show games that has been closed
-        # recently in activity log.
-        game_names = [process.game.name for process in active_processes if process.is_running]
+
+        # If no new processes started and previous were not closed
+        # then there is no point updating activity data or attempting to
+        # perform any automatic actions.
+        if not any(p.has_started or p.has_closed for p in active_processes):
+            return
+
+        game_names = [process.game.name for process in active_processes if not process.has_closed]
         PlayerService.update_activity_data(game_names)
 
         if app.state.is_auto_mode:

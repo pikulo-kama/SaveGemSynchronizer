@@ -24,6 +24,7 @@ class _AppState(AppData):
     def __init__(self):
         super().__init__()
         self.__state = EditableJsonConfigHolder(resolve_app_data(File.AppState))
+        self.__on_state_change = None
 
     @property
     def game_name(self):
@@ -48,7 +49,7 @@ class _AppState(AppData):
         """
         Set game as active.
         """
-        self.__state.set_value(self.__STATE_SELECTED_GAME, game_name)
+        self.__set_state_value(self.__STATE_SELECTED_GAME, game_name)
 
     @property
     def locale(self):
@@ -73,7 +74,7 @@ class _AppState(AppData):
         """
         Set active locale.
         """
-        self.__state.set_value(self.__STATE_SELECTED_LOCALE, locale)
+        self.__set_state_value(self.__STATE_SELECTED_LOCALE, locale)
 
     @property
     def is_auto_mode(self):
@@ -87,7 +88,24 @@ class _AppState(AppData):
         """
         Used to enable/disabled auto mode.
         """
-        self.__state.set_value(self.__STATE_IS_AUTO_MODE, is_auto_mode)
+        self.__set_state_value(self.__STATE_IS_AUTO_MODE, is_auto_mode)
 
     def reload(self):
         self.__state = EditableJsonConfigHolder(resolve_app_data(File.AppState))
+
+    def on_change(self, callback):
+        """
+        Used to set callback that would run each time state is modified.
+        """
+        self.__on_state_change = callback
+
+    def __set_state_value(self, property_name: str, value):
+        """
+        Wrapper to set state value.
+        Will call on state change callback if defined.
+        """
+
+        self.__state.set_value(property_name, value)
+
+        if self.__on_state_change is not None:
+            self.__on_state_change()

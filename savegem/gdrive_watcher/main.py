@@ -30,9 +30,10 @@ class GDriveWatcher(Daemon):
         if not os.path.exists(resolve_temp_file(File.GUIInitializedFlag)):
             return
 
+        app.user.initialize(GDrive.get_current_user)
         app.games.download()
-        files, directories = self.__get_changes()
 
+        files, directories = self.__get_changes()
         save_files_modified = app.games.current.drive_directory in directories
         games_config_modified = app.config.games_config_file_id in files
         activity_log_modified = app.config.activity_log_file_id in files

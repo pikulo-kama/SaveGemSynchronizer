@@ -78,7 +78,7 @@ class GameProcess:
         """
         Used to check if process is running.
         """
-        return _ProcessState.Running == self.__status or _ProcessState.Started == self.__status
+        return _ProcessState.Running == self.__status
 
     @property
     def has_started(self):
