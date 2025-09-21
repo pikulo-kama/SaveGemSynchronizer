@@ -16,6 +16,26 @@ _log_levels = {
     "FATAL": logging.FATAL
 }
 
+# Name of running service/EXE
+_log_file_name = remove_extension_from_path(os.path.basename(sys.argv[0]))
+
+_handler = TimedRotatingFileHandler(
+    resolve_log(f"{_log_file_name}.log"),
+    when="midnight",
+    interval=1,
+    backupCount=5,
+    encoding=UTF_8
+)
+
+_handler.suffix = "%Y-%m-%d.log"
+_handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
+_handler.setFormatter(logging.Formatter(
+    "%(asctime)s - (%(name)s:%(lineno)d) [%(levelname)s] : %(message)s"
+))
+
+# Configure the root logger
+logging.getLogger().addHandler(_handler)
+
 
 def get_logger(logger_name: str):
     """
@@ -26,34 +46,7 @@ def get_logger(logger_name: str):
     level = _get_log_level(logger_name)
     logger.setLevel(level)
 
-    if not logger.hasHandlers():
-        _add_handlers(logger)
-
     return logger
-
-
-def _add_handlers(logger: logging.Logger):
-    """
-    Used to assign handlers to logger.
-    """
-
-    log_file_name = remove_extension_from_path(os.path.basename(sys.argv[0]))
-
-    handler = TimedRotatingFileHandler(
-        resolve_log(f"{log_file_name}.log"),
-        when="midnight",
-        interval=1,
-        backupCount=5,
-        encoding=UTF_8
-    )
-
-    handler.suffix = "%Y-%m-%d.log"
-    handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
-    handler.setFormatter(logging.Formatter(
-        "%(asctime)s - (%(name)s:%(lineno)d) [%(levelname)s] : %(message)s"
-    ))
-
-    logger.addHandler(handler)
 
 
 def _get_log_level(logger_name: str):

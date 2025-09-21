@@ -27,10 +27,9 @@ class File:
     GDriveConfig: Final = "config.json"
 
     AppConfig: Final = "app.json"
-    ProcessWatcherConfig: Final = "process_watcher.json"
-
     AppState: Final = "state.json"
     Logback: Final = "logback.json"
+
     GUIInitializedFlag: Final = "gui_init.flag"
 
 
