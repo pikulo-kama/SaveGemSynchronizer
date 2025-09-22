@@ -25,17 +25,10 @@ class GameDropdownBuilder(UIBuilder):
         )
         self.__dropdown = None
 
-    @property
-    def order(self) -> int:
-        # Needs to be initialized first.
-        return 0
-
     def build(self, gui: _GUI):
         self.__add_game_selection_dropdown(gui)
 
     def refresh(self, gui: _GUI):
-
-        app.games.download()
 
         if app.games.empty:
             _logger.error("There are no games configured. Can't proceed.")

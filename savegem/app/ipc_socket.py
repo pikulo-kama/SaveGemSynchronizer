@@ -1,3 +1,4 @@
+from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.core import app
 from savegem.common.core.holders import prop
 from savegem.common.core.ipc_socket import IPCSocket, IPCCommand
@@ -28,6 +29,12 @@ class _UISocket(IPCSocket):
             # main application.
             if app.state.is_auto_mode:
                 app.games.reload()
+
+            if event == UIRefreshEvent.GameConfigChange:
+                app.games.download()
+
+            elif event == UIRefreshEvent.ActivityLogUpdate:
+                app.activity.reload()
 
             _logger.debug("Refreshing UI with %s event.", event)
             execute_in_thread(lambda: gui.refresh(event))
