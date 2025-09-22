@@ -2,7 +2,6 @@ from savegem.app.gui.push_notification import push_notification
 from savegem.common.core.text_resource import tr
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.downloader import Downloader
-from savegem.common.service.player import PlayerService
 from savegem.common.service.uploader import Uploader
 from savegem.common.core import app
 from savegem.common.service.gdrive import GDrive
@@ -37,7 +36,7 @@ class ProcessWatcher(Daemon):
             return
 
         game_names = [process.game.name for process in active_processes if not process.has_closed]
-        PlayerService.update_activity_data(game_names)
+        app.activity.update(game_names)
 
         if app.state.is_auto_mode:
             self.__perform_automatic_actions(active_processes)

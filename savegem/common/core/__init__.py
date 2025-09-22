@@ -1,3 +1,4 @@
+from savegem.common.core.activity import _Activity
 from savegem.common.core.app_config import _AppConfig
 from savegem.common.core.app_data import AppData
 from savegem.common.core.app_state import _AppState
@@ -21,11 +22,13 @@ class _ApplicationContext:
         self.__app_config = _AppConfig()
         self.__game_config = _GameConfig()
         self.__user_state = _UserState()
+        self.__activity = _Activity()
 
         self.__link(self.__state)
         self.__link(self.__app_config)
         self.__link(self.__game_config)
         self.__link(self.__user_state)
+        self.__link(self.__activity)
 
     @property
     def state(self) -> _AppState:
@@ -54,6 +57,13 @@ class _ApplicationContext:
         Application configurations.
         """
         return self.__app_config
+
+    @property
+    def activity(self) -> _Activity:
+        """
+        Selected game activity data.
+        """
+        return self.__activity
 
     def __link(self, entity: AppData):
         entity.link(self)

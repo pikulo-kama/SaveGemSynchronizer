@@ -7,7 +7,6 @@ from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.builder import UIBuilder
-from savegem.common.service.player import PlayerService
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -34,18 +33,17 @@ class ActivePlayersBuilder(UIBuilder):
         self.__add_section(gui)
 
     def refresh(self, gui: _GUI):
-        active_players = PlayerService.get_active_players(app.games.current.name)
 
         status_color = "secondaryColor"
         active_players_color = "secondaryColor"
         players_label = tr("label_Offline")
 
-        if len(active_players) > 0:
+        if len(app.activity.players) > 0:
 
             status_color = "accentColor"
             active_players_color = "primaryColor"
-            players_label = active_players.pop(0)
-            remaining_players = len(active_players)
+            players_label = app.activity.players.pop(0)
+            remaining_players = len(app.activity.players)
 
             if remaining_players > 0:
                 players_label += f" +{remaining_players}"

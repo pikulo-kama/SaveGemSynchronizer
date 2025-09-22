@@ -1,4 +1,5 @@
 import threading
+import time
 
 from constants import Directory
 from savegem.app.gui.window import gui
@@ -22,6 +23,7 @@ def _main():
 
     app.state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     app.user.initialize(GDrive.get_current_user)
+    app.activity.reload()
     app.games.download()
 
     gui.initialize()
