@@ -1,13 +1,14 @@
-import tkinter as tk
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor
+from PyQt6.QtWidgets import QComboBox
 
+from savegem.app.gui.component.combobox import QCustomComboBox
 from savegem.common.core import app
 from savegem.app.gui.window import _GUI
-from savegem.app.gui.component.dropdown import Dropdown
-from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
+from savegem.app.gui.constants import UIRefreshEvent, QObjectName, QAttr, QKind
 from savegem.app.gui.builder import UIBuilder
 
 from savegem.common.util.logger import get_logger
-from savegem.common.util.thread import execute_in_blocking_thread
 
 _logger = get_logger(__name__)
 
@@ -23,7 +24,7 @@ class GameDropdownBuilder(UIBuilder):
             UIRefreshEvent.GameConfigChange,
             UIRefreshEvent.GameSelectionChange
         )
-        self.__dropdown = None
+        self.__combobox: QComboBox
 
     def build(self, gui: _GUI):
         self.__add_game_selection_dropdown(gui)
@@ -34,23 +35,33 @@ class GameDropdownBuilder(UIBuilder):
             _logger.error("There are no games configured. Can't proceed.")
             raise RuntimeError("There are no games configured. Can't proceed.")
 
-        self.__dropdown.configure(values=app.games.names)
-        self.__dropdown.set(app.games.current.name)
+        self.__combobox.blockSignals(True)
+        self.__combobox.clear()
+        self.__combobox.addItems(app.games.names)
+        self.__combobox.view().setCursor(Qt.CursorShape.PointingHandCursor)
+
+        self.__combobox.setCurrentText(app.games.current.name)
+        self.__combobox.blockSignals(False)
 
         self.enable(gui)
 
-    def enable(self, gui: "_GUI"):
-        state = TkState.Readonly
-        cursor = TkCursor.Hand
+    def enable(self, gui: _GUI):
+        enabled = True
+        cursor = Qt.CursorShape.PointingHandCursor
 
         if len(app.games.names) == 1:
-            state = TkState.Disabled
-            cursor = TkCursor.Forbidden
+            enabled = False
+            cursor = Qt.CursorShape.ForbiddenCursor
 
-        self.__dropdown.configure(state=state, cursor=cursor)
+        self.__combobox.setEnabled(enabled)
+        self.__combobox.setCursor(QCursor(cursor))
 
-    def disable(self, gui: "_GUI"):
-        self.__dropdown.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
+    def disable(self, gui: _GUI):
+        self.__combobox.setEnabled(False)
+        self.__combobox.setCursor(Qt.CursorShape.WaitCursor)
+
+    def is_enabled(self):
+        return True
 
     def __add_game_selection_dropdown(self, gui: _GUI):
         """
@@ -58,23 +69,16 @@ class GameDropdownBuilder(UIBuilder):
         """
 
         def on_game_selection_change(value):
-            def callback():
-                _logger.info("Game selection changed.")
-                _logger.info("Selected game - %s", value)
+            _logger.info("Game selection changed.")
+            _logger.info("Selected game - %s", value)
 
-                app.state.game_name = value
-                gui.refresh(UIRefreshEvent.GameSelectionChange)
+            app.state.game_name = value
+            app.games.current.download_metadata()
+            gui.refresh(UIRefreshEvent.GameSelectionChange)
 
-            return execute_in_blocking_thread(callback)
+        self.__combobox = QCustomComboBox()
+        self.__combobox.setObjectName(QObjectName.ComboBox)
+        self.__combobox.setProperty(QAttr.Kind, QKind.Secondary)
+        self.__combobox.currentTextChanged.connect(on_game_selection_change)  # noqa
 
-        self.__dropdown = Dropdown(
-            gui.top_right,
-            width=25,
-            height=1.5,
-            prefix="🎮 ",
-            command=on_game_selection_change,
-            margin=(10, 0),
-            style="Secondary.TDropdown"
-        )
-
-        self.__dropdown.grid(row=1, column=0, sticky=tk.E, padx=(0, 20), pady=(10, 0))
+        gui.top_right.layout().addWidget(self.__combobox, 1, 1)

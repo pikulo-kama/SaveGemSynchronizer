@@ -4,7 +4,7 @@
 <img src="assets/application-demo.png" alt="SaveGem Screenshot" width="800"/>
 
 ## 📌 Overview
-**SaveGem** is a simple desktop application built with **Tkinter** that allows players to **upload and download save files to Google Drive**.  
+**SaveGem** is a simple desktop application built with **PyQT** that allows players to **upload and download save files to Google Drive**.  
 
 It’s designed for games that:
 - Don’t have official cloud save support.
@@ -17,7 +17,7 @@ With SaveGem, you can seamlessly keep your save games **backed up and in sync**.
 
 ## 🚀 Features
 - ✅ Works for any game where saves are stored locally
-- ✅ Easy-to-use desktop UI (Tkinter)
+- ✅ Easy-to-use desktop UI (PyQT)
 - ✅ No manual reload! UI updates automatically
 - ✅ Upload local save files to Google Drive  
 - ✅ Download the latest save files from the drive

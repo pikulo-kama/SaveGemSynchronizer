@@ -125,4 +125,4 @@ class SubscriptableService:
             self.__progress += self.__single_stage_percentage
             progress = self.__progress
 
-        self._send_event(ProgressEvent(None, progress))
+        self._send_event(ProgressEvent(None, round(progress * 100)))

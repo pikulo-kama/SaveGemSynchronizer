@@ -1,0 +1,32 @@
+
+QComboBox#comboBox {
+    height: 25px;
+    color: color("primaryTextColor");
+    font: font("secondary-xs");
+    font-weight: bold;
+    padding: 5px 10px;
+}
+
+QComboBox#comboBox QAbstractItemView {
+    color: color("primaryTextColor");
+    border-radius: 5px;
+    padding: 5px;
+}
+
+QComboBox#comboBox QAbstractItemView::item {
+    padding: 5px;
+}
+
+
+/* Primary dropdown styles */
+QComboBox#comboBox[kind="primary"],
+QComboBox#comboBox[kind="primary"] QAbstractItemView {
+    background-color: color("primaryStaticColor");
+}
+
+
+/* Secondary dropdown styles */
+QComboBox#comboBox[kind="secondary"],
+QComboBox#comboBox[kind="secondary"] QAbstractItemView {
+    background-color: color("secondaryStaticColor");
+}

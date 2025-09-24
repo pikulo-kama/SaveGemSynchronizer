@@ -1,0 +1,35 @@
+
+QPushButton#button {
+    width: 30px;
+    height: 18px;
+
+    padding: 10px 5px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+
+    color: color("primaryTextColor");
+    font: font("primary-xs");
+    font-weight: 600;
+}
+
+
+/* Primary button */
+QPushButton#button[kind="primary"],
+QPushButton#button[kind="primary"]:pressed {
+    background-color: color("primaryStaticColor");
+}
+
+QPushButton#button[kind="primary"]:hover {
+    background-color: color("primaryHoverColor");
+}
+
+
+/* Secondary button */
+QPushButton#button[kind="secondary"],
+QPushButton#button[kind="secondary"]:pressed {
+    background-color: color("secondaryStaticColor");
+}
+
+QPushButton#button[kind="secondary"]:hover {
+    background-color: color("secondaryHoverColor");
+}

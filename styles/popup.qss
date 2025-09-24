@@ -1,0 +1,6 @@
+
+QLabel#popupTitle {
+    color: color("headingTextColor");
+    font: font("primary-xs");
+    font-weight: bold;
+}

@@ -1,18 +1,20 @@
-import tkinter as tk
+from PyQt6.QtCore import Qt, QThread
+from PyQt6.QtWidgets import QWidget, QHBoxLayout
 
+from savegem.app.gui.worker import QWorker
+from savegem.app.gui.worker.download_worker import DownloadWorker
+from savegem.app.gui.worker.upload_worker import UploadWorker
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.window import _GUI
-from savegem.app.gui.component.progress_button import ProgressButton
-from savegem.app.gui.constants import TkState, TkCursor, UIRefreshEvent
+from savegem.app.gui.component.progress_button import QProgressPushButton
+from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind
 from savegem.app.gui.popup.confirmation import confirmation
 from savegem.app.gui.popup.notification import notification
 from savegem.app.gui.builder import UIBuilder
-from savegem.common.service.downloader import Downloader
-from savegem.common.service.subscriptable import Event, EventType, EventKind, ProgressEvent
-from savegem.common.service.uploader import Uploader
+from savegem.common.service.subscriptable import EventKind, ErrorEvent
 from savegem.common.util.logger import get_logger
-from savegem.common.util.thread import execute_in_blocking_thread
+from savegem.app.gui.thread import execute_in_blocking_thread
 
 _logger = get_logger(__name__)
 
@@ -24,24 +26,18 @@ class DownloadUploadButtonBuilder(UIBuilder):
     """
 
     def __init__(self):
-        super().__init__(
-            UIRefreshEvent.LanguageChange,
-            UIRefreshEvent.AfterUploadDownloadComplete
-        )
+        super().__init__(UIRefreshEvent.LanguageChange)
 
-        self.__download_button = None
-        self.__upload_button = None
+        self.__gui = None
 
-        self.__downloader = Downloader()
-        self.__uploader = Uploader()
+        self.__download_button: QProgressPushButton
+        self.__upload_button: QProgressPushButton
 
-        self.__downloader.subscribe(self.__done_subscriber("notification_NewSaveHasBeenDownloaded"))
-        self.__uploader.subscribe(self.__done_subscriber("notification_SaveHasBeenUploaded"))
-
-        self.__downloader.subscribe(self.__error_subscriber)
-        self.__uploader.subscribe(self.__error_subscriber)
+        self.__thread: QThread
+        self.__worker: QWorker
 
     def build(self, gui: _GUI):
+        self.__gui = gui
         self.__add_buttons(gui)
 
     def refresh(self, gui: _GUI):
@@ -49,80 +45,101 @@ class DownloadUploadButtonBuilder(UIBuilder):
         upload_button_label = tr("label_UploadSaveToDrive")
         download_button_label = tr("label_DownloadSaveFromDrive")
 
-        self.__upload_button.configure(
-            text=upload_button_label,
-            progress=0
-        )
+        self.__upload_button.setText(upload_button_label)
+        self.__upload_button.set_progress(0)
         _logger.debug("Upload button reloaded (%s)", upload_button_label)
 
-        self.__download_button.configure(
-            text=download_button_label,
-            progress=0
-        )
+        self.__download_button.setText(download_button_label)
+        self.__download_button.set_progress(0)
         _logger.debug("Download button reloaded (%s)", download_button_label)
 
-    def enable(self, gui: "_GUI"):
-        self.__upload_button.configure(state=TkState.Default, cursor=TkCursor.Hand)
-        self.__download_button.configure(state=TkState.Default, cursor=TkCursor.Hand)
-
-    def disable(self, gui: "_GUI"):
-        self.__upload_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
-        self.__download_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
-
-    def __add_buttons(self, gui):
+    def __add_buttons(self, gui: _GUI):
         """
         Used to render upload and download buttons.
         """
 
-        button_frame = tk.Frame(gui.center)
+        button_frame = QWidget()
+        button_layout = QHBoxLayout(button_frame)
+        button_layout.setSpacing(20)
 
-        def upload_callback():
-            self.__uploader.upload(app.games.current)
-            gui.refresh(UIRefreshEvent.AfterUploadDownloadComplete)
+        self.__upload_button = QProgressPushButton()
+        self.__download_button = QProgressPushButton()
 
-        def download_callback():
-            self.__downloader.download(app.games.current)
-            gui.refresh(UIRefreshEvent.AfterUploadDownloadComplete)
-
-        self.__upload_button = ProgressButton(
-            button_frame,
-            width=35,
-            command=lambda: execute_in_blocking_thread(upload_callback),
-            style="Primary.TButton"
-        )
-
-        self.__download_button = ProgressButton(
-            button_frame,
-            width=5,
-            command=lambda: confirmation(
+        self.__upload_button.clicked.connect(self.__start_upload)  # noqa
+        self.__download_button.clicked.connect(  # noqa
+            lambda: confirmation(
                 tr("confirmation_ConfirmToDownloadSave"),
-                lambda: execute_in_blocking_thread(download_callback)
-            ),
-            style="Secondary.TButton"
+                self.__start_download
+            )
         )
 
-        self.__uploader.subscribe(self.__progress_subscriber(self.__upload_button))
-        self.__downloader.subscribe(self.__progress_subscriber(self.__download_button))
+        self.__upload_button.setProperty(QAttr.Kind, QKind.Primary)
+        self.__download_button.setProperty(QAttr.Kind, QKind.Secondary)
 
-        self.__upload_button.grid(row=0, column=0, padx=5)
-        self.__download_button.grid(row=0, column=1, padx=5)
+        self._add_interactable(self.__upload_button)
+        self._add_interactable(self.__download_button)
 
-        button_frame.grid(row=1, column=0)
+        button_layout.addSpacing(30)
+        button_layout.addWidget(self.__upload_button, stretch=8)
+        button_layout.addWidget(self.__download_button, stretch=2)
+        button_layout.addSpacing(30)
+
+        gui.center.layout().addWidget(button_frame, 1, 0, alignment=Qt.AlignmentFlag.AlignTop)
+
+    def __start_download(self):
+        """
+        Used to start download of save from cloud.
+        """
+
+        self.__thread = QThread()
+        self.__worker = DownloadWorker()
+
+        self.__worker.error.connect(self.__error_subscriber)
+        self.__worker.progress.connect(self.__progress_subscriber(self.__download_button))
+        self.__worker.completed.connect(self.__done_subscriber("notification_NewSaveHasBeenDownloaded"))
+
+        execute_in_blocking_thread(self.__thread, self.__worker)
+
+    def __start_upload(self):
+        """
+        Used to start upload of save to cloud.
+        """
+
+        self.__thread = QThread()
+        self.__worker = UploadWorker()
+
+        self.__worker.error.connect(self.__error_subscriber)
+        self.__worker.progress.connect(self.__progress_subscriber(self.__upload_button))
+        self.__worker.completed.connect(self.__done_subscriber("notification_SaveHasBeenUploaded"))
+
+        execute_in_blocking_thread(self.__thread, self.__worker)
+
+    def __done_subscriber(self, message: str):
+        """
+        Used to get callback that will get
+        executed once worker has finished work.
+        """
+
+        def callback():
+            notification(tr(message))
+            self.refresh(self.__gui)
+
+        return callback
 
     @staticmethod
-    def __done_subscriber(message: str):
-
-        def subscriber(event: Event):
-            if event.type == EventType.DONE:
-                notification(tr(message))
-
-        return subscriber
+    def __progress_subscriber(widget: QProgressPushButton):
+        """
+        Used to get callback that will get executed
+        when worker sends update event.
+        """
+        return lambda event: widget.set_progress(event.progress)
 
     @staticmethod
-    def __error_subscriber(event: Event):
-
-        if event.type is not EventType.ERROR:
-            return
+    def __error_subscriber(event: ErrorEvent):
+        """
+        Callback that will get executed
+        when worker sends error event.
+        """
 
         if event.kind == EventKind.SAVES_DIRECTORY_IS_MISSING:
             notification(tr("notification_ErrorSaveDirectoryMissing", app.games.current.local_path))
@@ -132,15 +149,3 @@ class DownloadUploadButtonBuilder(UIBuilder):
 
         elif event.kind == EventKind.ERROR_UPLOADING_TO_DRIVE:
             notification(tr("notification_ErrorUploadingToDrive"))
-
-    @staticmethod
-    def __progress_subscriber(widget: ProgressButton):
-
-        def subscriber(event: ProgressEvent):
-            if event.type == EventType.PROGRESS:
-                widget.configure(
-                    text=f"{int(event.progress * 100)}%",
-                    progress=event.progress
-                )
-
-        return subscriber

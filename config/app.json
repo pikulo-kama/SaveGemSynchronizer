@@ -1,6 +1,6 @@
 {
   "name": "SaveGem",
-  "version": "3.11.2",
+  "version": "4.0.0",
   "description": "SaveGem UI Application",
   "processName": "SaveGem.exe",
   "author": "Artur Parkour",
@@ -18,20 +18,5 @@
   "popupHeight" : 150,
 
   "horizontalMargin" : 100,
-  "verticalMargin" : 200,
-
-  "primaryColor" : "#009688",
-  "secondaryColor" : "#d3d3d3",
-  "accentColor" : "#e07b39",
-
-  "primaryButton" : {
-    "styleName" : "Primary",
-    "colorStatic" : "#ddedde",
-    "colorHover" : "#dae6db"
-  },
-  "secondaryButton" : {
-    "styleName" : "Secondary",
-    "colorStatic" : "#cedfeb",
-    "colorHover" : "#d5dde3"
-  }
+  "verticalMargin" : 200
 }

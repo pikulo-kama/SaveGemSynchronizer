@@ -140,6 +140,7 @@ COLLECT(
     Tree('..\\SaveGemSynchronizer\\resources', prefix='resources\\'),
     Tree('..\\SaveGemSynchronizer\\config', prefix='config\\'),
     Tree('..\\SaveGemSynchronizer\\locale', prefix='locale\\'),
+    Tree('..\\SaveGemSynchronizer\\styles', prefix='styles\\'),
 
     upx=True,
     name=build_exe_info("app").get("name")

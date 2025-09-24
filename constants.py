@@ -11,6 +11,7 @@ class Directory:
     Config: Final = os.path.join(ProjectRoot, "config")
     Locale: Final = os.path.join(ProjectRoot, "locale")
     Resources: Final = os.path.join(ProjectRoot, "resources")
+    Styles: Final = os.path.join(ProjectRoot, "styles")
 
     AppDataRoot = os.path.join(os.getenv("APPDATA"), "SaveGem")
     Output: Final = os.path.join(AppDataRoot, "Output")
@@ -29,6 +30,7 @@ class File:
     AppConfig: Final = "app.json"
     AppState: Final = "state.json"
     Logback: Final = "logback.json"
+    Style: Final = "style.json"
 
     GUIInitializedFlag: Final = "gui_init.flag"
 

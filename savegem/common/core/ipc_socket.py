@@ -1,4 +1,3 @@
-import abc
 import json
 from socket import socket, AF_INET, SOCK_STREAM
 from typing import Final
@@ -23,7 +22,16 @@ class IPCCommand:
     StateChanged: Final = "state_changed"
 
 
-class IPCSocket(abc.ABC):
+class IPCProp:
+    """
+    Contains IPC message properties.
+    """
+
+    Command: Final = "command"
+    Event: Final = "event"
+
+
+class IPCSocket:
 
     def __init__(self, port):
         self.__socket_info = ("127.0.0.1", port)
@@ -44,10 +52,9 @@ class IPCSocket(abc.ABC):
             connection, _ = sock.accept()
             message = connection.recv(4096)
             message = json.loads(message.decode(UTF_8))
-
             _logger.info("Received message - %s", message)
 
-            command = message.pop("command")
+            command = message.pop(IPCProp.Command)
 
             if command == IPCCommand.StateChanged:
                 app.state.reload()
@@ -60,9 +67,7 @@ class IPCSocket(abc.ABC):
     def send(self, message):
 
         if isinstance(message, str):
-            message = {
-                "command": message
-            }
+            message = {IPCProp.Command: message}
 
         with socket(AF_INET, SOCK_STREAM) as sock:
 
@@ -84,7 +89,5 @@ class IPCSocket(abc.ABC):
 
         return is_running
 
-    @abc.abstractmethod
     def _handle(self, command: str, message: dict):
-        pass
-
+        raise NotImplementedError()

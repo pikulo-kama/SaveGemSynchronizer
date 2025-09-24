@@ -1,0 +1,11 @@
+
+QLabel#saveStatusLabel {
+    color: color("headingTextColor");
+    font: font("primary-lg");
+}
+
+QLabel#saveStatusTimestamp {
+    color: color("headingTextColor");
+    font: font("primary-xs");
+    font-weight: bold;
+}

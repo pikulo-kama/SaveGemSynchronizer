@@ -1,9 +1,9 @@
-import tkinter as tk
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QHBoxLayout, QPushButton
 
 from constants import Resource
+from savegem.app.gui.constants import QAttr, QObjectName, QKind
 from savegem.common.core.text_resource import tr
-from savegem.app.gui.constants import TkCursor
-from savegem.app.gui.component.button import Button
 from savegem.app.gui.popup import Popup
 
 
@@ -11,9 +11,10 @@ def confirmation(message: str, callback):
     """
     Present popup used to display confirmation messages.
     """
+
     popup = Confirmation()
     popup.set_confirm_callback(callback)
-    popup.show(message)
+    popup.show_dialog(message)
 
 
 class Confirmation(Popup):
@@ -33,34 +34,30 @@ class Confirmation(Popup):
 
         self.__confirm_callback = callback
 
-    def _show_internal(self):
-        button_frame = tk.Frame(self._container)
+    def _add_controls(self):
+        button_layout = QHBoxLayout()
+        button_layout.setSpacing(10)
 
         def confirm_callback():
-            self.destroy()
+            self.accept()
 
             if self.__confirm_callback is not None:
                 self.__confirm_callback()
 
-        confirm_btn = Button(
-            button_frame,
-            text=tr("popup_ConfirmationButtonConfirm"),
-            cursor=TkCursor.Hand,
-            width=12,
-            command=confirm_callback,
-            style="SmallPrimary.TButton"
-        )
+        confirm_button = QPushButton(tr("popup_ConfirmationButtonConfirm"))
+        confirm_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        confirm_button.setObjectName(QObjectName.Button)
+        confirm_button.setProperty(QAttr.Kind, QKind.Primary)
 
-        close_btn = Button(
-            button_frame,
-            text=tr("popup_ConfirmationButtonClose"),
-            cursor=TkCursor.Hand,
-            width=10,
-            command=self.destroy,
-            style="SmallSecondary.TButton"
-        )
+        close_button = QPushButton(tr("popup_ConfirmationButtonClose"))
+        close_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        close_button.setObjectName(QObjectName.Button)
+        close_button.setProperty(QAttr.Kind, QKind.Secondary)
 
-        confirm_btn.grid(row=0, column=0, padx=(10, 10))
-        close_btn.grid(row=0, column=1)
+        confirm_button.clicked.connect(confirm_callback)  # noqa
+        close_button.clicked.connect(self.reject)  # noqa
 
-        button_frame.grid(row=1, column=0)
+        button_layout.addWidget(confirm_button)
+        button_layout.addWidget(close_button)
+
+        self._container.addLayout(button_layout)
