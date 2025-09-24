@@ -1,32 +1,51 @@
-from savegem.app.gui.component.button import Button
-from savegem.app.gui.constants import TkAttr
-from savegem.app.gui.style import adjust_color
-from savegem.common.util.graphics import create_polygon
+from PyQt6.QtWidgets import QPushButton, QProgressBar
+
+from savegem.app.gui.constants import QAttr
 
 
-class ProgressButton(Button):
+class QProgressPushButton(QPushButton):
     """
-    Button component that allows to set progress property
-    which could emulate progress bar animation on button.
+    Custom button component.
+    Combines both QPushButton and QProgressBar
+
+    When button progress is more than 0 button
+    will transform into progress bar.
     """
 
-    def _draw_on_body(self):
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
 
-        progress = self._get_value(TkAttr.Progress)
+        self.__progres_bar = QProgressBar(self)
+        self.__progres_bar.setTextVisible(False)
+        self.__progres_bar.setValue(0)
 
-        # Only draw is progress greater than 0.
-        if progress is None or progress == 0:
-            return
+    def set_progress(self, progress):
+        """
+        Used to set progress value of
+        progress bar.
+        """
 
-        width = self._get_width()
-        height = self._get_height()
-        radius = self._get_value(TkAttr.Radius)
-        background = self._get_value(TkAttr.BgColor)
+        self.__progres_bar.setValue(progress)
 
-        create_polygon(
-            0, 0, width * progress, height,
-            widget=self._canvas,
-            radius=radius,
-            fill=adjust_color(background, 0.95),
-            outline=""
-        )
+        if progress > 0:
+            self.setText("")
+            self.__progres_bar.setTextVisible(True)
+            self.setEnabled(False)
+
+        else:
+            self.__progres_bar.setTextVisible(False)
+            self.setEnabled(True)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        # Update the progress bar's geometry to match the button's size
+        self.__progres_bar.setGeometry(0, 0, self.width(), self.height())
+
+    def setProperty(self, name, value):
+        super().setProperty(name, value)
+
+        # If kind is being set for
+        # button then also update kind
+        # of progress bar.
+        if name == QAttr.Kind:
+            self.__progres_bar.setProperty(QAttr.Kind, f"{self.__class__.__name__}-{value}")

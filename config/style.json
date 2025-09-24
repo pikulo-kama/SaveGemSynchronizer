@@ -1,0 +1,57 @@
+{
+  "colors" : {
+    "light-old" : {
+      "primaryTextColor" : "#009688",
+      "secondaryTextColor" : "#d3d3d3",
+      "headingTextColor" : "#009688",
+      "accentColor" : "#e07b39",
+
+      "primaryStaticColor" : "#ddedde",
+      "primaryHoverColor" : "#dae6db",
+      "secondaryStaticColor" : "#cedfeb",
+      "secondaryHoverColor" : "#d5dde3"
+    },
+    "dark-old" : {
+      "primaryTextColor" : "#2c3e50",
+      "secondaryTextColor" : "#909090",
+      "headingTextColor" : "#e0e0e0",
+      "accentColor" : "#e07b39",
+
+      "primaryStaticColor" : "#4c7a72",
+      "primaryHoverColor" : "#5e958a",
+      "secondaryStaticColor" : "#5e7a9e",
+      "secondaryHoverColor" : "#6e8aa7"
+    },
+    "light" : {
+      "primaryTextColor" : "#EBF2F0",
+      "secondaryTextColor" : "#d3d3d3",
+      "headingTextColor" : "#5F6D73",
+      "accentColor" : "#e07b39",
+
+      "primaryStaticColor" : "#9AC1D0",
+      "primaryHoverColor" : "#82b9cf",
+      "secondaryStaticColor" : "#4F729A",
+      "secondaryHoverColor" : "#627c99"
+    },
+    "dark" : {
+      "primaryTextColor" : "#2c3e50",
+      "secondaryTextColor" : "#909090",
+      "headingTextColor" : "#5F6D73",
+      "accentColor" : "#e07b39",
+
+      "primaryStaticColor" : "#9AC1D0",
+      "primaryHoverColor" : "#82b9cf",
+      "secondaryStaticColor" : "#4F729A",
+      "secondaryHoverColor" : "#627c99"
+    }
+  },
+  "fonts" : {
+    "primary-xs" : "10pt 'Helvetica'",
+    "primary-sm" : "12pt 'Helvetica'",
+    "primary-md" : "18pt 'Helvetica'",
+    "primary-lg" : "24pt 'Helvetica'",
+
+    "secondary-xs" : "10pt 'Segoe UI Semibold'",
+    "secondary-md" : "18pt 'Segoe UI Semibold'"
+  }
+}

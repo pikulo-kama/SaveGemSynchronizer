@@ -1,7 +1,7 @@
 import os.path
 import shutil
 
-from constants import ZIP_MIME_TYPE, ZIP_EXTENSION
+from constants import ZIP_EXTENSION
 from savegem.common.core.game_config import Game
 from savegem.common.service.gdrive import GDrive
 from savegem.common.service.subscriptable import SubscriptableService, ErrorEvent, DoneEvent, EventKind
@@ -40,17 +40,17 @@ class Downloader(SubscriptableService):
             self._send_event(ErrorEvent(EventKind.SAVES_DIRECTORY_IS_MISSING))
             return
 
-        metadata = Downloader.get_last_save_metadata(game)
+        game.download_metadata()
         self._complete_stage()
 
-        if metadata is None:
+        if game.cloud_metadata is None:
             self._send_event(ErrorEvent(EventKind.LAST_SAVE_METADATA_IS_NONE))
             return
 
         # Download file and write it to zip file locally (in output directory)
         _logger.info("Downloading save archive.")
         file = GDrive.download_file(
-            metadata.get("id"),
+            game.cloud_metadata.get("id"),
             subscriber=lambda completion: self._complete_stage(completion)
         ).getvalue()
 
@@ -72,7 +72,7 @@ class Downloader(SubscriptableService):
         self._complete_stage()
 
         # Update metadata in memory.
-        game.checksum = metadata.get("checksum")
+        game.checksum = game.cloud_metadata.get("checksum")
         self._complete_stage()
 
         self._send_event(DoneEvent(None))
@@ -82,7 +82,7 @@ class Downloader(SubscriptableService):
         """
         Used to create backup of provided directory
         will copy directory in the same location and add
-        '_backup' prefix.
+        '_backup' suffix.
         """
 
         # Make backup of existing save, just in case.
@@ -97,31 +97,3 @@ class Downloader(SubscriptableService):
 
         _logger.info("Copying old save to backup directory.")
         shutil.copytree(saves_directory, backup_dir)
-
-    @staticmethod
-    def get_last_save_metadata(game: Game):
-        """
-        Used to get metadata of last save in Google Drive.
-        """
-
-        metadata = GDrive.query_single(
-            f"mimeType='{ZIP_MIME_TYPE}' and '{game.drive_directory}' in parents and trashed=false",
-            "files(id, appProperties, createdTime)"
-        )
-
-        if metadata is None:
-            message = "Error downloading metadata. Either configuration is incorrect or you don't have access."
-
-            _logger.error(message)
-            raise RuntimeError(message)
-
-        files_meta = metadata.get("files")
-
-        if len(files_meta) == 0:
-            _logger.warn("There are no saves on Google Drive for %s.", game.name)
-            return None
-
-        file_meta = files_meta[0]
-        properties = file_meta.get("appProperties") or {}
-
-        return {**file_meta, **properties}

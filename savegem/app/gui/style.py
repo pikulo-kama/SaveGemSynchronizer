@@ -1,217 +1,79 @@
-import tkinter as tk
-from tkinter import font
-from tkinter.ttk import Style
-from savegem.common.core.holders import prop
-from savegem.app.gui.constants import TkState, TkCursor
+import os
+import re
+from typing import Final
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
+
+from constants import Directory, File
+from savegem.common.core.json_config_holder import JsonConfigHolder
+from savegem.common.util.file import read_file, resolve_config
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
-style = Style()
+_styles = JsonConfigHolder(resolve_config(File.Style))
+
+_FONTS_PROP = "fonts"
+_COLORS_PROP = "colors"
+
+_COLOR_MODE_LIGHT = "light"
+_COLOR_MODE_DARK = "dark"
 
 
-def adjust_color(hex_color: str, factor: float) -> str:
+def _color(property_name: str):
     """
-    Darken or brighter a HEX color by a given factor (0–1).
-    Example: adjust_color("#6699ff", 0.8) -> "#527acc"
-    """
+    Used to get color that corresponds
+    provided property.
 
-    hex_color = hex_color.lstrip("#")
-
-    r = int(hex_color[0:2], 16)
-    g = int(hex_color[2:4], 16)
-    b = int(hex_color[4:6], 16)
-
-    r = int(r * factor)
-    g = int(g * factor)
-    b = int(b * factor)
-
-    return f"#{r:02x}{g:02x}{b:02x}"
-
-
-def init_gui_styles():
-    """
-    Used to initialize Tkinter custom styles.
+    Will get property depending on system color scheme.
     """
 
-    style.theme_use("clam")
+    mode = _COLOR_MODE_LIGHT
+    color_scheme = QApplication.instance().styleHints().colorScheme()  # noqa
 
-    _add_button("primaryButton")
-    _add_button("secondaryButton")
+    if color_scheme == Qt.ColorScheme.Light:
+        mode = _COLOR_MODE_LIGHT
 
-    _add_small_button("primaryButton")
-    _add_small_button("secondaryButton")
+    elif color_scheme == Qt.ColorScheme.Dark:
+        mode = _COLOR_MODE_DARK
 
-    for font_size in [10, 18]:
-        _add_square_button("primaryButton", font_size)
-        _add_square_button("secondaryButton", font_size)
-
-    _add_secondary_dropdown()
-    _add_secondary_chip()
+    colors = _styles.get_value(_COLORS_PROP).get(mode)
+    return colors.get(property_name)
 
 
-def _add_secondary_dropdown():
+def _font(property_name: str):
     """
-    Used to add custom Combobox styles with secondary color accent.
+    Used to get font that corresponds
+    provided property.
+    """
+    return _styles.get_value(_FONTS_PROP).get(property_name)
+
+
+def load_stylesheet():
+    """
+    Used to load all stylesheets and combine
+    them into single string.
     """
 
-    dropdown_style = "Secondary.TDropdown"
-    listbox_style = dropdown_style + ".TListbox"
+    styles = ""
 
-    _log_style(dropdown_style)
-    _log_style(listbox_style)
+    # Get all style files and join them together.
+    for style in os.listdir(Directory.Styles):
+        style_path = os.path.join(Directory.Styles, style)
+        styles += read_file(style_path)
 
-    style.configure(
-        dropdown_style,
-        background=prop("secondaryButton.colorStatic"),
-        foreground=prop("primaryColor"),
-        font=("Segoe UI Semibold", 10, font.BOLD),
-        cursor=TkCursor.Hand,
-        radius=6,
-        padding=5
+    # Resolve colors.
+    styles = re.sub(
+        r"color\(['\"]([^'\"]+)['\"]\)",
+        lambda match: _color(match.group(1)),
+        styles
     )
 
-    style.configure(
-        listbox_style,
-        background=prop("secondaryButton.colorStatic"),
-        foreground=prop("primaryColor"),
-        font=("Segoe UI Semibold", 8, font.BOLD),
-        cursor=TkCursor.Hand,
-        padding=5
+    # Resolve fonts.
+    styles = re.sub(
+        r"font\(['\"]([^'\"]+)['\"]\)",
+        lambda match: _font(match.group(1)),
+        styles
     )
 
-    style.map(
-        dropdown_style,
-        background=_expand_property(prop("secondaryButton.colorStatic"))
-    )
-
-    style.map(
-        listbox_style,
-        background=[
-            (TkState.Active, prop("primaryButton.colorHover")),
-            (TkState.Pressed, prop("secondaryButton.colorStatic"))
-        ]
-    )
-
-
-def _add_secondary_chip():
-    """
-    Used to add secondary style to custom Chip component.
-    """
-
-    style_name = "Primary.TChip"
-    _log_style(style_name)
-
-    style.configure(
-        style_name,
-        height=2,
-        radius=5,
-        font=("Segoe UI Semibold", 10),
-        foreground=prop("primaryColor"),
-        background=prop("primaryButton.colorStatic")
-    )
-
-
-def _add_button(button: str):
-    """
-    Used to create regular button style using provided configuration.
-    """
-
-    style_name = f"{prop(f"{button}.styleName")}.TButton"
-    _log_style(style_name)
-
-    style.configure(
-        style_name,
-        borderwidth=0,
-        relief=tk.SOLID,
-        foreground=prop("primaryColor"),
-        background=prop(f"{button}.colorStatic"),
-        padding=(18, 20),
-        cursor=TkCursor.Hand,
-        font=("Segoe UI Semibold", 18),
-        radius=10
-    )
-
-    style.map(
-        style_name,
-        background=[
-            (TkState.Active, prop(f"{button}.colorHover")),
-            (TkState.Pressed, prop(f"{button}.colorStatic"))
-        ]
-    )
-
-
-def _add_small_button(button):
-    """
-    Used to create small button style using provided configuration.
-    """
-
-    style_name = f"Small{prop(f"{button}.styleName")}.TButton"
-    _log_style(style_name)
-
-    style.configure(
-        style_name,
-        borderwidth=0,
-        relief=tk.SOLID,
-        foreground=prop("primaryColor"),
-        background=prop(f"{button}.colorStatic"),
-        padding=8,
-        cursor=TkCursor.Hand,
-        font=12,
-        radius=3
-    )
-
-    style.map(
-        style_name,
-        background=[
-            (TkState.Active, prop(f"{button}.colorHover")),
-            (TkState.Pressed, prop(f"{button}.colorStatic"))
-        ]
-    )
-
-
-def _add_square_button(button, font_size: int):
-    """
-    Used to create square button style using provided configuration and font size.
-    """
-
-    style_name = f"Square{prop(f"{button}.styleName")}.{font_size}.TButton"
-    _log_style(style_name)
-
-    style.configure(
-        style_name,
-        borderwidth=0,
-        relief=tk.SOLID,
-        font=("Small Fonts", font_size, font.BOLD),
-        width=3,
-        height=1,
-        foreground=prop("primaryColor"),
-        background=prop(f"{button}.colorStatic"),
-        padding=(8, 12),
-        cursor=TkCursor.Hand,
-        radius=5,
-    )
-
-    style.map(
-        style_name,
-        foreground=_expand_property(prop("primaryColor")),
-        background=[
-            (TkState.Active, prop(f"{button}.colorHover")),
-            (TkState.Pressed, prop(f"{button}.colorStatic"))
-        ]
-    )
-
-
-def _expand_property(value):
-    """
-    Used to create tuple list for value.
-    Needed for scenarios where property should be the same
-    regardless of current state.
-    """
-    return [(TkState.Readonly, value), (TkState.Disabled, value)]
-
-
-def _log_style(style_name: str):
-    """
-    Just a wrapper to log event when custom style is being registered.
-    """
-    _logger.info("Adding custom style '%s'", style_name)
+    return styles

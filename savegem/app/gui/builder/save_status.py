@@ -1,12 +1,10 @@
-import tkinter as tk
-from tkinter import font
-
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QLabel, QGridLayout
 from babel.localtime import get_localzone
 
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
-from savegem.common.core.holders import prop
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.builder import UIBuilder
 from datetime import date, datetime
@@ -14,7 +12,6 @@ from datetime import date, datetime
 from babel.dates import format_datetime
 from pytz import timezone
 
-from savegem.common.service.downloader import Downloader
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -34,73 +31,61 @@ class SaveStatusBuilder(UIBuilder):
             UIRefreshEvent.LanguageChange,
             UIRefreshEvent.GameConfigChange,
             UIRefreshEvent.CloudSaveFilesChange,
-            UIRefreshEvent.GameSelectionChange,
-            UIRefreshEvent.AfterUploadDownloadComplete
+            UIRefreshEvent.GameSelectionChange
         )
 
-        self.__save_status = None
-        self.__last_save_timestamp = None
+        self.__save_status: QLabel
+        self.__last_save_timestamp: QLabel
 
     def build(self, gui: _GUI):
         self.__add_save_information(gui)
 
     def refresh(self, gui: _GUI):
-        last_save_meta = Downloader.get_last_save_metadata(app.games.current)
+        save_status_label = self.__get_last_download_version_text()
+        last_save_timestamp_label = self.__get_last_save_info_text()
 
-        save_status_label = self.__get_last_download_version_text(last_save_meta)
-        last_save_timestamp_label = self.__get_last_save_info_text(last_save_meta)
-
-        self.__save_status.configure(text=save_status_label)
+        self.__save_status.setText(save_status_label)
         _logger.debug("Save status label was reloaded. (%s)", save_status_label)
 
-        self.__last_save_timestamp.configure(text=last_save_timestamp_label)
+        self.__last_save_timestamp.setText(last_save_timestamp_label)
         _logger.debug("Last save information label was reloaded. (%s)", last_save_timestamp_label)
-
-    def enable(self, gui: "_GUI"):
-        pass
-
-    def disable(self, gui: "_GUI"):
-        pass
 
     def __add_save_information(self, gui):
         """
         Used to render both local and Google Drive save status labels.
         """
 
-        info_frame = tk.Frame(gui.center)
+        info_frame = QWidget(gui.center)
+        layout = QGridLayout(info_frame)
+        layout.setSpacing(5)
 
-        # Text is empty for fields at this moment
-        # They would be populated later by GUI component.
-        self.__save_status = tk.Label(
-            info_frame,
-            fg=prop("primaryColor"),
-            font=("Helvetica", 25)
-        )
+        self.__save_status = QLabel()
+        self.__last_save_timestamp = QLabel()
 
-        self.__last_save_timestamp = tk.Label(
-            info_frame,
-            fg=prop("primaryColor"),
-            font=("Helvetica", 11, font.BOLD)
-        )
+        self.__save_status.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.__save_status.setObjectName("saveStatusLabel")
+        self.__last_save_timestamp.setObjectName("saveStatusTimestamp")
 
-        self.__save_status.grid(row=0, column=0)
-        self.__last_save_timestamp.grid(row=1, column=0)
+        layout.addWidget(self.__save_status, 0, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.__last_save_timestamp, 1, 0, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        info_frame.grid(row=0, column=0, pady=(0, 100))
+        gui.center.layout().addWidget(info_frame, 0, 0, alignment=Qt.AlignmentFlag.AlignCenter)
 
     @staticmethod
-    def __get_last_save_info_text(last_save_meta):
+    def __get_last_save_info_text():
         """
         Used to get Google Drive save status label.
         """
 
-        if last_save_meta is None:
+        metadata = app.games.current.cloud_metadata
+
+        if metadata is None:
             return ""
 
         time_zone = str(get_localzone())
         date_format = "d MMMM"
 
-        creation_datetime = datetime.strptime(last_save_meta.get("createdTime"), "%Y-%m-%dT%H:%M:%S.%fZ")
+        creation_datetime = datetime.strptime(metadata.get("createdTime"), "%Y-%m-%dT%H:%M:%S.%fZ")
         creation_datetime += timezone(time_zone).utcoffset(creation_datetime)
 
         # Only show year if it's not current one, just to avoid extra information.
@@ -114,21 +99,23 @@ class SaveStatusBuilder(UIBuilder):
             "info_NewestSaveOnDriveInformation",
             creation_date,
             creation_time,
-            last_save_meta.get("owner")
+            metadata.get("owner")
         )
 
     @staticmethod
-    def __get_last_download_version_text(latest_cloud_save_meta):
+    def __get_last_download_version_text():
         """
         Used to get local save status label.
         """
 
-        if latest_cloud_save_meta is None:
+        metadata = app.games.current.cloud_metadata
+
+        if metadata is None:
             return tr("label_StorageIsEmpty")
 
         last_save_checksum = app.games.current.checksum
         local_save_checksum = app.games.current.calculate_checksum()
-        cloud_save_checksum = latest_cloud_save_meta.get("checksum")
+        cloud_save_checksum = metadata.get("checksum")
 
         if last_save_checksum is None:
             return tr("label_NoInformationAboutCurrentSaveVersion")

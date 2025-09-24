@@ -1,5 +1,6 @@
-import tkinter as tk
 from datetime import date
+
+from PyQt6.QtWidgets import QLabel
 
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.core.holders import prop
@@ -19,7 +20,7 @@ class CopyrightBuilder(UIBuilder):
 
     def __init__(self):
         super().__init__(UIRefreshEvent.LanguageChange)
-        self.__copyright = None
+        self.__copyright: QLabel
 
     def build(self, gui: _GUI):
         self.__add_copyright(gui)
@@ -34,19 +35,13 @@ class CopyrightBuilder(UIBuilder):
             prop("author")
         )
 
-        self.__copyright.configure(text=copyright_label)
+        self.__copyright.setText(copyright_label)
         _logger.debug("Copyright was reloaded. (%s)", copyright_label)
-
-    def enable(self, gui: "_GUI"):
-        pass
-
-    def disable(self, gui: "_GUI"):
-        pass
 
     def __add_copyright(self, gui: _GUI):
         """
         Used to render copyright label.
         """
 
-        self.__copyright = tk.Label(gui.bottom)
-        self.__copyright.pack(expand=True)
+        self.__copyright = QLabel()
+        gui.bottom.layout().addWidget(self.__copyright, 0)

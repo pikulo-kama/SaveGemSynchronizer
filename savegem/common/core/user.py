@@ -51,7 +51,8 @@ class _UserState(AppData):
         Shortened user name.
         """
 
-        first_name = self.name.split(" ")[0]
+        name = self.name or ""
+        first_name = name.split(" ")[0]
 
         if len(first_name) > 10:
             first_name = f"{first_name[:10]}..."

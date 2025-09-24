@@ -1,16 +1,16 @@
 from savegem.app.gui.constants import UIRefreshEvent
+from savegem.app.gui.window import gui
 from savegem.common.core import app
 from savegem.common.core.holders import prop
-from savegem.common.core.ipc_socket import IPCSocket, IPCCommand
+from savegem.common.core.ipc_socket import IPCSocket, IPCCommand, IPCProp
 from savegem.common.util.logger import get_logger
-from savegem.common.util.thread import execute_in_thread
 from savegem.gdrive_watcher.ipc_socket import google_drive_watcher_socket
 from savegem.process_watcher.ipc_socket import process_watcher_socket
 
 _logger = get_logger(__name__)
 
 
-class _UISocket(IPCSocket):
+class UISocket(IPCSocket):
 
     def __init__(self):
         super().__init__(prop("ipc.uiSocketPort"))
@@ -18,26 +18,33 @@ class _UISocket(IPCSocket):
 
     def _handle(self, command: str, message: dict):
 
-        from savegem.app.gui.window import gui
-
         if command == IPCCommand.RefreshUI:
-            event = message.get("event")
+            event = message.get(IPCProp.Event)
+            gui().mutex.lock()
 
-            # When auto mode is enabled, and save was
-            # downloaded/uploaded from another service
-            # then we need to reload it in
-            # main application.
-            if app.state.is_auto_mode:
-                app.games.reload()
+            try:
+                # When auto mode is enabled, and save was
+                # downloaded/uploaded from another service
+                # then we need to reload it in
+                # main application.
+                if app.state.is_auto_mode:
+                    app.games.reload()
 
-            if event == UIRefreshEvent.GameConfigChange:
-                app.games.download()
+                if event == UIRefreshEvent.GameConfigChange:
+                    app.games.download()
+                    app.games.current.download_metadata()
 
-            elif event == UIRefreshEvent.ActivityLogUpdate:
-                app.activity.reload()
+                elif event == UIRefreshEvent.ActivityLogUpdate:
+                    app.activity.reload()
+
+                elif event == UIRefreshEvent.CloudSaveFilesChange:
+                    app.games.current.download_metadata()
+
+            finally:
+                gui().mutex.unlock()
 
             _logger.debug("Refreshing UI with %s event.", event)
-            execute_in_thread(lambda: gui.refresh(event))
+            gui().refresh(event)
 
     def notify_children(self, message: dict):
         """
@@ -48,4 +55,4 @@ class _UISocket(IPCSocket):
             process.send(message)
 
 
-ui_socket = _UISocket()
+ui_socket = UISocket()

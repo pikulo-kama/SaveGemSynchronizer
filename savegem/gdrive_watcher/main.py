@@ -5,7 +5,7 @@ from constants import File
 import threading
 import os.path
 
-from savegem.common.core.ipc_socket import IPCCommand
+from savegem.common.core.ipc_socket import IPCCommand, IPCProp
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import resolve_temp_file
@@ -93,8 +93,8 @@ class GDriveWatcher(Daemon):
 
         self._logger.debug("Sending RefreshUI command with event='%s'", event)
         ui_socket.send({
-            "command": IPCCommand.RefreshUI,
-            "event": event
+            IPCProp.Command: IPCCommand.RefreshUI,
+            IPCProp.Event: event
         })
 
 

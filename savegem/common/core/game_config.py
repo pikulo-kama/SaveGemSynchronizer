@@ -4,6 +4,7 @@ import os
 import re
 from typing import Final
 
+from constants import ZIP_MIME_TYPE
 from savegem.common.core.app_data import AppData
 from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
 from savegem.common.service.gdrive import GDrive
@@ -38,6 +39,7 @@ class Game:
         self.__auto_mode_allowed = auto_mode_allowed
 
         self.__metadata = EditableJsonConfigHolder(self.metadata_file_path)
+        self.__cloud_metadata = None
 
     @property
     def name(self):
@@ -69,7 +71,48 @@ class Game:
         return self.__drive_directory
 
     @property
+    def cloud_metadata(self):
+        """
+        Used to get metadata of latest
+        save on Google Drive.
+        """
+        return self.__cloud_metadata
+
+    def download_metadata(self):
+        """
+        Used to download latest save
+        metadata from Google Drive.
+        """
+
+        metadata = GDrive.query_single(
+            f"mimeType='{ZIP_MIME_TYPE}' and '{self.drive_directory}' in parents and trashed=false",
+            "files(id, appProperties, createdTime)"
+        )
+
+        if metadata is None:
+            message = "Error downloading metadata. Either configuration is incorrect or you don't have access."
+
+            _logger.error(message)
+            raise RuntimeError(message)
+
+        files_meta = metadata.get("files")
+
+        if len(files_meta) == 0:
+            _logger.warn("There are no saves on Google Drive for %s.", self.name)
+            self.__cloud_metadata = None
+            return
+
+        file_meta = files_meta[0]
+        properties = file_meta.get("appProperties") or {}
+
+        self.__cloud_metadata = {**file_meta, **properties}
+
+    @property
     def auto_mode_allowed(self):
+        """
+        Used to check whether auto mode
+        is enabled for the game.
+        """
         return self.__auto_mode_allowed
 
     @property
@@ -96,7 +139,7 @@ class Game:
         patterns = list(self.__files_filter)
 
         if len(patterns) == 0:
-            patterns = [self.__ALL_FILES]
+            patterns.append(self.__ALL_FILES)
 
         return [re.compile(pattern) for pattern in patterns]
 
@@ -122,7 +165,6 @@ class Game:
         checksum = hashlib.new("sha256")
 
         for file_path in self.file_list:
-
             # Don't include metadata when calculating checksum.
             if file_path == self.metadata_file_path:
                 continue
@@ -144,7 +186,6 @@ class Game:
         Used to get path to metadata file
         specific to the game.
         """
-
         return os.path.join(self.local_path, Game.__SAVE_META_FILE_NAME)
 
 
@@ -214,6 +255,9 @@ class _GameConfig(AppData):
                 allow_auto_mode
             )
 
+            # Download metadata for currently selected game as well.
+            self.current.download_metadata()
+
         _logger.debug("Configuration for following game(s) was found = %s", ", ".join(self.names))
 
     @property
@@ -257,6 +301,5 @@ class _GameConfig(AppData):
         Used to reload metadata for all
         registered games.
         """
-
         for game in self.list:
             game.reload_metadata()

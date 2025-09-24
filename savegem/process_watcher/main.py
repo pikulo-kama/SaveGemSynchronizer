@@ -59,9 +59,8 @@ class ProcessWatcher(Daemon):
                 self._logger.info("Auto mode is disabled for %s", process.game.name)
                 continue
 
-            save_meta = Downloader.get_last_save_metadata(process.game)
-
-            drive_checksum = save_meta.get("checksum")
+            process.game.download_metadata()
+            drive_checksum = process.game.cloud_metadata.get("checksum")
             local_checksum = process.game.calculate_checksum()
 
             if local_checksum == drive_checksum:

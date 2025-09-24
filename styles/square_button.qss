@@ -1,0 +1,50 @@
+
+/* Style for a square button */
+QPushButton#squareButton {
+    width: 40px;
+    height: 35px;
+
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+
+    color: color("primaryTextColor");
+    font: font("primary-md");
+    font-weight: bold;
+}
+
+QPushButton#squareButton[variant="small"] {
+    width: 20px;
+    height: 20px;
+}
+
+/* Primary button */
+QPushButton#squareButton[kind="primary"],
+QPushButton#squareButton[kind="primary"]:pressed {
+
+    background-color: color("primaryStaticColor");
+}
+
+QPushButton#squareButton[kind="primary"]:hover {
+    background-color: color("primaryHoverColor");
+}
+
+
+/* Secondary button */
+QPushButton#squareButton[kind="secondary"],
+QPushButton#squareButton[kind="secondary"]:pressed {
+
+    background-color: color("secondaryStaticColor");
+}
+
+QPushButton#squareButton[kind="secondary"]:hover {
+    background-color: color("secondaryHoverColor");
+}
+
+
+/* Disabled button */
+QPushButton#squareButton[kind="disabled"] {
+    background-color: transparent;
+    border-color: color("secondaryTextColor");
+    color: color("secondaryTextColor");
+}

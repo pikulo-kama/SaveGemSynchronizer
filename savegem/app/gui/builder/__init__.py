@@ -8,6 +8,9 @@ from abc import abstractmethod
 
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget
+
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.util.logger import get_logger
 
@@ -53,6 +56,7 @@ class UIBuilder(abc.ABC):
 
     def __init__(self, *events):
         self.__events = list(events)
+        self.__interactable_elements: list[QWidget] = []
 
     @property
     def order(self) -> int:
@@ -68,7 +72,7 @@ class UIBuilder(abc.ABC):
         builder should be invoked.
         """
 
-        self.__events.append(UIRefreshEvent.Always)
+        self.__events.append(UIRefreshEvent.All)
         return list(set(self.__events))
 
     @abstractmethod
@@ -86,22 +90,36 @@ class UIBuilder(abc.ABC):
         """
         pass
 
-    @abstractmethod
-    def enable(self, gui: "_GUI"):
-        """
-        Should be used to enable all interactable elements.
-        """
-        pass
-
-    @abstractmethod
-    def disable(self, gui: "_GUI"):
-        """
-        Should be used to disable all interactable elements.
-        """
-        pass
-
     def is_enabled(self):
         """
         Should be used to define whether current builder should be executed.
         """
         return True
+
+    def enable(self, gui: "_GUI"):
+        """
+        Used to enable all interactable elements.
+        """
+
+        for element in self.__interactable_elements:
+            element.setEnabled(True)
+            element.setCursor(Qt.CursorShape.PointingHandCursor)
+
+    def disable(self, gui: "_GUI"):
+        """
+        Used to disable all interactable elements.
+        """
+
+        for element in self.__interactable_elements:
+            element.setEnabled(False)
+            element.setCursor(Qt.CursorShape.WaitCursor)
+
+    def _add_interactable(self, element):
+        """
+        Used to register interactable element.
+        (e.g. button or combobox)
+
+        Allows disabling/enabling of elements
+        when ui is being blocked/unblocked.
+        """
+        self.__interactable_elements.append(element)

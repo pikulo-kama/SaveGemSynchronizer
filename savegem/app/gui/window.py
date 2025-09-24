@@ -1,4 +1,6 @@
-import tkinter as tk
+from PyQt6.QtCore import QMutex, pyqtSignal
+from PyQt6.QtGui import QIcon, QCloseEvent
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout
 
 from constants import Resource
 from savegem.common.core.text_resource import tr
@@ -8,58 +10,63 @@ from savegem.app.gui.builder import load_builders, UIBuilder
 from savegem.common.util.file import resolve_resource
 from savegem.common.util.logger import get_logger
 
+
 _logger = get_logger(__name__)
+_gui = None
 
 
-class _GUI:
+def gui():
+    """
+    Used to get instance of GUI.
+    """
+    global _gui
+
+    if _gui is None:
+        _gui = _GUI()
+
+    return _gui
+
+
+class _GUI(QMainWindow):
     """
     Main class to operate with application window.
     """
+
+    # Allows to lock/unlock UI.
+    # Used to avoid race conditions
+    # when UI is being updated from
+    # several threads simultaneously.
+    mutex = QMutex()
+
+    before_destroy = pyqtSignal()
+    after_init = pyqtSignal()
 
     def __init__(self):
         """
         Used to initialize GUI.
         """
+        super().__init__()
 
-        self.__window = tk.Tk()
+        self.__root = QWidget()
+        self.setCentralWidget(self.__root)
 
-        self.__top_left = tk.Frame(self.window)
-        self.__top = tk.Frame(self.window)
-        self.__top_right = tk.Frame(self.window)
-        self.__left = tk.Frame(self.window)
-        self.__center = tk.Frame(self.window)
-        self.__right = tk.Frame(self.window)
-        self.__bottom_left = tk.Frame(self.window)
-        self.__bottom = tk.Frame(self.window)
-        self.__bottom_right = tk.Frame(self.window)
+        self.__main_grid = QGridLayout(self.__root)
+        self.__top_left = QWidget()
+        self.__top = QWidget()
+        self.__top_right = QWidget()
+        self.__left = QWidget()
+        self.__center = QWidget()
+        self.__right = QWidget()
+        self.__bottom_left = QWidget()
+        self.__bottom = QWidget()
+        self.__bottom_right = QWidget()
 
-        from savegem.app.gui.style import init_gui_styles
-        init_gui_styles()
-
-        self.__builders: list[UIBuilder] = list()
-        self.__before_destroy_callback = None
-        self.__after_init_callback = None
+        self.__builders: list[UIBuilder] = load_builders()
         self.__is_ui_blocked = False
 
         self.__center_window()
-        self.window.title(tr("window_Title", prop("name")))
-        self.window.iconbitmap(resolve_resource(Resource.ApplicationIco))
-        self.window.resizable(False, False)
-
-        self.window.protocol("WM_DELETE_WINDOW", self.destroy)
-
-    def initialize(self):
-        """
-        Used to post initialize necessary resources for GUI.
-        """
-        self.__builders = load_builders()
-
-    @property
-    def window(self):
-        """
-        Used to get root widget.
-        """
-        return self.__window
+        self.setWindowTitle(tr("window_Title", prop("name")))
+        self.setWindowIcon(QIcon(resolve_resource(Resource.ApplicationIco)))
 
     @property
     def top_left(self):
@@ -124,19 +131,6 @@ class _GUI:
         """
         return self.__bottom_right
 
-    def set_cursor(self, cursor):
-        """
-        Used to change main window cursor.
-        """
-        self.window.config(cursor=cursor)
-
-    def schedule_operation(self, callback):
-        """
-        Used by processes executed on separate thread to execute some work back on main thread.
-        This is needed since Tkinter doesn't work well with multithreading.
-        """
-        self.window.after(0, callback)
-
     def build(self):
         """
         Used to build GUI.
@@ -145,56 +139,83 @@ class _GUI:
 
         _logger.info("Building UI.")
 
-        for builder_obj in self.__builders:
-            builder_obj.build(self)
+        # Two row grid
+        top_left_layout = QGridLayout(self.top_left)
+        top_left_layout.setContentsMargins(20, 20, 0, 0)
+        top_left_layout.setRowStretch(2, 1)
+        top_left_layout.setVerticalSpacing(10)
 
-        self.window.rowconfigure(0, weight=3)
-        self.window.rowconfigure(1, weight=5)
-        self.window.rowconfigure(2, weight=1)
+        self.top.setLayout(QVBoxLayout())
 
-        self.window.columnconfigure(0, weight=5, minsize=100)
-        self.window.columnconfigure(1, weight=2, minsize=100)
-        self.window.columnconfigure(2, weight=5, minsize=100)
+        # Two row grid
+        top_right_layout = QGridLayout(self.top_right)
+        top_right_layout.setContentsMargins(0, 20, 20, 0)
+        top_right_layout.setRowStretch(2, 1)
+        top_right_layout.setColumnStretch(0, 1)
+        top_right_layout.setVerticalSpacing(10)
 
-        self.top_left.grid(row=0, column=0, sticky=tk.NSEW)
-        self.top.grid(row=0, column=1, sticky=tk.NSEW)
-        self.top_right.grid(row=0, column=2, sticky=tk.NSEW)
-        self.left.grid(row=1, column=0, sticky=tk.NSEW)
-        self.right.grid(row=1, column=2, sticky=tk.NSEW)
-        self.bottom_left.grid(row=2, column=0, sticky=tk.NSEW)
-        self.bottom.grid(row=2, column=1, sticky=tk.NSEW)
-        self.bottom_right.grid(row=2, column=2, sticky=tk.NSEW)
+        self.center.setLayout(QGridLayout())
+        self.bottom.setLayout(QHBoxLayout())
 
-        self.top_right.columnconfigure(0, weight=1)
+        self.__main_grid.addWidget(self.top_left, 0, 0)
+        self.__main_grid.addWidget(self.top, 0, 1)
+        self.__main_grid.addWidget(self.top_right, 0, 2)
+        self.__main_grid.addWidget(self.left, 1, 0)
+        self.__main_grid.addWidget(self.right, 1, 2)
+        self.__main_grid.addWidget(self.bottom_left, 2, 0)
+        self.__main_grid.addWidget(self.bottom, 2, 1)
+        self.__main_grid.addWidget(self.bottom_right, 2, 2)
+
+        self.__main_grid.setRowStretch(0, 3)
+        self.__main_grid.setRowStretch(1, 5)
+        self.__main_grid.setRowStretch(2, 1)
+
+        self.__main_grid.setColumnStretch(0, 5)
+        self.__main_grid.setColumnStretch(1, 2)
+        self.__main_grid.setColumnStretch(2, 5)
 
         # Center could be quite large that's why it's not part
         # of the main grid.
-        self.center.place(relx=.5, rely=.5, anchor=tk.CENTER)
-        self.center.lift()
+        center_width = int(self.width() * 0.7)
+        center_height = int(self.height() * 0.7)
+        x = int((self.width() - center_width) / 2)
+        y = int((self.height() - center_height) / 2)
 
-        self.top_left.grid_propagate(False)
-        self.left.grid_propagate(False)
-        self.bottom_left.grid_propagate(False)
+        self.center.setParent(self)
+        self.center.setGeometry(x, y, center_width, center_height)
+        self.center.raise_()
 
-        self.top_right.grid_propagate(False)
-        self.right.grid_propagate(False)
-        self.bottom_right.grid_propagate(False)
+        self.top_left.setMinimumSize(1, 1)
+        self.left.setMinimumSize(1, 1)
+        self.bottom_left.setMinimumSize(1, 1)
+
+        self.top_right.setMinimumSize(1, 1)
+        self.right.setMinimumSize(1, 1)
+        self.bottom_right.setMinimumSize(1, 1)
+
+        for builder_obj in self.__builders:
+            builder_obj.build(self)
 
         self.refresh()
         self.is_blocked = False
 
-        if self.__after_init_callback is not None:
-            self.__after_init_callback()
+        self.after_init.emit()  # noqa
 
         _logger.info("Application loop has been started.")
-        self.window.mainloop()
+        self.show()
 
-    def after_init(self, callback):
+    def refresh(self, event=UIRefreshEvent.All):
         """
-        Used to define callback that will trigger
-        when GUI application is initialized.
+        Used to refresh dynamic UI elements.
         """
-        self.__after_init_callback = callback
+
+        _logger.info("Refreshing UI.")
+        for builder_obj in self.__builders:
+
+            if event in builder_obj.events:
+                builder_obj.refresh(self)
+
+        self.setWindowTitle(tr("window_Title", prop("name")))
 
     @property
     def is_blocked(self):
@@ -217,40 +238,13 @@ class _GUI:
             else:
                 builder_obj.enable(self)
 
-    def refresh(self, *events):
-        """
-        Used to refresh dynamic UI elements.
-        """
-
-        # If no events where provided then attempt
-        # to reload all components.
-        if len(events) == 0:
-            events = [UIRefreshEvent.Always]
-
-        _logger.info("Refreshing UI.")
-        for builder_obj in self.__builders:
-
-            if any(event in builder_obj.events for event in events):
-                builder_obj.refresh(self)
-
-        self.window.title(tr("window_Title", prop("name")))
-
-    def destroy(self):
+    def closeEvent(self, event: QCloseEvent):
         """
         Used to destroy application window.
         """
 
-        if self.__before_destroy_callback is not None:
-            self.__before_destroy_callback()
-
-        self.window.destroy()
-
-    def before_destroy(self, callback):
-        """
-        Allows to configure additional callback function that would
-        be invoked when window is being destroyed.
-        """
-        self.__before_destroy_callback = callback
+        self.before_destroy.emit()  # noqa
+        _logger.info("Application shut down.")
 
     def __center_window(self):
         """
@@ -258,8 +252,8 @@ class _GUI:
         Will ensure that each time app opened it's in the center of screen.
         """
 
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
+        screen_width = QApplication.primaryScreen().size().width()
+        screen_height = QApplication.primaryScreen().size().height()
 
         width = prop("windowWidth")
         height = prop("windowHeight")
@@ -270,10 +264,8 @@ class _GUI:
         width = min(width, alt_width)
         height = min(height, alt_height)
 
-        x = (screen_width - width) / 2
-        y = (screen_height - height) / 2
+        x = int((screen_width - width) / 2)
+        y = int((screen_height - height) / 2)
 
-        self.window.geometry("%dx%d+%d+%d" % (width, height, x, y))
-
-
-gui = _GUI()
+        self.setFixedSize(width, height)
+        self.move(x, y)

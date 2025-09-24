@@ -1,9 +1,8 @@
-import tkinter as tk
-from tkinter import font
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel
 
-from savegem.app.gui.constants import UIRefreshEvent
+from savegem.app.gui.constants import UIRefreshEvent, QAttr
 from savegem.common.core import app
-from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.window import _GUI
 from savegem.app.gui.builder import UIBuilder
@@ -25,66 +24,52 @@ class ActivePlayersBuilder(UIBuilder):
             UIRefreshEvent.LanguageChange
         )
 
-        self.__frame = None
-        self.__status_label = None
-        self.__active_players_label = None
+        self.__status_label: QLabel
+        self.__active_players_label: QLabel
 
     def build(self, gui: _GUI):
         self.__add_section(gui)
 
     def refresh(self, gui: _GUI):
-
-        status_color = "secondaryColor"
-        active_players_color = "secondaryColor"
         players_label = tr("label_Offline")
+        players_online = len(app.activity.players) > 0
 
-        if len(app.activity.players) > 0:
-
-            status_color = "accentColor"
-            active_players_color = "primaryColor"
+        if players_online:
             players_label = app.activity.players.pop(0)
             remaining_players = len(app.activity.players)
 
             if remaining_players > 0:
                 players_label += f" +{remaining_players}"
 
-        self.__status_label.configure(
-            foreground=prop(status_color)
-        )
-
-        self.__active_players_label.configure(
-            foreground=prop(active_players_color),
-            text=players_label
-        )
+        self.__status_label.setProperty(QAttr.Disabled, not players_online)
+        self.__active_players_label.setProperty(QAttr.Disabled, not players_online)
+        self.__active_players_label.setText(players_label)
 
         _logger.debug("Active users section was reloaded. (%s)", players_label)
 
-    def enable(self, gui: "_GUI"):
-        pass
-
-    def disable(self, gui: "_GUI"):
-        pass
-
     def __add_section(self, gui: _GUI):
         """
-        Used to render active users section.
+        Used to render active users section
+        containing users that are playing selected
+        game at the moment.
         """
 
-        self.__frame = tk.Frame(gui.top)
+        frame = QWidget(gui.top)
 
-        self.__status_label = tk.Label(
-            self.__frame,
-            text="⚫",
-            font=("Segoe UI Semibold", 10)
-        )
+        frame_layout = QHBoxLayout(frame)
+        frame_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.__active_players_label = tk.Label(
-            self.__frame,
-            foreground=prop("primaryColor"),
-            font=("Helvetica", 12, font.BOLD)
-        )
+        self.__status_label = QLabel()
+        self.__active_players_label = QLabel()
 
-        self.__status_label.pack(side=tk.LEFT)
-        self.__active_players_label.pack(side=tk.LEFT)
+        self.__status_label.setObjectName("activePlayersBadge")
+        self.__active_players_label.setObjectName("activePlayersLabel")
 
-        self.__frame.pack(anchor=tk.N, pady=(20, 0))
+        frame_layout.addStretch(1)
+        frame_layout.addWidget(self.__status_label)
+        frame_layout.addSpacing(5)
+        frame_layout.addWidget(self.__active_players_label)
+        frame_layout.addStretch(1)
+
+        gui.top.layout().addWidget(frame, alignment=Qt.AlignmentFlag.AlignTop)
+        gui.top.layout().setContentsMargins(0, 20, 0, 0)

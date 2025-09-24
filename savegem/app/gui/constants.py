@@ -6,72 +6,51 @@ class UIRefreshEvent:
     Represents UI refresh event.
     """
 
-    Always: Final = "always"
+    All: Final = "all"
+    Noone: Final = "noone"
 
     LanguageChange: Final = "language_change"
     ActivityLogUpdate: Final = "activity_log_update"
     GameConfigChange: Final = "game_config_change"
     CloudSaveFilesChange: Final = "cloud_files_change"
     GameSelectionChange: Final = "game_selection_change"
-    AfterUploadDownloadComplete: Final = "after_upload_download"
 
 
-class TkAttr:
+class QAttr:
     """
-    Contains names of built-in and custom
-    Tkinter component attributes.
-    """
-
-    Style: Final = "style"
-    State: Final = "state"
-    Text: Final = "text"
-    Font: Final = "font"
-    Command: Final = "command"
-    Width: Final = "width"
-    Height: Final = "height"
-    Padding: Final = "padding"
-    Margin: Final = "margin"
-    FgColor: Final = "foreground"
-    BgColor: Final = "background"
-    Radius: Final = "radius"
-    Progress: Final = "progress"
-    Image: Final = "image"
-    Values: Final = "values"
-    Prefix: Final = "prefix"
-
-
-class TkState:
-    """
-    Contains Tkinter component states.
+    Contains names of QT properties
+    used in QSS.
     """
 
-    Default: Final = ""
-    Active: Final = "active"
-    Pressed: Final = "pressed"
+    Kind: Final = "kind"
+    SizeVariant: Final = "variant"
+    Disabled: Final = "is-disabled"
+
+
+class QObjectName:
+    """
+    Contains names of QSS objects.
+    """
+
+    Button: Final = "button"
+    Chip: Final = "chip"
+    ComboBox: Final = "comboBox"
+    SquareButton: Final = "squareButton"
+
+
+class QSizeVariant:
+    """
+    Contains names of QT size variants.
+    """
+
+    Small: Final = "small"
+
+
+class QKind:
+    """
+    Contains names of element kinds.
+    """
+
+    Primary: Final = "primary"
+    Secondary: Final = "secondary"
     Disabled: Final = "disabled"
-    Readonly: Final = "readonly"
-
-
-class TkEvent:
-    """
-    Contains Tkinter component event names.
-    """
-
-    LMBClick: Final = "<Button-1>"
-    LMBRelease: Final = "<ButtonRelease-1>"
-    MoveResize: Final = "<Configure>"
-    Enter: Final = "<Enter>"
-    Leave: Final = "<Leave>"
-    ComboboxSelected: Final = "<<ComboboxSelected>>"
-    ListboxSelected: Final = "<<ListboxSelect>>"
-
-
-class TkCursor:
-    """
-    Contains Tkinter cursor names.
-    """
-
-    Default: Final = ""
-    Wait: Final = "wait"
-    Hand: Final = "hand2"
-    Forbidden: Final = "no"

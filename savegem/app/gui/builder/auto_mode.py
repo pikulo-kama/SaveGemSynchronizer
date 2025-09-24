@@ -1,10 +1,10 @@
-from savegem.app.gui.component.button import Button
-from savegem.app.gui.style import style
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QPushButton
+
+from savegem.app.gui.constants import QAttr, QKind, QObjectName
 from savegem.app.gui.popup.notification import notification
 from savegem.common.core import app
-from savegem.common.core.holders import prop
 from savegem.app.gui.window import _GUI
-from savegem.app.gui.constants import TkState, TkCursor, TkAttr
 from savegem.app.gui.builder import UIBuilder
 from savegem.common.core.text_resource import tr
 from savegem.common.util.logger import get_logger
@@ -20,39 +20,25 @@ class AutoModeBuilder(UIBuilder):
 
     def __init__(self):
         super().__init__()
-        self.__style_name = "SquareSecondary.18.TButton"
-        self.__auto_mode_button = None
+        self.__auto_mode_button: QPushButton
 
     def build(self, gui: _GUI):
         self.__add_auto_mode_button(gui)
 
     def refresh(self, gui: _GUI):
 
-        if app.state.is_auto_mode:
-            style_props = style.configure(self.__style_name)
-            background = style_props.get(TkAttr.BgColor)
-            foreground = style_props.get(TkAttr.FgColor)
+        button_kind = QKind.Secondary
 
-        else:
-            background = prop("secondaryColor")
-            foreground = prop("primaryButton.colorHover")
+        if not app.state.is_auto_mode:
+            button_kind = QKind.Disabled
 
-        self.__auto_mode_button.configure(
-            text="A",
-            background=background,
-            foreground=foreground
-        )
+        self.__auto_mode_button.setProperty(QAttr.Kind, button_kind)
+        self.__auto_mode_button.style().polish(self.__auto_mode_button)
 
         _logger.debug(
             "Auto mode updated, current state = %s",
             "ON" if app.state.is_auto_mode else "OFF"
         )
-
-    def enable(self, gui: "_GUI"):
-        self.__auto_mode_button.configure(state=TkState.Default, cursor=TkCursor.Hand)
-
-    def disable(self, gui: "_GUI"):
-        self.__auto_mode_button.configure(state=TkState.Disabled, cursor=TkCursor.Wait)
 
     def __add_auto_mode_button(self, gui: _GUI):
         """
@@ -74,10 +60,13 @@ class AutoModeBuilder(UIBuilder):
             self.refresh(gui)
             notification(message)
 
-        self.__auto_mode_button = Button(
-            gui.top_left,
-            command=callback,
-            style=self.__style_name
-        )
+        self.__auto_mode_button = QPushButton("A")
+        self.__auto_mode_button.clicked.connect(callback)  # noqa
+        self.__auto_mode_button.setObjectName(QObjectName.SquareButton)
 
-        self.__auto_mode_button.grid(row=0, column=0, padx=(20, 0), pady=(20, 0))
+        self._add_interactable(self.__auto_mode_button)
+
+        gui.top_left.layout().addWidget(
+            self.__auto_mode_button, 0, 0,
+            alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
+        )

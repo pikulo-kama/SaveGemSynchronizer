@@ -1,0 +1,20 @@
+
+QWidget#chip {
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+/* Chip label and image styles */
+QWidget#chip QLabel {
+    color: color("primaryTextColor");
+    font: font("secondary-xs");
+    font-weight: bold;
+}
+
+QWidget#chip[kind="primary"] {
+    background-color: color("primaryStaticColor");
+}
+
+QWidget#chip[kind="secondary"] {
+    background-color: color("primaryStaticColor");
+}

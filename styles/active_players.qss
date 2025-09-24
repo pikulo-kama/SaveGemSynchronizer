@@ -1,0 +1,23 @@
+
+QLabel#activePlayersBadge {
+    min-width: 16px;
+    min-height: 16px;
+
+    font: font("secondary-xs");
+    background-color: color("accentColor");
+    border-radius: 8px;
+}
+
+QLabel#activePlayersLabel {
+    font: font("primary-xs");
+    font-weight: bold;
+    color: color("headingTextColor");
+}
+
+QLabel#activePlayersBadge[is-disabled="true"] {
+    background-color: color("secondaryTextColor");
+}
+
+QLabel#activePlayersLabel[is-disabled="true"] {
+    color: color("secondaryTextColor");
+}

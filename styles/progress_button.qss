@@ -1,0 +1,39 @@
+
+/* General button style */
+QProgressPushButton {
+    color: color("primaryTextColor");
+    font: font("secondary-md");
+    min-height: 70px;
+    padding: 0;
+}
+
+
+/* Style for primary button */
+QProgressPushButton[kind="primary"],
+QProgressPushButton[kind="primary"]:pressed,
+QProgressBar[kind="QProgressPushButton-primary"]:pressed {
+
+    background-color: color("primaryStaticColor");
+}
+
+QProgressPushButton[kind="primary"]:hover,
+QProgressBar[kind="QProgressPushButton-primary"]::chunk,
+QProgressBar[kind="QProgressPushButton-primary"]::chunk:hover {
+
+    background-color: color("primaryHoverColor");
+}
+
+/* Style for secondary button */
+QProgressPushButton[kind="secondary"],
+QProgressPushButton[kind="secondary"]:pressed,
+QProgressBar[kind="QProgressPushButton-secondary"]:pressed {
+
+    background-color: color("secondaryStaticColor");
+}
+
+QProgressPushButton[kind="secondary"]:hover,
+QProgressBar[kind="QProgressPushButton-secondary"]::chunk,
+QProgressBar[kind="QProgressPushButton-secondary"]::chunk:hover {
+
+    background-color: color("secondaryHoverColor");
+}
