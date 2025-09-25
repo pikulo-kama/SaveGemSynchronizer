@@ -1,10 +1,11 @@
+from typing import Optional
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QPushButton
 
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import locales
-from savegem.app.gui.window import _GUI
 from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind, QObjectName
 from savegem.app.gui.builder import UIBuilder
 from savegem.common.util.logger import get_logger
@@ -20,12 +21,28 @@ class LanguageSwitchBuilder(UIBuilder):
 
     def __init__(self):
         super().__init__(UIRefreshEvent.LanguageChange)
-        self.__language_switch: QPushButton
+        self.__language_switch: Optional[QPushButton] = None
 
-    def build(self, gui: _GUI):
-        self.__add_language_switch_control(gui)
+    def build(self):
+        """
+        Used to render language switch control.
+        """
 
-    def refresh(self, gui: _GUI):
+        self.__language_switch = QPushButton()
+        self.__language_switch.setObjectName(QObjectName.SquareButton)
+        self.__language_switch.setProperty(QAttr.Kind, QKind.Primary)
+        self.__language_switch.clicked.connect(self.__toggle_language)  # noqa
+
+        self._add_interactable(self.__language_switch)
+
+        self._gui.top_left.layout().addWidget(
+            self.__language_switch, 1, 0,
+            alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
+        )
+
+        _logger.debug("Locale list - %s", locales)
+
+    def refresh(self):
         language_id = tr("languageId")
 
         # Limit language code to 2 characters.
@@ -40,27 +57,7 @@ class LanguageSwitchBuilder(UIBuilder):
         # multiple locales configured.
         return len(locales) > 1
 
-    def __add_language_switch_control(self, gui: _GUI):
-        """
-        Used to render language switch control.
-        """
-
-        self.__language_switch = QPushButton()
-        self.__language_switch.setObjectName(QObjectName.SquareButton)
-        self.__language_switch.setProperty(QAttr.Kind, QKind.Primary)
-        self.__language_switch.clicked.connect(lambda: self.__next_language(gui))  # noqa
-
-        self._add_interactable(self.__language_switch)
-
-        gui.top_left.layout().addWidget(
-            self.__language_switch, 1, 0,
-            alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
-        )
-
-        _logger.debug("Locale list - %s", locales)
-
-    @staticmethod
-    def __next_language(gui: _GUI):
+    def __toggle_language(self):
         """
         Used as callback function when language switch button is being clicked.
         """
@@ -76,4 +73,4 @@ class LanguageSwitchBuilder(UIBuilder):
         _logger.info("Selected language - %s", new_locale)
 
         app.state.locale = new_locale
-        gui.refresh(UIRefreshEvent.LanguageChange)
+        self._gui.refresh(UIRefreshEvent.LanguageChange)

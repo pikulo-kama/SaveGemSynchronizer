@@ -1,12 +1,12 @@
-from PyQt6.QtCore import Qt, QThread
+from typing import Optional
+
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QHBoxLayout
 
-from savegem.app.gui.worker import QWorker
 from savegem.app.gui.worker.download_worker import DownloadWorker
 from savegem.app.gui.worker.upload_worker import UploadWorker
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
-from savegem.app.gui.window import _GUI
 from savegem.app.gui.component.progress_button import QProgressPushButton
 from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind
 from savegem.app.gui.popup.confirmation import confirmation
@@ -14,7 +14,6 @@ from savegem.app.gui.popup.notification import notification
 from savegem.app.gui.builder import UIBuilder
 from savegem.common.service.subscriptable import EventKind, ErrorEvent
 from savegem.common.util.logger import get_logger
-from savegem.app.gui.thread import execute_in_blocking_thread
 
 _logger = get_logger(__name__)
 
@@ -28,32 +27,10 @@ class DownloadUploadButtonBuilder(UIBuilder):
     def __init__(self):
         super().__init__(UIRefreshEvent.LanguageChange)
 
-        self.__gui: _GUI | None = None
+        self.__download_button: Optional[QProgressPushButton] = None
+        self.__upload_button: Optional[QProgressPushButton] = None
 
-        self.__download_button: QProgressPushButton
-        self.__upload_button: QProgressPushButton
-
-        self.__thread: QThread
-        self.__worker: QWorker
-
-    def build(self, gui: _GUI):
-        self.__gui = gui
-        self.__add_buttons(gui)
-
-    def refresh(self, gui: _GUI):
-
-        upload_button_label = tr("label_UploadSaveToDrive")
-        download_button_label = tr("label_DownloadSaveFromDrive")
-
-        self.__upload_button.setText(upload_button_label)
-        self.__upload_button.set_progress(0)
-        _logger.debug("Upload button reloaded (%s)", upload_button_label)
-
-        self.__download_button.setText(download_button_label)
-        self.__download_button.set_progress(0)
-        _logger.debug("Download button reloaded (%s)", download_button_label)
-
-    def __add_buttons(self, gui: _GUI):
+    def build(self):
         """
         Used to render upload and download buttons.
         """
@@ -84,36 +61,47 @@ class DownloadUploadButtonBuilder(UIBuilder):
         button_layout.addWidget(self.__download_button, stretch=2)
         button_layout.addSpacing(30)
 
-        gui.center.layout().addWidget(button_frame, 1, 0, alignment=Qt.AlignmentFlag.AlignTop)
+        self._gui.center.layout().addWidget(button_frame, 1, 0, alignment=Qt.AlignmentFlag.AlignTop)
+
+    def refresh(self):
+
+        upload_button_label = tr("label_UploadSaveToDrive")
+        download_button_label = tr("label_DownloadSaveFromDrive")
+
+        self.__upload_button.setText(upload_button_label)
+        self.__upload_button.set_progress(0)
+        _logger.debug("Upload button reloaded (%s)", upload_button_label)
+
+        self.__download_button.setText(download_button_label)
+        self.__download_button.set_progress(0)
+        _logger.debug("Download button reloaded (%s)", download_button_label)
 
     def __start_download(self):
         """
         Used to start download of save from cloud.
         """
 
-        self.__thread = QThread()
-        self.__worker = DownloadWorker()
+        worker = DownloadWorker()
 
-        self.__worker.error.connect(self.__error_subscriber)
-        self.__worker.progress.connect(self.__progress_subscriber(self.__download_button))
-        self.__worker.completed.connect(self.__done_subscriber("notification_NewSaveHasBeenDownloaded"))
-        self.__worker.completed.connect(lambda: self.__gui.refresh(UIRefreshEvent.SaveDownloaded))
+        worker.error.connect(self.__error_subscriber)
+        worker.progress.connect(self.__progress_subscriber(self.__download_button))
+        worker.completed.connect(self.__done_subscriber("notification_NewSaveHasBeenDownloaded"))
+        worker.completed.connect(lambda: self._gui.refresh(UIRefreshEvent.SaveDownloaded))
 
-        execute_in_blocking_thread(self.__thread, self.__worker)
+        self._do_work(worker)
 
     def __start_upload(self):
         """
         Used to start upload of save to cloud.
         """
 
-        self.__thread = QThread()
-        self.__worker = UploadWorker()
+        worker = UploadWorker()
 
-        self.__worker.error.connect(self.__error_subscriber)
-        self.__worker.progress.connect(self.__progress_subscriber(self.__upload_button))
-        self.__worker.completed.connect(self.__done_subscriber("notification_SaveHasBeenUploaded"))
+        worker.error.connect(self.__error_subscriber)
+        worker.progress.connect(self.__progress_subscriber(self.__upload_button))
+        worker.completed.connect(self.__done_subscriber("notification_SaveHasBeenUploaded"))
 
-        execute_in_blocking_thread(self.__thread, self.__worker)
+        self._do_work(worker)
 
     def __done_subscriber(self, message: str):
         """
@@ -123,7 +111,7 @@ class DownloadUploadButtonBuilder(UIBuilder):
 
         def callback():
             notification(tr(message))
-            self.refresh(self.__gui)
+            self.refresh()
 
         return callback
 
@@ -142,11 +130,11 @@ class DownloadUploadButtonBuilder(UIBuilder):
         when worker sends error event.
         """
 
-        if event.kind == EventKind.SAVES_DIRECTORY_IS_MISSING:
+        if event.kind == EventKind.SavesDirectoryMissing:
             notification(tr("notification_ErrorSaveDirectoryMissing", app.games.current.local_path))
 
-        elif event.kind == EventKind.LAST_SAVE_METADATA_IS_NONE:
+        elif event.kind == EventKind.DriveMetadataMissing:
             notification(tr("label_StorageIsEmpty"))
 
-        elif event.kind == EventKind.ERROR_UPLOADING_TO_DRIVE:
+        elif event.kind == EventKind.ErrorUploadingToDrive:
             notification(tr("notification_ErrorUploadingToDrive"))
