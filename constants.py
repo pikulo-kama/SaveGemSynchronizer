@@ -44,6 +44,8 @@ class Resource:
     NotificationIco: Final = "notification.ico"
     ConfirmationIco: Final = "confirmation.ico"
 
+    DoorSvg: Final = "door.svg"
+
 
 JSON_EXTENSION: Final = ".json"
 ZIP_EXTENSION: Final = "zip"
@@ -51,3 +53,4 @@ ZIP_MIME_TYPE: Final = "application/zip"
 JSON_MIME_TYPE: Final = "application/json"
 
 UTF_8: Final = "utf-8"
+SHA_256: Final = "sha256"

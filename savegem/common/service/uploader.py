@@ -8,6 +8,7 @@ from savegem.common.core import app
 
 from constants import ZIP_EXTENSION
 from savegem.common.core.game_config import Game
+from savegem.common.core.save_meta import SaveMetaProp
 from savegem.common.service.gdrive import GDrive
 from savegem.common.service.subscriptable import SubscriptableService, DoneEvent, ErrorEvent, EventKind
 from savegem.common.util.file import resolve_temp_file
@@ -35,12 +36,13 @@ class Uploader(SubscriptableService):
         self._set_stages(5)
 
         saves_root_dir = game.local_path
-        current_date = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        now = datetime.now()
+        current_date = now.strftime("%Y-%m-%d-%H-%M-%S")
         target_archive_path = resolve_temp_file(f"{game.name}-{current_date}")
 
         if not os.path.exists(saves_root_dir):
             _logger.error("Directory with saves is missing %s", saves_root_dir)
-            self._send_event(ErrorEvent(EventKind.SAVES_DIRECTORY_IS_MISSING))
+            self._send_event(ErrorEvent(EventKind.SavesDirectoryMissing))
             return
 
         # Make directory to place all files that needs to be uploaded.
@@ -53,7 +55,9 @@ class Uploader(SubscriptableService):
         self._complete_stage()
 
         # Set checksum then copy metadata file to target directory.
-        game.checksum = game.calculate_checksum()
+        game.meta.local.checksum = game.meta.local.calculate_checksum()
+        game.meta.local.owner = app.user.name
+        game.meta.local.created_time = now.isoformat()
 
         shutil.copy(game.metadata_file_path, target_archive_path)
         self._complete_stage()
@@ -64,8 +68,11 @@ class Uploader(SubscriptableService):
         self._complete_stage()
 
         archive_props = {
-            "owner": app.user.name,
-            "checksum": game.checksum
+            SaveMetaProp.Owner: app.user.name,
+            SaveMetaProp.Checksum: game.meta.local.checksum
+            # No need to upload createdTime it would be populated by
+            # Google Drive API. We only add it to local metadata for
+            # clarity.
         }
 
         try:
@@ -78,7 +85,7 @@ class Uploader(SubscriptableService):
             )
 
         except HttpError:
-            self._send_event(ErrorEvent(EventKind.ERROR_UPLOADING_TO_DRIVE))
+            self._send_event(ErrorEvent(EventKind.ErrorUploadingToDrive))
             return
 
         self._send_event(DoneEvent(None))

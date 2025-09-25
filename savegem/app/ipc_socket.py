@@ -16,6 +16,12 @@ class UISocket(IPCSocket):
         super().__init__(prop("ipc.uiSocketPort"))
         self.__child_processes = [google_drive_watcher_socket, process_watcher_socket]
 
+    def send_ui_refresh_command(self, event: str):
+        self.send({
+            IPCProp.Command: IPCCommand.RefreshUI,
+            IPCProp.Event: event
+        })
+
     def _handle(self, command: str, message: dict):
 
         if command == IPCCommand.RefreshUI:
@@ -28,17 +34,17 @@ class UISocket(IPCSocket):
                 # then we need to reload it in
                 # main application.
                 if app.state.is_auto_mode:
-                    app.games.reload()
+                    app.games.refresh()
 
                 if event == UIRefreshEvent.GameConfigChange:
                     app.games.download()
-                    app.games.current.download_metadata()
+                    app.games.current.meta.drive.refresh()
 
                 elif event == UIRefreshEvent.ActivityLogUpdate:
-                    app.activity.reload()
+                    app.activity.refresh()
 
                 elif event == UIRefreshEvent.CloudSaveFilesChange:
-                    app.games.current.download_metadata()
+                    app.games.current.meta.drive.refresh()
 
             finally:
                 gui().mutex.unlock()

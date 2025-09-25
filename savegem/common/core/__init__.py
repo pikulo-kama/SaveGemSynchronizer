@@ -8,10 +8,12 @@ from savegem.common.core.user import _UserState
 
 class _ApplicationContext:
     """
-    Contains all runtime information. Has:
-    - Allows control over state (locale, selected game)
-    - Has list of loaded games and their properties
-    - Allows to get and update save versioning
+    Contains all runtime information. Provides:
+    - Control over state (locale, selected game)
+    - List of loaded games and their properties
+    - Possibility to get and update save versioning
+    - Possibility to work with activity data
+    - Possibility to access current user data
     """
 
     def __init__(self):
@@ -66,12 +68,21 @@ class _ApplicationContext:
         return self.__activity
 
     def __link(self, entity: AppData):
+        """
+        Used to link app data instance to
+        main application context.
+        """
+
         entity.link(self)
         self.__linked_entities.append(entity)
 
-    def reload(self):
+    def refresh(self):
+        """
+        Used to refresh all application data.
+        """
+
         for entity in self.__linked_entities:
-            entity.reload()
+            entity.refresh()
 
 
 app = _ApplicationContext()

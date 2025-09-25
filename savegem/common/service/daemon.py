@@ -64,7 +64,7 @@ class Daemon(abc.ABC):
                     continue
 
                 self._work()
-            except Exception as error:  # noqa: E722
+            except Exception as error:
                 self._logger.error("Exception in '%s' service: %s", self.__service_name, error, exc_info=True)
 
             time.sleep(self.__interval)

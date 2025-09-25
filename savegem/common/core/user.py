@@ -85,5 +85,5 @@ class _UserState(AppData):
 
         return image_path
 
-    def reload(self):
+    def refresh(self):
         pass

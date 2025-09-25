@@ -51,7 +51,7 @@ Name: "{userappdata}\{#AppName}\Logs"
 ; Copy everything from PyInstaller one dir output
 Source: "{#RootPath}output\dist\{#AppName}\*"; \
     DestDir: "{app}"; \
-    Flags: recursesubdirs
+    Flags: recursesubdirs replacesameversion
 
 ; Copy local logback to AppData if missing
 Source: "{#RootPath}config\logback.json"; \

@@ -20,6 +20,8 @@ class _AppState(AppData):
     __STATE_SELECTED_GAME: Final = "game"
     __STATE_SELECTED_LOCALE: Final = "locale"
     __STATE_IS_AUTO_MODE: Final = "isAutoMode"
+    __WINDOW_WIDTH: Final = "width"
+    __WINDOW_HEIGHT: Final = "height"
 
     def __init__(self):
         super().__init__()
@@ -90,7 +92,38 @@ class _AppState(AppData):
         """
         self.__set_state_value(self.__STATE_IS_AUTO_MODE, is_auto_mode)
 
-    def reload(self):
+    @property
+    def width(self):
+        """
+        Used to get window width.
+        """
+        return self.__state.get_value(self.__WINDOW_WIDTH, prop("windowWidth"))
+
+    @width.setter
+    def width(self, width: int):
+        """
+        Used to set window width.
+        """
+        self.__state.set_value(self.__WINDOW_WIDTH, width)
+
+    @property
+    def height(self):
+        """
+        Used to get window height.
+        """
+        return self.__state.get_value(self.__WINDOW_HEIGHT, prop("windowHeight"))
+
+    @height.setter
+    def height(self, height: int):
+        """
+        Used to set window height.
+        """
+        self.__state.set_value(self.__WINDOW_HEIGHT, height)
+
+    def refresh(self):
+        """
+        Used to reload application state.
+        """
         self.__state = EditableJsonConfigHolder(resolve_app_data(File.AppState))
 
     def on_change(self, callback):

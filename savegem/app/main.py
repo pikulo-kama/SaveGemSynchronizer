@@ -26,8 +26,8 @@ def _main():
     # Startup initialization.
     app.user.initialize(GDrive.get_current_user)
     app.games.download()
-    app.games.current.download_metadata()
-    app.activity.reload()
+    app.games.current.meta.drive.refresh()
+    app.activity.refresh()
 
     application = QApplication(sys.argv)
     application.setStyleSheet(load_stylesheet())

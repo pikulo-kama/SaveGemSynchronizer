@@ -1,5 +1,6 @@
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSize, QByteArray
 from PyQt6.QtGui import QPixmap, QPainter, QPainterPath
+from PyQt6.QtSvg import QSvgRenderer
 
 
 def make_circular_image(pixmap: QPixmap) -> QPixmap:
@@ -27,3 +28,25 @@ def make_circular_image(pixmap: QPixmap) -> QPixmap:
     painter.end()
 
     return circular_pixmap
+
+
+def svg_to_pixmap(raw_svg: str, size: QSize) -> QPixmap:
+    """
+    Converts an SVG string into a QPixmap.
+    """
+
+    svg_data = QByteArray(raw_svg.encode('utf-8'))
+
+    # Create a renderer for the SVG data
+    svg_renderer = QSvgRenderer(svg_data)
+
+    # Create a QPixmap to render the SVG onto
+    pixmap = QPixmap(size)
+    pixmap.fill(Qt.GlobalColor.transparent)
+
+    # Render the SVG onto the pixmap
+    painter = QPainter(pixmap)
+    svg_renderer.render(painter)
+    painter.end()
+
+    return pixmap

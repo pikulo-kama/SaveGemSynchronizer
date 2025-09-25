@@ -1,8 +1,9 @@
-from PyQt6.QtCore import QMutex, pyqtSignal
+from PyQt6.QtCore import QMutex, pyqtSignal, Qt
 from PyQt6.QtGui import QIcon, QCloseEvent
-from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout, QStackedLayout
 
 from constants import Resource
+from savegem.common.core import app
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
 from savegem.app.gui.constants import UIRefreshEvent
@@ -49,8 +50,11 @@ class _GUI(QMainWindow):
 
         self.__root = QWidget()
         self.setCentralWidget(self.__root)
+        self.__root_layout = QStackedLayout(self.__root)
+        self.__root_layout.setStackingMode(QStackedLayout.StackingMode.StackAll)
 
-        self.__main_grid = QGridLayout(self.__root)
+        self.__grid_widget = QWidget()
+        self.__grid_layout = QGridLayout(self.__grid_widget)
         self.__top_left = QWidget()
         self.__top = QWidget()
         self.__top_right = QWidget()
@@ -157,33 +161,22 @@ class _GUI(QMainWindow):
         self.center.setLayout(QGridLayout())
         self.bottom.setLayout(QHBoxLayout())
 
-        self.__main_grid.addWidget(self.top_left, 0, 0)
-        self.__main_grid.addWidget(self.top, 0, 1)
-        self.__main_grid.addWidget(self.top_right, 0, 2)
-        self.__main_grid.addWidget(self.left, 1, 0)
-        self.__main_grid.addWidget(self.right, 1, 2)
-        self.__main_grid.addWidget(self.bottom_left, 2, 0)
-        self.__main_grid.addWidget(self.bottom, 2, 1)
-        self.__main_grid.addWidget(self.bottom_right, 2, 2)
+        self.__grid_layout.addWidget(self.top_left, 0, 0)
+        self.__grid_layout.addWidget(self.top, 0, 1)
+        self.__grid_layout.addWidget(self.top_right, 0, 2)
+        self.__grid_layout.addWidget(self.left, 1, 0)
+        self.__grid_layout.addWidget(self.right, 1, 2)
+        self.__grid_layout.addWidget(self.bottom_left, 2, 0)
+        self.__grid_layout.addWidget(self.bottom, 2, 1)
+        self.__grid_layout.addWidget(self.bottom_right, 2, 2)
 
-        self.__main_grid.setRowStretch(0, 3)
-        self.__main_grid.setRowStretch(1, 5)
-        self.__main_grid.setRowStretch(2, 1)
+        self.__grid_layout.setRowStretch(0, 3)
+        self.__grid_layout.setRowStretch(1, 5)
+        self.__grid_layout.setRowStretch(2, 1)
 
-        self.__main_grid.setColumnStretch(0, 5)
-        self.__main_grid.setColumnStretch(1, 2)
-        self.__main_grid.setColumnStretch(2, 5)
-
-        # Center could be quite large that's why it's not part
-        # of the main grid.
-        center_width = int(self.width() * 0.7)
-        center_height = int(self.height() * 0.7)
-        x = int((self.width() - center_width) / 2)
-        y = int((self.height() - center_height) / 2)
-
-        self.center.setParent(self)
-        self.center.setGeometry(x, y, center_width, center_height)
-        self.center.raise_()
+        self.__grid_layout.setColumnStretch(0, 5)
+        self.__grid_layout.setColumnStretch(1, 2)
+        self.__grid_layout.setColumnStretch(2, 5)
 
         self.top_left.setMinimumSize(1, 1)
         self.left.setMinimumSize(1, 1)
@@ -193,8 +186,24 @@ class _GUI(QMainWindow):
         self.right.setMinimumSize(1, 1)
         self.bottom_right.setMinimumSize(1, 1)
 
+        # Center could be quite large that's why it's not part
+        # of the main grid.
+        center_wrapper = QWidget()
+        center_wrapper_layout = QHBoxLayout(center_wrapper)
+        center_wrapper_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        center_layout = QVBoxLayout(self.center)
+        center_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.center.setMaximumWidth(round(prop("windowWidth") * 0.7))
+        self.center.setMinimumHeight(round(prop("windowHeight") * 0.5))
+
+        center_wrapper_layout.addWidget(self.center)
+        self.__root_layout.addWidget(self.__grid_widget)
+        self.__root_layout.addWidget(center_wrapper)
+
         for builder_obj in self.__builders:
-            builder_obj.build(self)
+            builder_obj.link(self)
+            builder_obj.build()
 
         self.refresh()
         self.is_blocked = False
@@ -213,7 +222,7 @@ class _GUI(QMainWindow):
         for builder_obj in self.__builders:
 
             if event in builder_obj.events:
-                builder_obj.refresh(self)
+                builder_obj.refresh()
 
         self.setWindowTitle(tr("window_Title", prop("name")))
 
@@ -234,14 +243,18 @@ class _GUI(QMainWindow):
         for builder_obj in self.__builders:
 
             if is_blocked:
-                builder_obj.disable(self)
+                builder_obj.disable()
             else:
-                builder_obj.enable(self)
+                builder_obj.enable()
 
     def closeEvent(self, event: QCloseEvent):
         """
-        Used to destroy application window.
+        Used to call before application window
+        destroyed.
         """
+
+        app.state.width = self.width()
+        app.state.height = self.height()
 
         self.before_destroy.emit()  # noqa
         _logger.info("Application shut down.")
@@ -255,17 +268,9 @@ class _GUI(QMainWindow):
         screen_width = QApplication.primaryScreen().size().width()
         screen_height = QApplication.primaryScreen().size().height()
 
-        width = prop("windowWidth")
-        height = prop("windowHeight")
+        x = int((screen_width - app.state.width) / 2)
+        y = int((screen_height - app.state.height) / 2)
 
-        alt_width = screen_width - prop("horizontalMargin")
-        alt_height = screen_height - prop("verticalMargin")
-
-        width = min(width, alt_width)
-        height = min(height, alt_height)
-
-        x = int((screen_width - width) / 2)
-        y = int((screen_height - height) / 2)
-
-        self.setFixedSize(width, height)
+        self.setMinimumSize(prop("minWindowWidth"), prop("minWindowHeight"))
+        self.resize(app.state.width, app.state.height)
         self.move(x, y)

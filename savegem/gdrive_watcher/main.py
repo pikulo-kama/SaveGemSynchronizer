@@ -5,7 +5,6 @@ from constants import File
 import threading
 import os.path
 
-from savegem.common.core.ipc_socket import IPCCommand, IPCProp
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import resolve_temp_file
@@ -43,13 +42,13 @@ class GDriveWatcher(Daemon):
         self._logger.debug("Activity log modified: %s", activity_log_modified)
 
         if save_files_modified:
-            self.__send_refresh_event(UIRefreshEvent.CloudSaveFilesChange)
+            ui_socket.send_ui_refresh_command(UIRefreshEvent.CloudSaveFilesChange)
 
         if games_config_modified:
-            self.__send_refresh_event(UIRefreshEvent.GameConfigChange)
+            ui_socket.send_ui_refresh_command(UIRefreshEvent.GameConfigChange)
 
         if activity_log_modified:
-            self.__send_refresh_event(UIRefreshEvent.ActivityLogUpdate)
+            ui_socket.send_ui_refresh_command(UIRefreshEvent.ActivityLogUpdate)
 
     def __get_changes(self):
         """
@@ -85,17 +84,6 @@ class GDriveWatcher(Daemon):
         self._logger.debug("affected_directories=%s", affected_directories)
 
         return modified_files, affected_directories
-
-    def __send_refresh_event(self, event):
-        """
-        Used to send refresh command to GUI application.
-        """
-
-        self._logger.debug("Sending RefreshUI command with event='%s'", event)
-        ui_socket.send({
-            IPCProp.Command: IPCCommand.RefreshUI,
-            IPCProp.Event: event
-        })
 
 
 if __name__ == "__main__":

@@ -1,4 +1,7 @@
+from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.push_notification import push_notification
+from savegem.app.ipc_socket import ui_socket
+from savegem.common.core.save_meta import SyncStatus
 from savegem.common.core.text_resource import tr
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.downloader import Downloader
@@ -59,15 +62,14 @@ class ProcessWatcher(Daemon):
                 self._logger.info("Auto mode is disabled for %s", process.game.name)
                 continue
 
-            process.game.download_metadata()
-            drive_checksum = process.game.cloud_metadata.get("checksum")
-            local_checksum = process.game.calculate_checksum()
+            process.game.meta.drive.refresh()
+            sync_status = process.game.meta.sync_status
 
-            if local_checksum == drive_checksum:
+            if sync_status == SyncStatus.UpToDate:
                 self._logger.info(
                     "Skipping upload/download since checksum hasn't changed (%s:%s)",
                     process.game.name,
-                    local_checksum
+                    process.game.meta.local.checksum
                 )
                 continue
 
@@ -78,6 +80,7 @@ class ProcessWatcher(Daemon):
                 )
                 self.__downloader.download(process.game)
                 push_notification(tr("notification_NewSaveHasBeenDownloaded"))
+                ui_socket.send_ui_refresh_command(UIRefreshEvent.CloudSaveFilesChange)
 
             elif process.has_closed:
                 self._logger.info(

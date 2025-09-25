@@ -7,7 +7,6 @@ class UIRefreshEvent:
     """
 
     All: Final = "all"
-    Noone: Final = "noone"
 
     LanguageChange: Final = "language_change"
     ActivityLogUpdate: Final = "activity_log_update"

@@ -21,7 +21,7 @@ class AppData(abc.ABC):
         self._app = app
 
     @abc.abstractmethod
-    def reload(self):
+    def refresh(self):
         """
         Should be used to reinitialize app data.
         """

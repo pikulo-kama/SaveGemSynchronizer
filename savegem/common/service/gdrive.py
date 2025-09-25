@@ -3,6 +3,7 @@ import json
 import logging
 import os.path
 
+from google.auth.exceptions import RefreshError
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -221,10 +222,15 @@ class GDrive:
         # If they're just expired then try to refresh them
         if creds and creds.expired and creds.refresh_token:
             _logger.debug("Credentials expired, performing refresh.")
-            creds.refresh(Request())
+
+            try:
+                creds.refresh(Request())
+                return creds
+            except RefreshError:
+                _logger.error("Refresh token expired. Starting authentication process.")
 
         # Authenticate with credentials and then store them for future use
-        elif os.path.exists(credentials_file_name):
+        if os.path.exists(credentials_file_name):
             _logger.debug("Attempting authentication using credentials.")
 
             flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, _SCOPES)

@@ -1,23 +1,29 @@
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Final
+from enum import Enum, auto
+from typing import Optional
 
 
 class EventKind:
+    """
+    Represents kind of subscriptable event.
+    """
 
-    LAST_SAVE_METADATA_IS_NONE: Final = "LAST_SAVE_METADATA_IS_NONE"
-    SAVES_DIRECTORY_IS_MISSING: Final = "SAVES_DIRECTORY_IS_MISSING"
-    ERROR_UPLOADING_TO_DRIVE: Final = "ERROR_UPLOADING_TO_DRIVE"
+    """
+    Error Kinds
+    """
+    DriveMetadataMissing = auto()
+    SavesDirectoryMissing = auto()
+    ErrorUploadingToDrive = auto()
 
 
 class EventType(Enum):
     """
-    Enumeration for event types.
+    Represents type of event.
     """
 
-    PROGRESS = "Progress"
-    ERROR = "Error"
-    DONE = "Done"
+    Progress = auto()
+    Error = auto()
+    Done = auto()
 
 
 @dataclass
@@ -27,7 +33,7 @@ class Event:
     """
 
     _event_type: EventType = field(init=False)
-    _event_kind: str | None
+    _event_kind: Optional[str]
 
     @property
     def type(self):
@@ -52,7 +58,7 @@ class ErrorEvent(Event):
     """
 
     def __post_init__(self):
-        self._event_type = EventType.ERROR
+        self._event_type = EventType.Error
 
 
 @dataclass
@@ -64,7 +70,7 @@ class ProgressEvent(Event):
     _progress_percentage: int
 
     def __post_init__(self):
-        self._event_type = EventType.PROGRESS
+        self._event_type = EventType.Progress
 
     @property
     def progress(self):
@@ -78,7 +84,7 @@ class DoneEvent(Event):
     """
 
     def __post_init__(self):
-        self._event_type = EventType.DONE
+        self._event_type = EventType.Done
 
 
 class SubscriptableService:
@@ -109,6 +115,13 @@ class SubscriptableService:
             subscriber(event)
 
     def _set_stages(self, stage_count: int):
+        """
+        Used to sent amount of stages that would
+        be executed by service.
+
+        Used for single stage percentage calculation.
+        """
+
         self.__stages = stage_count
         self.__single_stage_percentage = 1 / stage_count
 
@@ -118,6 +131,10 @@ class SubscriptableService:
         self._complete_stage(completion=0)
 
     def _complete_stage(self, completion=1):
+        """
+        Used to complete stage fully or partially.
+        Will send progress event to subscribers.
+        """
 
         progress = self.__progress + (completion * self.__single_stage_percentage)
 

@@ -57,7 +57,7 @@ class IPCSocket:
             command = message.pop(IPCProp.Command)
 
             if command == IPCCommand.StateChanged:
-                app.state.reload()
+                app.state.refresh()
 
             else:
                 self._handle(command, message)
