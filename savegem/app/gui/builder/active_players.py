@@ -31,13 +31,13 @@ class ActivePlayersBuilder(UIBuilder):
         self.__add_section(gui)
 
     def refresh(self, gui: _GUI):
+        players = app.activity.players
         players_label = tr("label_Offline")
-        players_online = len(app.activity.players) > 0
         is_disabled = "true"
 
-        if players_online:
-            players_label = app.activity.players.pop(0)
-            remaining_players = len(app.activity.players)
+        if len(players) > 0:
+            players_label = players.pop(0)
+            remaining_players = len(players)
             is_disabled = "false"
 
             if remaining_players > 0:
