@@ -1,12 +1,14 @@
 
+#define RootPath "..\..\"
+
 ; --------------------------------------------------------
-; GetProperty(FileName, Property)
+; GetProperty(FilePath, Property)
 ; --------------------------------------------------------
 ; Reads a JSON file and extracts
 ; provided field using PowerShell.
 ;
 ; Parameters:
-;   FileName - Path to the JSON file.
+;   FilePath - Relative to project root path to the JSON file.
 ;   Property - Name of JSON property to extract.
 ;
 ; Returns:
@@ -16,11 +18,11 @@
 ;   AppVersion={#GetProperty("config\main.json", "version")}
 ;   → AppVersion=1.2.3
 ;
-#define GetProperty(str fileName, str property) \
+#define GetProperty(str filePath, str property) \
   Local[0] = AddBackslash(GetEnv("TEMP")) + "buffer.txt", \
   Local[1] = \
     "-ExecutionPolicy Bypass -Command """ + \
-    "$json = Get-Content '" + FileName + "' | ConvertFrom-Json;" + \
+    "$json = Get-Content '" + RootPath + filePath + "' | ConvertFrom-Json;" + \
     "Set-Content -Path '" + Local[0] + "' -Value $json." + property + ";" + \
     """", \
   Exec("powershell.exe", Local[1], SourcePath, , SW_HIDE), \
@@ -32,14 +34,11 @@
 
 
 ; --------------------------------------------------------
-; GetBuildType(RepoPath)
+; GetBuildType()
 ; --------------------------------------------------------
 ; Uses Git to detect the current branch of a repository.
 ; If branch is "master" → returns "RELEASE"
 ; Otherwise → returns "SNAPSHOT".
-;
-; Parameters:
-;   RepoPath - Path to the Git repository.
 ;
 ; Returns:
 ;   "RELEASE" or "SNAPSHOT".
@@ -49,11 +48,11 @@
 ;   → "RELEASE"  (if on master)
 ;   → "SNAPSHOT" (otherwise)
 ;
-#define GetBuildType(str RepoPath) \
+#define GetBuildType() \
   Local[0] = AddBackslash(GetEnv("TEMP")) + "buildType.txt", \
   Local[1] = \
     "-ExecutionPolicy Bypass -Command """ + \
-    "$branch = (git -C '" + RepoPath + "' rev-parse --abbrev-ref HEAD);" + \
+    "$branch = (git -C '" + RootPath + "' rev-parse --abbrev-ref HEAD);" + \
     "if ($branch -eq 'master') { $type = 'RELEASE' } else { $type = 'SNAPSHOT' };" + \
     "Set-Content -Path '" + Local[0] + "' -Value $type;" + \
     """", \

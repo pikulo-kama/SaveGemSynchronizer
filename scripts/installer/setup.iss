@@ -1,18 +1,16 @@
 
 #include "helpers.iss"
 
-#define RootPath "..\..\"
+#define AppName GetProperty("config\app.json", "name")
+#define Author GetProperty("config\app.json", "author")
+#define AppExeName GetProperty("config\app.json", "processName")
+#define AppVersion GetProperty("config\app.json", "version")
 
-#define AppName GetProperty(RootPath + "config\app.json", "name")
-#define Author GetProperty(RootPath + "config\app.json", "author")
-#define AppExeName GetProperty(RootPath + "config\app.json", "processName")
-#define AppVersion GetProperty(RootPath + "config\app.json", "version")
+#define WatchdogName GetProperty("config\watchdog.json", "name")
+#define WatchdogExeName GetProperty("config\watchdog.json", "processName")
 
-#define WatchdogName GetProperty(RootPath + "config\watchdog.json", "name")
-#define WatchdogExeName GetProperty(RootPath + "config\watchdog.json", "processName")
-
-#define ProcessWatcherExeName GetProperty(RootPath + "config\process_watcher.json", "processName")
-#define GDriveWatcherExeName GetProperty(RootPath + "config\gdrive_watcher.json", "processName")
+#define ProcessWatcherExeName GetProperty("config\process_watcher.json", "processName")
+#define GDriveWatcherExeName GetProperty("config\gdrive_watcher.json", "processName")
 
 [Setup]
 ; --- App Info ---
@@ -25,9 +23,10 @@ SetupIconFile={#RootPath}resources\application.ico
 DefaultDirName={pf}\{#AppName}
 DefaultGroupName={#AppName}
 UninstallDisplayIcon={app}\{#AppExeName}
-OutputBaseFilename={#AppName}Setup-{#AppVersion}-{#GetBuildType(RootPath)}
+OutputBaseFilename={#AppName}Setup-{#AppVersion}-{#GetBuildType()}
 OutputDir={#RootPath}output\installers
 DisableProgramGroupPage=no
+CloseApplications=force
 
 ; --- Installer Settings ---
 Compression=lzma
@@ -82,12 +81,32 @@ Name: "{commondesktop}\{#AppName}"; \
     IconFilename: "{app}\_internal\resources\application.ico"; \
     Tasks: desktopicon
     
-; Add process watcher launcher to startup.
+; Add watchdog to startup.
 Name: "{userstartup}\{#WatchdogName}"; \
     Filename: "{app}\{#WatchdogExeName}"; \
     IconFilename: "{app}\_internal\resources\application.ico"
 
 [Run]
+; Kill main application.
+Filename: "taskkill"; \
+    Parameters: "/f /im {#AppExeName}"; \
+    Flags: runhidden
+
+; Kill watchdog.
+Filename: "taskkill"; \
+    Parameters: "/f /im {#WatchdogExeName}"; \
+    Flags: runhidden
+
+; Kill Google Drive watcher.
+Filename: "taskkill"; \
+    Parameters: "/f /im {#GDriveWatcherExeName}"; \
+    Flags: runhidden
+
+; Kill process watcher.
+Filename: "taskkill"; \
+    Parameters: "/f /im {#ProcessWatcherExeName}"; \
+    Flags: runhidden
+
 ; Add option to start application after installation.
 Filename: "{app}\{#AppExeName}"; \
     Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; \
@@ -155,6 +174,15 @@ es.RemoveUserDataPrompt=¿Desea eliminar todos los datos de usuario de %1?
 ; ------------------------------------------------------------------------- ;
 
 [Code]
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ResultCode: Integer;
+begin
+  if CurStep = ssPostInstall then
+    // Immediately start watchdog process.
+    Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   Prompt: String;
@@ -167,13 +195,4 @@ begin
     if MsgBox(Prompt, mbConfirmation, MB_YESNO) = IDYES then
       DelTree(ExpandConstant('{userappdata}\{#AppName}'), True, True, True);
   end;
-end;
-
-procedure CurStepChanged(CurStep: TSetupStep);
-var
-  ExitCode: Integer;
-begin
-  if CurStep = ssPostInstall then
-    // Immediately start watchdog process.
-    Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ExitCode);
 end;
