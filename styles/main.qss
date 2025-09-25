@@ -1,20 +1,30 @@
 
 QPushButton {
+    outline: 1px dashed transparent;
     border-radius: 5px;
     padding: 8px 16px;
     font-size: 14px;
 }
 
 QProgressBar {
+    outline: 1px dashed transparent;
     background-color: rgba(0, 0, 0, 0);
     border: none;
     border-radius: 5px;
     text-align: center;
-    font: font("secondary-md");
+    font: font("primary-md");
     font-weight: bold;
     color: color("primaryTextColor");
 }
 
 QProgressBar::chunk {
     border-radius: 5px;
+}
+
+QProgressPushButton {
+    outline: 1px dashed transparent;
+    color: color("primaryTextColor");
+    font: font("primary-md");
+    min-height: 70px;
+    padding: 0;
 }

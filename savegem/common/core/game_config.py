@@ -255,9 +255,6 @@ class _GameConfig(AppData):
                 allow_auto_mode
             )
 
-            # Download metadata for currently selected game as well.
-            self.current.download_metadata()
-
         _logger.debug("Configuration for following game(s) was found = %s", ", ".join(self.names))
 
     @property

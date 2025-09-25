@@ -14,6 +14,7 @@ class UIRefreshEvent:
     GameConfigChange: Final = "game_config_change"
     CloudSaveFilesChange: Final = "cloud_files_change"
     GameSelectionChange: Final = "game_selection_change"
+    SaveDownloaded: Final = "save_downloaded"
 
 
 class QAttr:

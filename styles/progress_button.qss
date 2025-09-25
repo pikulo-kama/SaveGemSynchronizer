@@ -1,13 +1,4 @@
 
-/* General button style */
-QProgressPushButton {
-    color: color("primaryTextColor");
-    font: font("secondary-md");
-    min-height: 70px;
-    padding: 0;
-}
-
-
 /* Style for primary button */
 QProgressPushButton[kind="primary"],
 QProgressPushButton[kind="primary"]:pressed,

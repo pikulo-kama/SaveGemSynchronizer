@@ -44,4 +44,6 @@ class CopyrightBuilder(UIBuilder):
         """
 
         self.__copyright = QLabel()
+        self.__copyright.setObjectName("copyright")
+
         gui.bottom.layout().addWidget(self.__copyright, 0)

@@ -33,16 +33,22 @@ class ActivePlayersBuilder(UIBuilder):
     def refresh(self, gui: _GUI):
         players_label = tr("label_Offline")
         players_online = len(app.activity.players) > 0
+        is_disabled = "true"
 
         if players_online:
             players_label = app.activity.players.pop(0)
             remaining_players = len(app.activity.players)
+            is_disabled = "false"
 
             if remaining_players > 0:
                 players_label += f" +{remaining_players}"
 
-        self.__status_label.setProperty(QAttr.Disabled, not players_online)
-        self.__active_players_label.setProperty(QAttr.Disabled, not players_online)
+        self.__status_label.setProperty(QAttr.Disabled, is_disabled)
+        self.__active_players_label.setProperty(QAttr.Disabled, is_disabled)
+
+        self.__status_label.style().polish(self.__status_label)
+        self.__active_players_label.style().polish(self.__active_players_label)
+
         self.__active_players_label.setText(players_label)
 
         _logger.debug("Active users section was reloaded. (%s)", players_label)

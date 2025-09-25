@@ -31,7 +31,8 @@ class SaveStatusBuilder(UIBuilder):
             UIRefreshEvent.LanguageChange,
             UIRefreshEvent.GameConfigChange,
             UIRefreshEvent.CloudSaveFilesChange,
-            UIRefreshEvent.GameSelectionChange
+            UIRefreshEvent.GameSelectionChange,
+            UIRefreshEvent.SaveDownloaded
         )
 
         self.__save_status: QLabel
