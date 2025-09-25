@@ -14,9 +14,9 @@
 
   "windowWidth" : 1080,
   "windowHeight" : 720,
-  "popupWidth" : 400,
-  "popupHeight" : 150,
+  "minWindowWidth" : 960,
+  "minWindowHeight" : 540,
 
-  "horizontalMargin" : 100,
-  "verticalMargin" : 200
+  "popupWidth" : 400,
+  "popupHeight" : 150
 }

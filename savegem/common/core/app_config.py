@@ -31,7 +31,7 @@ class _AppConfig(AppData):
         """
         return self.__config.get_value("activityLogFileId")
 
-    def reload(self):
+    def refresh(self):
         # No need to reload config since it
         # is not modified by application.
         pass

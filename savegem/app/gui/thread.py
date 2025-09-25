@@ -1,15 +1,20 @@
+from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import Qt, QThread
-from savegem.app.gui.worker import QWorker
-from savegem.app.gui.window import gui
+
+if TYPE_CHECKING:
+    from savegem.app.gui.worker import QWorker
 
 
-def execute_in_blocking_thread(thread: QThread, worker: QWorker):
+def execute_in_blocking_thread(thread: QThread, worker: "QWorker"):
     """
     Used to execute operation in separate thread.
 
     Will update UI cursor to display that operation is being performed.
     Will block GUI while performing task.
     """
+
+    from savegem.app.gui.window import gui
 
     if gui().is_blocked:
         return

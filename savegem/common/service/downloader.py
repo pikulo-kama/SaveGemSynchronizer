@@ -37,20 +37,20 @@ class Downloader(SubscriptableService):
 
         if not os.path.exists(saves_directory):
             _logger.error("Directory with saves is missing %s", saves_directory)
-            self._send_event(ErrorEvent(EventKind.SAVES_DIRECTORY_IS_MISSING))
+            self._send_event(ErrorEvent(EventKind.SavesDirectoryMissing))
             return
 
-        game.download_metadata()
+        game.meta.drive.refresh()
         self._complete_stage()
 
-        if game.cloud_metadata is None:
-            self._send_event(ErrorEvent(EventKind.LAST_SAVE_METADATA_IS_NONE))
+        if not game.meta.drive.is_present:
+            self._send_event(ErrorEvent(EventKind.DriveMetadataMissing))
             return
 
         # Download file and write it to zip file locally (in output directory)
         _logger.info("Downloading save archive.")
         file = GDrive.download_file(
-            game.cloud_metadata.get("id"),
+            game.meta.drive.id,
             subscriber=lambda completion: self._complete_stage(completion)
         ).getvalue()
 
@@ -72,7 +72,7 @@ class Downloader(SubscriptableService):
         self._complete_stage()
 
         # Update metadata in memory.
-        game.checksum = game.cloud_metadata.get("checksum")
+        game.meta.local.checksum = game.meta.drive.checksum
         self._complete_stage()
 
         self._send_event(DoneEvent(None))

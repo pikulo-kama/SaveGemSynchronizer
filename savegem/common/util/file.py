@@ -2,7 +2,7 @@ import hashlib
 import json
 import os.path
 import shutil
-from constants import Directory, UTF_8
+from constants import Directory, UTF_8, SHA_256
 
 
 def resolve_config(config_name: str):
@@ -110,7 +110,7 @@ def delete_file(file_path: str):
         os.remove(file_path)
 
 
-def file_checksum(file_path: str, algorithm: str = "sha256", block_size: int = 8192):
+def file_checksum(file_path: str, algorithm: str = SHA_256, block_size: int = 8192):
     """
     Used to get checksum of file.
     """

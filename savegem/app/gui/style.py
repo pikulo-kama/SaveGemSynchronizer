@@ -13,11 +13,11 @@ from savegem.common.util.logger import get_logger
 _logger = get_logger(__name__)
 _styles = JsonConfigHolder(resolve_config(File.Style))
 
-_FONTS_PROP = "fonts"
-_COLORS_PROP = "colors"
+_FONTS_PROP: Final = "fonts"
+_COLORS_PROP: Final = "colors"
 
-_COLOR_MODE_LIGHT = "light"
-_COLOR_MODE_DARK = "dark"
+_COLOR_MODE_LIGHT: Final = "light"
+_COLOR_MODE_DARK: Final = "dark"
 
 
 def _color(property_name: str):
@@ -49,31 +49,40 @@ def _font(property_name: str):
     return _styles.get_value(_FONTS_PROP).get(property_name)
 
 
+def resolve_style_properties(style_string: str):
+    """
+    Used to resolve color/font
+    properties in string.
+    """
+
+    # Resolve colors.
+    style_string = re.sub(
+        r"color\(['\"]([^'\"]+)['\"]\)",
+        lambda match: _color(match.group(1)),
+        style_string
+    )
+
+    # Resolve fonts.
+    style_string = re.sub(
+        r"font\(['\"]([^'\"]+)['\"]\)",
+        lambda match: _font(match.group(1)),
+        style_string
+    )
+
+    return style_string
+
+
 def load_stylesheet():
     """
     Used to load all stylesheets and combine
     them into single string.
     """
 
-    styles = ""
+    style_string = ""
 
     # Get all style files and join them together.
     for style in os.listdir(Directory.Styles):
         style_path = os.path.join(Directory.Styles, style)
-        styles += read_file(style_path)
+        style_string += read_file(style_path)
 
-    # Resolve colors.
-    styles = re.sub(
-        r"color\(['\"]([^'\"]+)['\"]\)",
-        lambda match: _color(match.group(1)),
-        styles
-    )
-
-    # Resolve fonts.
-    styles = re.sub(
-        r"font\(['\"]([^'\"]+)['\"]\)",
-        lambda match: _font(match.group(1)),
-        styles
-    )
-
-    return styles
+    return resolve_style_properties(style_string)

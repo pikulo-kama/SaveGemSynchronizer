@@ -52,7 +52,11 @@ class _Activity(AppData):
             _logger.debug("Log After: %s", activity_log)
             GDrive.update_file(self._app.config.activity_log_file_id, json.dumps(activity_log, indent=2))
 
-    def reload(self):
+    def refresh(self):
+        """
+        Used to download activity data from drive.
+        """
+
         self.__players.clear()
 
         with GDrive.download_file(self._app.config.activity_log_file_id) as log_bytes:

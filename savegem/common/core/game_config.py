@@ -1,192 +1,14 @@
-import hashlib
 import json
 import os
 import re
 from typing import Final
 
-from constants import ZIP_MIME_TYPE
 from savegem.common.core.app_data import AppData
-from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
+from savegem.common.core.save_meta import _LocalMetadata, _DriveMetadata, _MetadataWrapper
 from savegem.common.service.gdrive import GDrive
-from savegem.common.util.file import file_checksum
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
-
-
-class Game:
-    """
-    Represents a game.
-    """
-
-    __SAVE_META_FILE_NAME: Final = "SaveGemMetadata.json"
-    __ALL_FILES: Final = ".*"
-
-    __META_CHECKSUM_ATTR = "checksum"
-
-    def __init__(self,
-                 name: str,
-                 process_name: str,
-                 local_path: str,
-                 drive_directory: str,
-                 files_filter: list[str],
-                 auto_mode_allowed: bool):
-        self.__name = name
-        self.__local_path = local_path
-        self.__drive_directory = drive_directory
-        self.__files_filter = files_filter
-        self.__process_name = process_name
-        self.__auto_mode_allowed = auto_mode_allowed
-
-        self.__metadata = EditableJsonConfigHolder(self.metadata_file_path)
-        self.__cloud_metadata = None
-
-    @property
-    def name(self):
-        """
-        Unique name of the game.
-        """
-        return self.__name
-
-    @property
-    def process_name(self):
-        """
-        Name of EXE file of the game
-        the way it's displayed in Task Manager.
-        """
-        return self.__process_name
-
-    @property
-    def local_path(self):
-        """
-        Path to the game on local filesystem.
-        """
-        return os.path.expandvars(self.__local_path)
-
-    @property
-    def drive_directory(self):
-        """
-        ID of Google Drive directory where save files located
-        """
-        return self.__drive_directory
-
-    @property
-    def cloud_metadata(self):
-        """
-        Used to get metadata of latest
-        save on Google Drive.
-        """
-        return self.__cloud_metadata
-
-    def download_metadata(self):
-        """
-        Used to download latest save
-        metadata from Google Drive.
-        """
-
-        metadata = GDrive.query_single(
-            f"mimeType='{ZIP_MIME_TYPE}' and '{self.drive_directory}' in parents and trashed=false",
-            "files(id, appProperties, createdTime)"
-        )
-
-        if metadata is None:
-            message = "Error downloading metadata. Either configuration is incorrect or you don't have access."
-
-            _logger.error(message)
-            raise RuntimeError(message)
-
-        files_meta = metadata.get("files")
-
-        if len(files_meta) == 0:
-            _logger.warn("There are no saves on Google Drive for %s.", self.name)
-            self.__cloud_metadata = None
-            return
-
-        file_meta = files_meta[0]
-        properties = file_meta.get("appProperties") or {}
-
-        self.__cloud_metadata = {**file_meta, **properties}
-
-    @property
-    def auto_mode_allowed(self):
-        """
-        Used to check whether auto mode
-        is enabled for the game.
-        """
-        return self.__auto_mode_allowed
-
-    @property
-    def file_list(self):
-        """
-        Used to get list of save file paths
-        that are being managed for game.
-        """
-
-        save_directory = self.local_path
-
-        for file_name in sorted(os.listdir(save_directory)):
-            # Only include files that are present in game config.
-            if any(p.match(file_name) for p in self.filter_patterns):
-                yield os.path.join(save_directory, file_name)
-
-    @property
-    def filter_patterns(self):
-        """
-        Returns list of REGEXP that is used to filter
-        save files.
-        """
-
-        patterns = list(self.__files_filter)
-
-        if len(patterns) == 0:
-            patterns.append(self.__ALL_FILES)
-
-        return [re.compile(pattern) for pattern in patterns]
-
-    @property
-    def checksum(self):
-        """
-        Used to get checksum of save files store in metadata file.
-        """
-        return self.__metadata.get_value(self.__META_CHECKSUM_ATTR)
-
-    @checksum.setter
-    def checksum(self, checksum):
-        """
-        Used to set checksum of save files inside metadata file.
-        """
-        self.__metadata.set_value(self.__META_CHECKSUM_ATTR, checksum)
-
-    def calculate_checksum(self):
-        """
-        Used to calculate checksum of save files.
-        """
-
-        checksum = hashlib.new("sha256")
-
-        for file_path in self.file_list:
-            # Don't include metadata when calculating checksum.
-            if file_path == self.metadata_file_path:
-                continue
-
-            checksum.update(file_checksum(file_path).encode())
-
-        return checksum.hexdigest()
-
-    def reload_metadata(self):
-        """
-        Used to read metadata file in case
-        it was updated by another process.
-        """
-        self.__metadata = EditableJsonConfigHolder(self.metadata_file_path)
-
-    @property
-    def metadata_file_path(self):
-        """
-        Used to get path to metadata file
-        specific to the game.
-        """
-        return os.path.join(self.local_path, Game.__SAVE_META_FILE_NAME)
 
 
 class _GameConfig(AppData):
@@ -230,21 +52,20 @@ class _GameConfig(AppData):
             local_path = game.get(self.__LOCAL_PATH)
             drive_directory = game.get(self.__PARENT_DIR)
             process_name = game.get(self.__PROCES_NAME)
-            allow_auto_mode = True
-            files_filter = []
+            allow_auto_mode = game.get(self.__AUTO_MODE_ALLOWED, True)
+            files_filter = game.get(self.__FILES_FILTER, [])
 
-            if self.__HIDDEN in game and game.get(self.__HIDDEN) is True:
+            hidden = game.get(self.__HIDDEN, False)
+            players = game.get(self.__PLAYERS, [])
+
+            if hidden:
                 _logger.debug("Skipping game '%s' since it's marked as hidden.", name)
                 continue
 
-            if self.__PLAYERS in game and self._app.user.email not in game.get(self.__PLAYERS):
+            # If players field is not configured it means that everyone
+            # has access to the game.
+            if len(players) > 0 and self._app.user.email not in players:
                 continue
-
-            if self.__AUTO_MODE_ALLOWED in game:
-                allow_auto_mode = game.get(self.__AUTO_MODE_ALLOWED)
-
-            if self.__FILES_FILTER in game:
-                files_filter = game.get(self.__FILES_FILTER)
 
             self.__games_by_name[name] = Game(
                 name,
@@ -293,10 +114,118 @@ class _GameConfig(AppData):
         """
         return list(self.__games_by_name.keys())
 
-    def reload(self):
+    def refresh(self):
         """
         Used to reload metadata for all
         registered games.
         """
         for game in self.list:
-            game.reload_metadata()
+            game.meta.local.refresh()
+
+
+class Game:
+    """
+    Represents a game.
+    """
+
+    __SAVE_META_FILE_NAME: Final = "SaveGemMetadata.json"
+    __ALL_FILES: Final = ".*"
+
+    def __init__(self,
+                 name: str,
+                 process_name: str,
+                 local_path: str,
+                 drive_directory: str,
+                 files_filter: list[str],
+                 auto_mode_allowed: bool):
+        self.__name = name
+        self.__local_path = local_path
+        self.__drive_directory = drive_directory
+        self.__files_filter = files_filter
+        self.__process_name = process_name
+        self.__auto_mode_allowed = auto_mode_allowed
+
+        self.__metadata = _MetadataWrapper(_LocalMetadata(self), _DriveMetadata(self))
+
+    @property
+    def name(self):
+        """
+        Unique name of the game.
+        """
+        return self.__name
+
+    @property
+    def process_name(self):
+        """
+        Name of EXE file of the game
+        the way it's displayed in Task Manager.
+        """
+        return self.__process_name
+
+    @property
+    def local_path(self):
+        """
+        Path to the game on local filesystem.
+        """
+        return os.path.expandvars(self.__local_path)
+
+    @property
+    def drive_directory(self):
+        """
+        ID of Google Drive directory where save files located
+        """
+        return self.__drive_directory
+
+    @property
+    def meta(self):
+        """
+        Used to get metadata wrapper.
+
+        Contains both metadata of local save
+        and metadata of latest save on drive.
+        """
+        return self.__metadata
+
+    @property
+    def auto_mode_allowed(self):
+        """
+        Used to check whether auto mode
+        is enabled for the game.
+        """
+        return self.__auto_mode_allowed
+
+    @property
+    def file_list(self):
+        """
+        Used to get list of save file paths
+        that are being managed for game.
+        """
+
+        save_directory = self.local_path
+
+        for file_name in sorted(os.listdir(save_directory)):
+            # Only include files that are present in game config.
+            if any(p.match(file_name) for p in self.filter_patterns):
+                yield os.path.join(save_directory, file_name)
+
+    @property
+    def filter_patterns(self):
+        """
+        Returns list of REGEXP that is used to filter
+        save files.
+        """
+
+        patterns = list(self.__files_filter)
+
+        if len(patterns) == 0:
+            patterns.append(self.__ALL_FILES)
+
+        return [re.compile(pattern) for pattern in patterns]
+
+    @property
+    def metadata_file_path(self):
+        """
+        Used to get path to metadata file
+        specific to the game.
+        """
+        return os.path.join(self.local_path, Game.__SAVE_META_FILE_NAME)
