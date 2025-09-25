@@ -1,57 +1,34 @@
 {
   "colors" : {
-    "light-old" : {
-      "primaryTextColor" : "#009688",
+    "light" : {
+      "primaryTextColor" : "#82a197",
       "secondaryTextColor" : "#d3d3d3",
-      "headingTextColor" : "#009688",
+      "headingTextColor" : "#5F6D73",
       "accentColor" : "#e07b39",
 
       "primaryStaticColor" : "#ddedde",
-      "primaryHoverColor" : "#dae6db",
+      "primaryHoverColor" : "#d3e3d4",
       "secondaryStaticColor" : "#cedfeb",
-      "secondaryHoverColor" : "#d5dde3"
-    },
-    "dark-old" : {
-      "primaryTextColor" : "#2c3e50",
-      "secondaryTextColor" : "#909090",
-      "headingTextColor" : "#e0e0e0",
-      "accentColor" : "#e07b39",
-
-      "primaryStaticColor" : "#4c7a72",
-      "primaryHoverColor" : "#5e958a",
-      "secondaryStaticColor" : "#5e7a9e",
-      "secondaryHoverColor" : "#6e8aa7"
-    },
-    "light" : {
-      "primaryTextColor" : "#EBF2F0",
-      "secondaryTextColor" : "#d3d3d3",
-      "headingTextColor" : "#5F6D73",
-      "accentColor" : "#e07b39",
-
-      "primaryStaticColor" : "#9AC1D0",
-      "primaryHoverColor" : "#82b9cf",
-      "secondaryStaticColor" : "#4F729A",
-      "secondaryHoverColor" : "#627c99"
+      "secondaryHoverColor" : "#c8d6e0"
     },
     "dark" : {
-      "primaryTextColor" : "#2c3e50",
+      "primaryTextColor" : "#202020",
       "secondaryTextColor" : "#909090",
-      "headingTextColor" : "#5F6D73",
+      "headingTextColor" : "#d8e7ed",
       "accentColor" : "#e07b39",
 
-      "primaryStaticColor" : "#9AC1D0",
-      "primaryHoverColor" : "#82b9cf",
-      "secondaryStaticColor" : "#4F729A",
-      "secondaryHoverColor" : "#627c99"
+      "primaryStaticColor" : "#3F4F44",
+      "primaryHoverColor" : "#566b5c",
+      "secondaryStaticColor" : "#3C3D37",
+      "secondaryHoverColor" : "#56584f"
     }
   },
   "fonts" : {
-    "primary-xs" : "10pt 'Helvetica'",
-    "primary-sm" : "12pt 'Helvetica'",
-    "primary-md" : "18pt 'Helvetica'",
-    "primary-lg" : "24pt 'Helvetica'",
+    "primary-xs" : "10pt 'Roboto'",
+    "primary-sm" : "12pt 'Roboto'",
+    "primary-md" : "18pt 'Roboto'",
+    "primary-lg" : "24pt 'Roboto'",
 
-    "secondary-xs" : "10pt 'Segoe UI Semibold'",
-    "secondary-md" : "18pt 'Segoe UI Semibold'"
+    "secondary-xs" : "10pt 'Segoe UI Semibold'"
   }
 }

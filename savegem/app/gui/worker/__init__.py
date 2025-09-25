@@ -11,6 +11,8 @@ class QWorker(QObject):
     and emits events.
     """
 
+    completed = pyqtSignal()
+
     def start(self):
         """
         Worker entry point.
@@ -39,7 +41,6 @@ class QSubscriptableWorker(QWorker):
 
     error = pyqtSignal(ErrorEvent)
     progress = pyqtSignal(ProgressEvent)
-    completed = pyqtSignal()
 
     def _on_subscriptable_event(self, event: Event):
         """

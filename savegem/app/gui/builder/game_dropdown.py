@@ -74,6 +74,7 @@ class GameDropdownBuilder(UIBuilder):
 
             app.state.game_name = value
             app.games.current.download_metadata()
+            app.activity.reload()
             gui.refresh(UIRefreshEvent.GameSelectionChange)
 
         self.__combobox = QCustomComboBox()

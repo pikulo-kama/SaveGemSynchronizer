@@ -28,7 +28,7 @@ class DownloadUploadButtonBuilder(UIBuilder):
     def __init__(self):
         super().__init__(UIRefreshEvent.LanguageChange)
 
-        self.__gui = None
+        self.__gui: _GUI | None = None
 
         self.__download_button: QProgressPushButton
         self.__upload_button: QProgressPushButton
@@ -97,6 +97,7 @@ class DownloadUploadButtonBuilder(UIBuilder):
         self.__worker.error.connect(self.__error_subscriber)
         self.__worker.progress.connect(self.__progress_subscriber(self.__download_button))
         self.__worker.completed.connect(self.__done_subscriber("notification_NewSaveHasBeenDownloaded"))
+        self.__worker.completed.connect(lambda: self.__gui.refresh(UIRefreshEvent.SaveDownloaded))
 
         execute_in_blocking_thread(self.__thread, self.__worker)
 

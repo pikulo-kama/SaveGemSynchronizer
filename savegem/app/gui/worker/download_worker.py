@@ -1,3 +1,5 @@
+from savegem.app.gui.constants import UIRefreshEvent
+from savegem.app.gui.window import gui
 from savegem.app.gui.worker import QSubscriptableWorker
 from savegem.common.core import app
 from savegem.common.service.downloader import Downloader

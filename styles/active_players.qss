@@ -1,11 +1,13 @@
 
 QLabel#activePlayersBadge {
-    min-width: 16px;
-    min-height: 16px;
+    min-width: 14px;
+    min-height: 14px;
+    max-width: 14px;
+    max-height: 14px;
 
     font: font("secondary-xs");
     background-color: color("accentColor");
-    border-radius: 8px;
+    border-radius: 7px;
 }
 
 QLabel#activePlayersLabel {

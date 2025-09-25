@@ -30,18 +30,3 @@ def execute_in_blocking_thread(thread: QThread, worker: QWorker):
 
     gui().setCursor(Qt.CursorShape.WaitCursor)
     gui().is_blocked = True
-
-
-def execute_in_thread(thread: QThread, worker: QWorker):
-    """
-    Used to execute operation in separate thread.
-    """
-
-    worker.moveToThread(thread)
-
-    worker.completed.connect(thread.quit)  # noqa
-    thread.finished.connect(worker.deleteLater)  # noqa
-    thread.finished.connect(thread.deleteLater)  # noqa
-
-    thread.started.connect(worker.start)  # noqa
-    thread.start()
