@@ -1,6 +1,5 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from savegem.app.gui.window import gui
 from savegem.common.service.subscriptable import ErrorEvent, ProgressEvent, Event, DoneEvent
 
 
@@ -18,6 +17,7 @@ class QWorker(QObject):
         Worker entry point.
         """
 
+        from savegem.app.gui.window import gui
         gui().mutex.lock()
 
         try:
