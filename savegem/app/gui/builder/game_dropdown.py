@@ -1,10 +1,12 @@
+from typing import Optional
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QComboBox
 
 from savegem.app.gui.component.combobox import QCustomComboBox
+from savegem.app.gui.worker.game_change_worker import GameChangeWorker
 from savegem.common.core import app
-from savegem.app.gui.window import _GUI
 from savegem.app.gui.constants import UIRefreshEvent, QObjectName, QAttr, QKind
 from savegem.app.gui.builder import UIBuilder
 
@@ -24,12 +26,23 @@ class GameDropdownBuilder(UIBuilder):
             UIRefreshEvent.GameConfigChange,
             UIRefreshEvent.GameSelectionChange
         )
-        self.__combobox: QComboBox
+        self.__combobox: Optional[QComboBox] = None
 
-    def build(self, gui: _GUI):
-        self.__add_game_selection_dropdown(gui)
+    def build(self):
+        """
+        Used to render game selection dropdown.
+        """
 
-    def refresh(self, gui: _GUI):
+        self.__combobox = QCustomComboBox()
+        self.__combobox.setObjectName(QObjectName.ComboBox)
+        self.__combobox.setProperty(QAttr.Kind, QKind.Secondary)
+        self.__combobox.currentTextChanged.connect(self.__change_game)  # noqa
+
+        self._add_interactable(self.__combobox)
+
+        self._gui.top_right.layout().addWidget(self.__combobox, 1, 1)
+
+    def refresh(self):
 
         if app.games.empty:
             _logger.error("There are no games configured. Can't proceed.")
@@ -43,9 +56,9 @@ class GameDropdownBuilder(UIBuilder):
         self.__combobox.setCurrentText(app.games.current.name)
         self.__combobox.blockSignals(False)
 
-        self.enable(gui)
+        self.enable()
 
-    def enable(self, gui: _GUI):
+    def enable(self):
         enabled = True
         cursor = Qt.CursorShape.PointingHandCursor
 
@@ -56,30 +69,11 @@ class GameDropdownBuilder(UIBuilder):
         self.__combobox.setEnabled(enabled)
         self.__combobox.setCursor(QCursor(cursor))
 
-    def disable(self, gui: _GUI):
-        self.__combobox.setEnabled(False)
-        self.__combobox.setCursor(Qt.CursorShape.WaitCursor)
+    def __change_game(self, new_game):
+        _logger.info("Game selection changed.")
+        _logger.info("Selected game - %s", new_game)
 
-    def is_enabled(self):
-        return True
+        worker = GameChangeWorker(new_game)
+        worker.completed.connect(lambda: self._gui.refresh(UIRefreshEvent.GameSelectionChange))
 
-    def __add_game_selection_dropdown(self, gui: _GUI):
-        """
-        Used to render game selection dropdown.
-        """
-
-        def on_game_selection_change(value):
-            _logger.info("Game selection changed.")
-            _logger.info("Selected game - %s", value)
-
-            app.state.game_name = value
-            app.games.current.download_metadata()
-            app.activity.reload()
-            gui.refresh(UIRefreshEvent.GameSelectionChange)
-
-        self.__combobox = QCustomComboBox()
-        self.__combobox.setObjectName(QObjectName.ComboBox)
-        self.__combobox.setProperty(QAttr.Kind, QKind.Secondary)
-        self.__combobox.currentTextChanged.connect(on_game_selection_change)  # noqa
-
-        gui.top_right.layout().addWidget(self.__combobox, 1, 1)
+        self._do_work(worker)

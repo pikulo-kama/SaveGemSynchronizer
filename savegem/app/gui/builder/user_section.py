@@ -1,16 +1,18 @@
+from typing import Optional
+
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QIcon
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
 
-from constants import File
+from constants import File, Resource
 from savegem.app.gui.constants import QAttr, QSizeVariant, QKind, QObjectName
+from savegem.app.gui.style import resolve_style_properties
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.builder import UIBuilder
-from savegem.app.gui.window import _GUI
 from savegem.app.gui.popup.confirmation import confirmation
-from savegem.common.util.file import delete_file, resolve_app_data
-from savegem.common.util.graphics import make_circular_image
+from savegem.common.util.file import delete_file, resolve_app_data, read_file, resolve_resource
+from savegem.common.util.graphics import make_circular_image, svg_to_pixmap
 
 
 class UserSectionBuilder(UIBuilder):
@@ -22,35 +24,33 @@ class UserSectionBuilder(UIBuilder):
 
     def __init__(self):
         super().__init__()
-        self.__logout_button: QPushButton
+        self.__logout_button: Optional[QPushButton] = None
 
-    def build(self, gui: _GUI):
-        self.__add_user_section(gui)
-
-    def refresh(self, gui: _GUI):
-        pass
-
-    def is_enabled(self):
-        return True
-
-    def __add_user_section(self, gui: _GUI):
+    def build(self):
         """
         Used to render user section.
         """
 
-        user_section = QWidget(gui.top_right)
+        user_section = QWidget(self._gui.top_right)
         section_layout = QHBoxLayout(user_section)
         section_layout.setContentsMargins(0, 0, 0, 0)
         section_layout.setSpacing(10)
 
         user_chip = self.__build_chip()
 
-        self.__logout_button = QPushButton("➠")
+        logout_icon_size = QSize(30, 25)
+        logout_icon_raw = read_file(resolve_resource(Resource.DoorSvg))
+        logout_icon_raw = resolve_style_properties(logout_icon_raw)
+        logout_icon = svg_to_pixmap(logout_icon_raw, logout_icon_size)
+
+        self.__logout_button = QPushButton()
+        self.__logout_button.setIcon(QIcon(logout_icon))
+        self.__logout_button.setIconSize(logout_icon_size)
         self.__logout_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.__logout_button.clicked.connect(  # noqa
             lambda: confirmation(
                 tr("confirmation_ConfirmLogout"),
-                lambda: self.__logout(gui)
+                self.__logout
             )
         )
 
@@ -58,15 +58,15 @@ class UserSectionBuilder(UIBuilder):
         user_chip.setProperty(QAttr.Kind, QKind.Primary)
 
         self.__logout_button.setObjectName(QObjectName.SquareButton)
-        self.__logout_button.setProperty(QAttr.SizeVariant, QSizeVariant.Small)
         self.__logout_button.setProperty(QAttr.Kind, QKind.Secondary)
+        self.__logout_button.setProperty(QAttr.SizeVariant, QSizeVariant.Small)
 
         section_layout.addWidget(user_chip)
         section_layout.addWidget(self.__logout_button)
 
         self._add_interactable(self.__logout_button)
 
-        gui.top_right.layout().addWidget(
+        self._gui.top_right.layout().addWidget(
             user_section, 0, 1,
             alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight
         )
@@ -98,8 +98,7 @@ class UserSectionBuilder(UIBuilder):
 
         return user_chip
 
-    @staticmethod
-    def __logout(gui: _GUI):
+    def __logout(self):
         """
         Logout callback.
         Used to perform user cleanup action and destroy main window.
@@ -107,4 +106,4 @@ class UserSectionBuilder(UIBuilder):
 
         # Delete auth token.
         delete_file(resolve_app_data(File.GDriveToken))
-        gui.destroy()
+        self._gui.destroy()
