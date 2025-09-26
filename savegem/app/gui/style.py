@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QApplication
 
 from constants import Directory, File
 from savegem.common.core.json_config_holder import JsonConfigHolder
-from savegem.common.util.file import read_file, resolve_config
+from savegem.common.util.file import read_file, resolve_config, resolve_resource
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -50,7 +50,8 @@ def _image(file_name: str):
     """
 
     color_mode = _get_color_mode()
-    return f"url('resources/{color_mode}/{file_name}')"
+    image_token = f"url('{resolve_resource(os.path.join(color_mode, file_name))}')"
+    return image_token.replace(os.path.sep, '/')
 
 
 def _get_color_mode():
