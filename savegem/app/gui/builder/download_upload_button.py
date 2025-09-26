@@ -51,7 +51,9 @@ class DownloadUploadButtonBuilder(UIBuilder):
         )
 
         self.__upload_button.setProperty(QAttr.Kind, QKind.Primary)
+        self.__upload_button.setProperty(QAttr.Id, "uploadButton")
         self.__download_button.setProperty(QAttr.Kind, QKind.Secondary)
+        self.__download_button.setProperty(QAttr.Id, "downloadButton")
 
         self._add_interactable(self.__upload_button)
         self._add_interactable(self.__download_button)
@@ -66,15 +68,12 @@ class DownloadUploadButtonBuilder(UIBuilder):
     def refresh(self):
 
         upload_button_label = tr("label_UploadSaveToDrive")
-        download_button_label = tr("label_DownloadSaveFromDrive")
+
+        self.__upload_button.set_progress(0)
+        self.__download_button.set_progress(0)
 
         self.__upload_button.setText(upload_button_label)
-        self.__upload_button.set_progress(0)
         _logger.debug("Upload button reloaded (%s)", upload_button_label)
-
-        self.__download_button.setText(download_button_label)
-        self.__download_button.set_progress(0)
-        _logger.debug("Download button reloaded (%s)", download_button_label)
 
     def __start_download(self):
         """

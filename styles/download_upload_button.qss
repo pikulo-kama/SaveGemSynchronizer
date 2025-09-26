@@ -1,0 +1,10 @@
+
+QProgressPushButton[id="downloadButton"] {
+    icon: image("download.svg");
+    icon-size: 30px 30px;
+}
+
+QProgressPushButton[id="uploadButton"] {
+    icon: image("upload.svg");
+    icon-size: 30px 30px;
+}

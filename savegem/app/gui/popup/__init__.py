@@ -39,6 +39,7 @@ class Popup(QDialog):
 
         message_label = QLabel(message)
         message_label.setObjectName("popupTitle")
+        message_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self._container.addWidget(message_label, alignment=Qt.AlignmentFlag.AlignCenter)
         self._add_controls()

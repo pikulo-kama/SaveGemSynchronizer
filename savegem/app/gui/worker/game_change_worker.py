@@ -15,5 +15,3 @@ class GameChangeWorker(QWorker):
         app.state.game_name = self.__new_game
         app.games.current.meta.drive.refresh()
         app.activity.refresh()
-
-        self.completed.emit()

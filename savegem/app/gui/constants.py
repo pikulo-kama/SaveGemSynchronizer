@@ -16,12 +16,20 @@ class UIRefreshEvent:
     SaveDownloaded: Final = "save_downloaded"
 
 
+"""
+Used to transform regular boolean value
+into QSS compatible.
+"""
+QBool: Final = lambda value: "true" if value else "false"
+
+
 class QAttr:
     """
     Contains names of QT properties
     used in QSS.
     """
 
+    Id: Final = "id"
     Kind: Final = "kind"
     SizeVariant: Final = "variant"
     Disabled: Final = "is-disabled"

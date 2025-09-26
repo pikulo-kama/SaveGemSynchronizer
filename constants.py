@@ -44,8 +44,6 @@ class Resource:
     NotificationIco: Final = "notification.ico"
     ConfirmationIco: Final = "confirmation.ico"
 
-    DoorSvg: Final = "door.svg"
-
 
 JSON_EXTENSION: Final = ".json"
 ZIP_EXTENSION: Final = "zip"

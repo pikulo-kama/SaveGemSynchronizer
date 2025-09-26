@@ -1,0 +1,5 @@
+
+QPushButton#squareButton[id="logoutButton"] {
+    icon: image("door.svg");
+    icon-size: 20px 20px;
+}

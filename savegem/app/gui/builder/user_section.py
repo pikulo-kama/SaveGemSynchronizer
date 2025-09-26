@@ -1,18 +1,18 @@
 from typing import Optional
 
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QPixmap, QIcon
+from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
 
-from constants import File, Resource
+from constants import File
+from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.constants import QAttr, QSizeVariant, QKind, QObjectName
-from savegem.app.gui.style import resolve_style_properties
 from savegem.common.core import app
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.builder import UIBuilder
 from savegem.app.gui.popup.confirmation import confirmation
-from savegem.common.util.file import delete_file, resolve_app_data, read_file, resolve_resource
-from savegem.common.util.graphics import make_circular_image, svg_to_pixmap
+from savegem.common.util.file import delete_file, resolve_app_data
+from savegem.common.util.graphics import make_circular_image
 
 
 class UserSectionBuilder(UIBuilder):
@@ -38,14 +38,7 @@ class UserSectionBuilder(UIBuilder):
 
         user_chip = self.__build_chip()
 
-        logout_icon_size = QSize(30, 25)
-        logout_icon_raw = read_file(resolve_resource(Resource.DoorSvg))
-        logout_icon_raw = resolve_style_properties(logout_icon_raw)
-        logout_icon = svg_to_pixmap(logout_icon_raw, logout_icon_size)
-
-        self.__logout_button = QPushButton()
-        self.__logout_button.setIcon(QIcon(logout_icon))
-        self.__logout_button.setIconSize(logout_icon_size)
+        self.__logout_button = QCustomPushButton()
         self.__logout_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.__logout_button.clicked.connect(  # noqa
             lambda: confirmation(
@@ -59,6 +52,7 @@ class UserSectionBuilder(UIBuilder):
 
         self.__logout_button.setObjectName(QObjectName.SquareButton)
         self.__logout_button.setProperty(QAttr.Kind, QKind.Secondary)
+        self.__logout_button.setProperty(QAttr.Id, "logoutButton")
         self.__logout_button.setProperty(QAttr.SizeVariant, QSizeVariant.Small)
 
         section_layout.addWidget(user_chip)

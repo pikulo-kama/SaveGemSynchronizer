@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 
-from savegem.common.service.subscriptable import ErrorEvent, ProgressEvent, Event, DoneEvent
+from savegem.common.service.subscriptable import ErrorEvent, ProgressEvent, Event
 
 
 class QWorker(QObject):
@@ -22,6 +22,7 @@ class QWorker(QObject):
 
         try:
             self._run()
+            self.completed.emit()  # noqa
         finally:
             gui().mutex.unlock()
 
@@ -54,6 +55,3 @@ class QSubscriptableWorker(QWorker):
 
         elif isinstance(event, ProgressEvent):
             self.progress.emit(event)  # noqa
-
-        elif isinstance(event, DoneEvent):
-            self.completed.emit()  # noqa

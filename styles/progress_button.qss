@@ -14,6 +14,10 @@ QProgressBar[kind="QProgressPushButton-primary"]::chunk:hover {
     background-color: color("primaryHoverColor");
 }
 
+QProgressPushButton[kind="primary"][is-disabled="true"]:hover {
+    background-color: color("primaryStaticColor");
+}
+
 /* Style for secondary button */
 QProgressPushButton[kind="secondary"],
 QProgressPushButton[kind="secondary"]:pressed,
@@ -27,4 +31,8 @@ QProgressBar[kind="QProgressPushButton-secondary"]::chunk,
 QProgressBar[kind="QProgressPushButton-secondary"]::chunk:hover {
 
     background-color: color("secondaryHoverColor");
+}
+
+QProgressPushButton[kind="secondary"][is-disabled="true"]:hover {
+    background-color: color("secondaryStaticColor");
 }

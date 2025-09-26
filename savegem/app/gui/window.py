@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QMutex, pyqtSignal, Qt
 from PyQt6.QtGui import QIcon, QCloseEvent
-from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout, QStackedLayout
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout
 
 from constants import Resource
 from savegem.common.core import app
@@ -50,17 +50,14 @@ class _GUI(QMainWindow):
 
         self.__root = QWidget()
         self.setCentralWidget(self.__root)
-        self.__root_layout = QStackedLayout(self.__root)
-        self.__root_layout.setStackingMode(QStackedLayout.StackingMode.StackAll)
+        self.__root_layout = QHBoxLayout(self.__root)
 
         self.__grid_widget = QWidget()
         self.__grid_layout = QGridLayout(self.__grid_widget)
         self.__top_left = QWidget()
         self.__top = QWidget()
         self.__top_right = QWidget()
-        self.__left = QWidget()
         self.__center = QWidget()
-        self.__right = QWidget()
         self.__bottom_left = QWidget()
         self.__bottom = QWidget()
         self.__bottom_right = QWidget()
@@ -94,25 +91,11 @@ class _GUI(QMainWindow):
         return self.__top_right
 
     @property
-    def left(self):
-        """
-        Used to get left area of widget.
-        """
-        return self.__left
-
-    @property
     def center(self):
         """
         Used to get center area of widget.
         """
         return self.__center
-
-    @property
-    def right(self):
-        """
-        Used to get right area of widget.
-        """
-        return self.__right
 
     @property
     def bottom_left(self):
@@ -158,19 +141,28 @@ class _GUI(QMainWindow):
         top_right_layout.setColumnStretch(0, 1)
         top_right_layout.setVerticalSpacing(10)
 
-        self.center.setLayout(QGridLayout())
+        # Center slot takes whole row
+        # Wrapper is used to make center slot exactly on center.
+        center_wrapper = QWidget()
+        center_wrapper_layout = QHBoxLayout(center_wrapper)
+        center_wrapper_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        center_layout = QGridLayout(self.center)
+        center_layout.setSpacing(50)
+        center_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        center_wrapper_layout.addWidget(self.center)
+
         self.bottom.setLayout(QHBoxLayout())
 
         self.__grid_layout.addWidget(self.top_left, 0, 0)
         self.__grid_layout.addWidget(self.top, 0, 1)
         self.__grid_layout.addWidget(self.top_right, 0, 2)
-        self.__grid_layout.addWidget(self.left, 1, 0)
-        self.__grid_layout.addWidget(self.right, 1, 2)
+        self.__grid_layout.addWidget(center_wrapper, 1, 0, 1, 3)
         self.__grid_layout.addWidget(self.bottom_left, 2, 0)
         self.__grid_layout.addWidget(self.bottom, 2, 1)
         self.__grid_layout.addWidget(self.bottom_right, 2, 2)
 
-        self.__grid_layout.setRowStretch(0, 3)
+        self.__grid_layout.setRowStretch(0, 2)
         self.__grid_layout.setRowStretch(1, 5)
         self.__grid_layout.setRowStretch(2, 1)
 
@@ -179,27 +171,16 @@ class _GUI(QMainWindow):
         self.__grid_layout.setColumnStretch(2, 5)
 
         self.top_left.setMinimumSize(1, 1)
-        self.left.setMinimumSize(1, 1)
         self.bottom_left.setMinimumSize(1, 1)
 
-        self.top_right.setMinimumSize(1, 1)
-        self.right.setMinimumSize(1, 1)
-        self.bottom_right.setMinimumSize(1, 1)
-
-        # Center could be quite large that's why it's not part
-        # of the main grid.
-        center_wrapper = QWidget()
-        center_wrapper_layout = QHBoxLayout(center_wrapper)
-        center_wrapper_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        center_layout = QVBoxLayout(self.center)
-        center_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Restrict size of center slot.
         self.center.setMaximumWidth(round(prop("windowWidth") * 0.7))
         self.center.setMinimumHeight(round(prop("windowHeight") * 0.5))
 
-        center_wrapper_layout.addWidget(self.center)
+        self.top_right.setMinimumSize(1, 1)
+        self.bottom_right.setMinimumSize(1, 1)
+
         self.__root_layout.addWidget(self.__grid_widget)
-        self.__root_layout.addWidget(center_wrapper)
 
         for builder_obj in self.__builders:
             builder_obj.link(self)
