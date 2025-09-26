@@ -1,23 +1,25 @@
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QMouseEvent, QKeyEvent
-from PyQt6.QtWidgets import QComboBox
+from PyQt6.QtGui import QKeyEvent, QMouseEvent
+from PyQt6.QtWidgets import QPushButton
+
+from savegem.app.gui.constants import QAttr, QBool
 
 
-class QCustomComboBox(QComboBox):
+class QCustomPushButton(QPushButton):
     """
-    Custom QT ComboBox component.
-    Overwrites default QComboBox
-    behaviour by allowing to change
-    cursor when widget is disabled.
+    Custom button component.
+    Replaces default 'disable' behavior.
     """
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
+
         self.__is_enabled = True
+        self.setProperty(QAttr.Disabled, QBool(False))
 
     def setEnabled(self, is_enabled):
         self.__is_enabled = is_enabled
-        self.setAttribute(Qt.WidgetAttribute.WA_Hover, is_enabled)
+        self.setProperty(QAttr.Disabled, QBool(not is_enabled))
+        self.style().polish(self)
 
     def mousePressEvent(self, event: QMouseEvent):
         # Only handle events if component

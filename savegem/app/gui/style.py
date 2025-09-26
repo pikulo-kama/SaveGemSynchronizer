@@ -15,6 +15,7 @@ _styles = JsonConfigHolder(resolve_config(File.Style))
 
 _FONTS_PROP: Final = "fonts"
 _COLORS_PROP: Final = "colors"
+_IMAGES_PROP: Final = "images"
 
 _COLOR_MODE_LIGHT: Final = "light"
 _COLOR_MODE_DARK: Final = "dark"
@@ -28,16 +29,8 @@ def _color(property_name: str):
     Will get property depending on system color scheme.
     """
 
-    mode = _COLOR_MODE_LIGHT
-    color_scheme = QApplication.instance().styleHints().colorScheme()  # noqa
-
-    if color_scheme == Qt.ColorScheme.Light:
-        mode = _COLOR_MODE_LIGHT
-
-    elif color_scheme == Qt.ColorScheme.Dark:
-        mode = _COLOR_MODE_DARK
-
-    colors = _styles.get_value(_COLORS_PROP).get(mode)
+    color_mode = _get_color_mode()
+    colors = _styles.get_value(_COLORS_PROP).get(color_mode)
     return colors.get(property_name)
 
 
@@ -49,7 +42,35 @@ def _font(property_name: str):
     return _styles.get_value(_FONTS_PROP).get(property_name)
 
 
-def resolve_style_properties(style_string: str):
+def _image(file_name: str):
+    """
+    Used to get image resource QSS token.
+    Will use current color mode to resolve
+    path to image.
+    """
+
+    color_mode = _get_color_mode()
+    return f"url('resources/{color_mode}/{file_name}')"
+
+
+def _get_color_mode():
+    """
+    Used to get current color mode.
+    """
+
+    mode = _COLOR_MODE_LIGHT
+    color_scheme = QApplication.instance().styleHints().colorScheme()  # noqa
+
+    if color_scheme == Qt.ColorScheme.Light:
+        mode = _COLOR_MODE_LIGHT
+
+    elif color_scheme == Qt.ColorScheme.Dark:
+        mode = _COLOR_MODE_DARK
+
+    return mode
+
+
+def _resolve_style_properties(style_string: str):
     """
     Used to resolve color/font
     properties in string.
@@ -69,6 +90,13 @@ def resolve_style_properties(style_string: str):
         style_string
     )
 
+    # Resolve images.
+    style_string = re.sub(
+        r"image\(['\"]([^'\"]+)['\"]\)",
+        lambda match: _image(match.group(1)),
+        style_string
+    )
+
     return style_string
 
 
@@ -85,4 +113,4 @@ def load_stylesheet():
         style_path = os.path.join(Directory.Styles, style)
         style_string += read_file(style_path)
 
-    return resolve_style_properties(style_string)
+    return _resolve_style_properties(style_string)

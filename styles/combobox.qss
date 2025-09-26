@@ -13,6 +13,19 @@ QComboBox#comboBox QAbstractItemView {
     padding: 5px;
 }
 
+QComboBox#comboBox::drop-down {
+    right: 5px;
+    border: none;
+}
+
+QComboBox#comboBox::down-arrow {
+    image: image("chevron.svg");
+}
+
+QComboBox#comboBox::down-arrow:on {
+    top: 1px;
+}
+
 QComboBox#comboBox QAbstractItemView::item {
     padding: 5px;
 }

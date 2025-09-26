@@ -29,6 +29,10 @@ QPushButton#squareButton[kind="primary"]:hover {
     background-color: color("primaryHoverColor");
 }
 
+QPushButton#squareButton[kind="primary"][is-disabled="true"]:hover {
+    background-color: color("primaryStaticColor");
+}
+
 
 /* Secondary button */
 QPushButton#squareButton[kind="secondary"],
@@ -39,6 +43,10 @@ QPushButton#squareButton[kind="secondary"]:pressed {
 
 QPushButton#squareButton[kind="secondary"]:hover {
     background-color: color("secondaryHoverColor");
+}
+
+QPushButton#squareButton[kind="secondary"][is-disabled="true"]:hover {
+    background-color: color("secondaryStaticColor");
 }
 
 
