@@ -86,6 +86,14 @@ class DoneEvent(Event):
     def __post_init__(self):
         self._event_type = EventType.Done
 
+    @property
+    def success(self):
+        """
+        Used to check if service finished
+        work without errors.
+        """
+        return self._event_kind is None
+
 
 class SubscriptableService:
     """
@@ -109,10 +117,18 @@ class SubscriptableService:
 
     def _send_event(self, event: Event):
         """
-        Used to send events to subscriber
+        Used to send events to subscriber.
         """
+
+        events = [event]
+
+        # Send done event when there is error.
+        if isinstance(event, ErrorEvent):
+            events.append(DoneEvent(event.kind))
+
         for subscriber in self.__subscriber_list:
-            subscriber(event)
+            for event in events:
+                subscriber(event)
 
     def _set_stages(self, stage_count: int):
         """

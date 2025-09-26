@@ -1,6 +1,5 @@
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from savegem.common.service.subscriptable import ErrorEvent, ProgressEvent, Event
+from savegem.common.service.subscriptable import ErrorEvent, ProgressEvent, Event, DoneEvent
 
 
 class QWorker(QObject):
@@ -10,7 +9,7 @@ class QWorker(QObject):
     and emits events.
     """
 
-    completed = pyqtSignal()
+    finished = pyqtSignal()
 
     def start(self):
         """
@@ -22,7 +21,7 @@ class QWorker(QObject):
 
         try:
             self._run()
-            self.completed.emit()  # noqa
+            self.finished.emit()  # noqa
         finally:
             gui().mutex.unlock()
 
@@ -42,6 +41,7 @@ class QSubscriptableWorker(QWorker):
 
     error = pyqtSignal(ErrorEvent)
     progress = pyqtSignal(ProgressEvent)
+    completed = pyqtSignal(DoneEvent)
 
     def _on_subscriptable_event(self, event: Event):
         """
@@ -55,3 +55,6 @@ class QSubscriptableWorker(QWorker):
 
         elif isinstance(event, ProgressEvent):
             self.progress.emit(event)  # noqa
+
+        elif isinstance(event, DoneEvent):
+            self.completed.emit(event)  # noqa

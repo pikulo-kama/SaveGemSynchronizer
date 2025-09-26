@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING
-
 from PyQt6.QtCore import Qt, QThread
 
 if TYPE_CHECKING:
@@ -25,7 +24,7 @@ def execute_in_blocking_thread(thread: QThread, worker: "QWorker"):
 
     worker.moveToThread(thread)
 
-    worker.completed.connect(thread.quit)  # noqa
+    worker.finished.connect(thread.quit)  # noqa
     thread.finished.connect(worker.deleteLater)  # noqa
     thread.finished.connect(thread.deleteLater)  # noqa
     thread.finished.connect(on_finish)  # noqa
