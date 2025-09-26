@@ -12,7 +12,7 @@ from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind
 from savegem.app.gui.popup.confirmation import confirmation
 from savegem.app.gui.popup.notification import notification
 from savegem.app.gui.builder import UIBuilder
-from savegem.common.service.subscriptable import EventKind, ErrorEvent
+from savegem.common.service.subscriptable import EventKind, ErrorEvent, DoneEvent
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -86,6 +86,7 @@ class DownloadUploadButtonBuilder(UIBuilder):
         worker.progress.connect(self.__progress_subscriber(self.__download_button))
         worker.completed.connect(self.__done_subscriber("notification_NewSaveHasBeenDownloaded"))
         worker.completed.connect(lambda: self._gui.refresh(UIRefreshEvent.SaveDownloaded))
+        worker.completed.connect(self.refresh)
 
         self._do_work(worker)
 
@@ -99,18 +100,21 @@ class DownloadUploadButtonBuilder(UIBuilder):
         worker.error.connect(self.__error_subscriber)
         worker.progress.connect(self.__progress_subscriber(self.__upload_button))
         worker.completed.connect(self.__done_subscriber("notification_SaveHasBeenUploaded"))
+        worker.completed.connect(self.refresh)
 
         self._do_work(worker)
 
-    def __done_subscriber(self, message: str):
+    @staticmethod
+    def __done_subscriber(message: str):
         """
         Used to get callback that will get
         executed once worker has finished work.
         """
 
-        def callback():
-            notification(tr(message))
-            self.refresh()
+        def callback(event: DoneEvent):
+            # Only show notification if there was no error.
+            if event.success:
+                notification(tr(message))
 
         return callback
 

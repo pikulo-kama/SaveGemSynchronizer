@@ -74,6 +74,6 @@ class GameDropdownBuilder(UIBuilder):
         _logger.info("Selected game - %s", new_game)
 
         worker = GameChangeWorker(new_game)
-        worker.completed.connect(lambda: self._gui.refresh(UIRefreshEvent.GameSelectionChange))
+        worker.finished.connect(lambda: self._gui.refresh(UIRefreshEvent.GameSelectionChange))
 
         self._do_work(worker)
