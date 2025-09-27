@@ -142,13 +142,6 @@ class GDrive:
             _logger.error("Error updating file in drive", error)
             raise error
 
-    @staticmethod
-    def get_start_page_token():
-        """
-        Used to get start page token to query Google Drive Changes API.
-        """
-        return
-
     @classmethod
     def get_changes(cls, start_page_token):
         """
