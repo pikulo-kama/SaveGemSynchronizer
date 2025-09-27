@@ -3,9 +3,11 @@ import os
 import re
 from typing import Final
 
+from constants import File
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import _LocalMetadata, _DriveMetadata, _MetadataWrapper
 from savegem.common.service.gdrive import GDrive
+from savegem.common.util.file import delete_file, resolve_app_data
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -40,6 +42,10 @@ class _GameConfig(AppData):
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
+            # Remove token when failed to remove game config.
+            # Since there is a chance that user used wrong account to
+            # authenticate we remove token so that he could log in again.
+            delete_file(resolve_app_data(File.GDriveToken))
 
             _logger.error(message)
             raise RuntimeError(message)
