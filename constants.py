@@ -16,6 +16,7 @@ class Directory:
     AppDataRoot = os.path.join(os.getenv("APPDATA"), "SaveGem")
     Output: Final = os.path.join(AppDataRoot, "Output")
     Logs: Final = os.path.join(AppDataRoot, "Logs")
+    Logback: Final = os.path.join(AppDataRoot, "logback")
 
 
 class File:
@@ -29,7 +30,6 @@ class File:
 
     AppConfig: Final = "app.json"
     AppState: Final = "state.json"
-    Logback: Final = "logback.json"
     Style: Final = "style.json"
 
     GUIInitializedFlag: Final = "gui_init.flag"

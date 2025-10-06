@@ -10,11 +10,7 @@ from savegem.app.gui.constants import UIRefreshEvent
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(prop_mock, tr_mock):
-    """
-    Mocks 'tr', 'prop', and the GUI structure needed by build().
-    """
-
+def _setup(prop_mock, tr_mock):
     prop_mock.side_effect = lambda key: {
         "name": "SaveGem",
         "version": "1.2.0",
@@ -50,8 +46,7 @@ def test_copyright_builder_initialization(mocker: MockerFixture):
     assert builder._CopyrightBuilder__copyright is None  # noqa
 
 
-def test_build_creates_label_and_adds_to_gui(mocker: MockerFixture, module_patch, gui_mock, _copyright_builder,
-                                             _setup_dependencies):
+def test_build_creates_label_and_adds_to_gui(mocker: MockerFixture, module_patch, gui_mock, _copyright_builder):
     """
     Test build() creates the QLabel, sets its name, and adds it to the correct layout.
     """

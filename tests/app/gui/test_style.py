@@ -14,11 +14,7 @@ from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(json_config_holder_mock, path_join_mock, resolve_resource_mock):
-    """
-    Mocks the internal _styles JsonConfigHolder instance and its get_value method.
-    """
-
+def _setup(json_config_holder_mock, path_join_mock, resolve_resource_mock):
     json_config_holder_mock.return_value = MockJsonConfigHolder(
         {
             "colors": {

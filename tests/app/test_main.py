@@ -1,3 +1,5 @@
+from unittest.mock import call
+
 import pytest
 
 from constants import Directory
@@ -6,7 +8,7 @@ from savegem.common.core.ipc_socket import IPCCommand
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(module_patch, sys_mock):
+def _setup(module_patch, sys_mock):
     """
     Mocks all UI and system dependencies needed for the main application entry point.
     """
@@ -14,37 +16,25 @@ def _setup_dependencies(module_patch, sys_mock):
     sys_mock.argv = ['app.py']
 
 
-@pytest.fixture
-def _load_style_mock(module_patch):
-    return module_patch("load_stylesheet")
-
-
-def test_teardown_cleanup_routine(logger_mock, cleanup_directory_mock):
-    """
-    Test that the _teardown function correctly logs and calls the cleanup routine.
-    """
-
-    teardown()
-
-    logger_mock.info.assert_called_with("Cleaning up 'output' directory.")
-    cleanup_directory_mock.assert_called_once_with(Directory.Output)
-
-
-def test_main_application_startup(app_context, gdrive_mock, logger_mock, qt_app_mock, gui_mock,
-                                  ui_socket_mock, sys_mock):
+def test_main_application_startup(module_patch, app_context, gdrive_mock, logger_mock, qt_app_mock, gui_mock,
+                                  ui_socket_mock, sys_mock, prop_mock):
     """
     Test the entire application startup sequence, ensuring all services are initialized
     and UI signals are correctly connected.
     """
 
+    module_patch("load_stylesheet")
     qt_app_mock.return_value.exec.return_value = 0
+    prop_mock.return_value = "1.0.0"
 
     main()
 
-    # 1. Assert Application Initialization Sequence
+    logger_mock.info.assert_has_calls([
+        call("Starting SaveGem application."),
+        call("version %s", "1.0.0")
+    ], any_order=False)
 
     # 1a. Core Service Calls
-    logger_mock.info.assert_called_with("Initializing application.")
     app_context.user.initialize.assert_called_once_with(gdrive_mock.get_current_user)
     app_context.games.download.assert_called_once()
     app_context.games.current.meta.drive.refresh.assert_called_once()
@@ -83,3 +73,14 @@ def test_main_application_startup(app_context, gdrive_mock, logger_mock, qt_app_
     # 3. Assert Execution
     qt_app_mock.return_value.exec.assert_called_once()
     sys_mock.exit.assert_called_once_with(0)  # Assert it was called with the return value of exec()
+
+
+def test_teardown_cleanup_routine(logger_mock, cleanup_directory_mock):
+    """
+    Test that the _teardown function correctly logs and calls the cleanup routine.
+    """
+
+    teardown()
+
+    logger_mock.info.assert_called_with("Cleaning up 'output' directory.")
+    cleanup_directory_mock.assert_called_once_with(Directory.Output)

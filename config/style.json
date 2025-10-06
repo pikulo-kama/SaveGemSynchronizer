@@ -3,7 +3,7 @@
     "light" : {
       "primaryTextColor" : "#82a197",
       "secondaryTextColor" : "#d3d3d3",
-      "headingTextColor" : "#5F6D73",
+      "headingTextColor" : "#5f6d73",
       "accentColor" : "#e07b39",
 
       "primaryStaticColor" : "#ddedde",
@@ -17,9 +17,9 @@
       "headingTextColor" : "#d8e7ed",
       "accentColor" : "#e07b39",
 
-      "primaryStaticColor" : "#3F4F44",
+      "primaryStaticColor" : "#3f4f44",
       "primaryHoverColor" : "#566b5c",
-      "secondaryStaticColor" : "#3C3D37",
+      "secondaryStaticColor" : "#3c3d37",
       "secondaryHoverColor" : "#56584f"
     }
   },

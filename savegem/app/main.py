@@ -7,6 +7,7 @@ from constants import Directory
 from savegem.app.gui.style import load_stylesheet
 from savegem.app.gui.window import gui
 from savegem.app.ipc_socket import ui_socket
+from savegem.common.core.holders import prop
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.util.file import cleanup_directory
 from savegem.common.util.logger import get_logger
@@ -21,7 +22,8 @@ def main():
     Application entry point.
     """
 
-    _logger.info("Initializing application.")
+    _logger.info("Starting SaveGem application.")
+    _logger.info("version %s", prop("version"))
 
     # Startup initialization.
     app.user.initialize(GDrive.get_current_user)

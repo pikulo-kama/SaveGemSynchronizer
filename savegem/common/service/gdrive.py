@@ -206,7 +206,7 @@ class GDrive:
 
         # Get credentials from file (possible if authentication was done previously)
         if os.path.exists(token_file_name):
-            _logger.debug("Token was found. Application will use credentials from token.")
+            _logger.info("Token was found. Application will use credentials from token.")
             creds = Credentials.from_authorized_user_file(token_file_name, GDRIVE_SCOPES)
 
             if creds and creds.valid:
@@ -214,7 +214,7 @@ class GDrive:
 
         # If they're just expired then try to refresh them
         if creds and creds.expired and creds.refresh_token:
-            _logger.debug("Credentials expired, performing refresh.")
+            _logger.info("Credentials expired, performing refresh.")
 
             try:
                 creds.refresh(Request())
@@ -224,13 +224,13 @@ class GDrive:
 
         # Authenticate with credentials and then store them for future use
         if os.path.exists(credentials_file_name):
-            _logger.debug("Attempting authentication using credentials.")
+            _logger.info("Attempting authentication using credentials.")
 
             flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, GDRIVE_SCOPES)
             creds = flow.run_local_server(port=0)
 
-            _logger.debug("Authentication completed.")
-            _logger.debug("Saving Google Cloud access token for later use.")
+            _logger.info("Authentication completed.")
+            _logger.info("Saving Google Cloud access token for later use.")
             save_file(token_file_name, json.loads(creds.to_json()), as_json=True)
 
         else:

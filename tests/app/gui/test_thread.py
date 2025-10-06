@@ -6,7 +6,7 @@ from savegem.app.gui.thread import execute_in_blocking_thread
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(gui_mock, qtbot):  # noqa
+def _setup(gui_mock, qtbot):  # noqa
     gui_mock.is_blocked = False
 
 

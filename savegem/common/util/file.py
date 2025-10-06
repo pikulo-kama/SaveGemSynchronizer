@@ -47,6 +47,13 @@ def resolve_log(file_name: str):
     return os.path.join(Directory.Logs, file_name)
 
 
+def resolve_logback(file_name: str):
+    """
+    Used to resolve logging configuration file.
+    """
+    return os.path.join(Directory.Logback, file_name)
+
+
 def resolve_project_data(file_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}' directory.

@@ -11,7 +11,7 @@ from savegem.common.service.subscriptable import EventKind, ErrorEvent, DoneEven
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(app_context, games_config):
+def _setup(app_context, games_config):
     games_config.current.local_path = "/path/to/save"
 
 

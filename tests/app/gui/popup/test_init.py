@@ -9,7 +9,7 @@ from savegem.app.gui.popup import Popup
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(mocker: MockerFixture, module_patch, tr_mock, prop_mock, resolve_resource_mock, simple_gui):
+def _setup(mocker: MockerFixture, module_patch, tr_mock, prop_mock, resolve_resource_mock, simple_gui):
 
     resolve_resource_mock.return_value = "C:/path/to/icon.ico"
     prop_mock.side_effect = lambda key: {

@@ -10,11 +10,8 @@ from savegem.app.gui.window import gui, GUI
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(module_patch, qtbot, _mutex_mock, prop_mock, tr_mock, resolve_resource_mock,  # noqa
+def _setup(module_patch, qtbot, _mutex_mock, prop_mock, tr_mock, resolve_resource_mock,  # noqa
                         app_state_mock, _load_builders_mock, app_context, games_config):
-    """
-    Fixture to set up all necessary mocks for external dependencies.
-    """
 
     prop_mock.side_effect = lambda key: {
         "name": "SaveGem App",
@@ -302,12 +299,7 @@ def test_gui_close_event(mocker: MockerFixture, qtbot, app_state_mock):
     before_destroy_callback.assert_called_once()
 
 
-# You might want to add a test for QMutex usage, but since QMutex
-# is a thread-safe primitive, testing its mere existence and initialization
-# is usually sufficient in unit tests unless testing specific multithreaded
-# interaction.
-
-def test_gui_mutex_initialization(_setup_dependencies, qtbot):
+def test_gui_mutex_initialization(qtbot):
     """
     Test that the mutex is correctly initialized.
     """
