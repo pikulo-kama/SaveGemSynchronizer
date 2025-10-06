@@ -8,7 +8,7 @@ from constants import File, UTF_8
 from savegem.common.util.file import resolve_log, resolve_app_data, remove_extension_from_path, read_file
 
 _logback = read_file(resolve_app_data(File.Logback), as_json=True)
-_log_levels = {
+LogLevels = {
     "INFO": logging.INFO,
     "WARN": logging.WARN,
     "ERROR": logging.ERROR,
@@ -58,6 +58,6 @@ def _get_log_level(logger_name: str):
     level = _logback.get(logger_name)
 
     if level is not None:
-        return _log_levels[level]
+        return LogLevels[level]
 
     return logging.INFO

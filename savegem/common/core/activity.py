@@ -8,13 +8,13 @@ from savegem.common.util.logger import get_logger
 _logger = get_logger(__name__)
 
 
-class _Activity(AppData):
+class Activity(AppData):
     """
     Contains list of active players for current game
     """
 
-    __NAME_PROP = "name"
-    __GAMES_PROP = "games"
+    NAME_PROP = "name"
+    GAMES_PROP = "games"
 
     def __init__(self):
         super().__init__()
@@ -40,8 +40,8 @@ class _Activity(AppData):
 
             if len(game_names) > 0:
                 activity_log[self._app.user.machine_id] = {
-                    self.__NAME_PROP: self._app.user.name,
-                    self.__GAMES_PROP: game_names
+                    self.NAME_PROP: self._app.user.name,
+                    self.GAMES_PROP: game_names
                 }
 
             # If there are no games running then remove
@@ -70,5 +70,5 @@ class _Activity(AppData):
                 if machine_id == self._app.user.machine_id:
                     continue
 
-                if self._app.games.current.name in activity.get(self.__GAMES_PROP):
-                    self.__players.append(activity.get(self.__NAME_PROP, ""))
+                if self._app.games.current.name in activity.get(self.GAMES_PROP):
+                    self.__players.append(activity.get(self.NAME_PROP, ""))

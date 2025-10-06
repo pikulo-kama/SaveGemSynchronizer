@@ -33,7 +33,7 @@ class TextResource:
             cls.__current_locale = locale
             cls.__holder = JsonConfigHolder(resolve_locale(locale))
 
-        label = str(cls.__holder.get_value(key))
+        label = str(cls.__holder.get_value(key, key))
         _logger.debug("TextResource '%s.%s' = %s", locale, key, label)
 
         if len(args) > 0:

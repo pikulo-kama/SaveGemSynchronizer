@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Final
+from typing import Final, Optional
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
@@ -11,7 +11,7 @@ from savegem.common.util.file import read_file, resolve_config, resolve_resource
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
-_styles = JsonConfigHolder(resolve_config(File.Style))
+_styles: Optional[JsonConfigHolder] = None
 
 _FONTS_PROP: Final = "fonts"
 _COLORS_PROP: Final = "colors"
@@ -19,6 +19,19 @@ _IMAGES_PROP: Final = "images"
 
 _COLOR_MODE_LIGHT: Final = "light"
 _COLOR_MODE_DARK: Final = "dark"
+
+
+def _get_styles():
+    """
+    Internal method used to get styles configuration.
+    """
+
+    global _styles
+
+    if _styles is None:
+        _styles = JsonConfigHolder(resolve_config(File.Style))
+
+    return _styles
 
 
 def _color(property_name: str):
@@ -30,7 +43,7 @@ def _color(property_name: str):
     """
 
     color_mode = _get_color_mode()
-    colors = _styles.get_value(_COLORS_PROP).get(color_mode)
+    colors = _get_styles().get_value(_COLORS_PROP).get(color_mode)
     return colors.get(property_name)
 
 
@@ -39,7 +52,7 @@ def _font(property_name: str):
     Used to get font that corresponds
     provided property.
     """
-    return _styles.get_value(_FONTS_PROP).get(property_name)
+    return _get_styles().get_value(_FONTS_PROP).get(property_name)
 
 
 def _image(file_name: str):

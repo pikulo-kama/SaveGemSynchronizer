@@ -1,5 +1,5 @@
 from savegem.common.core.json_config_holder import JsonConfigHolder
-from savegem.common.service.daemon import Daemon
+from savegem.common.service.daemon import Daemon, ExitTestLoop
 
 import subprocess
 import threading
@@ -15,7 +15,7 @@ class Watchdog(Daemon):
     """
 
     def __init__(self):
-        super().__init__("watchdog", False)
+        Daemon.__init__(self, "watchdog", False)
 
     def _initialize(self, config: JsonConfigHolder):
         # Start thread for each process that needs to
@@ -26,7 +26,7 @@ class Watchdog(Daemon):
 
             thread.start()
 
-    def _work(self):
+    def _work(self):  # pragma: no cover
         # All processes would be watched
         # in separate threads, we just need to make
         # sure that main thread of watchdog is alive.
@@ -46,11 +46,14 @@ class Watchdog(Daemon):
 
                 self._logger.error("Process with args %s exited. Restarting in %ds...", args, self.interval)
 
+            except ExitTestLoop as error:
+                raise error
+
             except Exception as error:
-                self._logger.error("Error in watchdog: %s", error)
+                self._logger.error("Error in watchdog: %s", error, exc_info=True)
 
             time.sleep(self.interval)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     Watchdog().start()

@@ -18,8 +18,7 @@ class JsonConfigHolder:
 
         self._before_file_open()
 
-        # Can't use property from config since it wil result in circular dependency.
-        self._data = read_file(self._config_path, as_json=True)
+        self._load_data()
 
     def get_value(self, property_name, default_value=None):
         """
@@ -36,6 +35,15 @@ class JsonConfigHolder:
         Used to get full configuration as map.
         """
         return self._data
+
+    def _load_data(self):
+        """
+        Used to read configuration file
+        and store contents in holder.
+
+        Needed for testing purposes.
+        """
+        self._data = read_file(self._config_path, as_json=True)
 
     def _before_file_open(self):
         """

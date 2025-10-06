@@ -21,13 +21,13 @@ def get_running_game_processes():
     all_game_names = list(set(_previous_game_names + current_game_names))
 
     for game_name in all_game_names:
-        status = _ProcessState.Running
+        status = ProcessStatus.Running
 
         if game_name in current_game_names and game_name not in _previous_game_names:
-            status = _ProcessState.Started
+            status = ProcessStatus.Started
 
         elif game_name in _previous_game_names and game_name not in current_game_names:
-            status = _ProcessState.Closed
+            status = ProcessStatus.Closed
 
         processes.append(GameProcess(app.games.by_name(game_name), status))
 
@@ -47,7 +47,7 @@ def _get_active_games():
     return [games_by_processes.get(proc.name()) for proc in running_processes]
 
 
-class _ProcessState:
+class ProcessStatus:
     """
     Represents enum of process states.
     """
@@ -78,18 +78,18 @@ class GameProcess:
         """
         Used to check if process is running.
         """
-        return _ProcessState.Running == self.__status
+        return ProcessStatus.Running == self.__status
 
     @property
     def has_started(self):
         """
         Used to check if process is running and has just been started.
         """
-        return _ProcessState.Started == self.__status
+        return ProcessStatus.Started == self.__status
 
     @property
     def has_closed(self):
         """
         Used to check if process has just been closed.
         """
-        return _ProcessState.Closed == self.__status
+        return ProcessStatus.Closed == self.__status

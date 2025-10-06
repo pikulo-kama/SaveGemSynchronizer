@@ -56,7 +56,7 @@ class Popup(QDialog):
         self.move(x, parent.y())
         super().showEvent(event)
 
-    def _add_controls(self):
+    def _add_controls(self):  # pragma: no cover
         """
         Should be overridden in child classes.
         Should be used to add additional or customize existing

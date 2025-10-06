@@ -39,7 +39,7 @@ class QProgressPushButton(QCustomPushButton):
         self.setEnabled(in_progress is False)
 
     def resizeEvent(self, event):
-        super().resizeEvent(event)
+        QCustomPushButton.resizeEvent(self, event)
         # Update the progress bar's geometry to match the button's size
         self.__progress_bar.setGeometry(0, 0, self.width(), self.height())
 

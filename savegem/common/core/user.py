@@ -1,15 +1,18 @@
 import socket
 import urllib.request
 import uuid
+from typing import Final
 
 from savegem.common.core.app_data import AppData
 from savegem.common.util.file import resolve_temp_file
 
 
-class _UserState(AppData):
+class UserState(AppData):
     """
     Contains information about authenticated user.
     """
+
+    ProfilePictureFileName: Final = "profile.jpg"
 
     def __init__(self):
         super().__init__()
@@ -67,7 +70,7 @@ class _UserState(AppData):
         return self.__photo_link
 
     @property
-    def machine_id(self):
+    def machine_id(self):  # pragma: no cover
         return f"{socket.gethostname()}-{uuid.getnode()}"
 
     @staticmethod
@@ -80,10 +83,10 @@ class _UserState(AppData):
         if photo_link is None:
             return None
 
-        image_path = resolve_temp_file("profile.jpg")
+        image_path = resolve_temp_file(UserState.ProfilePictureFileName)
         urllib.request.urlretrieve(photo_link, image_path)
 
         return image_path
 
-    def refresh(self):
+    def refresh(self):  # pragma: no cover
         pass

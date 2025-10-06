@@ -17,7 +17,7 @@ from savegem.app.gui.worker import QWorker
 from savegem.common.util.logger import get_logger
 
 if TYPE_CHECKING:
-    from savegem.app.gui.window import _GUI
+    from savegem.app.gui.window import GUI
 
 _logger = get_logger(__name__)
 
@@ -41,7 +41,7 @@ def load_builders():
             builder: UIBuilder = member()
 
             if not builder.is_enabled():
-                _logger.warn("Skipping disabled builder '%s'.", member_name)
+                _logger.warning("Skipping disabled builder '%s'.", member_name)
                 continue
 
             builders.append(builder)
@@ -57,7 +57,7 @@ class UIBuilder(abc.ABC):
     """
 
     def __init__(self, *events):
-        self._gui: Optional["_GUI"] = None
+        self._gui: Optional["GUI"] = None
 
         self.__thread: QThread
         self.__worker: QWorker
@@ -66,14 +66,14 @@ class UIBuilder(abc.ABC):
         self.__interactable_elements: list[QWidget] = []
 
     @abstractmethod
-    def build(self):
+    def build(self):  # pragma: no cover
         """
         Should be used to build UI elements.
         Invoked only once when application starts.
         """
         pass
 
-    def refresh(self):
+    def refresh(self):  # pragma: no cover
         """
         Should be used to refresh dynamic elements when state changes.
         """
@@ -85,7 +85,7 @@ class UIBuilder(abc.ABC):
         """
         return True
 
-    def link(self, gui: "_GUI"):
+    def link(self, gui: "GUI"):
         """
         Used to link GUI instance to builder
         """

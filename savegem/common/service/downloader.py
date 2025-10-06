@@ -1,5 +1,6 @@
 import os.path
 import shutil
+from typing import Final
 
 from constants import ZIP_EXTENSION
 from savegem.common.core.game_config import Game
@@ -15,6 +16,8 @@ class Downloader(SubscriptableService):
     """
     Used to download latest save files of selected game from Google Drive.
     """
+
+    BackupSuffix: Final = "_backup"
 
     def download(self, game: Game):
         """
@@ -86,7 +89,7 @@ class Downloader(SubscriptableService):
         """
 
         # Make backup of existing save, just in case.
-        backup_dir = saves_directory + "_backup"
+        backup_dir = saves_directory + Downloader.BackupSuffix
         _logger.debug("backupDirectory = %s", backup_dir)
 
         # Need to remove directory if it exists since shutil wil create it.

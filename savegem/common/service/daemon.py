@@ -11,18 +11,26 @@ from savegem.common.util.logger import get_logger
 from savegem.common.util.process import is_process_already_running
 
 
+class ExitTestLoop(Exception):
+    """
+    Exception class for
+    testing purposes.
+    """
+    pass
+
+
 class Daemon(abc.ABC):
     """
     Wrapper for background service that is being executed
     with certain interval.
     """
 
-    __DEFAULT_INTERVAL: Final = 60
+    DefaultInterval: Final = 5
 
     def __init__(self, service_name: str, requires_auth: bool):
 
         self._logger = get_logger(service_name)
-        self.__interval = self.__DEFAULT_INTERVAL
+        self.__interval = self.DefaultInterval
         self.__service_name = service_name
         self.__requires_auth = requires_auth
         config_path = resolve_config(service_name + JSON_EXTENSION)
@@ -30,7 +38,7 @@ class Daemon(abc.ABC):
         if os.path.exists(config_path):
             config = JsonConfigHolder(config_path)
             process_name = config.get_value("processName")
-            self.__interval = config.get_value("iterationIntervalSeconds", self.__DEFAULT_INTERVAL)
+            self.__interval = config.get_value("iterationIntervalSeconds", self.DefaultInterval)
 
             self._logger.debug("Process name for service %s = %s", self.__service_name, process_name)
 
@@ -64,6 +72,9 @@ class Daemon(abc.ABC):
                     continue
 
                 self._work()
+            except ExitTestLoop as error:
+                raise error
+
             except Exception as error:
                 self._logger.error("Exception in '%s' service: %s", self.__service_name, error, exc_info=True)
 
@@ -76,7 +87,16 @@ class Daemon(abc.ABC):
         """
         return self.__interval
 
-    @abc.abstractmethod
+    @interval.setter
+    def interval(self, interval: int):
+        """
+        Used to set interval in which
+        daemon will run.
+        """
+
+        self.__interval = interval
+
+    @abc.abstractmethod  # pragma: no cover
     def _work(self):
         """
         Should have main logic of daemon.
@@ -84,7 +104,7 @@ class Daemon(abc.ABC):
         """
         pass
 
-    def _initialize(self, config: JsonConfigHolder):
+    def _initialize(self, config: JsonConfigHolder):  # pragma: no cover
         """
         Should be used to initialize additional configurations.
         """

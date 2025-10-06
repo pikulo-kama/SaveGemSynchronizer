@@ -11,17 +11,17 @@ from savegem.common.util.logger import get_logger
 _logger = get_logger(__name__)
 
 
-class _AppState(AppData):
+class AppState(AppData):
     """
     Used to retrieve and operate with application dynamic state.
     e.g. locale or selected game.
     """
 
-    __STATE_SELECTED_GAME: Final = "game"
-    __STATE_SELECTED_LOCALE: Final = "locale"
-    __STATE_IS_AUTO_MODE: Final = "isAutoMode"
-    __WINDOW_WIDTH: Final = "width"
-    __WINDOW_HEIGHT: Final = "height"
+    SelectedGame: Final = "game"
+    SelectedLocale: Final = "locale"
+    IsAutoMode: Final = "isAutoMode"
+    WindowWidth: Final = "width"
+    WindowHeight: Final = "height"
 
     def __init__(self):
         super().__init__()
@@ -34,11 +34,11 @@ class _AppState(AppData):
         Get active game.
         """
 
-        game_name = self.__state.get_value(self.__STATE_SELECTED_GAME)
+        game_name = self.__state.get_value(self.SelectedGame)
 
         if game_name not in self._app.games.names:
             default_game = self._app.games.names[0]
-            _logger.warn("Game '%s' was not found. Using game '%s' as default.", str(game_name), default_game)
+            _logger.warning("Game '%s' was not found. Using game '%s' as default.", str(game_name), default_game)
 
             game_name = default_game
             self.game_name = default_game
@@ -51,7 +51,7 @@ class _AppState(AppData):
         """
         Set game as active.
         """
-        self.__set_state_value(self.__STATE_SELECTED_GAME, game_name)
+        self.__set_state_value(self.SelectedGame, game_name)
 
     @property
     def locale(self):
@@ -59,11 +59,11 @@ class _AppState(AppData):
         Get active locale.
         """
 
-        locale = self.__state.get_value(self.__STATE_SELECTED_LOCALE)
+        locale = self.__state.get_value(self.SelectedLocale)
 
-        if locale not in locales:
+        if locale not in locales():
             default_locale = prop("defaultLocale")
-            _logger.warn("Locale '%s' was not found. Using default locale '%s'.", str(locale), default_locale)
+            _logger.warning("Locale '%s' was not found. Using default locale '%s'.", str(locale), default_locale)
 
             locale = default_locale
             self.locale = default_locale
@@ -76,49 +76,49 @@ class _AppState(AppData):
         """
         Set active locale.
         """
-        self.__set_state_value(self.__STATE_SELECTED_LOCALE, locale)
+        self.__set_state_value(self.SelectedLocale, locale)
 
     @property
     def is_auto_mode(self):
         """
         Used to check if auto download/upload mode is enabled.
         """
-        return self.__state.get_value(self.__STATE_IS_AUTO_MODE, False)
+        return self.__state.get_value(self.IsAutoMode, False)
 
     @is_auto_mode.setter
     def is_auto_mode(self, is_auto_mode):
         """
         Used to enable/disabled auto mode.
         """
-        self.__set_state_value(self.__STATE_IS_AUTO_MODE, is_auto_mode)
+        self.__set_state_value(self.IsAutoMode, is_auto_mode)
 
     @property
     def width(self):
         """
         Used to get window width.
         """
-        return self.__state.get_value(self.__WINDOW_WIDTH, prop("windowWidth"))
+        return self.__state.get_value(self.WindowWidth, prop("windowWidth"))
 
     @width.setter
     def width(self, width: int):
         """
         Used to set window width.
         """
-        self.__state.set_value(self.__WINDOW_WIDTH, width)
+        self.__state.set_value(self.WindowWidth, width)
 
     @property
     def height(self):
         """
         Used to get window height.
         """
-        return self.__state.get_value(self.__WINDOW_HEIGHT, prop("windowHeight"))
+        return self.__state.get_value(self.WindowHeight, prop("windowHeight"))
 
     @height.setter
     def height(self, height: int):
         """
         Used to set window height.
         """
-        self.__state.set_value(self.__WINDOW_HEIGHT, height)
+        self.__state.set_value(self.WindowHeight, height)
 
     def refresh(self):
         """

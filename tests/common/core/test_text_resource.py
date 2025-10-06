@@ -1,0 +1,77 @@
+import pytest
+from pytest_mock import MockerFixture
+
+from savegem.common.core import ApplicationContext
+from savegem.common.core.text_resource import tr, TextResource
+from tests.test_data import LocaleTestData
+from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
+
+
+@pytest.fixture(autouse=True)
+def _setup_dependencies(mocker: MockerFixture, json_config_holder_mock, resolve_locale_mock):
+
+    # Reset text resource state.
+    mocker.patch.object(TextResource, "_TextResource__current_locale", None)
+    mocker.patch.object(TextResource, "_TextResource__holder", None)
+
+    first_locales_holder = MockJsonConfigHolder({
+        "key1": LocaleTestData.FirstLocale,
+        "key2": f"{LocaleTestData.FirstLocale},{{0}},{{1}}",
+    })
+
+    second_locales_holder = MockJsonConfigHolder({
+        "key1": LocaleTestData.SecondLocale,
+        "key2": f"{LocaleTestData.SecondLocale},{{0}},{{1}}",
+    })
+
+    resolve_locale_mock.side_effect = lambda path: path
+    json_config_holder_mock.side_effect = lambda locale: first_locales_holder \
+        if locale == LocaleTestData.FirstLocale \
+        else second_locales_holder
+
+
+@pytest.fixture
+def _app_state(mocker: MockerFixture):
+    state_mock = mocker.MagicMock()
+
+    mocker.patch.object(
+        ApplicationContext,
+        "state",
+        state_mock
+    )
+
+    return state_mock
+
+
+def test_should_not_read_file_again_if_locale_same(json_config_holder_mock):
+    TextResource.get(LocaleTestData.FirstLocale, "key1")
+    TextResource.get(LocaleTestData.FirstLocale, "key1")
+
+    json_config_holder_mock.assert_called_once()
+
+
+def test_should_read_file_if_locale_changed(json_config_holder_mock):
+    TextResource.get(LocaleTestData.FirstLocale, "key1")
+    TextResource.get(LocaleTestData.SecondLocale, "key1")
+
+    assert json_config_holder_mock.call_count == 2
+
+
+def test_should_handle_non_existing_keys():
+    non_existing_key = "key321"
+    value = TextResource.get(LocaleTestData.FirstLocale, non_existing_key, "arg1", "arg2")
+
+    assert value == non_existing_key
+
+
+def test_should_resolve_arguments():
+    value = TextResource.get(LocaleTestData.FirstLocale, "key2", "arg1", "arg2")
+    assert value == f"{LocaleTestData.FirstLocale},arg1,arg2"
+
+
+def test_tr_should_use_local_from_state(_app_state):
+    _app_state.locale = LocaleTestData.FirstLocale
+    assert tr("key1") == LocaleTestData.FirstLocale
+
+    _app_state.locale = LocaleTestData.SecondLocale
+    assert tr("key1") == LocaleTestData.SecondLocale

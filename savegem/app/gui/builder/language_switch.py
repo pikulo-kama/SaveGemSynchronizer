@@ -40,7 +40,7 @@ class LanguageSwitchBuilder(UIBuilder):
             alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         )
 
-        _logger.debug("Locale list - %s", locales)
+        _logger.debug("Locale list - %s", locales())
 
     def refresh(self):
         language_id = tr("languageId")
@@ -55,19 +55,19 @@ class LanguageSwitchBuilder(UIBuilder):
     def is_enabled(self):
         # Only show control when there are
         # multiple locales configured.
-        return len(locales) > 1
+        return len(locales()) > 1
 
     def __toggle_language(self):
         """
         Used as callback function when language switch button is being clicked.
         """
 
-        next_locale_index = locales.index(app.state.locale) + 1
+        next_locale_index = locales().index(app.state.locale) + 1
 
-        if next_locale_index == len(locales):
+        if next_locale_index == len(locales()):
             next_locale_index = 0
 
-        new_locale = locales[next_locale_index]
+        new_locale = locales()[next_locale_index]
 
         _logger.info("Language has been changed.")
         _logger.info("Selected language - %s", new_locale)

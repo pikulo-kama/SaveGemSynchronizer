@@ -32,25 +32,34 @@ class IPCProp:
 
 
 class IPCSocket:
+    """
+    Socket wrapper used to accept messages.
+    """
+
+    Localhost: Final = "127.0.0.1"
+    MessageSize: Final = 4096
 
     def __init__(self, port):
-        self.__socket_info = ("127.0.0.1", port)
+        self.__socket_info = (self.Localhost, port)
 
     def listen(self):
-        _logger.info("Starting IPC socket on port %d.", self.__socket_info[1])
-
-        sock = socket(AF_INET, SOCK_STREAM)
+        """
+        Used to listen for incoming messages.
+        """
 
         if self.__is_socket_running():
             _logger.error("Socket already opened on %s.", self.__socket_info)
             exit(1)
 
+        _logger.info("Starting IPC socket on port %d.", self.__socket_info[1])
+
+        sock = socket(AF_INET, SOCK_STREAM)
         sock.bind(self.__socket_info)
         sock.listen()
 
         while True:
             connection, _ = sock.accept()
-            message = connection.recv(4096)
+            message = connection.recv(self.MessageSize)
             message = json.loads(message.decode(UTF_8))
             _logger.info("Received message - %s", message)
 
@@ -65,6 +74,13 @@ class IPCSocket:
             connection.close()
 
     def send(self, message):
+        """
+        Used to send message to the socket.
+        Expects a dict object with "command" property.
+
+        If string is provided as message it would be
+        automatically treated as command name.
+        """
 
         if isinstance(message, str):
             message = {IPCProp.Command: message}
@@ -90,4 +106,8 @@ class IPCSocket:
         return is_running
 
     def _handle(self, command: str, message: dict):
+        """
+        Should be overridden by child classes.
+        Used to handle socket implementation specific messages.
+        """
         raise NotImplementedError()
