@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+from pathlib import Path
 
 import pytest
 from pytest_mock import MockerFixture
@@ -44,36 +45,38 @@ def test_should_not_cleanup_non_existing_dir(listdir_mock):
     listdir_mock.assert_not_called()
 
 
-def test_should_remove_all_contents():
+def test_should_remove_all_contents(tmp_path: Path):
 
-    from constants import Directory
-    from savegem.common.util.file import resolve_temp_file, \
-        cleanup_directory, save_file
+    from savegem.common.util.file import resolve_temp_file, cleanup_directory, save_file
 
-    test_dir = os.path.join(Directory.Output, "TestDir")
+    test_dir = tmp_path / "TestDir"
+    nested_test_dir = test_dir / "AnotherTestDir"
 
     os.mkdir(test_dir)
-    save_file(resolve_temp_file("test.json"), {}, as_json=True)
-    save_file(resolve_temp_file(os.path.join(test_dir, "test.txt")), "")
+    os.mkdir(nested_test_dir)
 
-    cleanup_directory(Directory.Output)
+    save_file(str(test_dir / "test.json"), {}, as_json=True)
+    save_file(resolve_temp_file(str(nested_test_dir / "test.txt")), "")
 
-    assert len(os.listdir(Directory.Output)) == 0
-    assert not os.path.exists(test_dir)
+    cleanup_directory(str(test_dir))
+
+    assert len(os.listdir(str(test_dir))) == 0
+    assert not os.path.exists(str(nested_test_dir))
 
 
-def test_should_handle_error_silently_when_cleanup_dir(mocker: MockerFixture, module_patch):
+def test_should_handle_error_silently_when_cleanup_dir(mocker: MockerFixture, tmp_path: Path, module_patch):
 
-    from constants import Directory
-    from savegem.common.util.file import resolve_temp_file, \
-        cleanup_directory, save_file
+    from savegem.common.util.file import cleanup_directory, save_file
 
     print_mock = mocker.patch("builtins.print")
     unlink_mock = module_patch("os.unlink")
     unlink_mock.side_effect = RuntimeError("Can't unlink")
 
-    save_file(resolve_temp_file("test.json"), {}, as_json=True)
-    cleanup_directory(Directory.Output)
+    test_dir = tmp_path / "TestDir"
+    os.mkdir(test_dir)
+
+    save_file(str(test_dir / "test.json"), {}, as_json=True)
+    cleanup_directory(str(test_dir))
 
     print_mock.assert_called_once()
 

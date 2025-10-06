@@ -4,7 +4,7 @@ from tests.test_data import GameTestData, LocaleTestData, ConfigTestData, Player
 
 
 @pytest.fixture
-def app_context(mocker: MockerFixture, safe_module_patch):
+def app_context(mocker: MockerFixture, safe_module_patch, logger_mock):
 
     app_mock = mocker.MagicMock()
     safe_module_patch("app", app_mock)
