@@ -15,10 +15,10 @@ class Directory:
 
     # We need to have fallback value for APPDATA token, since
     # when tests are executed on Linux environment it would fail.
-    AppDataRoot = os.path.join(os.getenv("APPDATA"), "SaveGem")
+    AppDataRoot = os.path.join(os.getenv("APPDATA") or "", "SaveGem")
     Output: Final = os.path.join(AppDataRoot, "Output")
     Logs: Final = os.path.join(AppDataRoot, "Logs")
-    Logback: Final = os.path.join(AppDataRoot, "logback")
+    Logback: Final = os.path.join(AppDataRoot, "Logback")
 
 
 class File:

@@ -3,12 +3,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHBoxLayout
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.builder import UIBuilder
-from savegem.app.gui.builder.download_upload_button import DownloadUploadButtonBuilder
-from savegem.app.gui.component.progress_button import QProgressPushButton
-from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind
-from savegem.common.service.subscriptable import EventKind, ErrorEvent, DoneEvent
-
 
 @pytest.fixture(autouse=True)
 def _setup(app_context, games_config):
@@ -31,6 +25,8 @@ def _buttons_builder(simple_gui):
     Provides a fully mocked and initialized DownloadUploadButtonBuilder instance.
     """
 
+    from savegem.app.gui.builder.download_upload_button import DownloadUploadButtonBuilder
+
     builder = DownloadUploadButtonBuilder()
     builder._gui = simple_gui
 
@@ -41,6 +37,11 @@ def test_builder_initialization(mocker: MockerFixture):
     """
     Test the constructor initializes the base class and internal attributes.
     """
+
+    from savegem.app.gui.builder import UIBuilder
+    from savegem.app.gui.builder.download_upload_button import DownloadUploadButtonBuilder
+    from savegem.app.gui.constants import UIRefreshEvent
+
     mock_super_init = mocker.patch.object(UIBuilder, '__init__', return_value=None)
     builder = DownloadUploadButtonBuilder()
 
@@ -53,6 +54,9 @@ def test_build_creates_buttons_and_sets_layout(mocker: MockerFixture, _buttons_b
     """
     Test build() creates buttons, sets properties, registers as interactable, and configures layout.
     """
+
+    from savegem.app.gui.component.progress_button import QProgressPushButton
+    from savegem.app.gui.constants import QAttr, QKind
 
     # Arrange: Spy on internal methods
     mock_add_interactable = mocker.patch.object(_buttons_builder, '_add_interactable')
@@ -212,6 +216,9 @@ def test_done_subscriber_notifies_on_success_only(notification_mock, success, ex
     Test __done_subscriber calls notification only if the event is successful.
     """
 
+    from savegem.common.service.subscriptable import DoneEvent, EventKind
+    from savegem.app.gui.builder.download_upload_button import DownloadUploadButtonBuilder
+
     message_key = "test_message"
     callback = DownloadUploadButtonBuilder._DownloadUploadButtonBuilder__done_subscriber(message_key)  # noqa
     done_event = DoneEvent(None if success else EventKind.ErrorUploadingToDrive)
@@ -231,6 +238,9 @@ def test_progress_subscriber_sets_progress_on_widget(mocker: MockerFixture):
     Test __progress_subscriber returns a callback that updates the widget's progress.
     """
 
+    from savegem.app.gui.component.progress_button import QProgressPushButton
+    from savegem.app.gui.builder.download_upload_button import DownloadUploadButtonBuilder
+
     # Arrange
     mock_button = mocker.MagicMock(spec=QProgressPushButton)
     callback = DownloadUploadButtonBuilder._DownloadUploadButtonBuilder__progress_subscriber(mock_button)  # noqa
@@ -246,9 +256,9 @@ def test_progress_subscriber_sets_progress_on_widget(mocker: MockerFixture):
 
 
 @pytest.mark.parametrize("event_kind, expected_tr_key", [
-    (EventKind.SavesDirectoryMissing, "notification_ErrorSaveDirectoryMissing"),
-    (EventKind.DriveMetadataMissing, "label_StorageIsEmpty"),
-    (EventKind.ErrorUploadingToDrive, "notification_ErrorUploadingToDrive"),
+    ("SavesDirectoryMissing", "notification_ErrorSaveDirectoryMissing"),
+    ("DriveMetadataMissing", "label_StorageIsEmpty"),
+    ("ErrorUploadingToDrive", "notification_ErrorUploadingToDrive"),
     ("UnknownEvent", None),
 ])
 def test_error_subscriber_notifies_on_specific_errors(notification_mock, tr_mock, games_config, event_kind,
@@ -257,8 +267,22 @@ def test_error_subscriber_notifies_on_specific_errors(notification_mock, tr_mock
     Test __error_subscriber handles specific error kinds and notifies the user.
     """
 
+    from savegem.common.service.subscriptable import EventKind, ErrorEvent
+    from savegem.app.gui.builder.download_upload_button import DownloadUploadButtonBuilder
+
+    kind = None
+
+    if event_kind == "SavesDirectoryMissing":
+        kind = EventKind.SavesDirectoryMissing
+
+    if event_kind == "DriveMetadataMissing":
+        kind = EventKind.DriveMetadataMissing
+
+    if event_kind == "ErrorUploadingToDrive":
+        kind = EventKind.ErrorUploadingToDrive
+
     # Arrange
-    error_event = ErrorEvent(event_kind)
+    error_event = ErrorEvent(kind)
 
     # Act
     DownloadUploadButtonBuilder._DownloadUploadButtonBuilder__error_subscriber(error_event)  # noqa

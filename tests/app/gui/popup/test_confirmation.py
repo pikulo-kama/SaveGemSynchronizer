@@ -2,15 +2,14 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QPushButton, QHBoxLayout
 from pytest_mock import MockerFixture
 
-from constants import Resource
-from savegem.app.gui.constants import QAttr, QObjectName, QKind
-from savegem.app.gui.popup.confirmation import Confirmation, confirmation
-
 
 def test_confirmation_init_calls_super_with_correct_resources(mocker: MockerFixture, qtbot, simple_gui):
     """
     Test __init__ calls the Popup constructor with the correct title and icon keys.
     """
+
+    from constants import Resource
+    from savegem.app.gui.popup.confirmation import Confirmation
 
     # Spy on the Popup base class __init__ to check arguments
     mock_super_init = mocker.spy(Confirmation.__bases__[0], '__init__')
@@ -29,6 +28,9 @@ def test_add_controls_creates_and_configures_buttons(qtbot, tr_mock):
     """
     Test that _add_controls creates two buttons with correct properties and layout.
     """
+
+    from savegem.app.gui.constants import QAttr, QObjectName, QKind
+    from savegem.app.gui.popup.confirmation import Confirmation
 
     popup = Confirmation()
     qtbot.addWidget(popup)
@@ -60,6 +62,9 @@ def test_confirm_button_executes_callback_and_accepts(mocker: MockerFixture, qtb
     Test clicking Confirm executes the set callback and closes the dialog via accept().
     """
 
+    from savegem.app.gui.constants import QObjectName
+    from savegem.app.gui.popup.confirmation import Confirmation
+
     popup = Confirmation()
     qtbot.addWidget(popup)
 
@@ -87,6 +92,9 @@ def test_close_button_rejects_dialog(mocker: MockerFixture, qtbot):
     Test clicking Close closes the dialog via reject().
     """
 
+    from savegem.app.gui.constants import QObjectName
+    from savegem.app.gui.popup.confirmation import Confirmation
+
     popup = Confirmation()
     qtbot.addWidget(popup)
 
@@ -111,6 +119,8 @@ def test_confirmation_function_flow(mocker: MockerFixture, module_patch):
     Test the confirmation wrapper function correctly initializes the Confirmation
     class, sets the callback, and calls show_dialog.
     """
+
+    from savegem.app.gui.popup.confirmation import confirmation
 
     confirmation_mock_obj = module_patch("Confirmation")
 

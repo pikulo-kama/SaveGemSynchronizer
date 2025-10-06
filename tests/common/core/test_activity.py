@@ -2,34 +2,51 @@ import json
 import pytest
 
 from tests.test_data import GameTestData, PlayerTestData, ConfigTestData
-from savegem.common.core import Activity
 from tests.util import json_to_bytes_io
 
 
 NoActivity = {}
 
-FirstPlayerActivity = {
-    PlayerTestData.FirstPlayerMachineId: {
-        Activity.NAME_PROP: PlayerTestData.FirstPlayerName,
-        Activity.GAMES_PROP: [GameTestData.FirstGame]
-    }
-}
 
-SecondPlayerActivity = {
-    PlayerTestData.SecondPlayerMachineId: {
-        Activity.NAME_PROP: PlayerTestData.SecondPlayerName,
-        Activity.GAMES_PROP: [GameTestData.FirstGame]
-    }
-}
+@pytest.fixture
+def _first_player_activity():
 
-MultiplePlayersActivity = {
-    **FirstPlayerActivity,
-    **SecondPlayerActivity
-}
+    from savegem.common.core import Activity
+
+    return {
+        PlayerTestData.FirstPlayerMachineId: {
+            Activity.NAME_PROP: PlayerTestData.FirstPlayerName,
+            Activity.GAMES_PROP: [GameTestData.FirstGame]
+        }
+    }
+
+
+@pytest.fixture
+def _second_player_activity():
+
+    from savegem.common.core import Activity
+
+    return {
+        PlayerTestData.SecondPlayerMachineId: {
+            Activity.NAME_PROP: PlayerTestData.SecondPlayerName,
+            Activity.GAMES_PROP: [GameTestData.FirstGame]
+        }
+    }
+
+
+@pytest.fixture
+def _multiple_players_activity(_first_player_activity, _second_player_activity):
+    return {
+        **_first_player_activity,
+        **_second_player_activity
+    }
 
 
 @pytest.fixture
 def _activity(app_config, app_context, user_config_mock, games_config):
+
+    from savegem.common.core import Activity
+
     activity = Activity()
     activity.link(app_context)
 
@@ -61,24 +78,26 @@ def test_refresh_when_no_active_players(_activity, _mock_download_file, gdrive_m
     assert len(_activity.players) == 0
 
 
-def test_refresh_when_only_current_player(_activity, user_config_mock, _mock_download_file, gdrive_mock):
-    _mock_download_file(FirstPlayerActivity)
+def test_refresh_when_only_current_player(_activity, user_config_mock, _mock_download_file, gdrive_mock,
+                                          _first_player_activity):
+    _mock_download_file(_first_player_activity)
     _activity.refresh()
 
     # Current user should not be considered.
     assert len(_activity.players) == 0
 
 
-def test_refresh_when_active_players(_activity, _mock_download_file, gdrive_mock):
-    _mock_download_file(SecondPlayerActivity)
+def test_refresh_when_active_players(_activity, _mock_download_file, gdrive_mock, _second_player_activity):
+    _mock_download_file(_second_player_activity)
     _activity.refresh()
 
     # Current user should not be considered.
     assert len(_activity.players) == 1
 
 
-def test_refresh_when_activity_contains_not_selected_game(_activity, _mock_download_file, gdrive_mock, games_config):
-    _mock_download_file(SecondPlayerActivity)
+def test_refresh_when_activity_contains_not_selected_game(_activity, _mock_download_file, gdrive_mock, games_config,
+                                                          _second_player_activity):
+    _mock_download_file(_second_player_activity)
     games_config.current.name = GameTestData.SecondGame
     _activity.refresh()
 
@@ -86,10 +105,13 @@ def test_refresh_when_activity_contains_not_selected_game(_activity, _mock_downl
     assert len(_activity.players) == 0
 
 
-def test_update_when_has_active_games(_activity, _mock_download_file, gdrive_mock):
+def test_update_when_has_active_games(_activity, _mock_download_file, gdrive_mock, _second_player_activity):
+
+    from savegem.common.core import Activity
+
     games = [GameTestData.FirstGame, GameTestData.SecondGame]
 
-    _mock_download_file(SecondPlayerActivity)
+    _mock_download_file(_second_player_activity)
     _activity.update(games)
 
     update_args = gdrive_mock.update_file.call_args[0]
@@ -103,13 +125,13 @@ def test_update_when_has_active_games(_activity, _mock_download_file, gdrive_moc
     second_machine_id = PlayerTestData.SecondPlayerMachineId
 
     # Verify that existing activity data was not modified.
-    assert data.get(second_machine_id) == SecondPlayerActivity.get(second_machine_id)
+    assert data.get(second_machine_id) == _second_player_activity.get(second_machine_id)
     assert data.get(first_machine_id, {}).get(Activity.NAME_PROP) == PlayerTestData.FirstPlayerName
     assert data.get(first_machine_id, {}).get(Activity.GAMES_PROP) == games
 
 
-def test_update_when_no_games(_activity, _mock_download_file, gdrive_mock):
-    _mock_download_file(FirstPlayerActivity)
+def test_update_when_no_games(_activity, _mock_download_file, gdrive_mock, _first_player_activity):
+    _mock_download_file(_first_player_activity)
     _activity.update([])
 
     update_args = gdrive_mock.update_file.call_args[0]

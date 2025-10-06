@@ -1,10 +1,9 @@
 import os
 import sys
 from unittest import mock
+
 import psutil
 import pytest
-
-from savegem.common.util.process import get_running_processes, is_process_already_running
 
 CURRENT_REAL_EXE = os.path.realpath(sys.executable)
 
@@ -48,6 +47,8 @@ def test_all_processes_found(_process_iter):
     Tests that all requested processes are returned, ignoring irrelevant ones.
     """
 
+    from savegem.common.util.process import get_running_processes
+
     requested_names = ["chrome.exe", "spotify.exe"]
 
     # Create mock process objects that match the requested names
@@ -78,6 +79,8 @@ def test_only_some_processes_found(_process_iter):
     Tests that only the subset of processes that are running are returned.
     """
 
+    from savegem.common.util.process import get_running_processes
+
     requested_names = ["firefox.exe", "vlc.exe", "slack.exe"]
 
     mock_proc_vlc = create_mock_process("vlc.exe", pid=300)
@@ -100,6 +103,8 @@ def test_stop_early_optimization(_process_iter):
     Tests the optimization where the loop breaks once all requested processes are found.
     This is verified by ensuring subsequent mock processes are not accessed.
     """
+
+    from savegem.common.util.process import get_running_processes
 
     requested_names = ["a.exe", "b.exe"]
 
@@ -130,6 +135,8 @@ def test_handle_no_such_process(_process_iter):
     Tests that NoSuchProcess exception is caught and the process is safely ignored.
     """
 
+    from savegem.common.util.process import get_running_processes
+
     requested_names = ["good.exe", "bad.exe"]
     mock_proc_good = create_mock_process("good.exe", pid=101)
 
@@ -153,6 +160,8 @@ def test_handle_access_denied(_process_iter):
     Tests that AccessDenied exception is caught and the process is safely ignored.
     """
 
+    from savegem.common.util.process import get_running_processes
+
     requested_names = ["safe.exe", "denied.exe"]
 
     mock_proc_safe = create_mock_process("safe.exe", pid=201)
@@ -173,7 +182,11 @@ def test_handle_access_denied(_process_iter):
 
 
 def test_empty_input_list(_process_iter):
-    """Tests function behavior when an empty list of processes is provided."""
+    """
+    Tests function behavior when an empty list of processes is provided
+    """
+
+    from savegem.common.util.process import get_running_processes
 
     # Configure the iterator with a large list to ensure it doesn't get fully consumed
     _process_iter.return_value = [
@@ -196,6 +209,9 @@ def test_matching_process_is_running(_system_env, _process_iter):
     """
     Tests that True is returned when an identical, *other* process is found.
     """
+
+    from savegem.common.util.process import is_process_already_running
+
     process_name = "test_app"
     current_pid = 100
 
@@ -217,6 +233,9 @@ def test_no_other_matching_process(_system_env, _process_iter):
     """
     Tests that False is returned when only non-matching or the current process is found.
     """
+
+    from savegem.common.util.process import is_process_already_running
+
     process_name = "test_app"
     current_pid = 100
 
@@ -239,6 +258,9 @@ def test_current_process_is_ignored(_system_env, _process_iter):
     """
     Tests that the current process, even if its name matches, is correctly excluded.
     """
+
+    from savegem.common.util.process import is_process_already_running
+
     process_name = "test_app"
     current_pid = 100
 
@@ -255,6 +277,9 @@ def test_handles_psutil_exceptions(_system_env, _process_iter):
     """
     Tests that NoSuchProcess and AccessDenied exceptions are caught and the search continues.
     """
+
+    from savegem.common.util.process import is_process_already_running
+
     process_name = "test_app"
     current_pid = 100
 
@@ -285,6 +310,9 @@ def test_empty_executable_path(_system_env, _process_iter):
     """
     Tests a process whose .exe() returns None or an empty string (e.g., some system processes).
     """
+
+    from savegem.common.util.process import is_process_already_running
+
     process_name = "test_app"
 
     mock_processes = [

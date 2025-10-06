@@ -4,16 +4,14 @@ from PyQt6.QtGui import QResizeEvent
 from PyQt6.QtWidgets import QProgressBar
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.component.button import QCustomPushButton
-from savegem.app.gui.component.progress_button import QProgressPushButton
-from savegem.app.gui.constants import QAttr, QBool
-
 
 @pytest.fixture
 def _progress_button(qtbot):
     """
     Provides a QProgressPushButton instance registered with qtbot.
     """
+
+    from savegem.app.gui.component.progress_button import QProgressPushButton
 
     button = QProgressPushButton("Download")
     button.resize(200, 50)
@@ -26,6 +24,8 @@ def test_progress_button_initialization(_progress_button):
     """
     Test the button initializes the progress bar correctly.
     """
+
+    from savegem.app.gui.component.button import QCustomPushButton
 
     assert isinstance(_progress_button, QCustomPushButton)
 
@@ -51,6 +51,8 @@ def test_set_progress_updates_state_and_properties(_progress_button, progress, e
     Test set_progress updates QProgressBar value, text, custom property, and enabled state.
     """
 
+    from savegem.app.gui.constants import QBool
+
     progress_bar = _progress_button._QProgressPushButton__progress_bar  # noqa
     original_text = _progress_button.text()
 
@@ -75,6 +77,8 @@ def test_set_property_propagates_kind_to_progress_bar(_progress_button):
     """
     Test setProperty propagates QAttr.Kind to the progress bar with the correct prefixed value.
     """
+
+    from savegem.app.gui.constants import QAttr
 
     test_kind = "Primary"
     progress_bar = _progress_button._QProgressPushButton__progress_bar  # noqa
@@ -105,6 +109,8 @@ def test_resize_event_updates_progress_bar_geometry(mocker: MockerFixture, _prog
     """
     Test that resizeEvent sets the progress bar's geometry to match the button.
     """
+
+    from savegem.app.gui.component.button import QCustomPushButton
 
     mock_super_resize = mocker.spy(QCustomPushButton, 'resizeEvent')
 

@@ -6,14 +6,11 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QGridLayout
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.builder import UIBuilder
-from savegem.app.gui.builder.save_status import SaveStatusBuilder
-from savegem.app.gui.constants import UIRefreshEvent
-from savegem.common.core.save_meta import SyncStatus
-
 
 @pytest.fixture(autouse=True)
 def _setup(module_patch, tr_mock, app_context, games_config, app_state_mock, date_mock):
+
+    from savegem.common.core.save_meta import SyncStatus
 
     tr_mock.side_effect = lambda key, *args: f"Translated({key}, {args})"
 
@@ -35,6 +32,8 @@ def _status_builder(simple_gui):
     Provides a fully mocked and initialized SaveStatusBuilder instance.
     """
 
+    from savegem.app.gui.builder.save_status import SaveStatusBuilder
+
     builder = SaveStatusBuilder()
     builder._gui = simple_gui
 
@@ -45,6 +44,10 @@ def test_builder_initialization(mocker: MockerFixture):
     """
     Test the constructor initializes the base class with all required refresh events.
     """
+
+    from savegem.app.gui.builder import UIBuilder
+    from savegem.app.gui.builder.save_status import SaveStatusBuilder
+    from savegem.app.gui.constants import UIRefreshEvent
 
     mock_super_init = mocker.patch.object(UIBuilder, '__init__', return_value=None)
     builder = SaveStatusBuilder()
@@ -98,14 +101,26 @@ def test_build_creates_labels_and_sets_layout(_status_builder, simple_gui):
 
 
 @pytest.mark.parametrize("status, expected_tr_key", [
-    (SyncStatus.LocalOnly, "label_StorageIsEmpty"),
-    (SyncStatus.NeedsDownload, "info_SaveNeedsToBeDownloaded"),
-    (SyncStatus.UpToDate, "info_SaveIsUpToDate"),
+    ("LocalOnly", "label_StorageIsEmpty"),
+    ("NeedsDownload", "info_SaveNeedsToBeDownloaded"),
+    ("UpToDate", "info_SaveIsUpToDate"),
 ])
 def test_get_local_version_text_maps_sync_status_to_tr_key(games_config, tr_mock, status, expected_tr_key):
     """
     Test the correct message key is retrieved based on app.games.current.meta.sync_status.
     """
+
+    from savegem.common.core.save_meta import SyncStatus
+    from savegem.app.gui.builder.save_status import SaveStatusBuilder
+
+    if status == "LocalOnly":
+        status = SyncStatus.LocalOnly
+
+    if status == "NeedsDownload":
+        status = SyncStatus.NeedsDownload
+
+    if status == "UpToDate":
+        status = SyncStatus.UpToDate
 
     # Arrange
     games_config.current.meta.sync_status = status
@@ -122,6 +137,8 @@ def test_get_drive_timestamp_returns_empty_string_if_not_present(tr_mock, games_
     """
     Test an empty string is returned if no drive metadata is present.
     """
+
+    from savegem.app.gui.builder.save_status import SaveStatusBuilder
 
     # Arrange
     games_config.current.meta.drive.is_present = False
@@ -145,6 +162,8 @@ def test_get_drive_timestamp_formats_date_correctly(mocker: MockerFixture, modul
     Test the function formats the date, handling timezone and year comparison
     by controlling the mocked datetime objects.
     """
+
+    from savegem.app.gui.builder.save_status import SaveStatusBuilder
 
     games_config.current.meta.drive.is_present = True
     games_config.current.meta.drive.created_time = f"{creation_year}-10-01T10:00:00.000Z"

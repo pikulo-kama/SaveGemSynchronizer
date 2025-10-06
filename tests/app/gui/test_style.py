@@ -3,18 +3,12 @@ import re
 import pytest
 from PyQt6.QtCore import Qt
 
-from constants import Directory
-from savegem.app.gui.style import load_stylesheet, _COLOR_MODE_LIGHT, _COLOR_MODE_DARK  # noqa
-from savegem.app.gui.style import _resolve_style_properties  # noqa
-from savegem.app.gui.style import _get_color_mode  # noqa
-from savegem.app.gui.style import _color  # noqa
-from savegem.app.gui.style import _font  # noqa
-from savegem.app.gui.style import _image  # noqa
-from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
-
 
 @pytest.fixture(autouse=True)
 def _setup(json_config_holder_mock, path_join_mock, resolve_resource_mock):
+
+    from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
+
     json_config_holder_mock.return_value = MockJsonConfigHolder(
         {
             "colors": {
@@ -52,6 +46,9 @@ def test_get_color_mode_light(_mock_color_scheme):
     Test that _get_color_mode returns 'light' for Qt.ColorScheme.Light.
     """
 
+    from savegem.app.gui.style import _COLOR_MODE_LIGHT
+    from savegem.app.gui.style import _get_color_mode
+
     _mock_color_scheme(Qt.ColorScheme.Light)
     assert _get_color_mode() == _COLOR_MODE_LIGHT
 
@@ -60,6 +57,9 @@ def test_get_color_mode_dark(_mock_color_scheme):
     """
     Test that _get_color_mode returns 'dark' for Qt.ColorScheme.Dark.
     """
+
+    from savegem.app.gui.style import _COLOR_MODE_DARK
+    from savegem.app.gui.style import _get_color_mode
 
     _mock_color_scheme(Qt.ColorScheme.Dark)
     assert _get_color_mode() == _COLOR_MODE_DARK
@@ -70,6 +70,8 @@ def test_get_color_mode_default_light(_mock_color_scheme):
     Test that _get_color_mode returns 'light' for an unrecognized scheme (default).
     """
 
+    from savegem.app.gui.style import _get_color_mode
+
     # Use an arbitrary int not matching Light (1) or Dark (2)
     _mock_color_scheme(99)
     assert _get_color_mode()
@@ -79,6 +81,8 @@ def test_color_light_mode(_mock_color_scheme):
     """
     Test _color retrieves the correct color in light mode.
     """
+
+    from savegem.app.gui.style import _color
 
     _mock_color_scheme(Qt.ColorScheme.Light)
 
@@ -91,6 +95,8 @@ def test_color_dark_mode(_mock_color_scheme):
     Test _color retrieves the correct color in dark mode.
     """
 
+    from savegem.app.gui.style import _color
+
     _mock_color_scheme(Qt.ColorScheme.Dark)
 
     assert _color("background") == "#1E1E1E"
@@ -102,6 +108,8 @@ def test_font():
     Test _font retrieves the correct font property.
     """
 
+    from savegem.app.gui.style import _font
+
     assert _font("main_text") == "Arial"
     assert _font("title_text") == "Roboto Bold"
 
@@ -111,6 +119,8 @@ def test_image(_mock_color_scheme, resolve_resource_mock):
     Test _image resolves the resource path correctly, uses the color mode,
     and replaces OS separators with forward slashes for QSS format.
     """
+
+    from savegem.app.gui.style import _image
 
     # Set to dark mode
     _mock_color_scheme(Qt.ColorScheme.Dark)
@@ -131,6 +141,8 @@ def test_resolve_style_properties(_mock_color_scheme):
     """
     Test _resolve_style_properties correctly replaces color(), font(), and image() tokens.
     """
+
+    from savegem.app.gui.style import _resolve_style_properties
 
     _mock_color_scheme(Qt.ColorScheme.Dark)
 
@@ -161,6 +173,10 @@ def test_load_stylesheet(listdir_mock, read_file_mock, _mock_color_scheme):
     """
     Test load_stylesheet reads all files, concatenates them, and resolves properties.
     """
+
+    from constants import Directory
+    from savegem.app.gui.style import load_stylesheet
+
     _mock_color_scheme(Qt.ColorScheme.Light)
 
     # Mock os.listdir to simulate 3 style files

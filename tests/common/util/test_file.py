@@ -5,13 +5,13 @@ import os
 import pytest
 from pytest_mock import MockerFixture
 
-from constants import Directory, SHA_256, UTF_8
-from savegem.common.util.file import resolve_config, resolve_locale, resolve_resource, resolve_temp_file, \
-    resolve_app_data, resolve_log, resolve_project_data, cleanup_directory, save_file, read_file, delete_file, \
-    file_name_from_path, remove_extension_from_path, file_checksum
-
 
 def test_should_resolve_config(path_join_mock):
+
+    from constants import Directory
+    from savegem.common.util.file import resolve_config, resolve_locale, resolve_resource, resolve_temp_file, \
+        resolve_app_data, resolve_log, resolve_project_data
+
     file_name = "Test"
 
     resolve_config(file_name)
@@ -37,11 +37,19 @@ def test_should_resolve_config(path_join_mock):
 
 
 def test_should_not_cleanup_non_existing_dir(listdir_mock):
+
+    from savegem.common.util.file import cleanup_directory
+
     cleanup_directory("non/existing/dir")
     listdir_mock.assert_not_called()
 
 
 def test_should_remove_all_contents():
+
+    from constants import Directory
+    from savegem.common.util.file import resolve_temp_file, \
+        cleanup_directory, save_file
+
     test_dir = os.path.join(Directory.Output, "TestDir")
 
     os.mkdir(test_dir)
@@ -55,6 +63,11 @@ def test_should_remove_all_contents():
 
 
 def test_should_handle_error_silently_when_cleanup_dir(mocker: MockerFixture, module_patch):
+
+    from constants import Directory
+    from savegem.common.util.file import resolve_temp_file, \
+        cleanup_directory, save_file
+
     print_mock = mocker.patch("builtins.print")
     unlink_mock = module_patch("os.unlink")
     unlink_mock.side_effect = RuntimeError("Can't unlink")
@@ -66,11 +79,19 @@ def test_should_handle_error_silently_when_cleanup_dir(mocker: MockerFixture, mo
 
 
 def test_should_fail_read_file_if_doesnt_exist():
+
+    from savegem.common.util.file import resolve_temp_file, \
+        read_file
+
     with pytest.raises(RuntimeError):
         read_file(resolve_temp_file("non_existing.txt"))
 
 
 def test_read_file_basic_text(tmp_path):
+
+    from constants import UTF_8
+    from savegem.common.util.file import read_file
+
     content = "Hello, this is a test line.\nAnother line."
     file_path = tmp_path / "test_file.txt"
     with open(file_path, "w", encoding=UTF_8) as f:
@@ -82,6 +103,10 @@ def test_read_file_basic_text(tmp_path):
 
 
 def test_read_file_as_json(tmp_path):
+
+    from constants import UTF_8
+    from savegem.common.util.file import read_file
+
     json_data = {"name": "Test User", "id": 123, "active": True}
     json_content = json.dumps(json_data)
 
@@ -96,6 +121,10 @@ def test_read_file_as_json(tmp_path):
 
 
 def test_read_file_invalid_json(tmp_path):
+
+    from constants import UTF_8
+    from savegem.common.util.file import read_file
+
     invalid_content = "{'key': 'value'"
     file_path = tmp_path / "bad_data.json"
 
@@ -107,6 +136,10 @@ def test_read_file_invalid_json(tmp_path):
 
 
 def test_save_file_plain_text(tmp_path):
+
+    from constants import UTF_8
+    from savegem.common.util.file import save_file
+
     content = "A simple line of text.\nWith a second line."
     file_path = tmp_path / "text_output.txt"
 
@@ -119,6 +152,9 @@ def test_save_file_plain_text(tmp_path):
 
 
 def test_save_file_binary_data(tmp_path):
+
+    from savegem.common.util.file import save_file
+
     binary_data = b'\xde\xad\xbe\xef\x00\x01\x02'
     file_path = tmp_path / "binary_output.bin"
 
@@ -131,6 +167,10 @@ def test_save_file_binary_data(tmp_path):
 
 
 def test_save_file_as_json_text_mode(tmp_path):
+
+    from constants import UTF_8
+    from savegem.common.util.file import save_file
+
     data = {"key1": "value1", "key2": [1, 2, 3]}
     file_path = tmp_path / "json_output.json"
     expected_content = '{\n  "key1": "value1",\n  "key2": [\n    1,\n    2,\n    3\n  ]\n}'
@@ -146,6 +186,10 @@ def test_save_file_as_json_text_mode(tmp_path):
 
 
 def test_should_delete_file(module_patch, path_exists_mock, remove_mock):
+
+    from savegem.common.util.file import resolve_temp_file, \
+        delete_file
+
     path_exists_mock.return_value = False
 
     delete_file(resolve_temp_file("non_existing.txt"))
@@ -157,6 +201,10 @@ def test_should_delete_file(module_patch, path_exists_mock, remove_mock):
 
 
 def test_file_checksum_basic_sha256(tmp_path):
+
+    from constants import SHA_256
+    from savegem.common.util.file import file_checksum
+
     content = b"test"
     file_path = tmp_path / "test_file.txt"
 
@@ -171,6 +219,8 @@ def test_file_checksum_basic_sha256(tmp_path):
 
 def test_file_name_from_path(mock_path_separator):
 
+    from savegem.common.util.file import file_name_from_path
+
     mock_path_separator("/")
 
     assert file_name_from_path("long/path/to/test.txt") == "test.txt"
@@ -182,6 +232,9 @@ def test_file_name_from_path(mock_path_separator):
 
 
 def test_remove_extension_from_path():
+
+    from savegem.common.util.file import remove_extension_from_path
+
     assert remove_extension_from_path("test") == "test"
     assert remove_extension_from_path("test.txt") == "test"
     assert remove_extension_from_path("D:\\path\\to\\file.txt") == "D:\\path\\to\\file"

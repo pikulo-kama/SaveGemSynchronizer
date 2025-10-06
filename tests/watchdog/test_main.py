@@ -1,17 +1,17 @@
-import pytest
-from pytest_mock import MockerFixture
-
 import subprocess
 from unittest.mock import MagicMock
 
-from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
-from savegem.watchdog.main import Watchdog
-from savegem.common.service.daemon import Daemon, ExitTestLoop
+import pytest
+from pytest_mock import MockerFixture
 
 
 @pytest.fixture(autouse=True)
 def _setup(mocker: MockerFixture):
-    """Mocks Daemon's __init__ to inject required attributes into Watchdog."""
+    """
+    Mocks Daemon's __init__ to inject required attributes into Watchdog
+    """
+
+    from savegem.common.service.daemon import Daemon
 
     # Function that replaces the original Daemon.__init__ call
     def mock_daemon_init(self, service_name, requires_auth):
@@ -28,7 +28,12 @@ def _setup(mocker: MockerFixture):
 
 @pytest.fixture
 def mock_config():
-    """Fixture for configuration with sample child processes."""
+    """
+    Fixture for configuration with sample child processes
+    """
+
+    from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
+
     return MockJsonConfigHolder({
         "childProcesses": [
             "FirstService.exe",
@@ -40,7 +45,11 @@ def mock_config():
 
 @pytest.fixture
 def _watchdog():
-    """Fixture for the Watchdog instance."""
+    """
+    Fixture for the Watchdog instance
+    """
+
+    from savegem.watchdog.main import Watchdog
 
     watchdog = Watchdog()
     watchdog.interval = 1.0
@@ -50,7 +59,10 @@ def _watchdog():
 
 @pytest.fixture
 def mock_subprocess(mocker: MockerFixture):
-    """Fixture to mock subprocess.Popen and its returned process object."""
+    """
+    Fixture to mock subprocess.Popen and its returned process object
+    """
+
     # Mock the process instance returned by Popen
     mock_process = mocker.MagicMock()
     mock_process.wait.return_value = 0  # Assume clean exit by default
@@ -66,7 +78,9 @@ def _thread_mock(module_patch):
 
 
 def test_initialize_starts_threads(_watchdog, mock_config, _thread_mock, mocker: MockerFixture):
-    """Test that _initialize registers commands and starts a thread for each."""
+    """
+    Test that _initialize registers commands and starts a thread for each
+    """
 
     # Act
     _watchdog._initialize(mock_config)
@@ -91,7 +105,12 @@ def test_initialize_starts_threads(_watchdog, mock_config, _thread_mock, mocker:
 
 
 def test_watch_process_success_path(_watchdog, mock_subprocess, time_sleep_mock):
-    """Test process starts, exits cleanly (0), and prepares for restart."""
+    """
+    Test process starts, exits cleanly (0), and prepares for restart
+    """
+
+    from savegem.common.service.daemon import ExitTestLoop
+
     popen_mock, mock_process = mock_subprocess
     command_args = ["echo", "hello", "world"]
 
@@ -115,7 +134,11 @@ def test_watch_process_success_path(_watchdog, mock_subprocess, time_sleep_mock)
 
 
 def test_watch_process_file_not_found_error(_watchdog, mock_subprocess):
-    """Test process handles FileNotFoundError when executable is missing."""
+    """
+    Test process handles FileNotFoundError when executable is missing
+    """
+
+    from savegem.common.service.daemon import ExitTestLoop
 
     popen_mock, _ = mock_subprocess
     command_args = ["missing_executable", "--arg"]
@@ -131,7 +154,12 @@ def test_watch_process_file_not_found_error(_watchdog, mock_subprocess):
 
 
 def test_watch_process_unhandled_exception(_watchdog, mock_subprocess):
-    """Test process handles generic unhandled exceptions during execution."""
+    """
+    Test process handles generic unhandled exceptions during execution
+    """
+
+    from savegem.common.service.daemon import ExitTestLoop
+
     popen_mock, _ = mock_subprocess
     command_string = "echo test"
 

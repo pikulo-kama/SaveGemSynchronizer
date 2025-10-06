@@ -2,10 +2,6 @@ from unittest.mock import call
 
 import pytest
 
-from constants import Directory
-from savegem.app.main import main, teardown
-from savegem.common.core.ipc_socket import IPCCommand
-
 
 @pytest.fixture(autouse=True)
 def _setup(module_patch, sys_mock):
@@ -22,6 +18,9 @@ def test_main_application_startup(module_patch, app_context, gdrive_mock, logger
     Test the entire application startup sequence, ensuring all services are initialized
     and UI signals are correctly connected.
     """
+
+    from savegem.app.main import main, teardown
+    from savegem.common.core.ipc_socket import IPCCommand
 
     module_patch("load_stylesheet")
     qt_app_mock.return_value.exec.return_value = 0
@@ -79,6 +78,9 @@ def test_teardown_cleanup_routine(logger_mock, cleanup_directory_mock):
     """
     Test that the _teardown function correctly logs and calls the cleanup routine.
     """
+
+    from constants import Directory
+    from savegem.app.main import teardown
 
     teardown()
 

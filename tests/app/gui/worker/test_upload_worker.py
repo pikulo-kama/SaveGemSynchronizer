@@ -1,4 +1,3 @@
-from savegem.app.gui.worker.upload_worker import UploadWorker
 
 
 def test_download_worker_run_logic(uploader_mock, app_context, games_config):
@@ -6,6 +5,8 @@ def test_download_worker_run_logic(uploader_mock, app_context, games_config):
     Test that _run() instantiates Downloader, subscribes the handler,
     and calls download with the current game.
     """
+
+    from savegem.app.gui.worker.upload_worker import UploadWorker
 
     worker = UploadWorker()
     expected_handler = worker._on_subscriptable_event

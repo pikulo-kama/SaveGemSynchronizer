@@ -3,8 +3,6 @@ from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QPixmap, QPainter, QColor
 from PyQt6.QtWidgets import QApplication
 
-from savegem.common.util.graphics import make_circular_image
-
 
 def create_solid_pixmap(width: int, height: int, color=Qt.GlobalColor.red) -> QPixmap:
     """
@@ -35,6 +33,8 @@ def test_square_input_size_and_alpha(_qt_app):
     Checks size and alpha channel creation for a standard square pixmap.
     """
 
+    from savegem.common.util.graphics import make_circular_image
+
     size = 100
     original = create_solid_pixmap(size, size, Qt.GlobalColor.blue)
     circular = make_circular_image(original)
@@ -49,6 +49,8 @@ def test_rectangular_input_size(_qt_app):
     Checks size for a rectangular input, which should result in an ellipse clipping.
     """
 
+    from savegem.common.util.graphics import make_circular_image
+
     width, height = 150, 80
     original = create_solid_pixmap(width, height, Qt.GlobalColor.green)
     circular = make_circular_image(original)
@@ -60,6 +62,8 @@ def test_empty_pixmap(_qt_app):
     """
     Checks behavior with a zero-dimension pixmap.
     """
+
+    from savegem.common.util.graphics import make_circular_image
 
     original = QPixmap(0, 0)
     circular = make_circular_image(original)
@@ -73,6 +77,8 @@ def test_transparency_at_corners(_qt_app):
     Validates that the output pixmap is transparent outside the clipped area
     by checking a corner pixel (which is definitely outside the circle).
     """
+
+    from savegem.common.util.graphics import make_circular_image
 
     size = 100
     original = create_solid_pixmap(size, size, Qt.GlobalColor.white)
@@ -100,6 +106,8 @@ def test_input_with_alpha_channel(_qt_app):
     Ensures the function handles an input pixmap that already has an alpha channel
     and doesn't unintentionally remove content.
     """
+
+    from savegem.common.util.graphics import make_circular_image
 
     size = 100
     original = QPixmap(size, size)

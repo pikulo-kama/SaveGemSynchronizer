@@ -1,15 +1,16 @@
-import pytest
 import json
+
+import pytest
 from pytest_mock import MockerFixture
 
-from constants import UTF_8
-from savegem.common.core import ApplicationContext
-from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
 from tests.test_data import SocketTestData
 
 
 @pytest.fixture
 def _app_state(mocker: MockerFixture):
+
+    from savegem.common.core import ApplicationContext
+
     mock_state = mocker.MagicMock()
     mocker.patch.object(ApplicationContext, 'state', new=mock_state)
 
@@ -23,10 +24,14 @@ def _socket(mocker: MockerFixture):
 
 @pytest.fixture
 def _ipc_socket():
+    from savegem.common.core.ipc_socket import IPCSocket
     return IPCSocket(port=SocketTestData.UIPort)
 
 
 def test_is_socket_running_true(_ipc_socket, _socket, logger_mock):
+
+    from savegem.common.core.ipc_socket import IPCSocket
+
     mock_instance = _socket.return_value
 
     # Configure connect_ex to simulate success (return code 0)
@@ -52,6 +57,10 @@ def test_is_socket_running_false(_ipc_socket, _socket):
 
 
 def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socket, _app_state):
+
+    from constants import UTF_8
+    from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
+
     test_message = {IPCProp.Command: IPCCommand.StateChanged}
     encoded_message = json.dumps(test_message).encode(UTF_8)
 
@@ -93,6 +102,10 @@ def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socke
 
 
 def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, _app_state):
+
+    from constants import UTF_8
+    from savegem.common.core.ipc_socket import IPCSocket, IPCProp
+
     mocker.patch.object(_ipc_socket, '_IPCSocket__is_socket_running', return_value=False)
 
     test_command = "custom_action"
@@ -116,6 +129,10 @@ def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, _app
 
 
 def test_send_string_command_success(_ipc_socket, _socket):
+
+    from constants import UTF_8
+    from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
+
     socket_mock = _socket.return_value
     socket_mock.__enter__.return_value = socket_mock
 
@@ -128,6 +145,10 @@ def test_send_string_command_success(_ipc_socket, _socket):
 
 
 def test_send_dict_message_success(_ipc_socket, _socket):
+
+    from constants import UTF_8
+    from savegem.common.core.ipc_socket import IPCProp
+
     test_message = {IPCProp.Command: "test", "data": [1, 2]}
 
     mock_instance = _socket.return_value

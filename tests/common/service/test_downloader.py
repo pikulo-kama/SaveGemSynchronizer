@@ -1,14 +1,15 @@
 import pytest
-from unittest.mock import Mock
 
-from savegem.common.service.downloader import Downloader
-from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind, ProgressEvent
+from pytest_mock import MockerFixture
 
 
 @pytest.fixture
-def mock_game():
-    """Fixture to create a mock Game object with necessary nested mocks."""
-    mock_game = Mock()
+def mock_game(mocker: MockerFixture):
+    """
+    Fixture to create a mock Game object with necessary nested mocks
+    """
+
+    mock_game = mocker.Mock()
     mock_game.local_path = "/path/to/local/saves"
     mock_game.meta.drive.is_present = True
     mock_game.meta.drive.id = "drive_file_id"
@@ -16,20 +17,27 @@ def mock_game():
     mock_game.meta.drive.checksum = "drive_checksum_new"
 
     # Ensure refresh is available
-    mock_game.meta.drive.refresh = Mock()
+    mock_game.meta.drive.refresh = mocker.Mock()
 
     return mock_game
 
 
 @pytest.fixture
-def mock_subscriber():
-    """Fixture for a mock subscriber function to check sent events."""
-    return Mock()
+def mock_subscriber(mocker: MockerFixture):
+    """
+    Fixture for a mock subscriber function to check sent events.
+    """
+    return mocker.Mock()
 
 
 @pytest.fixture
 def _downloader(mock_subscriber):
-    """Fixture for the Downloader instance with a subscribed mock."""
+    """
+    Fixture for the Downloader instance with a subscribed mock.
+    """
+
+    from savegem.common.service.downloader import Downloader
+
     downloader = Downloader()
     downloader.subscribe(mock_subscriber)
 
@@ -38,7 +46,12 @@ def _downloader(mock_subscriber):
 
 def test_download_success(path_exists_mock, module_patch, copytree_mock,
                           _downloader, cleanup_directory_mock, mock_game, mock_subscriber):
-    """Test a successful full download process."""
+    """
+    Test a successful full download process.
+    """
+
+    from savegem.common.service.downloader import Downloader
+    from savegem.common.service.subscriptable import DoneEvent
 
     mock_unpack_archive = module_patch("shutil.unpack_archive")
     mock_save_file = module_patch("save_file")
@@ -115,7 +128,11 @@ def test_download_success(path_exists_mock, module_patch, copytree_mock,
 
 
 def test_download_saves_directory_missing(module_patch, _downloader, mock_game, mock_subscriber):
-    """Test early exit when the local saves directory is missing."""
+    """
+    Test early exit when the local saves directory is missing.
+    """
+
+    from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind, ProgressEvent
 
     module_patch("os.path.exists", return_value=False)
 
@@ -147,7 +164,11 @@ def test_download_saves_directory_missing(module_patch, _downloader, mock_game, 
 
 
 def test_download_drive_metadata_missing(module_patch, _downloader, mock_game, mock_subscriber):
-    """Test early exit when drive metadata is not present after refresh."""
+    """
+    Test early exit when drive metadata is not present after refresh.
+    """
+
+    from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
 
     module_patch("os.path.exists", return_value=True)
 
@@ -179,7 +200,11 @@ def test_download_drive_metadata_missing(module_patch, _downloader, mock_game, m
 
 def test_backup_directory_with_existing_backup(module_patch, copytree_mock, cleanup_directory_mock, removedirs_mock,
                                                path_exists_mock):
-    """Test the private backup method when a backup directory already exists."""
+    """
+    Test the private backup method when a backup directory already exists.
+    """
+
+    from savegem.common.service.downloader import Downloader
 
     module_patch("os.path.exists")
 
@@ -205,7 +230,11 @@ def test_backup_directory_with_existing_backup(module_patch, copytree_mock, clea
 
 
 def test_backup_directory_with_no_existing_backup(copytree_mock, cleanup_directory_mock, removedirs_mock, module_patch):
-    """Test the private backup method when no backup directory exists."""
+    """
+    Test the private backup method when no backup directory exists.
+    """
+
+    from savegem.common.service.downloader import Downloader
 
     module_patch("os.path.exists", return_value=False)
     saves_dir = "/path/to/saves"

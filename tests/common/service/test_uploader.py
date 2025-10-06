@@ -1,12 +1,9 @@
-import pytest
-from unittest.mock import Mock, call
 from datetime import datetime
+from unittest.mock import call
 
+import pytest
 from pytest_mock import MockerFixture
 
-from savegem.common.core.save_meta import SaveMetaProp
-from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind, ProgressEvent
-from savegem.common.service.uploader import Uploader
 from tests.test_data import PlayerTestData
 
 
@@ -18,7 +15,10 @@ def _setup(app_context, user_config_mock, path_exists_mock, resolve_temp_file_mo
 
 @pytest.fixture
 def mock_game(mocker: MockerFixture):
-    """Fixture to create a mock Game object with necessary nested mocks."""
+    """
+    Fixture to create a mock Game object with necessary nested mocks
+    """
+
     mock_game = mocker.MagicMock()
     mock_game.name = "TestGame"
     mock_game.local_path = "/path/to/saves"
@@ -36,14 +36,21 @@ def mock_game(mocker: MockerFixture):
 
 
 @pytest.fixture
-def mock_subscriber():
-    """Fixture for a mock subscriber function to check sent events."""
-    return Mock()
+def mock_subscriber(mocker: MockerFixture):
+    """
+    Fixture for a mock subscriber function to check sent events
+    """
+    return mocker.Mock()
 
 
 @pytest.fixture
 def uploader(mock_subscriber):
-    """Fixture for the Uploader instance with a subscribed mock."""
+    """
+    Fixture for the Uploader instance with a subscribed mock
+    """
+
+    from savegem.common.service.uploader import Uploader
+
     uploader = Uploader()
     uploader.subscribe(mock_subscriber)
 
@@ -52,7 +59,12 @@ def uploader(mock_subscriber):
 
 def test_upload_success(path_exists_mock, resolve_temp_file_mock, makedirs_mock, copy_mock, make_archive_mock,
                         gdrive_mock, datetime_mock, uploader, mock_game, mock_subscriber):
-    """Test a successful full upload process, ensuring all 5 stages complete."""
+    """
+    Test a successful full upload process, ensuring all 5 stages complete
+    """
+
+    from savegem.common.core.save_meta import SaveMetaProp
+    from savegem.common.service.subscriptable import DoneEvent
 
     # Setup datetime
     mock_now = datetime(2025, 10, 2, 12, 30, 0)
@@ -120,7 +132,11 @@ def test_upload_success(path_exists_mock, resolve_temp_file_mock, makedirs_mock,
 
 
 def test_upload_saves_directory_missing(path_exists_mock, makedirs_mock, uploader, mock_game, mock_subscriber):
-    """Test early exit and error handling when the local saves directory is missing."""
+    """
+    Test early exit and error handling when the local saves directory is missing
+    """
+
+    from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind, ProgressEvent
 
     path_exists_mock.return_value = False
 
@@ -151,7 +167,11 @@ def test_upload_saves_directory_missing(path_exists_mock, makedirs_mock, uploade
 def test_upload_http_error(module_patch, path_exists_mock, resolve_temp_file_mock, makedirs_mock, copy_mock,
                            make_archive_mock, gdrive_mock, datetime_mock, uploader, mock_game, mock_subscriber,
                            http_error_mock):
-    """Test error handling when GDrive.upload_file raises an HttpError."""
+    """
+    Test error handling when GDrive.upload_file raises an HttpError
+    """
+
+    from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
 
     # Setup GDrive mock to raise HttpError
     gdrive_mock.upload_file.side_effect = http_error_mock

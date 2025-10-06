@@ -85,6 +85,11 @@ def time_sleep_mock(module_patch):
 
 
 @pytest.fixture
+def time_mock(module_patch):
+    return module_patch("time.time")
+
+
+@pytest.fixture
 def date_mock(module_patch):
     return module_patch("date")
 

@@ -1,12 +1,8 @@
 import pytest
-
+from PyQt6.QtCore import QMutex
 from PyQt6.QtGui import QCloseEvent
 from PyQt6.QtWidgets import QWidget, QGridLayout, QHBoxLayout
-from PyQt6.QtCore import QMutex
 from pytest_mock import MockerFixture
-
-from savegem.app.gui.constants import UIRefreshEvent
-from savegem.app.gui.window import gui, GUI
 
 
 @pytest.fixture(autouse=True)
@@ -50,6 +46,9 @@ def _primary_screen_mock(mocker: MockerFixture, module_patch):
 
 @pytest.fixture
 def _first_builder(mocker: MockerFixture):
+
+    from savegem.app.gui.constants import UIRefreshEvent
+
     builder = mocker.MagicMock()
     builder.events = [UIRefreshEvent.All]
 
@@ -58,6 +57,9 @@ def _first_builder(mocker: MockerFixture):
 
 @pytest.fixture
 def _second_builder(mocker: MockerFixture):
+
+    from savegem.app.gui.constants import UIRefreshEvent
+
     builder = mocker.MagicMock()
     builder.events = [UIRefreshEvent.All, UIRefreshEvent.ActivityLogUpdate]
 
@@ -94,6 +96,8 @@ def test_gui_singleton():
     Test the gui() function ensures a singleton instance.
     """
 
+    from savegem.app.gui.window import gui, GUI
+
     instance1 = gui()
     instance2 = gui()
 
@@ -106,6 +110,8 @@ def test_gui_initialization(qtbot, prop_mock, tr_mock, resolve_resource_mock, _l
     """
     Test the GUI constructor initializes components and properties.
     """
+
+    from savegem.app.gui.window import GUI
 
     app_gui = GUI()
     qtbot.addWidget(app_gui)
@@ -141,6 +147,8 @@ def test_area_properties(qtbot):
     Test that the property getters return the correct widgets.
     """
 
+    from savegem.app.gui.window import GUI
+
     app_gui = GUI()
     qtbot.addWidget(app_gui)
 
@@ -157,6 +165,8 @@ def test_gui_build_and_show(mocker: MockerFixture, qtbot, tr_mock, _builders):
     """
     Test the build method correctly configures the UI and calls builders.
     """
+
+    from savegem.app.gui.window import GUI
 
     app_gui = GUI()
     qtbot.addWidget(app_gui)
@@ -200,6 +210,8 @@ def test_gui_refresh_all(_first_builder, _second_builder, qtbot, tr_mock):
     Test refresh method with the default 'All' event.
     """
 
+    from savegem.app.gui.window import GUI
+
     app_gui = GUI()
     qtbot.addWidget(app_gui)
     app_gui.build()  # Initialize builders
@@ -224,6 +236,9 @@ def test_gui_refresh_specific_event(qtbot, _first_builder, _second_builder):
     Test refresh method with a specific event that only one builder handles.
     """
 
+    from savegem.app.gui.constants import UIRefreshEvent
+    from savegem.app.gui.window import GUI
+
     app_gui = GUI()
     qtbot.addWidget(app_gui)
     app_gui.build()  # Initialize builders
@@ -240,7 +255,12 @@ def test_gui_refresh_specific_event(qtbot, _first_builder, _second_builder):
 
 
 def test_gui_is_blocked_setter_true(qtbot, _builders):
-    """Test setting is_blocked to True disables builders."""
+    """
+    Test setting is_blocked to True disables builders.
+    """
+
+    from savegem.app.gui.window import GUI
+
     app_gui = GUI()
     qtbot.addWidget(app_gui)
     app_gui.build()  # Ensure builders are initialized and enabled once
@@ -259,7 +279,12 @@ def test_gui_is_blocked_setter_true(qtbot, _builders):
 
 
 def test_gui_is_blocked_setter_false(qtbot, _builders):
-    """Test setting is_blocked to False enables builders."""
+    """
+    Test setting is_blocked to False enables builders.
+    """
+
+    from savegem.app.gui.window import GUI
+
     app_gui = GUI()
     qtbot.addWidget(app_gui)
     app_gui.build()
@@ -279,7 +304,12 @@ def test_gui_is_blocked_setter_false(qtbot, _builders):
 
 
 def test_gui_close_event(mocker: MockerFixture, qtbot, app_state_mock):
-    """Test closeEvent updates app state and emits signal."""
+    """
+    Test closeEvent updates app state and emits signal.
+    """
+
+    from savegem.app.gui.window import GUI
+
     app_gui = GUI()
     qtbot.addWidget(app_gui)
 
@@ -303,6 +333,8 @@ def test_gui_mutex_initialization(qtbot):
     """
     Test that the mutex is correctly initialized.
     """
+
+    from savegem.app.gui.window import GUI
 
     app_gui = GUI()
     qtbot.addWidget(app_gui)

@@ -1,13 +1,15 @@
 import pytest
 from pytest_mock import MockerFixture
 
-from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
-from savegem.common.core import AppState
 from tests.test_data import GameTestData, LocaleTestData
 
 
 @pytest.fixture(autouse=True)
 def _setup(editable_json_config_holder_mock, resolve_app_data_mock):
+
+    from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
+    from savegem.common.core import AppState
+
     mock_holder = MockJsonConfigHolder({
         AppState.SelectedGame: GameTestData.FirstGame,
         AppState.SelectedLocale: LocaleTestData.FirstLocale,
@@ -19,6 +21,8 @@ def _setup(editable_json_config_holder_mock, resolve_app_data_mock):
 
 @pytest.fixture
 def _app_state(mocker: MockerFixture, app_context, app_config, games_config):
+
+    from savegem.common.core import AppState
 
     state_change_callback = mocker.Mock()
 
@@ -35,6 +39,9 @@ def _app_state(mocker: MockerFixture, app_context, app_config, games_config):
 
 
 def test_should_call_callback_when_changing_game(_app_state):
+
+    from savegem.common.core import AppState
+
     _app_state.instance.game_name = GameTestData.SecondGame
 
     _app_state.callback.assert_called_once()
@@ -43,6 +50,9 @@ def test_should_call_callback_when_changing_game(_app_state):
 
 
 def test_should_call_callback_when_changing_locale(_app_state):
+
+    from savegem.common.core import AppState
+
     _app_state.instance.locale = LocaleTestData.FirstLocale
 
     _app_state.callback.assert_called_once()
@@ -51,6 +61,9 @@ def test_should_call_callback_when_changing_locale(_app_state):
 
 
 def test_should_call_callback_when_changing_auto_mode(_app_state):
+
+    from savegem.common.core import AppState
+
     _app_state.instance.is_auto_mode = True
 
     _app_state.callback.assert_called_once()
@@ -59,6 +72,9 @@ def test_should_call_callback_when_changing_auto_mode(_app_state):
 
 
 def test_should_not_call_callback_when_changing_width(_app_state):
+
+    from savegem.common.core import AppState
+
     width = 1920
     _app_state.instance.width = width
 
@@ -68,6 +84,9 @@ def test_should_not_call_callback_when_changing_width(_app_state):
 
 
 def test_should_not_call_callback_when_changing_height(_app_state):
+
+    from savegem.common.core import AppState
+
     height = 1080
     _app_state.instance.height = height
 
@@ -78,6 +97,8 @@ def test_should_not_call_callback_when_changing_height(_app_state):
 
 def test_should_get_first_game_if_not_in_state(_app_state):
 
+    from savegem.common.core import AppState
+
     _app_state.instance.game_name = None
     game_name = _app_state.instance.game_name
 
@@ -86,6 +107,9 @@ def test_should_get_first_game_if_not_in_state(_app_state):
 
 
 def test_should_get_default_locale_if_not_in_state(_app_state):
+
+    from savegem.common.core import AppState
+
     _app_state.instance.locale = None
     locale = _app_state.instance.locale
 

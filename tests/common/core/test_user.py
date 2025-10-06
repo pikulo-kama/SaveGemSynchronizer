@@ -3,8 +3,6 @@ import os.path
 import pytest
 from pytest_mock import MockerFixture
 
-from savegem.common.core import UserState
-from savegem.common.util.file import resolve_temp_file
 from tests.test_data import PlayerTestData
 
 
@@ -21,6 +19,10 @@ def _user_provider(mocker: MockerFixture):
 
 
 def test_should_initialize_only_once(_user_provider):
+
+    from savegem.common.core import UserState
+    from savegem.common.util.file import resolve_temp_file
+
     profile_photo_path = resolve_temp_file(UserState.ProfilePictureFileName)
     user_state = UserState()
 
@@ -36,6 +38,9 @@ def test_should_initialize_only_once(_user_provider):
 
 
 def test_should_not_download_photo_if_url_is_none(_user_provider):
+
+    from savegem.common.core import UserState
+
     user_state = UserState()
     user_state.initialize(lambda: {})
 
@@ -43,6 +48,9 @@ def test_should_not_download_photo_if_url_is_none(_user_provider):
 
 
 def test_should_trim_user_name_if_too_long(_user_provider):
+
+    from savegem.common.core import UserState
+
     user_state = UserState()
     user_state.initialize(lambda: {"displayName": "Ultra-long-super-user-name"})
 

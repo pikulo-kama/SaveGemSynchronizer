@@ -1,8 +1,6 @@
-import pytest
 from unittest.mock import MagicMock, call
 
-from savegem.app.gui.constants import UIRefreshEvent
-from savegem.gdrive_watcher.main import GDriveWatcher
+import pytest
 
 
 @pytest.fixture(autouse=True)
@@ -33,6 +31,8 @@ def test_work_returns_if_gui_not_initialized(path_exists_mock, app_context, gdri
     Test _work exits early if the GUI flag file does not exist.
     """
 
+    from savegem.gdrive_watcher.main import GDriveWatcher
+
     watcher = GDriveWatcher()
     path_exists_mock.return_value = False
 
@@ -47,6 +47,8 @@ def test_work_initializes_and_downloads_before_checking_changes(gdrive_mock, app
     """
     Test that app initialization and download are run regardless of changes.
     """
+
+    from savegem.gdrive_watcher.main import GDriveWatcher
 
     watcher = GDriveWatcher()
 
@@ -65,6 +67,8 @@ def test_get_changes_updates_token_and_extracts_ids(gdrive_mock):
     """
     Test __get_changes correctly processes changes and updates start_page_token.
     """
+
+    from savegem.gdrive_watcher.main import GDriveWatcher
 
     watcher = GDriveWatcher()
 
@@ -101,6 +105,8 @@ def test_get_changes_handles_removed_files_hack(gdrive_mock, app_context):
     Test that removed files are handled by assuming current game files were affected.
     """
 
+    from savegem.gdrive_watcher.main import GDriveWatcher
+
     watcher = GDriveWatcher()
     app_dir = app_context.games.current.drive_directory
 
@@ -130,6 +136,9 @@ def test_work_sends_refresh_for_all_relevant_changes(gdrive_mock, app_context, g
     """
     Test that all three relevant change types trigger the correct refresh events.
     """
+
+    from savegem.app.gui.constants import UIRefreshEvent
+    from savegem.gdrive_watcher.main import GDriveWatcher
 
     watcher = GDriveWatcher()
 
@@ -165,6 +174,8 @@ def test_work_sends_no_refresh_if_no_relevant_changes(ui_socket_mock, app_contex
     """
     Test no refresh commands are sent if unrelated changes occur.
     """
+
+    from savegem.gdrive_watcher.main import GDriveWatcher
 
     watcher = GDriveWatcher()
 

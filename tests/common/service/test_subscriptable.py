@@ -1,24 +1,33 @@
 import pytest
-from unittest.mock import Mock
-
-from savegem.common.service.subscriptable import SubscriptableService, EventKind, EventType, ErrorEvent, \
-    ProgressEvent, DoneEvent
+from pytest_mock import MockerFixture
 
 
 @pytest.fixture
-def subscriber_mock():
-    """A mock function to act as a subscriber."""
-    return Mock()
+def subscriber_mock(mocker: MockerFixture):
+    """
+    A mock function to act as a subscriber.
+    """
+    return mocker.Mock()
 
 
 @pytest.fixture
 def service():
-    """A fresh SubscriptableService instance."""
+    """
+    A fresh SubscriptableService instance.
+    """
+
+    from savegem.common.service.subscriptable import SubscriptableService
+
     return SubscriptableService()
 
 
 def test_error_event_creation():
-    """Test ErrorEvent initializes correctly."""
+    """
+    Test ErrorEvent initializes correctly.
+    """
+
+    from savegem.common.service.subscriptable import EventKind, EventType, ErrorEvent
+
     error_kind = EventKind.DriveMetadataMissing
     event = ErrorEvent(error_kind)
     assert event.type == EventType.Error
@@ -26,7 +35,12 @@ def test_error_event_creation():
 
 
 def test_progress_event_creation():
-    """Test ProgressEvent initializes correctly."""
+    """
+    Test ProgressEvent initializes correctly.
+    """
+
+    from savegem.common.service.subscriptable import EventType, ProgressEvent
+
     progress_percentage = 50
     event = ProgressEvent(None, progress_percentage)
     assert event.type == EventType.Progress
@@ -35,7 +49,12 @@ def test_progress_event_creation():
 
 
 def test_done_event_creation_success():
-    """Test DoneEvent for a successful completion."""
+    """
+    Test DoneEvent for a successful completion.
+    """
+
+    from savegem.common.service.subscriptable import EventType, DoneEvent
+
     event = DoneEvent(None)
     assert event.type == EventType.Done
     assert event.kind is None
@@ -43,7 +62,12 @@ def test_done_event_creation_success():
 
 
 def test_done_event_creation_failure():
-    """Test DoneEvent for a failure (indicated by kind being present)."""
+    """
+    Test DoneEvent for a failure (indicated by kind being present).
+    """
+
+    from savegem.common.service.subscriptable import EventKind, EventType, DoneEvent
+
     error_kind = EventKind.SavesDirectoryMissing
     event = DoneEvent(error_kind)
     assert event.type == EventType.Done
@@ -51,18 +75,23 @@ def test_done_event_creation_failure():
     assert event.success is False
 
 
-# --- Test SubscriptableService ---
-
-
 def test_subscribe_method(service, subscriber_mock):
-    """Test that a subscriber is added to the internal list."""
+    """
+    Test that a subscriber is added to the internal list.
+    """
+
     service.subscribe(subscriber_mock)
     # Check if the mock is in the internal list (accessing a 'private' attribute for testing)
     assert subscriber_mock in service._SubscriptableService__subscriber_list  # noqa
 
 
 def test_send_progress_event(service, subscriber_mock):
-    """Test sending a simple progress event."""
+    """
+    Test sending a simple progress event.
+    """
+
+    from savegem.common.service.subscriptable import EventType, ProgressEvent
+
     service.subscribe(subscriber_mock)
     progress_event = ProgressEvent(None, 25)
     service._send_event(progress_event)
@@ -74,7 +103,13 @@ def test_send_progress_event(service, subscriber_mock):
 
 
 def test_send_error_event_also_sends_done(service, subscriber_mock):
-    """Test sending an ErrorEvent also triggers a DoneEvent."""
+    """
+    Test sending an ErrorEvent also triggers a DoneEvent.
+    """
+
+    from savegem.common.service.subscriptable import EventKind, ErrorEvent, \
+        DoneEvent
+
     service.subscribe(subscriber_mock)
     error_kind = EventKind.ErrorUploadingToDrive
     error_event = ErrorEvent(error_kind)
@@ -96,7 +131,12 @@ def test_send_error_event_also_sends_done(service, subscriber_mock):
 
 
 def test_set_stages_sends_initial_progress(service, subscriber_mock):
-    """Test _set_stages sends an initial ProgressEvent."""
+    """
+    Test _set_stages sends an initial ProgressEvent.
+    """
+
+    from savegem.common.service.subscriptable import ProgressEvent
+
     service.subscribe(subscriber_mock)
     stage_count = 5
     service._set_stages(stage_count)
@@ -109,7 +149,10 @@ def test_set_stages_sends_initial_progress(service, subscriber_mock):
 
 
 def test_complete_stage_full_completion(service, subscriber_mock):
-    """Test _complete_stage updates and sends correct progress for full stage."""
+    """
+    Test _complete_stage updates and sends correct progress for full stage.
+    """
+
     service.subscribe(subscriber_mock)
     stage_count = 4  # 25% per stage
     service._set_stages(stage_count)
@@ -133,7 +176,10 @@ def test_complete_stage_full_completion(service, subscriber_mock):
 
 
 def test_complete_stage_partial_completion(service, subscriber_mock):
-    """Test _complete_stage updates and sends correct progress for partial stage."""
+    """
+    Test _complete_stage updates and sends correct progress for partial stage.
+    """
+
     service.subscribe(subscriber_mock)
     stage_count = 10  # 10% per stage
     service._set_stages(stage_count)

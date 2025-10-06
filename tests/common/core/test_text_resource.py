@@ -1,14 +1,14 @@
 import pytest
 from pytest_mock import MockerFixture
 
-from savegem.common.core import ApplicationContext
-from savegem.common.core.text_resource import tr, TextResource
 from tests.test_data import LocaleTestData
-from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
 
 
 @pytest.fixture(autouse=True)
 def _setup(mocker: MockerFixture, json_config_holder_mock, resolve_locale_mock):
+
+    from savegem.common.core.text_resource import TextResource
+    from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
 
     # Reset text resource state.
     mocker.patch.object(TextResource, "_TextResource__current_locale", None)
@@ -32,6 +32,9 @@ def _setup(mocker: MockerFixture, json_config_holder_mock, resolve_locale_mock):
 
 @pytest.fixture
 def _app_state(mocker: MockerFixture):
+
+    from savegem.common.core import ApplicationContext
+
     state_mock = mocker.MagicMock()
 
     mocker.patch.object(
@@ -44,6 +47,9 @@ def _app_state(mocker: MockerFixture):
 
 
 def test_should_not_read_file_again_if_locale_same(json_config_holder_mock):
+
+    from savegem.common.core.text_resource import TextResource
+
     TextResource.get(LocaleTestData.FirstLocale, "key1")
     TextResource.get(LocaleTestData.FirstLocale, "key1")
 
@@ -51,6 +57,9 @@ def test_should_not_read_file_again_if_locale_same(json_config_holder_mock):
 
 
 def test_should_read_file_if_locale_changed(json_config_holder_mock):
+
+    from savegem.common.core.text_resource import TextResource
+
     TextResource.get(LocaleTestData.FirstLocale, "key1")
     TextResource.get(LocaleTestData.SecondLocale, "key1")
 
@@ -58,6 +67,9 @@ def test_should_read_file_if_locale_changed(json_config_holder_mock):
 
 
 def test_should_handle_non_existing_keys():
+
+    from savegem.common.core.text_resource import TextResource
+
     non_existing_key = "key321"
     value = TextResource.get(LocaleTestData.FirstLocale, non_existing_key, "arg1", "arg2")
 
@@ -65,11 +77,17 @@ def test_should_handle_non_existing_keys():
 
 
 def test_should_resolve_arguments():
+
+    from savegem.common.core.text_resource import TextResource
+
     value = TextResource.get(LocaleTestData.FirstLocale, "key2", "arg1", "arg2")
     assert value == f"{LocaleTestData.FirstLocale},arg1,arg2"
 
 
 def test_tr_should_use_local_from_state(_app_state):
+
+    from savegem.common.core.text_resource import tr
+
     _app_state.locale = LocaleTestData.FirstLocale
     assert tr("key1") == LocaleTestData.FirstLocale
 

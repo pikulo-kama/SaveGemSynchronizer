@@ -1,9 +1,6 @@
 import pytest
 from pytest_mock import MockerFixture
 
-from constants import JSON_EXTENSION
-from savegem.common.core.json_config_holder import JsonConfigHolder
-
 
 MockData = {"key1": 123, "key2": "value"}
 
@@ -18,6 +15,9 @@ def test_initialization_appends_extension_if_missing(read_file_mock):
     Test that the JSON extension is automatically appended to the config_path
     if it's not present.
     """
+
+    from constants import JSON_EXTENSION
+    from savegem.common.core.json_config_holder import JsonConfigHolder
 
     config_name = "test_config"
     expected_path = config_name + JSON_EXTENSION
@@ -36,6 +36,9 @@ def test_initialization_uses_provided_path_if_extension_present(read_file_mock):
     Test that the config_path is used as-is if the extension is already present.
     """
 
+    from constants import JSON_EXTENSION
+    from savegem.common.core.json_config_holder import JsonConfigHolder
+
     expected_path = "test_config" + JSON_EXTENSION
 
     holder = JsonConfigHolder(expected_path)
@@ -51,6 +54,8 @@ def test_initialization_calls_before_file_open_and_load_data(mocker: MockerFixtu
     """
     Test the sequence of initialization calls.
     """
+
+    from savegem.common.core.json_config_holder import JsonConfigHolder
 
     mock_before_file_open = mocker.spy(JsonConfigHolder, '_before_file_open')
 
@@ -71,6 +76,8 @@ def test_get_value_retrieves_existing_property():
     Test that get_value retrieves data correctly.
     """
 
+    from savegem.common.core.json_config_holder import JsonConfigHolder
+
     holder = JsonConfigHolder("test_config")
 
     # Test for string value
@@ -84,6 +91,9 @@ def test_get_value_returns_default_for_non_existing_property():
     """
     Test that get_value returns the default_value if the property is missing.
     """
+
+    from savegem.common.core.json_config_holder import JsonConfigHolder
+
     JsonConfigHolder("test_config")
 
     holder = JsonConfigHolder("test_config")
@@ -100,6 +110,8 @@ def test_get_returns_full_configuration_map():
     Test that get returns the full internal data dictionary.
     """
 
+    from savegem.common.core.json_config_holder import JsonConfigHolder
+
     holder = JsonConfigHolder("test_config")
 
     full_config = holder.get()
@@ -113,6 +125,8 @@ def test_load_data_updates_internal_data(read_file_mock):
     """
     Test _load_data explicitly reads the file and updates _data.
     """
+
+    from savegem.common.core.json_config_holder import JsonConfigHolder
 
     holder = JsonConfigHolder("test_config")
 

@@ -3,9 +3,6 @@ import os
 import pytest
 from pytest_mock import MockerFixture
 
-from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
-from savegem.common.util.file import save_file
-
 
 @pytest.fixture(autouse=True)
 def _setup(path_exists_mock):
@@ -22,6 +19,9 @@ def test_initialization_ensures_file_exists(save_file_mock, _test_config_path):
     Test that the file existence check and creation logic is triggered on initialization.
     """
 
+    from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
+    from savegem.common.util.file import save_file
+
     save_file(_test_config_path, {}, as_json=True)
 
     EditableJsonConfigHolder(_test_config_path)
@@ -32,6 +32,9 @@ def test_set_value_updates_data_and_saves(save_file_mock, _test_config_path):
     """
     Test that set_value updates the internal data and calls save_file.
     """
+
+    from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
+    from savegem.common.util.file import save_file
 
     save_file(_test_config_path, {}, as_json=True)
 
@@ -59,6 +62,9 @@ def test_set_fully_replaces_data_and_saves(save_file_mock, _test_config_path):
     """
     Test that set fully replaces the internal data and calls save_file.
     """
+
+    from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
+    from savegem.common.util.file import save_file
 
     save_file(_test_config_path, {}, as_json=True)
 
@@ -89,6 +95,8 @@ def test_before_file_open_creates_directories_and_default_file(mocker: MockerFix
     We must use a manual patch approach here to control os.path.exists behavior
     within this specific test.
     """
+
+    from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
 
     mocker.patch.object(EditableJsonConfigHolder, "_load_data")
 

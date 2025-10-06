@@ -3,15 +3,14 @@ from PyQt6.QtGui import QMouseEvent, QKeyEvent
 from PyQt6.QtWidgets import QPushButton
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.component.button import QCustomPushButton
-from savegem.app.gui.constants import QAttr, QBool
-
 
 @pytest.fixture
 def _custom_button(qtbot):
     """
     Provides a QCustomPushButton instance registered with qtbot.
     """
+
+    from savegem.app.gui.component.button import QCustomPushButton
 
     button = QCustomPushButton("Test")
     qtbot.addWidget(button)
@@ -24,6 +23,8 @@ def test_custom_push_button_initialization(_custom_button):
     Test the button's initial state and custom properties.
     """
 
+    from savegem.app.gui.constants import QAttr, QBool
+
     assert _custom_button._QCustomPushButton__is_enabled is True  # noqa
     assert _custom_button.property(QAttr.Disabled) == QBool(False)
     assert QPushButton.isEnabled(_custom_button) is True
@@ -33,6 +34,8 @@ def test_set_enabled_to_false_updates_state_and_property(mocker: MockerFixture, 
     """
     Test setEnabled(False) updates the custom state and property.
     """
+
+    from savegem.app.gui.constants import QAttr, QBool
 
     mock_polish = mocker.patch.object(_custom_button.style(), 'polish')
 
@@ -48,6 +51,8 @@ def test_set_enabled_to_true_updates_state_and_property(mocker: MockerFixture, _
     """
     Test setEnabled(True) updates the custom state and property.
     """
+
+    from savegem.app.gui.constants import QAttr, QBool
 
     _custom_button.setEnabled(False)
     mock_polish = mocker.patch.object(_custom_button.style(), 'polish')

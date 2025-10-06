@@ -2,8 +2,6 @@ import pytest
 from PyQt6.QtCore import Qt
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.thread import execute_in_blocking_thread
-
 
 @pytest.fixture(autouse=True)
 def _setup(gui_mock, qtbot):  # noqa
@@ -12,7 +10,10 @@ def _setup(gui_mock, qtbot):  # noqa
 
 @pytest.fixture
 def mock_worker(mocker: MockerFixture):
-    """Provides a mock QWorker object."""
+    """
+    Provides a mock QWorker object
+    """
+
     worker = mocker.MagicMock()
 
     return worker
@@ -22,6 +23,8 @@ def test_execute_in_blocking_thread_blocks_gui(gui_mock, qthread_mock, mock_work
     """
     Test that the function correctly sets the wait cursor and blocks the GUI.
     """
+
+    from savegem.app.gui.thread import execute_in_blocking_thread
 
     execute_in_blocking_thread(qthread_mock, mock_worker)
 
@@ -43,6 +46,9 @@ def test_execute_in_blocking_thread_unblocks_on_finish(gui_mock, qthread_mock, m
     """
     Test that the GUI unblocks and cursor is reset when the thread finishes.
     """
+
+    from savegem.app.gui.thread import execute_in_blocking_thread
+
     # Set up a spy on the final finish callback
     execute_in_blocking_thread(qthread_mock, mock_worker)
     qthread_mock.finished.emit()
@@ -71,6 +77,9 @@ def test_execute_in_blocking_thread_avoids_redundant_execution(gui_mock, qthread
     """
     Test that the function returns immediately if the GUI is already blocked.
     """
+
+    from savegem.app.gui.thread import execute_in_blocking_thread
+
     # Set GUI to blocked state before execution
     gui_mock.is_blocked = True
 
@@ -94,6 +103,8 @@ def test_execute_in_blocking_thread_connects_cleanup(qthread_mock, mock_worker):
     """
     Test that all required signal connections for thread cleanup are made.
     """
+
+    from savegem.app.gui.thread import execute_in_blocking_thread
 
     execute_in_blocking_thread(qthread_mock, mock_worker)
 
