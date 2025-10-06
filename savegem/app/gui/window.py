@@ -23,12 +23,12 @@ def gui():
     global _gui
 
     if _gui is None:
-        _gui = _GUI()
+        _gui = GUI()
 
     return _gui
 
 
-class _GUI(QMainWindow):
+class GUI(QMainWindow):
     """
     Main class to operate with application window.
     """

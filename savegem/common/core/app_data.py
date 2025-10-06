@@ -2,19 +2,19 @@ import abc
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from savegem.common.core import _ApplicationContext
+    from savegem.common.core import ApplicationContext
 
 
-class AppData(abc.ABC):
+class AppData(abc.ABC):  # pragma: no cover
     """
     Represents root level context object.
     Has application context ap property.
     """
 
     def __init__(self):
-        self._app: "_ApplicationContext|None" = None
+        self._app: "ApplicationContext|None" = None
 
-    def link(self, app: "_ApplicationContext"):
+    def link(self, app: "ApplicationContext"):
         """
         Used to link application context to app data.
         """

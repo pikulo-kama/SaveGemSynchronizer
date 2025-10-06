@@ -129,6 +129,10 @@ def file_name_from_path(file_path: str):
     Used to extract file name from file path.
     e.g. /path/to/file.txt -> file.txt
     """
+
+    if os.path.sep not in file_path:
+        return file_path
+
     return file_path[file_path.rindex(os.path.sep) + 1:]
 
 
@@ -137,4 +141,10 @@ def remove_extension_from_path(file_path: str):
     Used to remove file extension from file path.
     e.g. /path/to/file.txt -> /path/to/file
     """
-    return file_path[0:file_path.rindex(".")]
+
+    separator = "."
+
+    if separator not in file_path:
+        return file_path
+
+    return file_path[0:file_path.rindex(separator)]

@@ -36,7 +36,7 @@ def measure_time(when=logging.DEBUG):
     return decorator
 
 
-def profile(function):
+def profile(function):  # pragma: no cover
     """
     Used to measure execution time
     of provided function.

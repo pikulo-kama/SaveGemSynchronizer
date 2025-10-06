@@ -13,7 +13,7 @@ _logger = get_logger(__name__)
 class UISocket(IPCSocket):
 
     def __init__(self):
-        super().__init__(prop("ipc.uiSocketPort"))
+        IPCSocket.__init__(self, prop("ipc.uiSocketPort"))
         self.__child_processes = [google_drive_watcher_socket, process_watcher_socket]
 
     def send_ui_refresh_command(self, event: str):

@@ -1,12 +1,12 @@
-from savegem.common.core.activity import _Activity
-from savegem.common.core.app_config import _AppConfig
+from savegem.common.core.activity import Activity
+from savegem.common.core.app_config import AppConfig
 from savegem.common.core.app_data import AppData
-from savegem.common.core.app_state import _AppState
-from savegem.common.core.game_config import _GameConfig
-from savegem.common.core.user import _UserState
+from savegem.common.core.app_state import AppState
+from savegem.common.core.game_config import GameConfig
+from savegem.common.core.user import UserState
 
 
-class _ApplicationContext:
+class ApplicationContext:
     """
     Contains all runtime information. Provides:
     - Control over state (locale, selected game)
@@ -20,11 +20,11 @@ class _ApplicationContext:
 
         self.__linked_entities: list[AppData] = []
 
-        self.__state = _AppState()
-        self.__app_config = _AppConfig()
-        self.__game_config = _GameConfig()
-        self.__user_state = _UserState()
-        self.__activity = _Activity()
+        self.__state = AppState()
+        self.__app_config = AppConfig()
+        self.__game_config = GameConfig()
+        self.__user_state = UserState()
+        self.__activity = Activity()
 
         self.__link(self.__state)
         self.__link(self.__app_config)
@@ -33,35 +33,35 @@ class _ApplicationContext:
         self.__link(self.__activity)
 
     @property
-    def state(self) -> _AppState:
+    def state(self) -> AppState:
         """
         Application state
         """
         return self.__state
 
     @property
-    def games(self) -> _GameConfig:
+    def games(self) -> GameConfig:
         """
         Available games' configurations.
         """
         return self.__game_config
 
     @property
-    def user(self) -> _UserState:
+    def user(self) -> UserState:
         """
         Information about authenticated user.
         """
         return self.__user_state
 
     @property
-    def config(self) -> _AppConfig:
+    def config(self) -> AppConfig:
         """
         Application configurations.
         """
         return self.__app_config
 
     @property
-    def activity(self) -> _Activity:
+    def activity(self) -> Activity:
         """
         Selected game activity data.
         """
@@ -85,4 +85,4 @@ class _ApplicationContext:
             entity.refresh()
 
 
-app = _ApplicationContext()
+app = ApplicationContext()

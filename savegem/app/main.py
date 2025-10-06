@@ -16,7 +16,7 @@ from savegem.common.core import app
 _logger = get_logger("app")
 
 
-def _main():
+def main():
     """
     Application entry point.
     """
@@ -34,18 +34,18 @@ def _main():
 
     app.state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
-    gui().before_destroy.connect(_teardown)
+    gui().before_destroy.connect(teardown)
     gui().build()
 
     sys.exit(application.exec())
 
 
-def _teardown():
+def teardown():
     _logger.info("Cleaning up 'output' directory.")
     cleanup_directory(Directory.Output)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Start UI socket.
     threading.Thread(target=ui_socket.listen, daemon=True).start()
-    _main()
+    main()

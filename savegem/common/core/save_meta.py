@@ -38,13 +38,13 @@ class SaveMetaProp:
     Checksum: Final = "checksum"
 
 
-class _MetadataWrapper:
+class MetadataWrapper:
     """
     Holder for both local and drive
     metadata.
     """
 
-    def __init__(self, local: "_LocalMetadata", drive: "_DriveMetadata"):
+    def __init__(self, local: "LocalMetadata", drive: "DriveMetadata"):
         self.__local = local
         self.__drive = drive
 
@@ -90,10 +90,8 @@ class _MetadataWrapper:
         elif current_checksum != drive_save_checksum:
             return SyncStatus.NeedsUpload
 
-        return SyncStatus.NoInformation
 
-
-class _Metadata(abc.ABC):
+class Metadata(abc.ABC):  # pragma: no cover
     """
     Represents game save metadata.
     """
@@ -134,7 +132,7 @@ class _Metadata(abc.ABC):
         pass
 
 
-class _LocalMetadata(_Metadata):
+class LocalMetadata(Metadata):
 
     def __init__(self, game: "Game"):
         super().__init__(game)
@@ -184,7 +182,7 @@ class _LocalMetadata(_Metadata):
         self.__metadata = EditableJsonConfigHolder(self._game.metadata_file_path)
 
 
-class _DriveMetadata(_Metadata):
+class DriveMetadata(Metadata):
 
     __ID_PROP: Final = "id"
 
@@ -238,7 +236,7 @@ class _DriveMetadata(_Metadata):
         files_meta = metadata.get("files")
 
         if len(files_meta) == 0:
-            _logger.warn("There are no saves on Google Drive for %s.", self._game.name)
+            _logger.warning("There are no saves on Google Drive for %s.", self._game.name)
             self.__is_present = False
             return
 

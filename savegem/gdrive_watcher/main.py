@@ -15,7 +15,7 @@ class GDriveWatcher(Daemon):
 
     def __init__(self):
         self.__start_page_token = None
-        super().__init__("gdrive_watcher", True)
+        Daemon.__init__(self, "gdrive_watcher", True)
 
     def _work(self):
         """
@@ -86,7 +86,7 @@ class GDriveWatcher(Daemon):
         return modified_files, affected_directories
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Start Google Drive Watcher socket.
     threading.Thread(target=google_drive_watcher_socket.listen, daemon=True).start()
     GDriveWatcher().start()

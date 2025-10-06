@@ -5,7 +5,7 @@ from typing import Final
 
 from constants import File
 from savegem.common.core.app_data import AppData
-from savegem.common.core.save_meta import _LocalMetadata, _DriveMetadata, _MetadataWrapper
+from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import delete_file, resolve_app_data
 from savegem.common.util.logger import get_logger
@@ -13,7 +13,7 @@ from savegem.common.util.logger import get_logger
 _logger = get_logger(__name__)
 
 
-class _GameConfig(AppData):
+class GameConfig(AppData):
     """
     Used to download and retrieve information from game configuration
     which is stored on Google Drive.
@@ -110,7 +110,7 @@ class _GameConfig(AppData):
         """
         Used to get game by its name.
         """
-        return self.__games_by_name[game_name]
+        return self.__games_by_name.get(game_name)
 
     @property
     def names(self):
@@ -144,21 +144,21 @@ class Game:
                  drive_directory: str,
                  files_filter: list[str],
                  auto_mode_allowed: bool):
-        self.__name = name
+        self._name = name
         self.__local_path = local_path
         self.__drive_directory = drive_directory
         self.__files_filter = files_filter
-        self.__process_name = process_name
-        self.__auto_mode_allowed = auto_mode_allowed
+        self._process_name = process_name
+        self._auto_mode_allowed = auto_mode_allowed
 
-        self.__metadata = _MetadataWrapper(_LocalMetadata(self), _DriveMetadata(self))
+        self._metadata = MetadataWrapper(LocalMetadata(self), DriveMetadata(self))
 
     @property
     def name(self):
         """
         Unique name of the game.
         """
-        return self.__name
+        return self._name
 
     @property
     def process_name(self):
@@ -166,7 +166,7 @@ class Game:
         Name of EXE file of the game
         the way it's displayed in Task Manager.
         """
-        return self.__process_name
+        return self._process_name
 
     @property
     def local_path(self):
@@ -190,7 +190,7 @@ class Game:
         Contains both metadata of local save
         and metadata of latest save on drive.
         """
-        return self.__metadata
+        return self._metadata
 
     @property
     def auto_mode_allowed(self):
@@ -198,7 +198,7 @@ class Game:
         Used to check whether auto mode
         is enabled for the game.
         """
-        return self.__auto_mode_allowed
+        return self._auto_mode_allowed
 
     @property
     def file_list(self):

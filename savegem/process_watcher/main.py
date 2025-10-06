@@ -21,7 +21,7 @@ class ProcessWatcher(Daemon):
     """
 
     def __init__(self):
-        super().__init__("process_watcher", True)
+        Daemon.__init__(self, "process_watcher", True)
 
         self.__downloader = Downloader()
         self.__uploader = Uploader()
@@ -91,7 +91,7 @@ class ProcessWatcher(Daemon):
                 push_notification(tr("notification_SaveHasBeenUploaded"))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Start Process Watcher socket.
     threading.Thread(target=process_watcher_socket.listen, daemon=True).start()
     ProcessWatcher().start()

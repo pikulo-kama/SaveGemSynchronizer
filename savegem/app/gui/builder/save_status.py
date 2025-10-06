@@ -1,5 +1,6 @@
 from typing import Optional
 
+import pytz
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QLabel, QGridLayout
 from babel.localtime import get_localzone
@@ -90,11 +91,12 @@ class SaveStatusBuilder(UIBuilder):
         if not metadata.is_present:
             return ""
 
-        time_zone = str(get_localzone())
-        date_format = "d MMMM"
+        creation_datetime_naive = datetime.strptime(metadata.created_time, "%Y-%m-%dT%H:%M:%S.%fZ")
+        utc_datetime = pytz.utc.localize(creation_datetime_naive)
+        time_zone = timezone(str(get_localzone()))
+        creation_datetime = utc_datetime.astimezone(time_zone)
 
-        creation_datetime = datetime.strptime(metadata.created_time, "%Y-%m-%dT%H:%M:%S.%fZ")
-        creation_datetime += timezone(time_zone).utcoffset(creation_datetime)
+        date_format = "d MMMM"
 
         # Only show year if it's not current one, just to avoid extra information.
         if creation_datetime.year != date.today().year:

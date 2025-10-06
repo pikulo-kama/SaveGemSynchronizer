@@ -10,7 +10,7 @@ class ProcessWatcherSocket(IPCSocket):
     def __init__(self):
         super().__init__(prop("ipc.processWatcherSocketPort"))
 
-    def _handle(self, command: str, message: dict):
+    def _handle(self, command: str, message: dict):  # pragma: no cover
         pass
 
 
