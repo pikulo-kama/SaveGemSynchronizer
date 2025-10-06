@@ -11,7 +11,7 @@ from savegem.app.gui.constants import QAttr, QSizeVariant, QKind, QObjectName
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(module_patch, tr_mock, resolve_app_data_mock, app_context, user_config_mock):
+def _setup(module_patch, tr_mock, resolve_app_data_mock, app_context, user_config_mock):
     resolve_app_data_mock.return_value = "/mock/appdata/token"
     user_config_mock.short_name = "John"
     user_config_mock.photo = "path/to/photo.png"

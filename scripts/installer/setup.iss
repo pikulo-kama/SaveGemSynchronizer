@@ -53,10 +53,9 @@ Source: "{#RootPath}output\dist\{#AppName}\*"; \
     DestDir: "{app}"; \
     Flags: recursesubdirs replacesameversion
 
-; Copy local logback to AppData if missing
-Source: "{#RootPath}config\logback.json"; \
-    DestDir: "{userappdata}\{#AppName}"; \
-    DestName: "logback.json"; \
+; Copy local logback files to AppData
+Source: "{#RootPath}logback\*"; \
+    DestDir: "{userappdata}\{#AppName}\Logback"; \
     Flags: ignoreversion
     
 [Tasks]

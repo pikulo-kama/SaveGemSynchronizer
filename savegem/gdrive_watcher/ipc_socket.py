@@ -15,6 +15,7 @@ class GdriveWatcherSocket(IPCSocket):
     def _handle(self, command: str, message: dict):
 
         if command == IPCCommand.GUIInitialized:
+            _logger.debug("Received GUI Initialized command.")
             save_file(resolve_temp_file(File.GUIInitializedFlag), "")
 
 

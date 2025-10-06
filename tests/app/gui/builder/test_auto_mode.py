@@ -9,7 +9,7 @@ from savegem.app.gui.constants import QAttr, QKind, QObjectName
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(tr_mock, app_context, app_state_mock):
+def _setup(tr_mock, app_context, app_state_mock):
     app_state_mock.is_auto_mode = False  # Default initial state
 
 

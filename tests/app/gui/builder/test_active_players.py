@@ -9,7 +9,7 @@ from savegem.app.gui.constants import UIRefreshEvent, QAttr
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(app_context, activity_mock):
+def _setup(app_context, activity_mock):
     pass
 
 

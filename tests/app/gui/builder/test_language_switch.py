@@ -9,7 +9,7 @@ from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind, QObjectName
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(tr_mock, locales_mock, app_context, app_state_mock):
+def _setup(tr_mock, locales_mock, app_context, app_state_mock):
     tr_mock.side_effect = lambda key: "en_US" if key == "languageId" else f"Translated({key})"
     locales_mock.return_value = ["en_US", "fr_FR", "de_DE"]
     app_state_mock.locale = "en_US"

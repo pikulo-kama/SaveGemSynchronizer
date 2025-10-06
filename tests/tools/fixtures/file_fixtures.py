@@ -32,6 +32,11 @@ def resolve_resource_mock(module_patch):
 
 
 @pytest.fixture
+def resolve_logback_mock(module_patch):
+    return module_patch("resolve_logback")
+
+
+@pytest.fixture
 def read_file_mock(module_patch):
     return module_patch("read_file")
 

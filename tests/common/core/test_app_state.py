@@ -7,7 +7,7 @@ from tests.test_data import GameTestData, LocaleTestData
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(editable_json_config_holder_mock, resolve_app_data_mock):
+def _setup(editable_json_config_holder_mock, resolve_app_data_mock):
     mock_holder = MockJsonConfigHolder({
         AppState.SelectedGame: GameTestData.FirstGame,
         AppState.SelectedLocale: LocaleTestData.FirstLocale,

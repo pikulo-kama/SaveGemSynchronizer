@@ -12,7 +12,7 @@ from savegem.common.service.gdrive import GDrive, GDRIVE_SCOPES
 
 
 @pytest.fixture(autouse=True)
-def reset_gdrive_class():
+def _cleanup():
     """Ensure GDrive.__drive is reset before each test."""
     GDrive._GDrive__drive = None
 

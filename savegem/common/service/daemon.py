@@ -5,6 +5,7 @@ import time
 from typing import Final
 
 from constants import JSON_EXTENSION, File
+from savegem.common.core.holders import prop
 from savegem.common.core.json_config_holder import JsonConfigHolder
 from savegem.common.util.file import resolve_config, resolve_app_data
 from savegem.common.util.logger import get_logger
@@ -54,7 +55,8 @@ class Daemon(abc.ABC):
         Used to start daemon.
         """
 
-        self._logger.info("Started daemon '%s' with interval %d second(s).", self.__service_name, self.__interval)
+        self._logger.info("Starting service '%s' version %s.", self.__service_name, prop("version"))
+        self._logger.info("Polling rate '%s' seconds.", self.__interval)
 
         while True:
             try:

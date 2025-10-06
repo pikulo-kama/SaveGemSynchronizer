@@ -10,7 +10,7 @@ from savegem.common.service.daemon import Daemon, ExitTestLoop
 
 
 @pytest.fixture(autouse=True)
-def _mock_daemon(mocker: MockerFixture):
+def _setup(mocker: MockerFixture):
     """Mocks Daemon's __init__ to inject required attributes into Watchdog."""
 
     # Function that replaces the original Daemon.__init__ call

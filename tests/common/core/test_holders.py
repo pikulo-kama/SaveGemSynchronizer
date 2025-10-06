@@ -7,7 +7,7 @@ from tests.test_data import LocaleTestData, SocketTestData
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(mocker: MockerFixture, json_config_holder_mock, resolve_config_mock):
+def _setup(mocker: MockerFixture, json_config_holder_mock, resolve_config_mock):
 
     # Reset global module state so functions like prop() run the config loader again
     import savegem.common.core.holders as holders_module

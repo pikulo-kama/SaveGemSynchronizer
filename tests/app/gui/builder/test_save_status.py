@@ -13,7 +13,7 @@ from savegem.common.core.save_meta import SyncStatus
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(module_patch, tr_mock, app_context, games_config, app_state_mock, date_mock):
+def _setup(module_patch, tr_mock, app_context, games_config, app_state_mock, date_mock):
 
     tr_mock.side_effect = lambda key, *args: f"Translated({key}, {args})"
 

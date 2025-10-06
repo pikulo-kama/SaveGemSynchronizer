@@ -9,7 +9,7 @@ from savegem.app.gui.constants import UIRefreshEvent, QObjectName, QAttr, QKind
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(app_context, games_config):
+def _setup(app_context, games_config):
     games_config.names = ["GameA", "GameB", "GameC"]
     games_config.current.name = "GameA"
     games_config.empty = False

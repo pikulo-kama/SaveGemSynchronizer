@@ -8,7 +8,7 @@ from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(mocker: MockerFixture, json_config_holder_mock, resolve_locale_mock):
+def _setup(mocker: MockerFixture, json_config_holder_mock, resolve_locale_mock):
 
     # Reset text resource state.
     mocker.patch.object(TextResource, "_TextResource__current_locale", None)

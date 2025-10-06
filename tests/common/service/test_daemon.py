@@ -33,7 +33,7 @@ class MockDaemon(Daemon):
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(mocker: MockerFixture, json_config_holder_mock):
+def _setup(mocker: MockerFixture, json_config_holder_mock):
     mock_holder = MockJsonConfigHolder({
         "processName": "test_mock_process",
         "iterationIntervalSeconds": 10  # Non-default interval

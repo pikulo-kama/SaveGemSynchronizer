@@ -1,0 +1,17 @@
+{
+  "process_watcher" : "INFO",
+
+  "savegem.common.core.activity" : "ERROR",
+  "savegem.common.core.app_config" : "ERROR",
+  "savegem.common.core.app_state" : "ERROR",
+  "savegem.common.core.game_config" : "ERROR",
+  "savegem.common.core.ipc_socket" : "ERROR",
+  "savegem.common.core.save_meta" : "ERROR",
+  "savegem.common.core.text_resource" : "ERROR",
+
+  "savegem.common.service.downloader" : "INFO",
+  "savegem.common.service.uploader" : "INFO",
+  "savegem.common.service.gdrive" : "ERROR",
+
+  "savegem.common.util.process": "INFO"
+}

@@ -6,18 +6,11 @@ from savegem.gdrive_watcher.main import GDriveWatcher
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(resolve_temp_file_mock, path_exists_mock, games_config):
+def _setup(module_patch, resolve_temp_file_mock, path_exists_mock, games_config):
     # By default, assume GUI is initialized (flag file exists)
     resolve_temp_file_mock.return_value = "/mock/temp/gui_flag.txt"
     path_exists_mock.return_value = True
     games_config.current.drive_directory = "MOCKED_DRIVE_DIR_ID"
-
-
-@pytest.fixture(autouse=True)
-def _mock_daemon(module_patch):
-    """
-    Mocks Daemon's __init__ to inject required attributes into GDriveWatcher.
-    """
 
     def mock_daemon_init(self, service_name, requires_auth):
         self.__service_name = service_name

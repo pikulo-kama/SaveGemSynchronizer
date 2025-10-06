@@ -11,7 +11,7 @@ from tests.test_data import PlayerTestData
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(app_context, user_config_mock, path_exists_mock, resolve_temp_file_mock):
+def _setup(app_context, user_config_mock, path_exists_mock, resolve_temp_file_mock):
     path_exists_mock.return_value = True
     resolve_temp_file_mock.return_value = "/tmp/test-game-archive"
 

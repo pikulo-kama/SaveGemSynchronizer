@@ -7,8 +7,7 @@ from savegem.common.core.ipc_socket import IPCProp, IPCCommand
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(module_patch, app_context, games_config, prop_mock, logger_mock,
-                        activity_mock, app_state_mock, gui_mock):
+def _setup(module_patch, app_context, games_config, prop_mock, logger_mock, activity_mock, app_state_mock, gui_mock):
     """
     Mocks all external dependencies and singletons used by UISocket.
     """
@@ -51,7 +50,7 @@ def test_ui_socket_init(mocker: MockerFixture, _ui_socket, ipc_socket_base_init_
     assert process_watcher_socket_mock in child_processes
 
 
-def test_send_ui_refresh_command(_ui_socket, _setup_dependencies):
+def test_send_ui_refresh_command(_ui_socket):
     """
     Tests that send_ui_refresh_command formats the IPC message correctly.
     """

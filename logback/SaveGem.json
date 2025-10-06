@@ -1,9 +1,9 @@
 {
   "app" : "INFO",
+  "savegem.app.ipc_socket" : "INFO",
   "savegem.app.gui.window" : "INFO",
   "savegem.app.gui.popup" : "INFO",
   "savegem.app.gui.style" : "INFO",
-  "savegem.app.gui.ipc_socket" : "INFO",
 
   "savegem.app.gui.builder" : "INFO",
   "savegem.app.gui.builder.active_players" : "WARN",
@@ -14,22 +14,17 @@
   "savegem.app.gui.builder.language_switch" : "WARN",
   "savegem.app.gui.builder.save_status" : "WARN",
 
-  "process_watcher" : "INFO",
+  "savegem.app.gui.worker" : "INFO",
 
-  "gdrive_watcher" : "INFO",
-  "savegem.gdrive_watcher.ipc_socket" : "INFO",
-
-  "watchdog" : "INFO",
-
+  "savegem.common.core.activity" : "ERROR",
+  "savegem.common.core.app_config" : "ERROR",
   "savegem.common.core.app_state" : "ERROR",
-  "savegem.common.core.game_config" : "INFO",
+  "savegem.common.core.game_config" : "ERROR",
   "savegem.common.core.ipc_socket" : "ERROR",
+  "savegem.common.core.save_meta" : "ERROR",
   "savegem.common.core.text_resource" : "ERROR",
 
   "savegem.common.service.downloader" : "INFO",
   "savegem.common.service.uploader" : "INFO",
-  "savegem.common.service.gdrive" : "INFO",
-  "savegem.common.service.player" : "INFO",
-
-  "savegem.common.util.process": "INFO"
+  "savegem.common.service.gdrive" : "INFO"
 }

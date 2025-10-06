@@ -20,7 +20,7 @@ _second_process = MockProcess(_second_game.process_name)
 
 
 @pytest.fixture(autouse=True)
-def _setup_dependencies(app_context, games_config):
+def _setup(app_context, games_config):
     type(games_config).list = [_first_game, _second_game]
 
     games_config.by_name.side_effect = lambda name: {
