@@ -54,16 +54,6 @@ def module_patch(mocker: MockerFixture, request: FixtureRequest):
 
 
 @pytest.fixture
-def logger_mock(mocker: MockerFixture, module_patch, safe_module_patch):
-    mock = mocker.MagicMock()
-
-    module_patch("get_logger", return_value=mock)
-    safe_module_patch("_logger", new=mock)
-
-    return mock
-
-
-@pytest.fixture
 def prop_mock(module_patch):
     return module_patch("prop")
 

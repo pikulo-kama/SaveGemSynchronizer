@@ -1,0 +1,38 @@
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Debug
+        run: ls
+
+      - name: Install Qt and OpenGL Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Tests and Generate Coverage Report
+        run: pytest --cov=savegem --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          # Codecov often automatically detects the token for public repos,
+          # but in case it fails, we explicitly define it here.
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          verbose: true
