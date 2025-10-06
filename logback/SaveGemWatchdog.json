@@ -1,3 +1,4 @@
 {
-  "watchdog" : "INFO"
+  "watchdog" : "INFO",
+  "savegem.common.util.process": "INFO"
 }
