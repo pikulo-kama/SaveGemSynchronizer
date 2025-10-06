@@ -3,10 +3,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHBoxLayout, QLabel
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.builder import UIBuilder
-from savegem.app.gui.builder.active_players import ActivePlayersBuilder
-from savegem.app.gui.constants import UIRefreshEvent, QAttr
-
 
 @pytest.fixture(autouse=True)
 def _setup(app_context, activity_mock):
@@ -19,6 +15,8 @@ def _active_players_builder(simple_gui):
     Provides a fully mocked and initialized ActivePlayersBuilder instance.
     """
 
+    from savegem.app.gui.builder.active_players import ActivePlayersBuilder
+
     # Temporarily set the _gui attribute on the instance before calling build/refresh
     builder = ActivePlayersBuilder()
     builder._gui = simple_gui
@@ -29,6 +27,10 @@ def test_active_players_builder_initialization(mocker: MockerFixture):
     """
     Test the constructor correctly initializes the base class and internal attributes.
     """
+
+    from savegem.app.gui.builder import UIBuilder
+    from savegem.app.gui.builder.active_players import ActivePlayersBuilder
+    from savegem.app.gui.constants import UIRefreshEvent
 
     mock_super_init = mocker.patch.object(UIBuilder, '__init__', return_value=None)
 
@@ -94,6 +96,8 @@ def test_refresh_player_scenarios(mocker: MockerFixture, _active_players_builder
     """
     Test refresh logic for various player counts.
     """
+
+    from savegem.app.gui.constants import QAttr
 
     # Arrange: Mock internal labels and the activity log
     mock_status = mocker.MagicMock(spec=QLabel)
