@@ -7,19 +7,23 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.errors import HttpError
 from pytest_mock import MockerFixture
 
-from constants import ZIP_MIME_TYPE
-from savegem.common.service.gdrive import GDrive, GDRIVE_SCOPES
-
 
 @pytest.fixture(autouse=True)
 def _cleanup():
-    """Ensure GDrive.__drive is reset before each test."""
+    """
+    Ensure GDrive.__drive is reset before each test.
+    """
+
+    from savegem.common.service.gdrive import GDrive
+
     GDrive._GDrive__drive = None
 
 
 @pytest.fixture
 def _drive_service_mock(mocker: MockerFixture):
-    """Fixture for the mocked Google Drive service object (returned by build)."""
+    """
+    Fixture for the mocked Google Drive service object (returned by build).
+    """
 
     mock_service = mocker.MagicMock()
 
@@ -111,7 +115,11 @@ def _get_creds_mock(module_patch):
 
 def test_get_credentials_from_token_file(resolve_project_data_mock, resolve_app_data_mock, _credentials_mock,
                                          path_exists_mock, mock_creds_valid, _google_build_mock):
-    """Test successful authentication using an existing valid token file."""
+    """
+    Test successful authentication using an existing valid token file.
+    """
+
+    from savegem.common.service.gdrive import GDrive, GDRIVE_SCOPES
 
     resolve_app_data_mock.return_value = "token.json"
     resolve_project_data_mock.return_value = "creds.json"
@@ -129,7 +137,11 @@ def test_get_credentials_from_token_file(resolve_project_data_mock, resolve_app_
 def test_get_credentials_from_flow(_google_build_mock, resolve_project_data_mock, resolve_app_data_mock,
                                    path_exists_mock, _installed_app_flow_mock, json_mock, save_file_mock,
                                    mock_creds_valid):
-    """Test successful authentication using client secrets file (new flow)."""
+    """
+    Test successful authentication using client secrets file (new flow).
+    """
+
+    from savegem.common.service.gdrive import GDrive, GDRIVE_SCOPES
 
     path_exists_mock.side_effect = [False, True]
 
@@ -152,7 +164,11 @@ def test_get_credentials_from_flow(_google_build_mock, resolve_project_data_mock
 
 def test_get_credentials_refresh_expired(path_exists_mock, _credentials_mock, _request_mock,
                                          mock_creds_valid, _google_build_mock):
-    """Test refreshing expired credentials."""
+    """
+    Test refreshing expired credentials.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     path_exists_mock.side_effect = [True, False]
 
@@ -169,7 +185,11 @@ def test_get_credentials_refresh_expired(path_exists_mock, _credentials_mock, _r
 
 def test_should_handle_refresh_error_silently(path_exists_mock, _credentials_mock, _request_mock,
                                               mock_creds_valid, _google_build_mock, logger_mock):
-    """Test refreshing expired credentials."""
+    """
+    Test refreshing expired credentials.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     path_exists_mock.side_effect = [True, False]
 
@@ -187,7 +207,11 @@ def test_should_handle_refresh_error_silently(path_exists_mock, _credentials_moc
 
 
 def test_get_credentials_missing_all(path_exists_mock):
-    """Test raises RuntimeError when both token and creds files are missing."""
+    """
+    Test raises RuntimeError when both token and creds files are missing.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     path_exists_mock.side_effect = [False, False]
 
@@ -196,7 +220,11 @@ def test_get_credentials_missing_all(path_exists_mock):
 
 
 def test_get_current_user(_google_build_mock, _drive_service_mock, _get_creds_mock):
-    """Test get_current_user calls the correct Drive API endpoint."""
+    """
+    Test get_current_user calls the correct Drive API endpoint.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     user_info = GDrive.get_current_user()
 
@@ -206,7 +234,11 @@ def test_get_current_user(_google_build_mock, _drive_service_mock, _get_creds_mo
 
 
 def test_query_single_success(_google_build_mock, _drive_service_mock, _get_creds_mock):
-    """Test query_single successful execution."""
+    """
+    Test query_single successful execution.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     q_str = "name='test'"
     fields_str = "files(id, name)"
@@ -226,7 +258,11 @@ def test_query_single_success(_google_build_mock, _drive_service_mock, _get_cred
 
 def test_query_single_http_error(logger_mock, http_error_mock, _google_build_mock, _drive_service_mock,
                                  _get_creds_mock):
-    """Test query_single handling of HttpError."""
+    """
+    Test query_single handling of HttpError.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     # Setup mock to raise HttpError
     _drive_service_mock.files().list().execute.side_effect = http_error_mock
@@ -237,7 +273,12 @@ def test_query_single_http_error(logger_mock, http_error_mock, _google_build_moc
 
 
 def test_next_chunk_progress():
-    """Test __next_chunk correctly calculates and calls subscriber with progress."""
+    """
+    Test __next_chunk correctly calculates and calls subscriber with progress.
+    """
+
+    from savegem.common.service.gdrive import GDrive
+
     mock_request = Mock()
     mock_subscriber = Mock()
 
@@ -256,7 +297,12 @@ def test_next_chunk_progress():
 
 
 def test_next_chunk_done():
-    """Test __next_chunk calls subscriber with 1.0 when done."""
+    """
+    Test __next_chunk calls subscriber with 1.0 when done.
+    """
+
+    from savegem.common.service.gdrive import GDrive
+
     mock_request = Mock()
     mock_subscriber = Mock()
 
@@ -271,7 +317,12 @@ def test_next_chunk_done():
 
 
 def test_next_chunk_no_status():
-    """Test __next_chunk calls subscriber with 0 when status is None (and not done)."""
+    """
+    Test __next_chunk calls subscriber with 0 when status is None (and not done).
+    """
+
+    from savegem.common.service.gdrive import GDrive
+
     mock_request = Mock()
     mock_subscriber = Mock()
 
@@ -286,7 +337,12 @@ def test_next_chunk_no_status():
 
 
 def test_next_chunk_no_subscriber():
-    """Test __next_chunk does nothing if no subscriber provided."""
+    """
+    Test __next_chunk does nothing if no subscriber provided.
+    """
+
+    from savegem.common.service.gdrive import GDrive
+
     mock_request = Mock()
 
     # Setup
@@ -301,7 +357,12 @@ def test_next_chunk_no_subscriber():
 
 def test_download_file_success(_google_build_mock, _next_chunk_mock, _media_base_download_mock, _drive_service_mock,
                                _get_creds_mock):
-    """Test download_file successful completion."""
+    """
+    Test download_file successful completion.
+    """
+
+    from savegem.common.service.gdrive import GDrive
+
     file_id = "test_id"
 
     # Setup: 2 chunks (False, False) followed by done (None, True)
@@ -323,23 +384,29 @@ def test_download_file_success(_google_build_mock, _next_chunk_mock, _media_base
 
 def test_download_file_http_error(_google_build_mock, _next_chunk_mock, _media_base_download_mock, http_error_mock,
                                   _get_creds_mock):
-    """Test download_file handles HttpError."""
+    """
+    Test download_file handles HttpError.
+    """
+
+    from savegem.common.service.gdrive import GDrive
+
     file_id = "test_id"
 
-    # Setup: HttpError occurs on the first chunk
     _next_chunk_mock.side_effect = http_error_mock
 
-    # Act
     file_io = GDrive.download_file(file_id)
 
-    # Assert
     assert file_io is None
-    # Check error logging (implicit via mock_logger)
 
 
 def test_upload_file_success(_google_build_mock, _next_chunk_mock, _media_file_upload_mock,
                              file_name_from_path_mock, _drive_service_mock, _get_creds_mock):
-    """Test upload_file successful completion."""
+    """
+    Test upload_file successful completion.
+    """
+
+    from constants import ZIP_MIME_TYPE
+    from savegem.common.service.gdrive import GDrive
 
     file_name_from_path_mock.return_value = "test.zip"
 
@@ -377,7 +444,11 @@ def test_upload_file_success(_google_build_mock, _next_chunk_mock, _media_file_u
 
 def test_upload_file_http_error(_google_build_mock, http_error_mock, _next_chunk_mock, _media_file_upload_mock,
                                 file_name_from_path_mock, _get_creds_mock):
-    """Test upload_file handles HttpError by raising it."""
+    """
+    Test upload_file handles HttpError by raising it.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     file_name_from_path_mock.return_value = "test.zip"
 
@@ -391,7 +462,11 @@ def test_upload_file_http_error(_google_build_mock, http_error_mock, _next_chunk
 
 def test_update_file_success(_google_build_mock, _next_chunk_mock, _media_base_upload_mock, _drive_service_mock,
                              _get_creds_mock):
-    """Test update_file successful completion."""
+    """
+    Test update_file successful completion.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     # Setup: 2 chunks followed by done
     _next_chunk_mock.side_effect = [(Mock(), False), (Mock(), False), (None, True)]
@@ -414,7 +489,11 @@ def test_update_file_success(_google_build_mock, _next_chunk_mock, _media_base_u
 
 def test_update_file_http_error(_google_build_mock, _next_chunk_mock, _media_base_upload_mock, http_error_mock,
                                 _get_creds_mock):
-    """Test update_file handles HttpError by raising it."""
+    """
+    Test update_file handles HttpError by raising it.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     _next_chunk_mock.side_effect = http_error_mock
 
@@ -424,7 +503,11 @@ def test_update_file_http_error(_google_build_mock, _next_chunk_mock, _media_bas
 
 
 def test_get_changes_no_start_token(_google_build_mock, _drive_service_mock, _get_creds_mock):
-    """Test get_changes fetches start token if none is provided."""
+    """
+    Test get_changes fetches start token if none is provided.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     # Act
     result = GDrive.get_changes(None)
@@ -441,7 +524,11 @@ def test_get_changes_no_start_token(_google_build_mock, _drive_service_mock, _ge
 
 
 def test_get_changes_with_start_token(_google_build_mock, _drive_service_mock, _get_creds_mock):
-    """Test get_changes uses provided start token."""
+    """
+    Test get_changes uses provided start token.
+    """
+
+    from savegem.common.service.gdrive import GDrive
 
     start_token = "provided_token"
 

@@ -1,13 +1,13 @@
 import pytest
 from pytest_mock import MockerFixture
 
-from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
-from savegem.common.core.holders import prop, locales
 from tests.test_data import LocaleTestData, SocketTestData
 
 
 @pytest.fixture(autouse=True)
 def _setup(mocker: MockerFixture, json_config_holder_mock, resolve_config_mock):
+
+    from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
 
     # Reset global module state so functions like prop() run the config loader again
     import savegem.common.core.holders as holders_module
@@ -25,14 +25,18 @@ def _setup(mocker: MockerFixture, json_config_holder_mock, resolve_config_mock):
 
 
 def test_should_read_property(json_config_holder_mock):
+    from savegem.common.core.holders import prop
     assert prop("property") == LocaleTestData.FirstLocale
 
 
 def test_should_read_nested_property(json_config_holder_mock):
+    from savegem.common.core.holders import prop
     assert prop("nested.property") == SocketTestData.UIPort
 
 
 def test_should_load_locales(listdir_mock):
+
+    from savegem.common.core.holders import locales
 
     listdir_mock.return_value = [
         f"{LocaleTestData.SecondLocale}.yml",

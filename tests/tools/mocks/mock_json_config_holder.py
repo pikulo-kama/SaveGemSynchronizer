@@ -2,7 +2,10 @@ from savegem.common.core.editable_json_config_holder import EditableJsonConfigHo
 
 
 class MockJsonConfigHolder(EditableJsonConfigHolder):
-    """Mock for JsonConfigHolder to control config values."""
+    """
+    Mock for JsonConfigHolder to control config values
+    """
+
 
     def __init__(self, config_values):  # noqa
         self._config_values = config_values

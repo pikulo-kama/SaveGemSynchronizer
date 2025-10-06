@@ -4,14 +4,15 @@ from PyQt6.QtGui import QMouseEvent, QKeyEvent
 from PyQt6.QtWidgets import QComboBox
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.component.combobox import QCustomComboBox
-
 
 @pytest.fixture
 def _custom_combobox(qtbot):
     """
     Provides a QCustomComboBox instance registered with qtbot.
     """
+
+    from savegem.app.gui.component.combobox import QCustomComboBox
+
     combobox = QCustomComboBox()
     combobox.addItems(["Item 1", "Item 2"])
     qtbot.addWidget(combobox)

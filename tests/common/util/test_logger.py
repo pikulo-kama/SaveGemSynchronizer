@@ -1,161 +1,215 @@
 import logging
+
 import pytest
-
-from constants import JSON_EXTENSION
-from savegem.common.util.logger import _get_logback, get_logger, OFF_LOG_LEVEL  # noqa
+from pytest_mock import MockerFixture
 
 
-DEFAULT_LOGBACK_DATA = {"root": "INFO", "SaveGem": "DEBUG"}
-CUSTOM_LOGBACK_DATA = {"app": "WARN", "CustomApp": "ERROR"}
+@pytest.fixture(scope="module", autouse=True)
+def _setup_module():
+    """
+    Patches external dependencies (constants, file util) and system arguments
+    before the module is imported to correctly set initial globals.
+    """
 
+    import savegem.common.util.logger as module
+    module._log_file_name = "my_service"
 
-@pytest.fixture(autouse=True)
-def _setup(resolve_logback_mock, read_file_mock):
-    resolve_logback_mock.side_effect = lambda name: f"/mock/path/{name}"
-    read_file_mock.side_effect = lambda path, as_json: (
-        CUSTOM_LOGBACK_DATA if "CustomApp" in path else DEFAULT_LOGBACK_DATA
-    )
+    return module
 
 
 @pytest.fixture
-def _logger_module():
+def _logging_mock(module_patch):
+    return module_patch("logging")
+
+
+@pytest.fixture
+def _file_handler_mock(module_patch):
+    return module_patch("TimedRotatingFileHandler")
+
+
+@pytest.fixture
+def _logger_module(_setup_module):
     """
-    Patches the global _log_levels in the module to ensure consistent mapping
-    and prevents the module from initializing the logger on import.
-    """
-
-    import savegem.common.util.logger as logger_module
-    yield logger_module
-
-
-def test_returns_configured_level_when_present(_logger_module):
-    """
-    Tests that the correct mapped log level is returned when configured.
-    """
-
-    # Set the mock _logback dictionary
-    _logger_module._logback = {
-        "root": "INFO",
-        "module_a": "DEBUG",
-        "module_b": "ERROR"
-    }
-
-    # Test configured levels
-    assert _logger_module._get_log_level("module_a") == logging.DEBUG
-    assert _logger_module._get_log_level("module_b") == logging.ERROR
-    assert _logger_module._get_log_level("root") == logging.INFO
-
-
-def test_returns_info_default_when_not_configured(_logger_module):
-    """
-    Tests that logging.INFO is returned for not configured logger.
+    Resets the module's global state (_logback, _initialized) and root logger
+    handlers before each test for isolation.
     """
 
-    # Set the mock _logback dictionary
-    _logger_module._logback = {
-        "known_module": "WARN"
-    }
+    module = _setup_module
 
-    # Test not configured level
-    assert _logger_module._get_log_level("unknown_module") == logging.INFO
-    assert _logger_module._get_log_level("another_unknown") == logging.INFO
+    # Reset module globals
+    module._logback = None
+    module._initialized = False
+
+    # Clear handlers from the root logger for consistent testing of _initialize_logging
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+
+    yield module
 
 
-def test_raises_key_error_for_invalid_level_string(_logger_module):
+def test_get_logback_fallback_to_savegem(_logger_module, read_file_mock, path_exists_mock, resolve_logback_mock):
     """
-    Tests that a KeyError is raised if the configuration contains an invalid log level string.
-    """
-
-    # Set the mock _logback dictionary with an invalid level
-    _logger_module._logback = {
-        "bad_module": "CRITICAL"  # Assuming CRITICAL is NOT in the MOCK_LOG_LEVELS
-    }
-
-    # The method should raise KeyError when trying to access MOCK_LOG_LEVELS["CRITICAL"]
-    with pytest.raises(KeyError):
-        _logger_module._get_log_level("bad_module")
-
-
-def test_handles_empty_logback(_logger_module):
-    """
-    Tests that it defaults to INFO when _logback is empty.
+    Tests falling back to 'SaveGem.json' if the specific file doesn't exist.
     """
 
-    module = _logger_module
-    module._logback = {}
-    assert module._get_log_level("any_module") == logging.INFO
+    # Setup
+    mock_logback_content = {"com.app": "INFO"}
+    read_file_mock.return_value = mock_logback_content
+    resolve_logback_mock.side_effect = lambda name: name
+
+    # Mock os.path.exists: False for specific file, True for default ('SaveGem.json')
+    path_exists_mock.side_effect = [False, True]
+
+    # Execution
+    logback = _logger_module._get_logback(_logger_module._log_file_name)
+
+    # Assertions
+    assert logback == mock_logback_content
+    # Check that read_file was called with the fallback file name
+    read_file_mock.assert_called_once_with(
+        "SaveGem.json",
+        as_json=True
+    )
 
 
-def test_get_logback_uses_default_when_custom_config_missing(path_exists_mock, resolve_logback_mock, read_file_mock):
+def test_get_logback_caching(_logger_module, read_file_mock):
     """
-    Test that if the log file name's config does not exist,
-    it falls back to 'SaveGem.json'.
-    """
-
-    # Setup: Ensure the custom file is reported as NOT existing
-    path_exists_mock.return_value = False
-
-    log_file_name = "MyService"
-
-    # ACT
-    result = _get_logback(log_file_name)
-
-    # ASSERT
-    # 1. Check if os.path.exists was called for the custom file name
-    path_exists_mock.assert_called_with(resolve_logback_mock(log_file_name + JSON_EXTENSION))
-
-    # 2. Check that read_file was called with the DEFAULT logback file name
-    expected_path = f"/mock/path/SaveGem{JSON_EXTENSION}"
-    read_file_mock.assert_called_once_with(expected_path, as_json=True)
-
-    # 3. Check the returned data is the default data
-    assert result == DEFAULT_LOGBACK_DATA
-
-
-def test_get_logback_uses_custom_config_when_present(path_exists_mock, resolve_logback_mock, read_file_mock):
-    """
-    Test that if the log file name's config exists, it is used.
+    Tests that logback is only read from the file system once.
     """
 
-    # Setup: Configure os.path.exists to return TRUE for the custom file
-    path_exists_mock.return_value = True
+    read_file_mock.return_value = {"ROOT": "INFO"}
 
-    log_file_name = "CustomApp"
+    _logger_module._get_logback('app')
+    _logger_module._get_logback('app')
 
-    # ACT
-    result = _get_logback(log_file_name)
-
-    # ASSERT
-    # 1. Check if os.path.exists was called for the custom file name
-    path_exists_mock.assert_called_with(resolve_logback_mock(log_file_name + JSON_EXTENSION))
-
-    # 2. Check that read_file was called with the CUSTOM logback file name
-    expected_path = f"/mock/path/CustomApp{JSON_EXTENSION}"
-    read_file_mock.assert_called_once_with(expected_path, as_json=True)
-
-    # 3. Check the returned data is the custom data
-    assert result == CUSTOM_LOGBACK_DATA
+    read_file_mock.assert_called_once()
 
 
-def test_get_logger_sets_disabled_to_true_when_level_is_off(_logger_module):
+@pytest.mark.parametrize("log_name, configured_level, expected_level", [
+    ("com.app.worker", "DEBUG", logging.DEBUG),
+    ("com.app.api", "WARN", logging.WARN),
+    ("com.app.disabled", "OFF", "OFF"),
+])
+def test_get_log_level_configured(mocker: MockerFixture, _logger_module, log_name, configured_level, expected_level):
     """
-    Verifies that if the logback config specifies 'OFF', the logger's
-    'disabled' attribute is set to True.
+    Tests getting a log level configured in logback.
     """
 
-    logger_name = "test_logger_off"
-    _logger_module._logback = {
-        logger_name: OFF_LOG_LEVEL
-    }
+    # Mock _get_logback to return a configuration including the test level
+    mock_logback = {log_name: configured_level, "ROOT": "INFO"}
+    mocker.patch.object(_logger_module, '_get_logback', return_value=mock_logback)
 
-    # ACT
-    # This calls _get_log_level, which reads from the mocked _logback
-    logger = get_logger(logger_name)
+    level = _logger_module._get_log_level(log_name)
 
-    # ASSERT
-    # 1. Check the logger instance is correctly disabled
-    assert logger.disabled is True
+    assert level == expected_level
 
-    # 2. Check the logger level (should still be NOTSET if disabled=True)
-    # The setLevel line is skipped, so the level should be NOTSET (0)
-    assert logger.level == logging.NOTSET
+
+def test_get_log_level_default(_logger_module, mocker):
+    """
+    Tests falling back to the default level (logging.INFO).
+    """
+
+    mocker.patch.object(_logger_module, '_get_logback', return_value={"com.other.app": "DEBUG"})
+
+    level = _logger_module._get_log_level("un_configured.logger")
+
+    assert level == logging.INFO
+
+
+def test_initialize_logging_first_call(module_patch, _logger_module, _logging_mock, _file_handler_mock,
+                                       resolve_log_mock):
+    """
+    Tests that logging is initialized correctly on the first call, setting up the root logger.
+    """
+
+    from constants import UTF_8
+
+    module_patch("logging.Formatter")
+    resolve_log_mock.side_effect = lambda name: name
+
+    _logger_module._initialize_logging()
+
+    # 1. Check TimedRotatingFileHandler creation
+    _file_handler_mock.assert_called_once_with(
+        "my_service.log",
+        when="midnight",
+        interval=1,
+        backupCount=5,
+        encoding=UTF_8
+    )
+
+    # 2. Check handler configuration (suffix and formatter)
+    assert _file_handler_mock.return_value.suffix == "%Y-%m-%d.log"
+    _file_handler_mock.return_value.setFormatter.assert_called()
+
+    _logging_mock.getLogger.return_value.addHandler.assert_called_with(_file_handler_mock.return_value)
+
+    # 4. Check global state update
+    assert _logger_module._initialized is True
+
+
+def test_initialize_logging_second_call_ignored(module_patch, _file_handler_mock, _logger_module):
+    """
+    Tests that logging initialization is skipped after the first time.
+    """
+
+    # First, manually set _initialized=True
+    _logger_module._initialized = True
+
+    # Execute again
+    _logger_module._initialize_logging()
+
+    # Assertions: Should not call the handler constructor
+    _file_handler_mock.assert_not_called()
+
+
+def test_get_logger_initializes_logging(module_patch, _logger_module, mocker):
+    """
+    Tests that get_logger calls _initialize_logging.
+    """
+
+    initialize_logging_mock = module_patch('_initialize_logging')
+
+    # Mock dependencies to avoid full setup
+    mocker.patch.object(_logger_module, "_get_log_level", return_value=logging.INFO)
+
+    _logger_module.get_logger("test_logger")
+
+    initialize_logging_mock.assert_called_once()
+
+
+def test_get_logger_level_configured(_logger_module, mocker, _logging_mock):
+    """
+    Tests logger returned with a specific, non-OFF log level.
+    """
+
+    mock_logger = _logging_mock.getLogger.return_value
+    mock_logger.disabled = False
+
+    mocker.patch.object(_logger_module, "_initialize_logging")
+    mocker.patch.object(_logger_module, "_get_log_level", return_value=logging.DEBUG)
+
+    logger = _logger_module.get_logger("test_logger_debug")
+
+    assert logger is mock_logger
+    _logging_mock.getLogger.assert_called_with("test_logger_debug")
+    mock_logger.setLevel.assert_called_once_with(logging.DEBUG)
+    assert mock_logger.disabled is False
+
+
+def test_get_logger_level_off(_logging_mock, _logger_module, mocker):
+    """
+    Tests logger returned with 'OFF' level is disabled.
+    """
+
+    mocker.patch.object(_logger_module, '_initialize_logging')
+    mocker.patch.object(_logger_module, '_get_log_level', return_value=_logger_module.OFF_LOG_LEVEL)
+
+    logger = _logger_module.get_logger("test_logger_off")
+    get_logger_mock = _logging_mock.getLogger.return_value
+
+    assert logger is get_logger_mock
+    _logging_mock.getLogger.assert_called_with("test_logger_off")
+    get_logger_mock.setLevel.assert_not_called()
+    assert get_logger_mock.disabled is True

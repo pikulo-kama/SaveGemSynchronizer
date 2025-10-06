@@ -1,4 +1,3 @@
-from savegem.app.gui.push_notification import push_notification
 
 
 def test_push_notification_sends_correct_toast(module_patch, prop_mock, tr_mock, resolve_resource_mock):
@@ -6,6 +5,8 @@ def test_push_notification_sends_correct_toast(module_patch, prop_mock, tr_mock,
     Test that the Notification object is initialized with correct arguments
     and that its methods (set_audio, show) are called.
     """
+
+    from savegem.app.gui.push_notification import push_notification
 
     mock_notification = module_patch("Notification")
     mock_audio = module_patch(f"audio")

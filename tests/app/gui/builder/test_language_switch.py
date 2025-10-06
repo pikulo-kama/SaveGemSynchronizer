@@ -3,10 +3,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QPushButton
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.builder import UIBuilder
-from savegem.app.gui.builder.language_switch import LanguageSwitchBuilder
-from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind, QObjectName
-
 
 @pytest.fixture(autouse=True)
 def _setup(tr_mock, locales_mock, app_context, app_state_mock):
@@ -21,6 +17,8 @@ def _language_switch_builder(simple_gui):
     Provides a fully mocked and initialized LanguageSwitchBuilder instance.
     """
 
+    from savegem.app.gui.builder.language_switch import LanguageSwitchBuilder
+
     builder = LanguageSwitchBuilder()
     builder._gui = simple_gui
 
@@ -31,6 +29,10 @@ def test_builder_initialization(mocker: MockerFixture):
     """
     Test the constructor initializes the base class with the correct event.
     """
+
+    from savegem.app.gui.builder import UIBuilder
+    from savegem.app.gui.builder.language_switch import LanguageSwitchBuilder
+    from savegem.app.gui.constants import UIRefreshEvent
 
     mock_super_init = mocker.patch.object(UIBuilder, '__init__', return_value=None)
     builder = LanguageSwitchBuilder()
@@ -49,6 +51,8 @@ def test_is_enabled_based_on_locale_count(locales_mock, locale_count, expected_e
     Test is_enabled() returns True only if there are multiple locales configured.
     """
 
+    from savegem.app.gui.builder.language_switch import LanguageSwitchBuilder
+
     # Arrange
     locales_mock.return_value = ["L"] * locale_count
     builder = LanguageSwitchBuilder()
@@ -61,6 +65,8 @@ def test_build_creates_button_and_registers_it(mocker: MockerFixture, _language_
     """
     Test build() creates the button, connects the callback, and adds it to the layout.
     """
+
+    from savegem.app.gui.constants import QAttr, QKind, QObjectName
 
     # Arrange: Spy on internal methods
     mock_add_interactable = mocker.patch.object(_language_switch_builder, '_add_interactable')
@@ -128,6 +134,8 @@ def test_toggle_language_cycles_locale_and_refreshes_gui(_language_switch_builde
     """
     Test the __toggle_language callback cycles the locale and triggers GUI refresh.
     """
+
+    from savegem.app.gui.constants import UIRefreshEvent
 
     # Arrange: Set initial state and ensure button exists
     _language_switch_builder.build()

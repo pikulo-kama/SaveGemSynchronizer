@@ -4,12 +4,11 @@ from PyQt6.QtGui import QShowEvent
 from PyQt6.QtWidgets import QLabel, QVBoxLayout
 from pytest_mock import MockerFixture
 
-from constants import Resource
-from savegem.app.gui.popup import Popup
-
 
 @pytest.fixture(autouse=True)
 def _setup(mocker: MockerFixture, module_patch, tr_mock, prop_mock, resolve_resource_mock, simple_gui):
+
+    from savegem.app.gui.popup import Popup
 
     resolve_resource_mock.return_value = "C:/path/to/icon.ico"
     prop_mock.side_effect = lambda key: {
@@ -26,6 +25,9 @@ def test_popup_initialization(qtbot, tr_mock, prop_mock, resolve_resource_mock):
     """
     Test the constructor correctly initializes properties and calls dependencies.
     """
+
+    from constants import Resource
+    from savegem.app.gui.popup import Popup
 
     title_key = "confirmation_title"
 
@@ -49,6 +51,8 @@ def test_show_dialog_displays_message_and_calls_exec(mocker: MockerFixture, qtbo
     """
     Test show_dialog sets up the message, calls _add_controls, and executes the dialog.
     """
+
+    from savegem.app.gui.popup import Popup
 
     test_message = "Data transfer complete."
 
@@ -80,6 +84,8 @@ def test_show_event_centers_dialog(qtbot):
     Test showEvent centers the popup horizontally relative to its parent
     and places it at the parent's top y-coordinate.
     """
+
+    from savegem.app.gui.popup import Popup
 
     # Arrange: Parent geometry is mocked to QRect(100, 50, 800, 600)
     # Popup fixed size is 400x200

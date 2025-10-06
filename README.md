@@ -69,7 +69,7 @@ SaveGem includes a process responsible for managing background tasks, which ensu
 Due to the nature of this process management, Windows Defender (and similar antivirus software) may incorrectly flag the application as a threat (Trojan) and automatically remove it.
 
 ### Action Required
-To prevent this issue, you must add the SaveGem installation directory to your antivirus exclusion list (e.g., Windows Defender, Avast, McAfee) immediately after installation.
+To prevent this issue, you must add the SaveGem installation directory to your antivirus exclusion list (e.g., Windows Defender, Avast, etc.) immediately after installation.
 
 ### Windows Defender Steps (Example)
 1. Open Windows Security.

@@ -1,9 +1,5 @@
 import pytest
 
-from constants import File
-from savegem.common.core.ipc_socket import IPCCommand
-from savegem.gdrive_watcher.ipc_socket import GdriveWatcherSocket
-
 
 @pytest.fixture(autouse=True)
 def _setup(prop_mock):
@@ -23,6 +19,8 @@ def test_init_calls_parent_with_correct_port(_ipc_socket_mock, prop_mock):
     Test GdriveWatcherSocket initializes the base class with the port from prop().
     """
 
+    from savegem.gdrive_watcher.ipc_socket import GdriveWatcherSocket
+
     # Arrange
     expected_port = 54321
     _ipc_socket_mock.return_value = expected_port
@@ -39,6 +37,10 @@ def test_handle_gui_initialized_command_saves_flag_file(_ipc_socket_mock, save_f
     """
     Test that the GUIInitialized command triggers the flag file creation.
     """
+
+    from constants import File
+    from savegem.common.core.ipc_socket import IPCCommand
+    from savegem.gdrive_watcher.ipc_socket import GdriveWatcherSocket
 
     socket_instance = GdriveWatcherSocket()
 
@@ -60,6 +62,8 @@ def test_handle_other_commands_does_nothing(_ipc_socket_mock, save_file_mock, co
     """
     Test that commands other than GUIInitialized do not trigger file saving.
     """
+
+    from savegem.gdrive_watcher.ipc_socket import GdriveWatcherSocket
 
     socket_instance = GdriveWatcherSocket()
 

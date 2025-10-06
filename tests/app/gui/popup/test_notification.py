@@ -2,15 +2,14 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QPushButton
 from pytest_mock import MockerFixture
 
-from constants import Resource
-from savegem.app.gui.constants import QAttr, QObjectName, QKind
-from savegem.app.gui.popup.notification import Notification, notification
-
 
 def test_notification_init_calls_super_with_correct_resources(mocker: MockerFixture, qtbot, gui_mock):
     """
     Test __init__ calls the Popup constructor with the correct title and icon keys.
     """
+
+    from constants import Resource
+    from savegem.app.gui.popup.notification import Notification
 
     mock_super_init = mocker.spy(Notification.__bases__[0], '__init__')
 
@@ -26,6 +25,9 @@ def test_add_controls_creates_and_configures_close_button(qtbot, tr_mock):
     """
     Test that _add_controls creates one close button with correct properties and layout.
     """
+
+    from savegem.app.gui.constants import QAttr, QObjectName, QKind
+    from savegem.app.gui.popup.notification import Notification
 
     popup = Notification()
     qtbot.addWidget(popup)
@@ -47,6 +49,9 @@ def test_close_button_accepts_dialog(mocker: MockerFixture, qtbot):
     Test clicking the Close button closes the dialog via accept().
     """
 
+    from savegem.app.gui.constants import QObjectName
+    from savegem.app.gui.popup.notification import Notification
+
     popup = Notification()
     qtbot.addWidget(popup)
 
@@ -65,6 +70,8 @@ def test_notification_function_flow(module_patch):
     Test the notification wrapper function correctly initializes the Notification
     class and calls show_dialog.
     """
+
+    from savegem.app.gui.popup.notification import notification
 
     notification_mock_object = module_patch("Notification")
     test_message = "Update finished successfully."

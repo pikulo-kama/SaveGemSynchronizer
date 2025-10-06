@@ -4,11 +4,6 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel
 from pytest_mock import MockerFixture
 
-from constants import File
-from savegem.app.gui.builder.user_section import UserSectionBuilder
-from savegem.app.gui.component.button import QCustomPushButton
-from savegem.app.gui.constants import QAttr, QSizeVariant, QKind, QObjectName
-
 
 @pytest.fixture(autouse=True)
 def _setup(module_patch, tr_mock, resolve_app_data_mock, app_context, user_config_mock):
@@ -41,6 +36,8 @@ def _user_section_builder(simple_gui):
     Provides a fully mocked and initialized UserSectionBuilder instance.
     """
 
+    from savegem.app.gui.builder.user_section import UserSectionBuilder
+
     builder = UserSectionBuilder()
     builder._gui = simple_gui
 
@@ -52,6 +49,8 @@ def test_build_chip_creates_and_configures_user_chip(user_config_mock, _pixmap, 
     """
     Test __build_chip creates the widget, labels, and sets the fixed size.
     """
+
+    from savegem.app.gui.builder.user_section import UserSectionBuilder
 
     # Act
     user_chip = UserSectionBuilder._UserSectionBuilder__build_chip()  # noqa
@@ -85,6 +84,9 @@ def test_build_creates_section_and_adds_widgets(mocker: MockerFixture, simple_gu
     """
     Test build() creates the logout button, sets properties, and organizes the layout.
     """
+
+    from savegem.app.gui.component.button import QCustomPushButton
+    from savegem.app.gui.constants import QAttr, QSizeVariant, QKind, QObjectName
 
     # Arrange: Spy on the internal __build_chip call to ensure it runs
     mock_build_chip = mocker.patch.object(
@@ -158,6 +160,8 @@ def test_logout_callback_deletes_token_and_destroys_gui(resolve_app_data_mock, d
     """
     Test the __logout method performs file cleanup and destroys the GUI.
     """
+
+    from constants import File
 
     _user_section_builder._UserSectionBuilder__logout()  # noqa
 

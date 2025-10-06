@@ -2,11 +2,6 @@ import pytest
 from PyQt6.QtCore import Qt
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.builder import UIBuilder
-from savegem.app.gui.builder.game_dropdown import GameDropdownBuilder
-from savegem.app.gui.component.combobox import QCustomComboBox
-from savegem.app.gui.constants import UIRefreshEvent, QObjectName, QAttr, QKind
-
 
 @pytest.fixture(autouse=True)
 def _setup(app_context, games_config):
@@ -25,6 +20,9 @@ def _dropdown_builder(simple_gui):
     """
     Provides a fully mocked and initialized GameDropdownBuilder instance.
     """
+
+    from savegem.app.gui.builder.game_dropdown import GameDropdownBuilder
+
     builder = GameDropdownBuilder()
     builder._gui = simple_gui
 
@@ -35,6 +33,10 @@ def test_builder_initialization(mocker: MockerFixture):
     """
     Test the constructor initializes the base class with correct events.
     """
+
+    from savegem.app.gui.builder import UIBuilder
+    from savegem.app.gui.builder.game_dropdown import GameDropdownBuilder
+    from savegem.app.gui.constants import UIRefreshEvent
 
     mock_super_init = mocker.patch.object(UIBuilder, '__init__', return_value=None)
     builder = GameDropdownBuilder()
@@ -50,6 +52,9 @@ def test_build_creates_combobox_and_sets_layout(mocker: MockerFixture, simple_gu
     """
     Test build() creates the combobox, connects the signal, and adds it to the layout.
     """
+
+    from savegem.app.gui.component.combobox import QCustomComboBox
+    from savegem.app.gui.constants import QObjectName, QAttr, QKind
 
     # Arrange: Spy on internal methods
     mock_add_interactable = mocker.patch.object(_dropdown_builder, '_add_interactable')
@@ -164,6 +169,8 @@ def test_change_game_starts_worker_and_refreshes_gui(mocker: MockerFixture, _dro
     """
     Test __change_game starts a worker and connects it to refresh the GUI on finish.
     """
+
+    from savegem.app.gui.constants import UIRefreshEvent
 
     # Arrange: Setup builder and worker mocks
     _dropdown_builder.build()

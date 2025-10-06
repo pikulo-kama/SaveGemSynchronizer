@@ -3,11 +3,7 @@ from pathlib import Path
 import pytest
 from pytest_mock import MockerFixture
 
-from savegem.common.core.game_config import Game, GameConfig
-from savegem.common.core.save_meta import LocalMetadata
-from constants import File
 from tests.test_data import GameTestData, PlayerTestData, ConfigTestData
-from tests.util import json_to_bytes_io
 
 
 @pytest.fixture
@@ -15,6 +11,8 @@ def _download_file_mock(gdrive_mock, tmp_path: Path):
     """
     Mocks GDrive.download_file to return the successful file data.
     """
+
+    from tests.util import json_to_bytes_io
 
     gdrive_mock.download_file.return_value = json_to_bytes_io(
         [
@@ -54,6 +52,9 @@ def _download_file_mock(gdrive_mock, tmp_path: Path):
 
 @pytest.fixture
 def _games_config(app_context, app_config, user_config_mock, app_state_mock, _download_file_mock):
+
+    from savegem.common.core.game_config import GameConfig
+
     game_config = GameConfig()
     game_config.link(app_context)
 
@@ -73,6 +74,9 @@ def _game(_game_path):
     """
     Provides a representative Game instance for testing.
     """
+
+    from savegem.common.core.game_config import Game
+
     return Game(
         name="Test Game",
         process_name="Test.exe",
@@ -115,6 +119,8 @@ def test_download_failure_raises_runtime_error_and_cleans_token(_games_config, g
     Tests the failure path when GDrive download fails.
     """
 
+    from constants import File
+
     gdrive_mock.download_file.return_value = None
 
     with pytest.raises(RuntimeError) as error:
@@ -129,6 +135,8 @@ def test_game_config_properties(_games_config):
     """
     Tests basic properties: list, names, empty, by_name, current.
     """
+
+    from savegem.common.core.game_config import Game
 
     # Initial state
     assert _games_config.empty is True
@@ -149,6 +157,8 @@ def test_game_config_refresh_calls_game_meta_refresh(mocker: MockerFixture, _gam
     """
     Verifies that refresh() calls refresh on LocalMetadata for each game.
     """
+
+    from savegem.common.core.save_meta import LocalMetadata
 
     # Mock the LocalMetadata.refresh method which is called via game.meta.local.refresh()
     mock_local_refresh = mocker.patch.object(LocalMetadata, "refresh")
@@ -225,6 +235,8 @@ def test_game_filter_patterns_no_filter(_game_path):
     """
     Tests filter_patterns when the filter list is empty (should default to ".*").
     """
+
+    from savegem.common.core.game_config import Game
 
     # Arrange: Create a Game instance with an empty filter list
     game_no_filter = Game(

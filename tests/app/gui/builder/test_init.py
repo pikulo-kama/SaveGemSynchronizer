@@ -3,45 +3,59 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.builder import UIBuilder, load_builders
-from savegem.app.gui.constants import UIRefreshEvent
-from savegem.app.gui.worker import QWorker
+
+@pytest.fixture
+def _enabled_builder_a():
+    from savegem.app.gui.builder import UIBuilder
+
+    class EnabledBuilderA(UIBuilder):
+        def build(self):
+            pass
+
+        def is_enabled(self):
+            return True
+
+        @property
+        def order(self):
+            return 50
+
+    return EnabledBuilderA
 
 
-class EnabledBuilderA(UIBuilder):
-    def build(self):
-        pass
+@pytest.fixture
+def _enabled_builder_b():
+    from savegem.app.gui.builder import UIBuilder
 
-    def is_enabled(self):
-        return True
+    class EnabledBuilderB(UIBuilder):
+        def build(self):
+            pass
 
-    @property
-    def order(self):
-        return 50
+        def is_enabled(self):
+            return True
 
+        @property
+        def order(self):
+            return 150
 
-class EnabledBuilderB(UIBuilder):
-    def build(self):
-        pass
-
-    def is_enabled(self):
-        return True
-
-    @property
-    def order(self):
-        return 150
+    return EnabledBuilderB
 
 
-class DisabledBuilder(UIBuilder):
-    def build(self):
-        pass
+@pytest.fixture
+def disabled_builder():
+    from savegem.app.gui.builder import UIBuilder
 
-    def is_enabled(self):
-        return False
+    class DisabledBuilder(UIBuilder):
+        def build(self):
+            pass
 
-    @property
-    def order(self):
-        return 10
+        def is_enabled(self):
+            return False
+
+        @property
+        def order(self):
+            return 10
+
+    return DisabledBuilder
 
 
 class NotABuilder:
@@ -59,6 +73,8 @@ def _concrete_builder():
     Provides a minimal concrete implementation of UIBuilder for testing.
     """
 
+    from savegem.app.gui.builder import UIBuilder
+
     class ConcreteBuilder(UIBuilder):
         def build(self):
             pass
@@ -67,19 +83,22 @@ def _concrete_builder():
 
 
 def test_load_builders_loads_enabled_builders_and_sorts(mocker: MockerFixture, module_patch, logger_mock,
-                                                        _iter_modules_mock):
+                                                        _iter_modules_mock, _enabled_builder_a, _enabled_builder_b,
+                                                        disabled_builder):
     """
     Test load_builders finds only enabled builders and returns them sorted by order.
     """
 
+    from savegem.app.gui.builder import load_builders
+
     mock_modules = {
         "module_a": {
-            "EnabledBuilderA": EnabledBuilderA,
+            "EnabledBuilderA": _enabled_builder_a,
             "NotABuilder": NotABuilder,
         },
         "module_b": {
-            "DisabledBuilder": DisabledBuilder,
-            "EnabledBuilderB": EnabledBuilderB,
+            "DisabledBuilder": disabled_builder,
+            "EnabledBuilderB": _enabled_builder_b,
         }
     }
 
@@ -102,8 +121,8 @@ def test_load_builders_loads_enabled_builders_and_sorts(mocker: MockerFixture, m
     builders = load_builders()
 
     assert len(builders) == 2
-    assert isinstance(builders[0], EnabledBuilderA)
-    assert isinstance(builders[1], EnabledBuilderB)
+    assert isinstance(builders[0], _enabled_builder_a)
+    assert isinstance(builders[1], _enabled_builder_b)
 
     assert builders[0].order == 50
     assert builders[1].order == 150
@@ -115,6 +134,8 @@ def test_load_builders_returns_empty_list_if_no_builders(_iter_modules_mock):
     """
     Test load_builders handles an empty module scan gracefully.
     """
+
+    from savegem.app.gui.builder import load_builders
 
     _iter_modules_mock.return_value = []
     assert load_builders() == []
@@ -153,6 +174,9 @@ def test_ui_builder_events_property_includes_all(_concrete_builder):
     """
     Test the events property always includes UIRefreshEvent.All.
     """
+
+    from savegem.app.gui.builder import UIBuilder
+    from savegem.app.gui.constants import UIRefreshEvent
 
     class EventBuilder(UIBuilder):
         def build(self): pass
@@ -216,6 +240,8 @@ def test_do_work_starts_worker(mocker: MockerFixture, module_patch, exec_block_t
     """
     Test _do_work sets up QThread, QWorker, and calls execute_in_blocking_thread.
     """
+
+    from savegem.app.gui.worker import QWorker
 
     mock_worker = mocker.MagicMock(spec=QWorker)
 

@@ -1,9 +1,10 @@
-from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
-from savegem.common.core import AppConfig
 from tests.test_data import ConfigTestData
 
 
 def test_should_return_config_properties(json_config_holder_mock):
+
+    from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
+    from savegem.common.core import AppConfig
 
     json_config_holder_mock.return_value = MockJsonConfigHolder({
         AppConfig.ActivityLogFileProp: ConfigTestData.ActivityLogFileId,

@@ -4,10 +4,6 @@ import pytest
 from PyQt6.QtWidgets import QVBoxLayout, QLabel
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.builder import UIBuilder
-from savegem.app.gui.builder.copyright import CopyrightBuilder
-from savegem.app.gui.constants import UIRefreshEvent
-
 
 @pytest.fixture(autouse=True)
 def _setup(prop_mock, tr_mock):
@@ -27,6 +23,8 @@ def _copyright_builder(gui_mock):
     Provides a fully mocked and initialized CopyrightBuilder instance.
     """
 
+    from savegem.app.gui.builder.copyright import CopyrightBuilder
+
     builder = CopyrightBuilder()
     builder._gui = gui_mock
 
@@ -37,6 +35,10 @@ def test_copyright_builder_initialization(mocker: MockerFixture):
     """
     Test the constructor correctly initializes the base class.
     """
+
+    from savegem.app.gui.builder import UIBuilder
+    from savegem.app.gui.builder.copyright import CopyrightBuilder
+    from savegem.app.gui.constants import UIRefreshEvent
 
     mock_super_init = mocker.patch.object(UIBuilder, '__init__', return_value=None)
 

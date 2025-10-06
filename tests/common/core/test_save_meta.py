@@ -1,10 +1,8 @@
 from datetime import datetime
+from unittest.mock import MagicMock, call, PropertyMock
 
 import pytest
-from unittest.mock import MagicMock, call, PropertyMock
 from pytest_mock import MockerFixture
-
-from savegem.common.core.save_meta import LocalMetadata, SaveMetaProp, DriveMetadata, SyncStatus, MetadataWrapper
 
 MOCK_METADATA_PATH = "/path/to/game/metadata.json"
 MOCK_SAVE_FILE_A = "/path/to/game/save_a.dat"
@@ -52,7 +50,12 @@ def _logger(module_patch):
 
 @pytest.fixture
 def _local_meta(mocker: MockerFixture):
-    """Mocks LocalMetadata instance."""
+    """
+    Mocks LocalMetadata instance.
+    """
+
+    from savegem.common.core.save_meta import LocalMetadata
+
     mock = MagicMock(spec=LocalMetadata)
     # Set the return value of the calculate_checksum method
     mock.calculate_checksum.return_value = "CURRENT_HASH"
@@ -65,7 +68,12 @@ def _local_meta(mocker: MockerFixture):
 
 @pytest.fixture
 def _drive_meta(mocker: MockerFixture):
-    """Mocks DriveMetadata instance."""
+    """
+    Mocks DriveMetadata instance.
+    """
+
+    from savegem.common.core.save_meta import DriveMetadata
+
     mock = MagicMock(spec=DriveMetadata)
 
     # Mock the properties to be controllable via the mock object attributes
@@ -76,17 +84,33 @@ def _drive_meta(mocker: MockerFixture):
 
 
 def test_local_metadata_initialization(mock_game, _config_holder):
+    from savegem.common.core.save_meta import LocalMetadata
+
     LocalMetadata(mock_game)
     _config_holder.assert_called_once_with(mock_game.metadata_file_path)
 
 
 @pytest.mark.parametrize("prop, expected_key, set_value", [
-    ("owner", SaveMetaProp.Owner, "TestUser"),
-    ("created_time", SaveMetaProp.CreatedTime, "2023-01-01T10:00:00Z"),
-    ("checksum", SaveMetaProp.Checksum, "1a2b3c4d5e"),
+    ("owner", "Owner", "TestUser"),
+    ("created_time", "CreatedTime", "2023-01-01T10:00:00Z"),
+    ("checksum", "Checksum", "1a2b3c4d5e"),
 ])
 def test_local_metadata_getters(mock_game, _config_holder, prop, expected_key, set_value):
-    """Tests that property getters call get_value on the config holder."""
+    """
+    Tests that property getters call get_value on the config holder.
+    """
+
+    from savegem.common.core.save_meta import SaveMetaProp, LocalMetadata
+
+    if expected_key == "Owner":
+        expected_key = SaveMetaProp.Owner
+
+    elif expected_key == "CreatedTime":
+        expected_key = SaveMetaProp.CreatedTime
+
+    elif expected_key == "Checksum":
+        expected_key = SaveMetaProp.Checksum
+
     local_meta = LocalMetadata(mock_game)
 
     # Configure the mock holder to return a predictable value
@@ -101,7 +125,12 @@ def test_local_metadata_getters(mock_game, _config_holder, prop, expected_key, s
 
 
 def test_local_metadata_setters(mock_game, _config_holder):
-    """Tests that property setters call set_value on the config holder."""
+    """
+    Tests that property setters call set_value on the config holder.
+    """
+
+    from savegem.common.core.save_meta import LocalMetadata, SaveMetaProp
+
     local_meta = LocalMetadata(mock_game)
     mock_holder = _config_holder.return_value
 
@@ -119,7 +148,12 @@ def test_local_metadata_setters(mock_game, _config_holder):
 
 
 def test_local_metadata_calculate_checksum(mock_game, _config_holder, mock_checksum_utils):
-    """Tests that calculate_checksum skips metadata file and correctly combines file hashes."""
+    """
+    Tests that calculate_checksum skips metadata file and correctly combines file hashes.
+    """
+
+    from savegem.common.core.save_meta import LocalMetadata
+
     local_meta = LocalMetadata(mock_game)
 
     # Act
@@ -146,7 +180,12 @@ def test_local_metadata_calculate_checksum(mock_game, _config_holder, mock_check
 
 
 def test_local_metadata_refresh(mock_game, _config_holder):
-    """Tests that refresh re-initializes the config holder."""
+    """
+    Tests that refresh re-initializes the config holder.
+    """
+
+    from savegem.common.core.save_meta import LocalMetadata
+
     LocalMetadata(mock_game).refresh()
     # The constructor should have been called twice: once for init, once for refresh
     assert _config_holder.call_count == 2
@@ -156,6 +195,9 @@ def test_local_metadata_refresh(mock_game, _config_holder):
 # --- DriveMetadata Tests ---
 
 def test_drive_metadata_refresh_success(mock_game, _gdrive):
+
+    from savegem.common.core.save_meta import SaveMetaProp, DriveMetadata
+
     drive_meta = DriveMetadata(mock_game)
 
     _gdrive.query_single.return_value = {
@@ -181,6 +223,9 @@ def test_drive_metadata_refresh_success(mock_game, _gdrive):
 
 
 def test_drive_metadata_refresh_no_saves(mock_game, _gdrive, _logger):
+
+    from savegem.common.core.save_meta import DriveMetadata
+
     drive_meta = DriveMetadata(mock_game)
     _gdrive.query_single.return_value = {"files": []}
 
@@ -193,7 +238,12 @@ def test_drive_metadata_refresh_no_saves(mock_game, _gdrive, _logger):
 
 
 def test_drive_metadata_refresh_runtime_error(mock_game, _gdrive, _logger):
-    """Tests refresh when GDrive query returns None (indicating a structural error)."""
+    """
+    Tests refresh when GDrive query returns None (indicating a structural error).
+    """
+
+    from savegem.common.core.save_meta import DriveMetadata
+
     drive_meta = DriveMetadata(mock_game)
 
     # Arrange: Mock the GDrive query result to be None
@@ -213,20 +263,20 @@ def test_drive_metadata_refresh_runtime_error(mock_game, _gdrive, _logger):
     "drive_present, local_stored_checksum, local_calculated_checksum, drive_stored_checksum, expected_status",
     [
         # 1. LocalOnly: Drive not present
-        (False, "SOME_HASH", "CURRENT_HASH", "DRIVE_HASH", SyncStatus.LocalOnly),
+        (False, "SOME_HASH", "CURRENT_HASH", "DRIVE_HASH", "LocalOnly"),
         # 2. NoInformation: Local checksum is None (even if drive is present)
-        (True, None, "CURRENT_HASH", "DRIVE_HASH", SyncStatus.NoInformation),
+        (True, None, "CURRENT_HASH", "DRIVE_HASH", "NoInformation"),
         # 3. UpToDate: All three match
-        (True, "HASH_A", "HASH_A", "HASH_A", SyncStatus.UpToDate),
+        (True, "HASH_A", "HASH_A", "HASH_A", "UpToDate"),
         # 4. NeedsDownload: Local stored checksum is stale compared to Drive
         # Local stored != Drive, regardless of what's currently on disk
-        (True, "OLD_HASH", "CURRENT_HASH", "NEW_DRIVE_HASH", SyncStatus.NeedsDownload),
+        (True, "OLD_HASH", "CURRENT_HASH", "NEW_DRIVE_HASH", "NeedsDownload"),
         # 5. NeedsUpload: Local files changed, but the *stored* local checksum still matches Drive
         # (This path means "NeedsDownload" didn't trigger, so local_stored == drive_stored)
         # But current_checksum != drive_stored
-        (True, "MATCHING_HASH", "NEW_CURRENT_HASH", "MATCHING_HASH", SyncStatus.NeedsUpload),
+        (True, "MATCHING_HASH", "NEW_CURRENT_HASH", "MATCHING_HASH", "NeedsUpload"),
         # 6. Fallback NoInformation (Should not be reachable if logic is perfect, but tests the final return)
-        (True, "HASH_X", "HASH_Y", "HASH_X", SyncStatus.NeedsUpload)  # Falls through to NeedsUpload logic
+        (True, "HASH_X", "HASH_Y", "HASH_X", "NeedsUpload")  # Falls through to NeedsUpload logic
     ]
 )
 def test_metadata_wrapper_sync_status(
@@ -238,7 +288,29 @@ def test_metadata_wrapper_sync_status(
         drive_stored_checksum,
         expected_status
 ):
-    """Tests all possible sync status outcomes based on checksum comparison."""
+    """
+    Tests all possible sync status outcomes based on checksum comparison.
+    """
+
+    from savegem.common.core.save_meta import MetadataWrapper, SyncStatus
+
+    if expected_status == "LocalOnly":
+        expected_status = SyncStatus.LocalOnly
+
+    elif expected_status == "NoInformation":
+        expected_status = SyncStatus.NoInformation
+
+    elif expected_status == "UpToDate":
+        expected_status = SyncStatus.UpToDate
+
+    elif expected_status == "NeedsDownload":
+        expected_status = SyncStatus.NeedsDownload
+
+    elif expected_status == "NeedsUpload":
+        expected_status = SyncStatus.NeedsUpload
+
+    elif expected_status == "NeedsUpload":
+        expected_status = SyncStatus.NeedsUpload
 
     # Arrange: Set up mock properties
     type(_drive_meta).is_present = PropertyMock(return_value=drive_present)
@@ -257,6 +329,9 @@ def test_metadata_wrapper_sync_status(
 
 
 def test_metadata_getter_props(_local_meta, _drive_meta):
+
+    from savegem.common.core.save_meta import MetadataWrapper
+
     wrapper = MetadataWrapper(_local_meta, _drive_meta)
 
     assert wrapper.local == _local_meta

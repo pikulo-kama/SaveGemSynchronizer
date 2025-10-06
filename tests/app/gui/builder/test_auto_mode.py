@@ -3,10 +3,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QPushButton
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.builder import UIBuilder
-from savegem.app.gui.builder.auto_mode import AutoModeBuilder
-from savegem.app.gui.constants import QAttr, QKind, QObjectName
-
 
 @pytest.fixture(autouse=True)
 def _setup(tr_mock, app_context, app_state_mock):
@@ -19,6 +15,8 @@ def _auto_mode_builder(simple_gui):
     Provides a fully mocked and initialized AutoModeBuilder instance.
     """
 
+    from savegem.app.gui.builder.auto_mode import AutoModeBuilder
+
     builder = AutoModeBuilder()
     builder._gui = simple_gui
 
@@ -29,6 +27,9 @@ def test_auto_mode_builder_initialization(mocker: MockerFixture):
     """
     Test the constructor correctly initializes the base class and internal attributes.
     """
+
+    from savegem.app.gui.builder import UIBuilder
+    from savegem.app.gui.builder.auto_mode import AutoModeBuilder
 
     # Spy on the base class __init__
     mock_super_init = mocker.patch.object(UIBuilder, '__init__', return_value=None)
@@ -45,6 +46,8 @@ def test_build_creates_button_and_registers_it(mocker: MockerFixture, _auto_mode
     """
     Test build() creates the button, connects the callback, and adds it to the layout.
     """
+
+    from savegem.app.gui.constants import QObjectName
 
     mock_add_interactable = mocker.patch.object(_auto_mode_builder, '_add_interactable')
 
@@ -66,14 +69,18 @@ def test_build_creates_button_and_registers_it(mocker: MockerFixture, _auto_mode
 
 
 @pytest.mark.parametrize("is_auto_mode, expected_kind", [
-    (True, QKind.Secondary),
-    (False, QKind.Disabled),
+    (True, "Secondary"),
+    (False, "Disabled"),
 ])
 def test_refresh_sets_button_style(mocker: MockerFixture, _auto_mode_builder, logger_mock, is_auto_mode, expected_kind,
                                    app_state_mock):
     """
     Test refresh() sets the correct QAttr.Kind based on app.state.is_auto_mode.
     """
+
+    from savegem.app.gui.constants import QKind, QAttr
+
+    kind = QKind.Secondary if expected_kind == "Secondary" else QKind.Disabled
 
     mock_button = mocker.MagicMock(spec=QPushButton)
     _auto_mode_builder._AutoModeBuilder__auto_mode_button = mock_button
@@ -84,7 +91,7 @@ def test_refresh_sets_button_style(mocker: MockerFixture, _auto_mode_builder, lo
 
     _auto_mode_builder.refresh()
 
-    mock_button.setProperty.assert_called_once_with(QAttr.Kind, expected_kind)
+    mock_button.setProperty.assert_called_once_with(QAttr.Kind, kind)
     mock_polish.assert_called_once_with(mock_button)
     logger_mock.debug.assert_called_once()
 
