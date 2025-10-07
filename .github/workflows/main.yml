@@ -4,22 +4,11 @@ on: [push, pull_request]
 
 jobs:
   run-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Setup Xvfb
-        run: |
-          sudo apt-get install -y xvfb libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
-            libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0 libxcb-shape0 \
-            libglib2.0-0 libgl1-mesa-dev
-          
-          sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev \
-            libxkbcommon-dev libxkbcommon-x11-dev
-          
-          sudo /usr/bin/Xvfb &
 
       - name: Set up Python 3.x
         uses: actions/setup-python@v5
@@ -27,12 +16,12 @@ jobs:
           python-version: '3.x'
 
       - name: Install Python Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run Tests and Generate Coverage Report (with Xvfb)
         run: |
-          xvfb-run -s "-screen 0 1024x768x24" -e /dev/stdout \
-            `which pytest` --cov=savegem --cov-report=xml
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Tests and Generate Coverage Report
+        run: pytest --cov=savegem --cov-report=xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -41,4 +30,3 @@ jobs:
           # but in case it fails, we explicitly define it here.
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
-          verbose: true

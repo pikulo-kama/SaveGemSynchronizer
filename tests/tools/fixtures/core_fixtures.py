@@ -51,7 +51,12 @@ def module_patch(mocker: MockerFixture, request: FixtureRequest):
         path_list.append(source_file_name)
 
     module_path = separator.join(path_list)
-    return lambda path, *args, **kw: mocker.patch(f"{module_path}{separator}{path}", *args, **kw)
+
+    def _patch(path, *args, **kw):
+        mock_path = f"{module_path}{separator}{path}"
+        return mocker.patch(mock_path, *args, **kw)
+
+    return _patch
 
 
 @pytest.fixture
@@ -62,14 +67,10 @@ def prop_mock(safe_module_patch):
 @pytest.fixture
 def tr_mock(mocker: MockerFixture, module_patch):
 
-    import savegem.common.core.text_resource as tr_module
-
     mock = mocker.MagicMock()
     mock.side_effect = lambda key, *args: f"Translated({key})"
 
     module_patch("tr", new=mock)
-    mocker.patch.object(tr_module, "tr", new=mock)
-    mocker.patch("savegem.common.core.text_resource.tr", new=mock)
 
     return mock
 
