@@ -17,6 +17,15 @@ def _ipc_socket():
     return IPCSocket(port=SocketTestData.UIPort)
 
 
+@pytest.fixture
+def _mock_is_socket_running(mocker: MockerFixture, _ipc_socket):
+    return lambda state: mocker.patch.object(_ipc_socket, '_IPCSocket__is_socket_running', return_value=state)
+
+
+def test_port_property(_ipc_socket):
+    assert _ipc_socket.port == SocketTestData.UIPort
+
+
 def test_is_socket_running_true(_ipc_socket, _socket, logger_mock):
 
     from savegem.common.core.ipc_socket import IPCSocket
@@ -45,16 +54,18 @@ def test_is_socket_running_false(_ipc_socket, _socket):
     mock_instance.close.assert_called_once()
 
 
-def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socket, app_state_mock):
+def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socket, app_state_mock,
+                                      _mock_is_socket_running):
 
     from constants import UTF_8
     from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
+    from savegem.common.util.test import ExitTestLoop
 
     test_message = {IPCProp.Command: IPCCommand.StateChanged}
     encoded_message = json.dumps(test_message).encode(UTF_8)
 
     # Mock the internal private check to ensure it returns False and doesn't exit
-    mocker.patch.object(_ipc_socket, '_IPCSocket__is_socket_running', return_value=False)
+    _mock_is_socket_running(False)
     mock_handle = mocker.patch.object(_ipc_socket, '_handle')
 
     # Get mock instances of the socket objects
@@ -65,13 +76,13 @@ def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socke
     # to break the infinite loop after one successful message processing
     mock_connection.recv.side_effect = [
         encoded_message,
-        Exception("Stop listening after one message")
+        ExitTestLoop("Stop listening after one message")
     ]
 
     # Configure sock.accept() to return the connection mock
     mock_server_sock.accept.return_value = (mock_connection, (IPCSocket.Localhost, SocketTestData.ProcessWatcherPort))
 
-    with pytest.raises(Exception, match="Stop listening after one message"):
+    with pytest.raises(ExitTestLoop, match="Stop listening after one message"):
         _ipc_socket.listen()
 
     # Verify the IPC socket setup
@@ -90,13 +101,16 @@ def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socke
     mock_handle.assert_not_called()
 
 
-def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, app_state_mock):
+def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, app_state_mock, _mock_is_socket_running,
+                               logger_mock):
 
     from constants import UTF_8
     from savegem.common.core.ipc_socket import IPCSocket, IPCProp
+    from savegem.common.util.test import ExitTestLoop
 
-    mocker.patch.object(_ipc_socket, '_IPCSocket__is_socket_running', return_value=False)
+    _mock_is_socket_running(False)
 
+    error = Exception("Can't connect.")
     test_command = "custom_action"
     test_message = {IPCProp.Command: test_command, "payload": "data"}
     encoded_message = json.dumps(test_message).encode(UTF_8)
@@ -107,12 +121,17 @@ def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, app_
     socket_mock = _socket.return_value
     mock_connection = mocker.MagicMock()
 
-    mock_connection.recv.side_effect = [encoded_message, Exception("Stop listening")]
+    mock_connection.recv.side_effect = [
+        encoded_message,
+        error,
+        ExitTestLoop("Stop listening")
+    ]
     socket_mock.accept.return_value = (mock_connection, (IPCSocket.Localhost, SocketTestData.ProcessWatcherPort))
 
-    with pytest.raises(Exception, match="Stop listening"):
+    with pytest.raises(ExitTestLoop, match="Stop listening"):
         _ipc_socket.listen()
 
+    logger_mock.error.assert_called_with("Error handling received message: %s", error, exc_info=True)
     mock_handle.assert_called_once_with(test_command, {"payload": "data"})
     app_state_mock.refresh.assert_not_called()
 
@@ -158,9 +177,4 @@ def test_send_connection_refused_error(_ipc_socket, _socket, logger_mock):
 
     _ipc_socket.send("test_command")
 
-    logger_mock.error.assert_called_once_with(error)
-
-
-def test_should_throw_not_implemented_in_handle(_ipc_socket):
-    with pytest.raises(NotImplementedError):
-        _ipc_socket._handle("", {})
+    logger_mock.error.assert_called_once_with(error, exc_info=True)

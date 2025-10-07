@@ -1,6 +1,6 @@
 {
   "gdrive_watcher" : "INFO",
-  "savegem.gdrive_watcher.ipc_socket" : "INFO",
+  "savegem.gdrive_watcher.ipc_socket" : "ERROR",
 
   "savegem.common.core.activity" : "ERROR",
   "savegem.common.core.app_config" : "ERROR",

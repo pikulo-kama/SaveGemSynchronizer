@@ -59,6 +59,7 @@ class UISocket(IPCSocket):
         """
         for process in self.__child_processes:
             process.send(message)
+            _logger.debug("Send message to socket with port %d", process.port)
 
 
 ui_socket = UISocket()
