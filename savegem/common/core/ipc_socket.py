@@ -5,7 +5,7 @@ from typing import Final
 from constants import UTF_8
 from savegem.common.core.context import app
 from savegem.common.util.logger import get_logger
-
+from savegem.common.util.test import ExitTestLoop
 
 _logger = get_logger(__name__)
 
@@ -42,6 +42,13 @@ class IPCSocket:
     def __init__(self, port):
         self.__socket_info = (self.Localhost, port)
 
+    @property
+    def port(self):
+        """
+        Used to get port on which socket is running.
+        """
+        return self.__socket_info[1]
+
     def listen(self):
         """
         Used to listen for incoming messages.
@@ -58,20 +65,27 @@ class IPCSocket:
         sock.listen()
 
         while True:
-            connection, _ = sock.accept()
-            message = connection.recv(self.MessageSize)
-            message = json.loads(message.decode(UTF_8))
-            _logger.info("Received message - %s", message)
+            try:
+                connection, _ = sock.accept()
+                message = connection.recv(self.MessageSize)
+                message = json.loads(message.decode(UTF_8))
+                _logger.info("Received message - %s", message)
 
-            command = message.pop(IPCProp.Command)
+                command = message.pop(IPCProp.Command)
 
-            if command == IPCCommand.StateChanged:
-                app().state.refresh()
+                if command == IPCCommand.StateChanged:
+                    app().state.refresh()
 
-            else:
-                self._handle(command, message)
+                else:
+                    self._handle(command, message)
 
-            connection.close()
+                connection.close()
+
+            except ExitTestLoop as error:
+                raise error
+
+            except Exception as error:
+                _logger.error("Error handling received message: %s", error, exc_info=True)
 
     def send(self, message):
         """
@@ -92,7 +106,7 @@ class IPCSocket:
                 sock.sendall(json.dumps(message).encode(UTF_8))
 
             except ConnectionRefusedError as error:
-                _logger.error(error)
+                _logger.error(error, exc_info=True)
 
     def __is_socket_running(self):
         """
@@ -105,9 +119,9 @@ class IPCSocket:
 
         return is_running
 
-    def _handle(self, command: str, message: dict):
+    def _handle(self, command: str, message: dict):  # pragma: no cover
         """
         Should be overridden by child classes.
         Used to handle socket implementation specific messages.
         """
-        raise NotImplementedError()
+        pass

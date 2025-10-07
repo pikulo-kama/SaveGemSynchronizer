@@ -1,6 +1,6 @@
 {
   "app" : "INFO",
-  "savegem.app.ipc_socket" : "INFO",
+  "savegem.app.ipc_socket" : "ERROR",
   "savegem.app.gui.window" : "INFO",
   "savegem.app.gui.popup" : "INFO",
   "savegem.app.gui.style" : "INFO",

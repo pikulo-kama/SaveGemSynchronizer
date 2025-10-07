@@ -1,5 +1,6 @@
 from savegem.common.core.json_config_holder import JsonConfigHolder
-from savegem.common.service.daemon import Daemon, ExitTestLoop
+from savegem.common.service.daemon import Daemon
+from savegem.common.util.test import ExitTestLoop
 
 import subprocess
 import threading
