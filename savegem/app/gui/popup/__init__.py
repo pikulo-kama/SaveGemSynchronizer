@@ -4,7 +4,6 @@ from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel
 
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
-from savegem.app.gui.window import gui
 from savegem.common.util.file import resolve_resource
 from savegem.common.util.logger import get_logger
 
@@ -16,8 +15,8 @@ class Popup(QDialog):
     General popup window component.
     """
 
-    def __init__(self, title_text_resource, icon):
-        super().__init__(gui())
+    def __init__(self, parent, title_text_resource, icon):
+        super().__init__(parent)
 
         _logger.info("Initializing popup.")
         _logger.debug("popupTitle = %s", title_text_resource)

@@ -6,7 +6,7 @@ from savegem.common.core.text_resource import tr
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.downloader import Downloader
 from savegem.common.service.uploader import Uploader
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.service.gdrive import GDrive
 from savegem.process_watcher.game_process import get_running_game_processes, GameProcess
 from savegem.process_watcher.ipc_socket import process_watcher_socket
@@ -27,8 +27,8 @@ class ProcessWatcher(Daemon):
         self.__uploader = Uploader()
 
     def _work(self):
-        app.user.initialize(GDrive.get_current_user)
-        app.games.download()
+        app().user.initialize(GDrive.get_current_user)
+        app().games.download()
 
         active_processes = get_running_game_processes()
 
@@ -39,9 +39,9 @@ class ProcessWatcher(Daemon):
             return
 
         game_names = [process.game.name for process in active_processes if not process.has_closed]
-        app.activity.update(game_names)
+        app().activity.update(game_names)
 
-        if app.state.is_auto_mode:
+        if app().state.is_auto_mode:
             self.__perform_automatic_actions(active_processes)
 
     def __perform_automatic_actions(self, processes: list[GameProcess]):

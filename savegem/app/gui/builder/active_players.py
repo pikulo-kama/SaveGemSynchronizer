@@ -4,7 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel
 
 from savegem.app.gui.constants import UIRefreshEvent, QAttr
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.builder import UIBuilder
 from savegem.common.util.logger import get_logger
@@ -56,7 +56,7 @@ class ActivePlayersBuilder(UIBuilder):
         self._gui.top.layout().setContentsMargins(0, 20, 0, 0)
 
     def refresh(self):
-        players = app.activity.players
+        players = app().activity.players
         players_label = tr("label_Offline")
         is_disabled = "true"
 

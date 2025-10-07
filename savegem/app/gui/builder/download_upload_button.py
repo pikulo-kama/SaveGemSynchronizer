@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout
 
 from savegem.app.gui.worker.download_worker import DownloadWorker
 from savegem.app.gui.worker.upload_worker import UploadWorker
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.component.progress_button import QProgressPushButton
 from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind
@@ -134,7 +134,7 @@ class DownloadUploadButtonBuilder(UIBuilder):
         """
 
         if event.kind == EventKind.SavesDirectoryMissing:
-            notification(tr("notification_ErrorSaveDirectoryMissing", app.games.current.local_path))
+            notification(tr("notification_ErrorSaveDirectoryMissing", app().games.current.local_path))
 
         elif event.kind == EventKind.DriveMetadataMissing:
             notification(tr("label_StorageIsEmpty"))

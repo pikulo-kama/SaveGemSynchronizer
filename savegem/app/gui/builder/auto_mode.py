@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QPushButton
 
 from savegem.app.gui.constants import QAttr, QKind, QObjectName
 from savegem.app.gui.popup.notification import notification
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.app.gui.builder import UIBuilder
 from savegem.common.core.text_resource import tr
 from savegem.common.util.logger import get_logger
@@ -30,12 +30,12 @@ class AutoModeBuilder(UIBuilder):
 
         def callback():
             # Toggle state of button
-            if app.state.is_auto_mode:
-                app.state.is_auto_mode = False
+            if app().state.is_auto_mode:
+                app().state.is_auto_mode = False
                 message = tr("notification_AutoModeOff")
 
             else:
-                app.state.is_auto_mode = True
+                app().state.is_auto_mode = True
                 message = tr("notification_AutoModeOn")
 
             # No need to fully reload the UI since no other visual components
@@ -57,7 +57,7 @@ class AutoModeBuilder(UIBuilder):
     def refresh(self):
         button_kind = QKind.Secondary
 
-        if not app.state.is_auto_mode:
+        if not app().state.is_auto_mode:
             button_kind = QKind.Disabled
 
         self.__auto_mode_button.setProperty(QAttr.Kind, button_kind)
@@ -65,5 +65,5 @@ class AutoModeBuilder(UIBuilder):
 
         _logger.debug(
             "Auto mode updated, current state = %s",
-            "ON" if app.state.is_auto_mode else "OFF"
+            "ON" if app().state.is_auto_mode else "OFF"
         )

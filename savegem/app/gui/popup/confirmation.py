@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QHBoxLayout, QPushButton
 
 from constants import Resource
 from savegem.app.gui.constants import QAttr, QObjectName, QKind
+from savegem.app.gui.window import gui
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.popup import Popup
 
@@ -23,7 +24,7 @@ class Confirmation(Popup):
     """
 
     def __init__(self):
-        super().__init__("popup_ConfirmationTitle", Resource.ConfirmationIco)
+        Popup.__init__(self, gui(), "popup_ConfirmationTitle", Resource.ConfirmationIco)
         self.__confirm_callback = None
 
     def set_confirm_callback(self, callback):

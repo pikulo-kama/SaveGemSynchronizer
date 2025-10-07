@@ -205,7 +205,7 @@ def test_load_stylesheet(listdir_mock, read_file_mock, _mock_color_scheme):
     result = load_stylesheet()
 
     # Assert that os.listdir and os.path.join were called correctly (mocked in fixture)
-    listdir_mock.assert_called_with(Directory.Styles)
+    listdir_mock.assert_called_with(Directory().Styles)
     assert read_file_mock.call_count == 3
 
     # Check the final resolved string

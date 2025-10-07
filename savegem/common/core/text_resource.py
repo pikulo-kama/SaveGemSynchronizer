@@ -1,4 +1,4 @@
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.core.json_config_holder import JsonConfigHolder
 from savegem.common.util.file import resolve_locale
 from savegem.common.util.logger import get_logger
@@ -10,7 +10,7 @@ def tr(key: str, *args) -> str:
     """
     Used to resolve text resource based on the currently selected language.
     """
-    return TextResource.get(app.state.locale, key, *args)
+    return TextResource.get(app().state.locale, key, *args)
 
 
 class TextResource:

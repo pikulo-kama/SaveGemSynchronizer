@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from unittest.mock import call
 
 import pytest
 from pytest_mock import MockerFixture
@@ -16,25 +17,39 @@ def test_should_resolve_config(path_join_mock):
     file_name = "Test"
 
     resolve_config(file_name)
-    path_join_mock.assert_called_with(Directory.Config, file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().Config, file_name)
+    ])
 
     resolve_locale(file_name)
-    path_join_mock.assert_called_with(Directory.Locale, file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().Locale, file_name)
+    ])
 
     resolve_resource(file_name)
-    path_join_mock.assert_called_with(Directory.Resources, file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().Resources, file_name)
+    ])
 
     resolve_temp_file(file_name)
-    path_join_mock.assert_called_with(Directory.Output, file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().Output, file_name)
+    ])
 
     resolve_app_data(file_name)
-    path_join_mock.assert_called_with(Directory.AppDataRoot, file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().AppDataRoot, file_name)
+    ])
 
     resolve_log(file_name)
-    path_join_mock.assert_called_with(Directory.Logs, file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().Logs, file_name)
+    ])
 
     resolve_project_data(file_name)
-    path_join_mock.assert_called_with(Directory.ProjectRoot, file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().ProjectRoot, file_name)
+    ])
 
 
 def test_should_not_cleanup_non_existing_dir(listdir_mock):

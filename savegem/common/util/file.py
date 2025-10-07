@@ -9,56 +9,56 @@ def resolve_config(config_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}/config' directory.
     """
-    return os.path.join(Directory.Config, config_name)
+    return os.path.join(Directory().Config, config_name)
 
 
 def resolve_locale(locale_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}/locale' directory.
     """
-    return os.path.join(Directory.Locale, locale_name)
+    return os.path.join(Directory().Locale, locale_name)
 
 
 def resolve_resource(resource_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}/resource' directory.
     """
-    return os.path.join(Directory.Resources, resource_name)
+    return os.path.join(Directory().Resources, resource_name)
 
 
 def resolve_temp_file(file_name: str):
     """
     Used to resolve file in '{APP_DATA}/SaveGem/output' directory.
     """
-    return os.path.join(Directory.Output, file_name)
+    return os.path.join(Directory().Output, file_name)
 
 
 def resolve_app_data(file_name: str):
     """
     Used to resolve file in '{APP_DATA}' directory.
     """
-    return os.path.join(Directory.AppDataRoot, file_name)
+    return os.path.join(Directory().AppDataRoot, file_name)
 
 
 def resolve_log(file_name: str):
     """
     Used to resolve file in '{APP_DATA}/logs' directory.
     """
-    return os.path.join(Directory.Logs, file_name)
+    return os.path.join(Directory().Logs, file_name)
 
 
 def resolve_logback(file_name: str):
     """
     Used to resolve logging configuration file.
     """
-    return os.path.join(Directory.Logback, file_name)
+    return os.path.join(Directory().Logback, file_name)
 
 
 def resolve_project_data(file_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}' directory.
     """
-    return os.path.join(Directory.ProjectRoot, file_name)
+    return os.path.join(Directory().ProjectRoot, file_name)
 
 
 def cleanup_directory(directory: str):

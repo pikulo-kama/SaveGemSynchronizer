@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
 from constants import File
 from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.constants import QAttr, QSizeVariant, QKind, QObjectName
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.builder import UIBuilder
 from savegem.app.gui.popup.confirmation import confirmation
@@ -76,13 +76,13 @@ class UserSectionBuilder(UIBuilder):
         chip_layout = QHBoxLayout(user_chip)
 
         user_photo_label = QLabel()
-        photo_pixmap = QPixmap(app.user.photo).scaled(
+        photo_pixmap = QPixmap(app().user.photo).scaled(
             QSize(20, 20),
             Qt.AspectRatioMode.KeepAspectRatio,
             Qt.TransformationMode.SmoothTransformation
         )
         user_photo_label.setPixmap(make_circular_image(photo_pixmap))
-        user_name_label = QLabel(app.user.short_name)
+        user_name_label = QLabel(app().user.short_name)
 
         chip_layout.addWidget(user_photo_label)
         chip_layout.addStretch()

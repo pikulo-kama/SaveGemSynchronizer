@@ -3,7 +3,7 @@ from socket import socket, AF_INET, SOCK_STREAM
 from typing import Final
 
 from constants import UTF_8
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.util.logger import get_logger
 
 
@@ -66,7 +66,7 @@ class IPCSocket:
             command = message.pop(IPCProp.Command)
 
             if command == IPCCommand.StateChanged:
-                app.state.refresh()
+                app().state.refresh()
 
             else:
                 self._handle(command, message)

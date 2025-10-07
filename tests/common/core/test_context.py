@@ -32,7 +32,7 @@ def test_context_initialization(_activity, _app_state, _app_config, _game_config
     and verifies the private __link method is called for each.
     """
 
-    from savegem.common.core import ApplicationContext
+    from savegem.common.core.context import ApplicationContext
 
     context = ApplicationContext()
 
@@ -58,7 +58,7 @@ def test_property_accessors(_activity, _app_state, _app_config, _game_config, _u
     Tests that all public properties return the correct, cached mock instance.
     """
 
-    from savegem.common.core import ApplicationContext
+    from savegem.common.core.context import ApplicationContext
 
     context = ApplicationContext()
 
@@ -74,7 +74,7 @@ def test_refresh_calls_all_linked_entities(_activity, _app_state, _app_config, _
     Tests that the refresh method calls refresh() on every linked entity.
     """
 
-    from savegem.common.core import ApplicationContext
+    from savegem.common.core.context import ApplicationContext
 
     context = ApplicationContext()
     context.refresh()
@@ -84,11 +84,3 @@ def test_refresh_calls_all_linked_entities(_activity, _app_state, _app_config, _
     _app_state.return_value.refresh.assert_called_once()
     _game_config.return_value.refresh.assert_called_once()
     _user_state.return_value.refresh.assert_called_once()
-
-
-def test_global_app_instance_exists():
-    """
-    Tests that the global 'app' singleton instance is defined and is of the correct type.
-    """
-    from savegem.common.core import ApplicationContext, app
-    assert isinstance(app, ApplicationContext)

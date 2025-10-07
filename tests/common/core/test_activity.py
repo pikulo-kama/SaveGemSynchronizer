@@ -11,7 +11,7 @@ NoActivity = {}
 @pytest.fixture
 def _first_player_activity():
 
-    from savegem.common.core import Activity
+    from savegem.common.core.activity import Activity
 
     return {
         PlayerTestData.FirstPlayerMachineId: {
@@ -24,7 +24,7 @@ def _first_player_activity():
 @pytest.fixture
 def _second_player_activity():
 
-    from savegem.common.core import Activity
+    from savegem.common.core.activity import Activity
 
     return {
         PlayerTestData.SecondPlayerMachineId: {
@@ -45,7 +45,7 @@ def _multiple_players_activity(_first_player_activity, _second_player_activity):
 @pytest.fixture
 def _activity(app_config, app_context, user_config_mock, games_config):
 
-    from savegem.common.core import Activity
+    from savegem.common.core.activity import Activity
 
     activity = Activity()
     activity.link(app_context)
@@ -107,7 +107,7 @@ def test_refresh_when_activity_contains_not_selected_game(_activity, _mock_downl
 
 def test_update_when_has_active_games(_activity, _mock_download_file, gdrive_mock, _second_player_activity):
 
-    from savegem.common.core import Activity
+    from savegem.common.core.activity import Activity
 
     games = [GameTestData.FirstGame, GameTestData.SecondGame]
 

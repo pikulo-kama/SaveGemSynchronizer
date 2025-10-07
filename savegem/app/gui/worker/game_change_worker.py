@@ -1,5 +1,5 @@
 from savegem.app.gui.worker import QWorker
-from savegem.common.core import app
+from savegem.common.core.context import app
 
 
 class GameChangeWorker(QWorker):
@@ -12,6 +12,6 @@ class GameChangeWorker(QWorker):
         self.__new_game = new_game
 
     def _run(self):
-        app.state.game_name = self.__new_game
-        app.games.current.meta.drive.refresh()
-        app.activity.refresh()
+        app().state.game_name = self.__new_game
+        app().games.current.meta.drive.refresh()
+        app().activity.refresh()

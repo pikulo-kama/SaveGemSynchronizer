@@ -30,22 +30,6 @@ def _setup(mocker: MockerFixture, json_config_holder_mock, resolve_locale_mock):
         else second_locales_holder
 
 
-@pytest.fixture
-def _app_state(mocker: MockerFixture):
-
-    from savegem.common.core import ApplicationContext
-
-    state_mock = mocker.MagicMock()
-
-    mocker.patch.object(
-        ApplicationContext,
-        "state",
-        state_mock
-    )
-
-    return state_mock
-
-
 def test_should_not_read_file_again_if_locale_same(json_config_holder_mock):
 
     from savegem.common.core.text_resource import TextResource
@@ -84,12 +68,12 @@ def test_should_resolve_arguments():
     assert value == f"{LocaleTestData.FirstLocale},arg1,arg2"
 
 
-def test_tr_should_use_local_from_state(_app_state):
+def test_tr_should_use_local_from_state(app_state_mock):
 
     from savegem.common.core.text_resource import tr
 
-    _app_state.locale = LocaleTestData.FirstLocale
+    app_state_mock.locale = LocaleTestData.FirstLocale
     assert tr("key1") == LocaleTestData.FirstLocale
 
-    _app_state.locale = LocaleTestData.SecondLocale
+    app_state_mock.locale = LocaleTestData.SecondLocale
     assert tr("key1") == LocaleTestData.SecondLocale

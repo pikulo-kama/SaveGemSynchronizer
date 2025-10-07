@@ -1,9 +1,18 @@
+import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QPushButton, QHBoxLayout
 from pytest_mock import MockerFixture
 
 
-def test_confirmation_init_calls_super_with_correct_resources(mocker: MockerFixture, qtbot, simple_gui):
+@pytest.fixture(autouse=True)
+def _setup(mocker: MockerFixture, tr_mock, prop_mock, simple_gui):
+    prop_mock.side_effect = lambda _: 10
+
+    mocker.patch("savegem.app.gui.popup.tr", tr_mock)
+    mocker.patch("savegem.app.gui.popup.prop", prop_mock)
+
+
+def test_confirmation_init_calls_super_with_correct_resources(mocker: MockerFixture, qtbot, simple_gui, tr_mock):
     """
     Test __init__ calls the Popup constructor with the correct title and icon keys.
     """
@@ -19,12 +28,12 @@ def test_confirmation_init_calls_super_with_correct_resources(mocker: MockerFixt
 
     mock_super_init.assert_called_once()
 
-    assert mock_super_init.call_args[0][1] == "popup_ConfirmationTitle"
-    assert mock_super_init.call_args[0][2] == Resource.ConfirmationIco
+    assert mock_super_init.call_args[0][2] == "popup_ConfirmationTitle"
+    assert mock_super_init.call_args[0][3] == Resource.ConfirmationIco
     assert confirmation_popup._Confirmation__confirm_callback is None  # noqa
 
 
-def test_add_controls_creates_and_configures_buttons(qtbot, tr_mock):
+def test_add_controls_creates_and_configures_buttons(qtbot, simple_gui):
     """
     Test that _add_controls creates two buttons with correct properties and layout.
     """

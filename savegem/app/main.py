@@ -12,7 +12,7 @@ from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.util.file import cleanup_directory
 from savegem.common.util.logger import get_logger
 from savegem.common.service.gdrive import GDrive
-from savegem.common.core import app
+from savegem.common.core.context import app
 
 _logger = get_logger("app")
 
@@ -26,15 +26,15 @@ def main():
     _logger.info("version %s", prop("version"))
 
     # Startup initialization.
-    app.user.initialize(GDrive.get_current_user)
-    app.games.download()
-    app.games.current.meta.drive.refresh()
-    app.activity.refresh()
+    app().user.initialize(GDrive.get_current_user)
+    app().games.download()
+    app().games.current.meta.drive.refresh()
+    app().activity.refresh()
 
     application = QApplication(sys.argv)
     application.setStyleSheet(load_stylesheet())
 
-    app.state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
+    app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
     gui().before_destroy.connect(teardown)
     gui().build()
@@ -44,7 +44,7 @@ def main():
 
 def teardown():
     _logger.info("Cleaning up 'output' directory.")
-    cleanup_directory(Directory.Output)
+    cleanup_directory(Directory().Output)
 
 
 if __name__ == "__main__":  # pragma: no cover

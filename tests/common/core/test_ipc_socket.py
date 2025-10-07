@@ -7,17 +7,6 @@ from tests.test_data import SocketTestData
 
 
 @pytest.fixture
-def _app_state(mocker: MockerFixture):
-
-    from savegem.common.core import ApplicationContext
-
-    mock_state = mocker.MagicMock()
-    mocker.patch.object(ApplicationContext, 'state', new=mock_state)
-
-    return mock_state
-
-
-@pytest.fixture
 def _socket(mocker: MockerFixture):
     return mocker.patch('savegem.common.core.ipc_socket.socket')
 
@@ -56,7 +45,7 @@ def test_is_socket_running_false(_ipc_socket, _socket):
     mock_instance.close.assert_called_once()
 
 
-def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socket, _app_state):
+def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socket, app_state_mock):
 
     from constants import UTF_8
     from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
@@ -95,13 +84,13 @@ def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socke
     mock_server_sock.accept.call_count = 2
 
     # Verify the core logic: app.state.refresh was called
-    _app_state.refresh.assert_called_once()
+    app_state_mock.refresh.assert_called_once()
 
     # Verify _handle was NOT called
     mock_handle.assert_not_called()
 
 
-def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, _app_state):
+def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, app_state_mock):
 
     from constants import UTF_8
     from savegem.common.core.ipc_socket import IPCSocket, IPCProp
@@ -125,7 +114,7 @@ def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, _app
         _ipc_socket.listen()
 
     mock_handle.assert_called_once_with(test_command, {"payload": "data"})
-    _app_state.refresh.assert_not_called()
+    app_state_mock.refresh.assert_not_called()
 
 
 def test_send_string_command_success(_ipc_socket, _socket):

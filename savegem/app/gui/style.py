@@ -123,8 +123,8 @@ def load_stylesheet():
     style_string = ""
 
     # Get all style files and join them together.
-    for style in os.listdir(Directory.Styles):
-        style_path = os.path.join(Directory.Styles, style)
+    for style in os.listdir(Directory().Styles):
+        style_path = os.path.join(Directory().Styles, style)
         style_string += read_file(style_path)
 
     return _resolve_style_properties(style_string)
