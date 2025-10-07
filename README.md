@@ -1,5 +1,5 @@
 ![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg)
-![Code Coverage](https://codecov.io/gh/pikulo-kama/SaveGemSynchronizer/branch/snapshot-4-1-0/graph/badge.svg)
+![Code Coverage](https://codecov.io/gh/pikulo-kama/SaveGemSynchronizer/branch/master/graph/badge.svg)
 
 # 💎 SaveGem – Save Manager for PC Games
 <img src="assets/application-demo.png" alt="SaveGem Screenshot" width="800"/>
