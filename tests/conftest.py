@@ -55,9 +55,6 @@ def global_logger_mock(request):
     with patch("savegem.common.util.logger.get_logger") as get_logger_mock:
         yield get_logger_mock
 
-# @pytest.fixture
-# def logger_mock(global_logger_mock):
-#     return global_logger_mock.return_value
 
 @pytest.fixture(autouse=True)
 def logger_mock(mocker: MockerFixture, safe_module_patch):
