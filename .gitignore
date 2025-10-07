@@ -6,3 +6,4 @@ __pycache__/
 config.json
 credentials.json
 .coverage
+coverage.xml
