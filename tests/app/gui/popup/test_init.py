@@ -21,7 +21,7 @@ def _setup(mocker: MockerFixture, module_patch, tr_mock, prop_mock, resolve_reso
     simple_gui.setGeometry(QRect(100, 50, 800, 600))
 
 
-def test_popup_initialization(qtbot, tr_mock, prop_mock, resolve_resource_mock):
+def test_popup_initialization(qtbot, tr_mock, prop_mock, resolve_resource_mock, simple_gui):
     """
     Test the constructor correctly initializes properties and calls dependencies.
     """
@@ -31,7 +31,7 @@ def test_popup_initialization(qtbot, tr_mock, prop_mock, resolve_resource_mock):
 
     title_key = "confirmation_title"
 
-    popup = Popup(title_key, Resource.ApplicationIco)
+    popup = Popup(simple_gui, title_key, Resource.ApplicationIco)
     qtbot.addWidget(popup)
 
     assert popup.windowTitle() == f"Translated({title_key})"
@@ -47,7 +47,7 @@ def test_popup_initialization(qtbot, tr_mock, prop_mock, resolve_resource_mock):
     assert popup.layout() is popup._container
 
 
-def test_show_dialog_displays_message_and_calls_exec(mocker: MockerFixture, qtbot):
+def test_show_dialog_displays_message_and_calls_exec(mocker: MockerFixture, qtbot, simple_gui):
     """
     Test show_dialog sets up the message, calls _add_controls, and executes the dialog.
     """
@@ -57,7 +57,7 @@ def test_show_dialog_displays_message_and_calls_exec(mocker: MockerFixture, qtbo
     test_message = "Data transfer complete."
 
     # Arrange: Initialize and spy on methods
-    popup = Popup("title_key", "icon_key")
+    popup = Popup(simple_gui, "title_key", "icon_key")
     qtbot.addWidget(popup)
 
     # Spy on exec and _add_controls methods
@@ -79,7 +79,7 @@ def test_show_dialog_displays_message_and_calls_exec(mocker: MockerFixture, qtbo
     mock_exec.assert_called_once()  # Verify QDialog.exec() was called to display modal
 
 
-def test_show_event_centers_dialog(qtbot):
+def test_show_event_centers_dialog(qtbot, simple_gui):
     """
     Test showEvent centers the popup horizontally relative to its parent
     and places it at the parent's top y-coordinate.
@@ -89,7 +89,7 @@ def test_show_event_centers_dialog(qtbot):
 
     # Arrange: Parent geometry is mocked to QRect(100, 50, 800, 600)
     # Popup fixed size is 400x200
-    popup = Popup("title_key", "icon_key")
+    popup = Popup(simple_gui, "title_key", "icon_key")
     qtbot.addWidget(popup)
 
     # The mock will ensure width()=400 and height()=200

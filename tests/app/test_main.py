@@ -85,4 +85,4 @@ def test_teardown_cleanup_routine(logger_mock, cleanup_directory_mock):
     teardown()
 
     logger_mock.info.assert_called_with("Cleaning up 'output' directory.")
-    cleanup_directory_mock.assert_called_once_with(Directory.Output)
+    cleanup_directory_mock.assert_called_once_with(Directory().Output)

@@ -7,7 +7,7 @@ from tests.test_data import GameTestData, LocaleTestData, ConfigTestData, Player
 def app_context(mocker: MockerFixture, safe_module_patch, logger_mock):
 
     app_mock = mocker.MagicMock()
-    safe_module_patch("app", app_mock)
+    safe_module_patch("app", return_value=app_mock)
 
     return app_mock
 
@@ -25,7 +25,7 @@ def app_state_mock(mocker: MockerFixture, app_context):
     return app_state_mock
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def app_config(mocker: MockerFixture, app_context):
     """
     Used to mock Google Drive configuration holder.

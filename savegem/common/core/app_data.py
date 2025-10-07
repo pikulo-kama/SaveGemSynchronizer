@@ -2,7 +2,7 @@ import abc
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from savegem.common.core import ApplicationContext
+    from savegem.common.core.context import ApplicationContext
 
 
 class AppData(abc.ABC):  # pragma: no cover

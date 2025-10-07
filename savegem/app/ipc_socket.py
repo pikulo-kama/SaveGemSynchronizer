@@ -1,6 +1,6 @@
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.window import gui
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.core.holders import prop
 from savegem.common.core.ipc_socket import IPCSocket, IPCCommand, IPCProp
 from savegem.common.util.logger import get_logger
@@ -33,18 +33,18 @@ class UISocket(IPCSocket):
                 # downloaded/uploaded from another service
                 # then we need to reload it in
                 # main application.
-                if app.state.is_auto_mode:
-                    app.games.refresh()
+                if app().state.is_auto_mode:
+                    app().games.refresh()
 
                 if event == UIRefreshEvent.GameConfigChange:
-                    app.games.download()
-                    app.games.current.meta.drive.refresh()
+                    app().games.download()
+                    app().games.current.meta.drive.refresh()
 
                 elif event == UIRefreshEvent.ActivityLogUpdate:
-                    app.activity.refresh()
+                    app().activity.refresh()
 
                 elif event == UIRefreshEvent.CloudSaveFilesChange:
-                    app.games.current.meta.drive.refresh()
+                    app().games.current.meta.drive.refresh()
 
             finally:
                 gui().mutex.unlock()

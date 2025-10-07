@@ -1,24 +1,34 @@
+import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QPushButton
 from pytest_mock import MockerFixture
 
 
-def test_notification_init_calls_super_with_correct_resources(mocker: MockerFixture, qtbot, gui_mock):
+@pytest.fixture(autouse=True)
+def _setup(mocker: MockerFixture, tr_mock, prop_mock, simple_gui):
+    prop_mock.side_effect = lambda _: 10
+
+    mocker.patch("savegem.app.gui.popup.tr", tr_mock)
+    mocker.patch("savegem.app.gui.popup.prop", prop_mock)
+
+
+def test_notification_init_calls_super_with_correct_resources(mocker: MockerFixture, qtbot, simple_gui):
     """
     Test __init__ calls the Popup constructor with the correct title and icon keys.
     """
 
     from constants import Resource
+    from savegem.app.gui.popup import Popup
     from savegem.app.gui.popup.notification import Notification
 
-    mock_super_init = mocker.spy(Notification.__bases__[0], '__init__')
+    mock_super_init = mocker.spy(Popup, '__init__')
 
     notification_popup = Notification()
     qtbot.addWidget(notification_popup)
 
     mock_super_init.assert_called_once()
-    assert mock_super_init.call_args[0][1] == "popup_NotificationTitle"
-    assert mock_super_init.call_args[0][2] == Resource.NotificationIco
+    assert mock_super_init.call_args[0][2] == "popup_NotificationTitle"
+    assert mock_super_init.call_args[0][3] == Resource.NotificationIco
 
 
 def test_add_controls_creates_and_configures_close_button(qtbot, tr_mock):
@@ -44,7 +54,7 @@ def test_add_controls_creates_and_configures_close_button(qtbot, tr_mock):
     assert popup._container.count() == 1
 
 
-def test_close_button_accepts_dialog(mocker: MockerFixture, qtbot):
+def test_close_button_accepts_dialog(mocker: MockerFixture, qtbot, simple_gui, tr_mock):
     """
     Test clicking the Close button closes the dialog via accept().
     """

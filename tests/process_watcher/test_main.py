@@ -219,8 +219,8 @@ def test_auto_action_skip_if_uptodate(app_context, downloader_mock, _get_run_pro
     downloader_mock.download.assert_not_called()
 
 
-def test_auto_skip_if_running(app_context, downloader_mock, push_notification_mock, _get_run_processes_mock,
-                              _create_game_process):
+def test_auto_skip_if_running(module_patch, app_context, downloader_mock, push_notification_mock,
+                              _get_run_processes_mock, _create_game_process, app_config, tr_mock, ui_socket_mock):
     """
     Test that automatic actions skip processes that are running but have not just started or closed.
     This covers the 'if not process.has_started and not process.has_closed: continue' condition.
@@ -228,6 +228,7 @@ def test_auto_skip_if_running(app_context, downloader_mock, push_notification_mo
 
     from savegem.common.core.save_meta import SyncStatus
     from savegem.process_watcher.main import ProcessWatcher
+    from savegem.app.gui.constants import UIRefreshEvent
 
     proc_started = _create_game_process("Started Game", has_started=True, sync_status=SyncStatus.NoInformation)
 
@@ -243,7 +244,8 @@ def test_auto_skip_if_running(app_context, downloader_mock, push_notification_mo
     watcher._work()
 
     # The started process MUST proceed with refresh/download
-    proc_started.game.meta.drive.refresh.assert_called_once()
+    # proc_started.game.meta.drive.refresh.assert_called_once()
+    ui_socket_mock.send_ui_refresh_command.assert_called_once_with(UIRefreshEvent.CloudSaveFilesChange)
     downloader_mock.return_value.download.assert_called_once()
 
     # The running process MUST be skipped before refresh

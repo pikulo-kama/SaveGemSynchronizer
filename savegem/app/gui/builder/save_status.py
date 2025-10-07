@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QWidget, QLabel, QGridLayout
 from babel.localtime import get_localzone
 
 from savegem.app.gui.constants import UIRefreshEvent
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.core.save_meta import SyncStatus
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.builder import UIBuilder
@@ -86,7 +86,7 @@ class SaveStatusBuilder(UIBuilder):
         Used to get Google Drive save status label.
         """
 
-        metadata = app.games.current.meta.drive
+        metadata = app().games.current.meta.drive
 
         if not metadata.is_present:
             return ""
@@ -102,7 +102,7 @@ class SaveStatusBuilder(UIBuilder):
         if creation_datetime.year != date.today().year:
             date_format += " YYYY"
 
-        creation_date = format_datetime(creation_datetime, date_format, locale=app.state.locale)
+        creation_date = format_datetime(creation_datetime, date_format, locale=app().state.locale)
         creation_time = creation_datetime.strftime("%H:%M")
 
         return tr(
@@ -118,5 +118,5 @@ class SaveStatusBuilder(UIBuilder):
         Used to get local save status label.
         """
 
-        message_key = _status_message_map.get(app.games.current.meta.sync_status)
+        message_key = _status_message_map.get(app().games.current.meta.sync_status)
         return tr(message_key)

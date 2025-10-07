@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QPushButton
 
 from constants import Resource
 from savegem.app.gui.constants import QAttr, QObjectName, QKind
+from savegem.app.gui.window import gui
 from savegem.common.core.text_resource import tr
 from savegem.app.gui.popup import Popup
 
@@ -20,7 +21,7 @@ class Notification(Popup):
     """
 
     def __init__(self):
-        super().__init__("popup_NotificationTitle", Resource.NotificationIco)
+        super().__init__(gui(), "popup_NotificationTitle", Resource.NotificationIco)
 
     def _add_controls(self):
         close_button = QPushButton(tr("popup_NotificationButtonClose"))

@@ -3,7 +3,7 @@ from typing import Optional
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QPushButton
 
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import locales
 from savegem.app.gui.constants import UIRefreshEvent, QAttr, QKind, QObjectName
@@ -62,7 +62,7 @@ class LanguageSwitchBuilder(UIBuilder):
         Used as callback function when language switch button is being clicked.
         """
 
-        next_locale_index = locales().index(app.state.locale) + 1
+        next_locale_index = locales().index(app().state.locale) + 1
 
         if next_locale_index == len(locales()):
             next_locale_index = 0
@@ -72,5 +72,5 @@ class LanguageSwitchBuilder(UIBuilder):
         _logger.info("Language has been changed.")
         _logger.info("Selected language - %s", new_locale)
 
-        app.state.locale = new_locale
+        app().state.locale = new_locale
         self._gui.refresh(UIRefreshEvent.LanguageChange)

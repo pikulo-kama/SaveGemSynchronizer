@@ -7,18 +7,43 @@ class Directory:
     Contains names of directories used by application.
     """
 
-    ProjectRoot: Final = os.path.dirname(os.path.abspath(__file__))
-    Config: Final = os.path.join(ProjectRoot, "config")
-    Locale: Final = os.path.join(ProjectRoot, "locale")
-    Resources: Final = os.path.join(ProjectRoot, "resources")
-    Styles: Final = os.path.join(ProjectRoot, "styles")
+    @property
+    def ProjectRoot(self):  # noqa
+        return os.path.dirname(os.path.abspath(__file__))
 
-    # We need to have fallback value for APPDATA token, since
-    # when tests are executed on Linux environment it would fail.
-    AppDataRoot = os.path.join(os.getenv("APPDATA") or "", "SaveGem")
-    Output: Final = os.path.join(AppDataRoot, "Output")
-    Logs: Final = os.path.join(AppDataRoot, "Logs")
-    Logback: Final = os.path.join(AppDataRoot, "Logback")
+    @property
+    def Config(self):  # noqa
+        return str(os.path.join(self.ProjectRoot, "config"))
+
+    @property
+    def Locale(self):  # noqa
+        return os.path.join(self.ProjectRoot, "locale")
+
+    @property
+    def Resources(self):  # noqa
+        return os.path.join(self.ProjectRoot, "resources")
+
+    @property
+    def Styles(self):  # noqa
+        return os.path.join(self.ProjectRoot, "styles")
+
+    @property
+    def AppDataRoot(self):  # noqa
+        # We need to have fallback value for APPDATA token, since
+        # when tests are executed on Linux environment it would fail.
+        return os.path.join(os.getenv("APPDATA") or "", "SaveGem")
+
+    @property
+    def Output(self):  # noqa
+        return os.path.join(self.AppDataRoot, "Output")
+
+    @property
+    def Logs(self):  # noqa
+        return os.path.join(self.AppDataRoot, "Logs")
+
+    @property
+    def Logback(self):  # noqa
+        return os.path.join(self.AppDataRoot, "Logback")
 
 
 class File:

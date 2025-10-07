@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock
 
 import pytest
 from _pytest.fixtures import FixtureRequest
@@ -6,9 +7,9 @@ from pytest_mock import MockerFixture
 
 def _safe_patch(patch_method, path, *args, **kw):
     try:
-        patch_method(path, *args, **kw)
+        return patch_method(path, *args, **kw)
     except AttributeError:
-        pass
+        return MagicMock()
 
 
 @pytest.fixture
@@ -54,13 +55,23 @@ def module_patch(mocker: MockerFixture, request: FixtureRequest):
 
 
 @pytest.fixture
-def prop_mock(module_patch):
-    return module_patch("prop")
+def prop_mock(safe_module_patch):
+    return safe_module_patch("prop")
 
 
 @pytest.fixture
-def tr_mock(module_patch):
-    return module_patch("tr", side_effect=lambda key, *args: f"Translated({key})")
+def tr_mock(mocker: MockerFixture, module_patch):
+
+    import savegem.common.core.text_resource as tr_module
+
+    mock = mocker.MagicMock()
+    mock.side_effect = lambda key, *args: f"Translated({key})"
+
+    module_patch("tr", new=mock)
+    mocker.patch.object(tr_module, "tr", new=mock)
+    mocker.patch("savegem.common.core.text_resource.tr", new=mock)
+
+    return mock
 
 
 @pytest.fixture

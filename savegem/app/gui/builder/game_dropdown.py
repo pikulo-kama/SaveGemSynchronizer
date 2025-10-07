@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QComboBox
 
 from savegem.app.gui.component.combobox import QCustomComboBox
 from savegem.app.gui.worker.game_change_worker import GameChangeWorker
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.app.gui.constants import UIRefreshEvent, QObjectName, QAttr, QKind
 from savegem.app.gui.builder import UIBuilder
 
@@ -44,16 +44,16 @@ class GameDropdownBuilder(UIBuilder):
 
     def refresh(self):
 
-        if app.games.empty:
+        if app().games.empty:
             _logger.error("There are no games configured. Can't proceed.")
             raise RuntimeError("There are no games configured. Can't proceed.")
 
         self.__combobox.blockSignals(True)
         self.__combobox.clear()
-        self.__combobox.addItems(app.games.names)
+        self.__combobox.addItems(app().games.names)
         self.__combobox.view().setCursor(Qt.CursorShape.PointingHandCursor)
 
-        self.__combobox.setCurrentText(app.games.current.name)
+        self.__combobox.setCurrentText(app().games.current.name)
         self.__combobox.blockSignals(False)
 
         self.enable()
@@ -62,7 +62,7 @@ class GameDropdownBuilder(UIBuilder):
         enabled = True
         cursor = Qt.CursorShape.PointingHandCursor
 
-        if len(app.games.names) == 1:
+        if len(app().games.names) == 1:
             enabled = False
             cursor = Qt.CursorShape.ForbiddenCursor
 

@@ -18,7 +18,7 @@ def _user_provider(mocker: MockerFixture):
 
 def test_should_initialize_only_once(module_patch, _user_provider):
 
-    from savegem.common.core import UserState
+    from savegem.common.core.user import UserState
     from savegem.common.util.file import resolve_temp_file
 
     url_retrieve_mock = module_patch("urllib.request.urlretrieve")
@@ -39,7 +39,7 @@ def test_should_initialize_only_once(module_patch, _user_provider):
 
 def test_should_not_download_photo_if_url_is_none(_user_provider):
 
-    from savegem.common.core import UserState
+    from savegem.common.core.user import UserState
 
     user_state = UserState()
     user_state.initialize(lambda: {})
@@ -49,7 +49,7 @@ def test_should_not_download_photo_if_url_is_none(_user_provider):
 
 def test_should_trim_user_name_if_too_long(_user_provider):
 
-    from savegem.common.core import UserState
+    from savegem.common.core.user import UserState
 
     user_state = UserState()
     user_state.initialize(lambda: {"displayName": "Ultra-long-super-user-name"})

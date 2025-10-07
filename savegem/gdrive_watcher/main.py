@@ -1,6 +1,6 @@
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.ipc_socket import ui_socket
-from savegem.common.core import app
+from savegem.common.core.context import app
 from constants import File
 import threading
 import os.path
@@ -29,13 +29,13 @@ class GDriveWatcher(Daemon):
         if not os.path.exists(resolve_temp_file(File.GUIInitializedFlag)):
             return
 
-        app.user.initialize(GDrive.get_current_user)
-        app.games.download()
+        app().user.initialize(GDrive.get_current_user)
+        app().games.download()
 
         files, directories = self.__get_changes()
-        save_files_modified = app.games.current.drive_directory in directories
-        games_config_modified = app.config.games_config_file_id in files
-        activity_log_modified = app.config.activity_log_file_id in files
+        save_files_modified = app().games.current.drive_directory in directories
+        games_config_modified = app().config.games_config_file_id in files
+        activity_log_modified = app().config.activity_log_file_id in files
 
         self._logger.debug("Current game files modified: %s", save_files_modified)
         self._logger.debug("Games config modified: %s", games_config_modified)
@@ -74,7 +74,7 @@ class GDriveWatcher(Daemon):
             # about what was removed on cloud. To be safe if something is removed
             # on drive we will assume it was for current game and refresh UI.
             if is_removed:
-                affected_directories.append(app.games.current.drive_directory)
+                affected_directories.append(app().games.current.drive_directory)
                 continue
 
             modified_files.append(file.get("id"))

@@ -4,7 +4,7 @@ import shutil
 
 from googleapiclient.errors import HttpError
 
-from savegem.common.core import app
+from savegem.common.core.context import app
 
 from constants import ZIP_EXTENSION
 from savegem.common.core.game_config import Game
@@ -56,7 +56,7 @@ class Uploader(SubscriptableService):
 
         # Set checksum then copy metadata file to target directory.
         game.meta.local.checksum = game.meta.local.calculate_checksum()
-        game.meta.local.owner = app.user.name
+        game.meta.local.owner = app().user.name
         game.meta.local.created_time = now.isoformat()
 
         shutil.copy(game.metadata_file_path, target_archive_path)
@@ -68,7 +68,7 @@ class Uploader(SubscriptableService):
         self._complete_stage()
 
         archive_props = {
-            SaveMetaProp.Owner: app.user.name,
+            SaveMetaProp.Owner: app().user.name,
             SaveMetaProp.Checksum: game.meta.local.checksum
             # No need to upload createdTime it would be populated by
             # Google Drive API. We only add it to local metadata for

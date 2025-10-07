@@ -3,7 +3,7 @@ from PyQt6.QtGui import QIcon, QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout
 
 from constants import Resource
-from savegem.common.core import app
+from savegem.common.core.context import app
 from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
 from savegem.app.gui.constants import UIRefreshEvent
@@ -234,8 +234,8 @@ class GUI(QMainWindow):
         destroyed.
         """
 
-        app.state.width = self.width()
-        app.state.height = self.height()
+        app().state.width = self.width()
+        app().state.height = self.height()
 
         self.before_destroy.emit()  # noqa
         _logger.info("Application shut down.")
@@ -249,9 +249,9 @@ class GUI(QMainWindow):
         screen_width = QApplication.primaryScreen().size().width()
         screen_height = QApplication.primaryScreen().size().height()
 
-        x = int((screen_width - app.state.width) / 2)
-        y = int((screen_height - app.state.height) / 2)
+        x = int((screen_width - app().state.width) / 2)
+        y = int((screen_height - app().state.height) / 2)
 
         self.setMinimumSize(prop("minWindowWidth"), prop("minWindowHeight"))
-        self.resize(app.state.width, app.state.height)
+        self.resize(app().state.width, app().state.height)
         self.move(x, y)

@@ -5,8 +5,13 @@ from pytest_mock import MockerFixture
 
 
 # Disable logger mock
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture
 def global_logger_mock():
+    pass
+
+
+@pytest.fixture
+def logger_mock():
     pass
 
 
