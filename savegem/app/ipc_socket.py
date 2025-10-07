@@ -57,9 +57,12 @@ class UISocket(IPCSocket):
         Used to send message to all child processes
         that are running in background.
         """
+
+        _logger.debug("Sending message to child processes.")
+
         for process in self.__child_processes:
             process.send(message)
-            _logger.debug("Send message to socket with port %d", process.port)
+            _logger.debug("Sent message to socket on port %d", process.port)
 
 
 ui_socket = UISocket()

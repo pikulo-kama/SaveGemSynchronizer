@@ -7,6 +7,7 @@ from savegem.common.core.context import app
 from savegem.common.util.logger import get_logger
 from savegem.common.util.test import ExitTestLoop
 
+
 _logger = get_logger(__name__)
 
 
