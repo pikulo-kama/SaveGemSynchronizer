@@ -33,3 +33,19 @@ QProgressPushButton {
 QProgressPushButton[in-progress="true"] {
     icon: none;
 }
+
+
+QLabel#informationIcon {
+    min-width: 16px;
+    max-width: 16px;
+    min-height: 16px;
+    min-width: 16px;
+
+    border-radius: 8px;
+    padding: 0px 1px;
+
+    color: color("primaryTextColor");
+    background: color("secondaryTextColor");
+    font: font("primary-xs");
+    font-weight: bold;
+}

@@ -2,6 +2,7 @@
   "languageId" : "DE",
   "window_Title" : "{0} Synchronisierer",
   "window_Copyright" : "{0}™ v{1} © {2} {3}. Lizenziert unter GPLv3.",
+  "window_CopyrightDisclaimer" : "{0} ist ein inoffizielles Dienstprogramm eines Drittanbieters.\n\nAlle Spieltitel, Logos und zugehörigen geistigen Eigentumsrechte sind Eigentum ihrer jeweiligen Inhaber.\n{0} ist weder mit einem Spielepublisher oder -entwickler verbunden, von diesem befürwortet noch gesponsert.",
   "popup_NotificationTitle" : "Information",
   "popup_NotificationButtonClose" : "OK",
   "popup_ConfirmationTitle" : "Achtung",

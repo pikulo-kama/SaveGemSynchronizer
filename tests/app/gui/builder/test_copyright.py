@@ -1,7 +1,8 @@
 from datetime import date
+from unittest.mock import call
 
 import pytest
-from PyQt6.QtWidgets import QVBoxLayout, QLabel
+from PyQt6.QtCore import Qt
 from pytest_mock import MockerFixture
 
 
@@ -13,8 +14,14 @@ def _setup(prop_mock, tr_mock):
         "author": "Author A",
     }.get(key)
 
-    tr_mock.side_effect = lambda key, name, version, period, author: \
-        f"Copyright String: {name} v{version}, {period} by {author}"
+    def _tr(key, *args):
+
+        if key == "window_Copyright":
+            return f"Copyright String: {args[0]} v{args[1]}, {args[2]} by {args[3]}"
+        else:
+            return f"Disclaimer for {args[0]}"
+
+    tr_mock.side_effect = _tr
 
 
 @pytest.fixture
@@ -48,24 +55,32 @@ def test_copyright_builder_initialization(mocker: MockerFixture):
     assert builder._CopyrightBuilder__copyright is None  # noqa
 
 
-def test_build_creates_label_and_adds_to_gui(mocker: MockerFixture, module_patch, gui_mock, _copyright_builder):
+def test_build_creates_label_and_adds_to_gui(module_patch, gui_mock, _copyright_builder):
     """
     Test build() creates the QLabel, sets its name, and adds it to the correct layout.
     """
 
+    frame_mock = module_patch("QWidget")
+    frame_layout = module_patch("QHBoxLayout")
+
     mock_label_constructor = module_patch("QLabel")
     mock_label_instance = mock_label_constructor.return_value
 
-    mock_layout = mocker.MagicMock(spec=QVBoxLayout)
-    gui_mock.bottom.layout.return_value = mock_layout
+    mock_tooltip_constructor = module_patch("QIconTooltip")
+    mock_tooltip_instance = mock_tooltip_constructor.return_value
 
     _copyright_builder.build()
 
     mock_label_constructor.assert_called_once_with()
+    mock_tooltip_constructor.assert_called_once_with()
     mock_label_instance.setObjectName.assert_called_once_with("copyright")
-    mock_layout.addWidget.assert_called_once_with(mock_label_instance, 0)
 
-    assert _copyright_builder._CopyrightBuilder__copyright is mock_label_instance  # noqa
+    frame_layout.return_value.addWidget.assert_has_calls([
+        call(mock_label_instance, alignment=Qt.AlignmentFlag.AlignVCenter),
+        call(mock_tooltip_instance, alignment=Qt.AlignmentFlag.AlignVCenter)
+    ])
+
+    gui_mock.bottom.layout.return_value.addWidget.assert_called_once_with(frame_mock.return_value, 0)
 
 
 @pytest.mark.parametrize("mock_year, expected_period", [
@@ -82,22 +97,34 @@ def test_refresh_calculates_period_and_sets_text(mocker: MockerFixture, _copyrig
     # Arrange: Mock the current date
     date_mock.today.return_value = date(mock_year, 1, 1)
 
-    mock_label = mocker.MagicMock(spec=QLabel)
-    _copyright_builder._CopyrightBuilder__copyright = mock_label
+    mock_copyright_label = mocker.MagicMock()
+    mock_disclaimer_label = mocker.MagicMock()
+
+    _copyright_builder._CopyrightBuilder__copyright = mock_copyright_label
+    _copyright_builder._CopyrightBuilder__tooltip = mock_disclaimer_label
 
     _copyright_builder.refresh()
 
     # Assert 1: tr() is called with the correct arguments
-    tr_mock.assert_called_once_with(
-        "window_Copyright",
-        "SaveGem",
-        "1.2.0",
-        expected_period,
-        "Author A"
-    )
+    tr_mock.assert_has_calls([
+        call(
+            "window_CopyrightDisclaimer",
+            "SaveGem"
+        ),
+        call(
+            "window_Copyright",
+            "SaveGem",
+            "1.2.0",
+            expected_period,
+            "Author A"
+        )
+    ])
 
-    expected_text = f"Copyright String: SaveGem v1.2.0, {expected_period} by Author A"
-    mock_label.setText.assert_called_once_with(expected_text)
+    expected_copyright = f"Copyright String: SaveGem v1.2.0, {expected_period} by Author A"
+    expected_disclaimer = f"Disclaimer for SaveGem"
+
+    mock_copyright_label.setText.assert_called_once_with(expected_copyright)
+    mock_disclaimer_label.setText.assert_called_once_with(expected_disclaimer)
 
 
 def test_refresh_logs_info(mocker: MockerFixture, _copyright_builder, logger_mock):
@@ -105,10 +132,11 @@ def test_refresh_logs_info(mocker: MockerFixture, _copyright_builder, logger_moc
     Test refresh() ensures the logger debug method is called.
     """
 
-    mock_label = mocker.MagicMock(spec=QLabel)
-    _copyright_builder._CopyrightBuilder__copyright = mock_label
+    _copyright_builder._CopyrightBuilder__copyright = mocker.MagicMock()
+    _copyright_builder._CopyrightBuilder__tooltip = mocker.MagicMock()
 
     _copyright_builder.refresh()
 
-    logger_mock.debug.assert_called_once()
-    assert "Copyright was reloaded" in logger_mock.debug.call_args[0][0]
+    logger_mock.debug.call_count = 2
+    assert "Disclaimer was reloaded" in logger_mock.debug.call_args_list[0][0][0]
+    assert "Copyright was reloaded" in logger_mock.debug.call_args_list[1][0][0]

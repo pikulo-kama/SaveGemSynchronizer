@@ -2,6 +2,7 @@
   "languageId" : "EN",
   "window_Title" : "{0} Synchronizer",
   "window_Copyright" : "{0}™ v{1} © {2} {3}. Licensed under GPLv3.",
+  "window_CopyrightDisclaimer" : "{0} is an unofficial third-party utility.\n\nAll game titles, logos, and associated intellectual property are the property of their respective owners.\n{0} is not affiliated with, endorsed by, or sponsored by any game publisher or developer.",
   "popup_NotificationTitle" : "Information",
   "popup_NotificationButtonClose" : "OK",
   "popup_ConfirmationTitle" : "Be Aware",
