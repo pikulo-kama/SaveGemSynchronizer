@@ -25,14 +25,14 @@ def main():
     _logger.info("Starting SaveGem application.")
     _logger.info("version %s", prop("version"))
 
+    application = QApplication(sys.argv)
+    application.setStyleSheet(load_stylesheet())
+
     # Startup initialization.
     app().user.initialize(GDrive.get_current_user)
     app().games.download()
     app().games.current.meta.drive.refresh()
     app().activity.refresh()
-
-    application = QApplication(sys.argv)
-    application.setStyleSheet(load_stylesheet())
 
     app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))

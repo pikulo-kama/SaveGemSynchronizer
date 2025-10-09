@@ -68,8 +68,8 @@ class Resource:
     """
 
     ApplicationIco: Final = "application.ico"
-    NotificationIco: Final = "notification.ico"
-    ConfirmationIco: Final = "confirmation.ico"
+    NotificationIco: Final = "notification.svg"
+    ConfirmationIco: Final = "confirmation.svg"
 
 
 JSON_EXTENSION: Final = ".json"

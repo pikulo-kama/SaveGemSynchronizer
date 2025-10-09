@@ -1,13 +1,14 @@
 import json
 import os
 import re
+import urllib.request
 from typing import Final
 
 from constants import File
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
 from savegem.common.service.gdrive import GDrive
-from savegem.common.util.file import delete_file, resolve_app_data
+from savegem.common.util.file import delete_file, resolve_app_data, resolve_resource, resolve_temp_file
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -24,6 +25,7 @@ class GameConfig(AppData):
     __LOCAL_PATH: Final = "localPath"
     __PLAYERS: Final = "players"
     __GAME_NAME: Final = "name"
+    __GAME_LOGO: Final = "logo"
     __PROCES_NAME: Final = "process"
     __HIDDEN: Final = "hidden"
     __AUTO_MODE_ALLOWED: Final = "allowAutoMode"
@@ -55,9 +57,10 @@ class GameConfig(AppData):
 
         for game in json.load(game_config):
             name = game.get(self.__GAME_NAME)
+            process_name = game.get(self.__PROCES_NAME)
+            logo = game.get(self.__GAME_LOGO)
             local_path = game.get(self.__LOCAL_PATH)
             drive_directory = game.get(self.__PARENT_DIR)
-            process_name = game.get(self.__PROCES_NAME)
             allow_auto_mode = game.get(self.__AUTO_MODE_ALLOWED, True)
             files_filter = game.get(self.__FILES_FILTER, [])
 
@@ -76,6 +79,7 @@ class GameConfig(AppData):
             self.__games_by_name[name] = Game(
                 name,
                 process_name,
+                logo,
                 local_path,
                 drive_directory,
                 files_filter,
@@ -134,21 +138,24 @@ class Game:
     Represents a game.
     """
 
+    __RESOURCE_TOKEN: Final = "resource:"
     __SAVE_META_FILE_NAME: Final = "SaveGemMetadata.json"
     __ALL_FILES: Final = ".*"
 
     def __init__(self,
                  name: str,
                  process_name: str,
+                 logo: str,
                  local_path: str,
                  drive_directory: str,
                  files_filter: list[str],
                  auto_mode_allowed: bool):
         self._name = name
+        self._process_name = process_name
+        self.__logo = self.__download_logo(logo)
         self.__local_path = local_path
         self.__drive_directory = drive_directory
         self.__files_filter = files_filter
-        self._process_name = process_name
         self._auto_mode_allowed = auto_mode_allowed
 
         self._metadata = MetadataWrapper(LocalMetadata(self), DriveMetadata(self))
@@ -167,6 +174,13 @@ class Game:
         the way it's displayed in Task Manager.
         """
         return self._process_name
+
+    @property
+    def logo(self):
+        """
+        Path to the game logo.
+        """
+        return self.__logo
 
     @property
     def local_path(self):
@@ -235,3 +249,20 @@ class Game:
         specific to the game.
         """
         return os.path.join(self.local_path, Game.__SAVE_META_FILE_NAME)
+
+    def __download_logo(self, logo_url: str):
+        """
+        Used to download game logo and store it locally.
+        Or just resolve path to it if logo is application resource.
+        """
+
+        if logo_url is None:
+            return None
+
+        if logo_url.startswith(self.__RESOURCE_TOKEN):
+            return resolve_resource(logo_url.replace(self.__RESOURCE_TOKEN, ""))
+
+        logo_path = resolve_temp_file(self.name)
+        urllib.request.urlretrieve(logo_url, logo_path)
+
+        return logo_path

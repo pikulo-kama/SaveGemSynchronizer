@@ -1,6 +1,6 @@
 from typing import Optional
 
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
 
@@ -12,7 +12,7 @@ from savegem.common.core.text_resource import tr
 from savegem.app.gui.builder import UIBuilder
 from savegem.app.gui.popup.confirmation import confirmation
 from savegem.common.util.file import delete_file, resolve_app_data
-from savegem.common.util.graphics import make_circular_image
+from savegem.common.util.graphics import make_circular_image, scale_image
 
 
 class UserSectionBuilder(UIBuilder):
@@ -76,11 +76,7 @@ class UserSectionBuilder(UIBuilder):
         chip_layout = QHBoxLayout(user_chip)
 
         user_photo_label = QLabel()
-        photo_pixmap = QPixmap(app().user.photo).scaled(
-            QSize(20, 20),
-            Qt.AspectRatioMode.KeepAspectRatio,
-            Qt.TransformationMode.SmoothTransformation
-        )
+        photo_pixmap = scale_image(QPixmap(app().user.photo), 20)
         user_photo_label.setPixmap(make_circular_image(photo_pixmap))
         user_name_label = QLabel(app().user.short_name)
 

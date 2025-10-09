@@ -1,5 +1,20 @@
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QPixmap, QPainter, QPainterPath
+from PyQt6.QtWidgets import QApplication
+
+
+def get_color_mode():
+    """
+    Used to get current color mode.
+    """
+
+    mode = "light"
+    color_scheme = QApplication.instance().styleHints().colorScheme()  # noqa
+
+    if color_scheme == Qt.ColorScheme.Dark:
+        mode = "dark"
+
+    return mode
 
 
 def make_circular_image(pixmap: QPixmap) -> QPixmap:
@@ -27,3 +42,18 @@ def make_circular_image(pixmap: QPixmap) -> QPixmap:
     painter.end()
 
     return circular_pixmap
+
+
+def scale_image(pixmap: QPixmap, width: int, height: int = None) -> QPixmap:
+    """
+    Used to scale image to provided size.
+    """
+
+    if height is None:
+        height = width
+
+    return pixmap.scaled(
+        QSize(width, height),
+        Qt.AspectRatioMode.KeepAspectRatio,
+        Qt.TransformationMode.SmoothTransformation
+    )

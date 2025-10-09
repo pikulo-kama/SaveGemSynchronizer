@@ -3,6 +3,7 @@ import json
 import os.path
 import shutil
 from constants import Directory, UTF_8, SHA_256
+from savegem.common.util.graphics import get_color_mode
 
 
 def resolve_config(config_name: str):
@@ -23,7 +24,13 @@ def resolve_resource(resource_name: str):
     """
     Used to resolve file in '{PROJECT_ROOT}/resource' directory.
     """
-    return os.path.join(Directory().Resources, resource_name)
+
+    resource_path = os.path.join(Directory().Resources, get_color_mode(), resource_name)
+
+    if not os.path.exists(resource_path):
+        resource_path = os.path.join(Directory().Resources, resource_name)
+
+    return resource_path
 
 
 def resolve_temp_file(file_name: str):

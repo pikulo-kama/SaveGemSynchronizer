@@ -82,12 +82,12 @@ def test_color_light_mode(_mock_color_scheme):
     Test _color retrieves the correct color in light mode.
     """
 
-    from savegem.app.gui.style import _color
+    from savegem.app.gui.style import color
 
     _mock_color_scheme(Qt.ColorScheme.Light)
 
-    assert _color("background") == "#FFFFFF"
-    assert _color("text") == "#000000"
+    assert color("background") == "#FFFFFF"
+    assert color("text") == "#000000"
 
 
 def test_color_dark_mode(_mock_color_scheme):
@@ -95,12 +95,12 @@ def test_color_dark_mode(_mock_color_scheme):
     Test _color retrieves the correct color in dark mode.
     """
 
-    from savegem.app.gui.style import _color
+    from savegem.app.gui.style import color
 
     _mock_color_scheme(Qt.ColorScheme.Dark)
 
-    assert _color("background") == "#1E1E1E"
-    assert _color("text") == "#EBEBEB"
+    assert color("background") == "#1E1E1E"
+    assert color("text") == "#EBEBEB"
 
 
 def test_font():
@@ -108,10 +108,10 @@ def test_font():
     Test _font retrieves the correct font property.
     """
 
-    from savegem.app.gui.style import _font
+    from savegem.app.gui.style import font
 
-    assert _font("main_text") == "Arial"
-    assert _font("title_text") == "Roboto Bold"
+    assert font("main_text") == "Arial"
+    assert font("title_text") == "Roboto Bold"
 
 
 def test_image(_mock_color_scheme, resolve_resource_mock):
@@ -120,7 +120,7 @@ def test_image(_mock_color_scheme, resolve_resource_mock):
     and replaces OS separators with forward slashes for QSS format.
     """
 
-    from savegem.app.gui.style import _image
+    from savegem.app.gui.style import image
 
     # Set to dark mode
     _mock_color_scheme(Qt.ColorScheme.Dark)
@@ -129,7 +129,7 @@ def test_image(_mock_color_scheme, resolve_resource_mock):
     expected_resolved_path = "resolved/path/dark/icon.png"
     expected_token = f"url('{expected_resolved_path}')"
 
-    result = _image("icon.png")
+    result = image("icon.png")
 
     # Check the call to resolve_resource used the correct OS path format (dark\icon.png)
     # The lambda in the fixture handles the os.path.join mocking here

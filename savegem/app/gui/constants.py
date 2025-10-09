@@ -44,7 +44,6 @@ class QObjectName:
     Chip: Final = "chip"
     ComboBox: Final = "comboBox"
     SquareButton: Final = "squareButton"
-    InformationIcon: Final = "informationIcon"
 
 
 class QSizeVariant:
