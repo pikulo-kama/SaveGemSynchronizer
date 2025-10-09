@@ -9,9 +9,3 @@ This project uses third-party libraries:
 - winotify ([MIT](https://opensource.org/licenses/MIT))
 - PyQt6 ([GPL v3](https://riverbankcomputing.com/commercial/pyqt/license)) \
   *Note: Use of PyQt6 is subject to the conditions of the GPL v3 license, or a valid commercial license if proprietary.*
-
-
-Icons used in SaveGem™:
-- Gemstone icon by Jonas Roßner, from https://openmoji.org, licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- Warning icon by Miriam Vollmeier, from https://openmoji.org, licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- Information icon by Jose Avila, from https://openmoji.org, licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)

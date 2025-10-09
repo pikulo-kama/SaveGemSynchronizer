@@ -1,0 +1,16 @@
+<svg width="15" height="15" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <mask id="exclamation-mask">
+    <rect width="100" height="100" fill="white"/>
+
+    <rect x="40" y="15" width="20" height="50" rx="10" fill="black"/>
+    <circle cx="50" cy="82" r="9" fill="black"/>
+  </mask>
+
+  <circle
+    cx="50"
+    cy="50"
+    r="50"
+    fill="#d3d3d3"
+    mask="url(#exclamation-mask)"
+  />
+</svg>
