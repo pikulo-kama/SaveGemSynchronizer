@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "table_name": "ui_sections",
+    "extractor": "DatabaseExtractor",
+    "extract_date": "2025-10-22T04:10:43.518831"
+  },
+  "data": [
+    {
+      "section_id": "home",
+      "section_label": "tr{label_Home}",
+      "section_icon": "home.svg",
+      "controller": "MenuController",
+      "order_id": 1
+    },
+    {
+      "section_id": "settings",
+      "section_label": "tr{label_Settings}",
+      "section_icon": "gear.svg",
+      "controller": "MenuController",
+      "order_id": 2
+    },
+    {
+      "section_id": "about",
+      "section_label": "tr{label_About}",
+      "section_icon": "about.svg",
+      "controller": "MenuController",
+      "order_id": 3
+    },
+    {
+      "section_id": "game_details",
+      "section_label": "tr{label_Details}",
+      "controller": "GameBarController",
+      "order_id": 1
+    },
+    {
+      "section_id": "game_history",
+      "section_label": "tr{label_History}",
+      "controller": "GameBarController",
+      "order_id": 2
+    },
+    {
+      "section_id": "game_settings",
+      "section_label": "tr{label_Settings}",
+      "controller": "GameBarController",
+      "order_id": 3
+    }
+  ]
+}

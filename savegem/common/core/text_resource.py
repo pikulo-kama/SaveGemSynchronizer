@@ -1,6 +1,5 @@
 from savegem.common.core.context import app
-from savegem.common.core.json_config_holder import JsonConfigHolder
-from savegem.common.util.file import resolve_locale
+from savegem.common.db.manager import db
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -19,7 +18,7 @@ class TextResource:
     """
 
     __current_locale = None
-    __holder = None
+    __resource_map = {}
 
     @classmethod
     def get(cls, locale: str, key: str, *args) -> str:
@@ -31,9 +30,9 @@ class TextResource:
         if cls.__current_locale != locale:
             _logger.info("Locale selection has been changed. Initializing holder for %s", locale)
             cls.__current_locale = locale
-            cls.__holder = JsonConfigHolder(resolve_locale(locale))
+            cls.__initialize_text_resources(locale)
 
-        label = str(cls.__holder.get_value(key, key))
+        label = cls.__resource_map.get(key, key)
         _logger.debug("TextResource '%s.%s' = %s", locale, key, label)
 
         if len(args) > 0:
@@ -41,3 +40,29 @@ class TextResource:
             label = label.format(*args)
 
         return label
+
+    @classmethod
+    def reset(cls):
+        """
+        Used to reset loaded translations.
+        """
+
+        cls.__current_locale = None
+        cls.__resource_map = {}
+
+    @classmethod
+    def __initialize_text_resources(cls, locale_id: str):
+        """
+        Used to load text resources
+        that correspond provided locale ID.
+        """
+
+        resources = db().table("setup_text_resource") \
+            .where("locale_id = ?", locale_id) \
+            .retrieve()
+
+        for resource in resources:
+            key = resource.get("text_resource_key")
+            value = resource.get("text_resource")
+
+            cls.__resource_map[key] = value

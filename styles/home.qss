@@ -1,0 +1,4 @@
+
+QCustomWidget#homeRightSection {
+    max-width: 900px;
+}

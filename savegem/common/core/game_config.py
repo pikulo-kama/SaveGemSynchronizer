@@ -4,11 +4,11 @@ import re
 import urllib.request
 from typing import Final
 
-from constants import File
+from constants import File, JPG_EXTENSION
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
 from savegem.common.service.gdrive import GDrive
-from savegem.common.util.file import delete_file, resolve_app_data, resolve_resource, resolve_temp_file
+from savegem.common.util.file import delete_file, resolve_app_data, resolve_resource, resolve_temp_resource
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -138,7 +138,6 @@ class Game:
     Represents a game.
     """
 
-    __RESOURCE_TOKEN: Final = "resource:"
     __SAVE_META_FILE_NAME: Final = "SaveGemMetadata.json"
     __ALL_FILES: Final = ".*"
 
@@ -256,13 +255,11 @@ class Game:
         Or just resolve path to it if logo is application resource.
         """
 
+        # Use SaveGem logo as fallback game logo.
         if logo_url is None:
-            return None
+            return resolve_resource("gem.svg")
 
-        if logo_url.startswith(self.__RESOURCE_TOKEN):
-            return resolve_resource(logo_url.replace(self.__RESOURCE_TOKEN, ""))
-
-        logo_path = resolve_temp_file(self.name)
+        logo_path = resolve_temp_resource(f"{self.name}{JPG_EXTENSION}")
         urllib.request.urlretrieve(logo_url, logo_path)
 
         return logo_path

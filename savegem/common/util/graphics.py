@@ -1,26 +1,19 @@
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QRect, QRectF
 from PyQt6.QtGui import QPixmap, QPainter, QPainterPath
-from PyQt6.QtWidgets import QApplication
 
 
-def get_color_mode():
+def round_image(pixmap: QPixmap, radius: int = None) -> QPixmap:
     """
-    Used to get current color mode.
+    Takes a QPixmap and returns a new QPixmap rounded to specified radius.
+    If radius is not provided then pixmap would be clipped to circle shape.
     """
 
-    mode = "light"
-    color_scheme = QApplication.instance().styleHints().colorScheme()  # noqa
+    width = pixmap.width()
+    height = pixmap.height()
+    effective_radius = min(width, height) // 2
 
-    if color_scheme == Qt.ColorScheme.Dark:
-        mode = "dark"
-
-    return mode
-
-
-def make_circular_image(pixmap: QPixmap) -> QPixmap:
-    """
-    Takes a QPixmap and returns a new QPixmap clipped to a circular shape.
-    """
+    if radius is not None:
+        effective_radius = min(effective_radius, radius)
 
     # Create a new pixmap with an alpha channel
     circular_pixmap = QPixmap(pixmap.size())
@@ -32,7 +25,9 @@ def make_circular_image(pixmap: QPixmap) -> QPixmap:
 
     # Create a circular path
     path = QPainterPath()
-    path.addEllipse(0, 0, pixmap.width(), pixmap.height())
+    rectangle = QRect(0, 0, width, height)
+    path.addRoundedRect(QRectF(rectangle), effective_radius, effective_radius)
+    # path.addEllipse(0, 0, pixmap.width(), pixmap.height())
 
     # Clip the painter to the circular path
     painter.setClipPath(path)

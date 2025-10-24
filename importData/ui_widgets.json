@@ -1,0 +1,439 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "extractor": "WidgetsExtractor",
+    "extract_date": "2025-10-24T12:49:13.531521"
+  },
+  "data": [
+    {
+      "widget_id": "hl_root",
+      "section_id": "home",
+      "controller": "MenuItemController",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QHBoxLayout",
+      "children": [
+        {
+          "widget_id": "left_section",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "width": 250,
+          "margin_left": 10,
+          "margin_bottom": 20,
+          "children": [
+            {
+              "widget_id": "logo_section",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QHBoxLayout",
+              "height": 80,
+              "margin_left": 5,
+              "children": [
+                {
+                  "widget_id": "logo_image",
+                  "content": "pixmap{gem_outline.svg, scale: 60}",
+                  "widget_type_id": "QLabel",
+                  "alignment": "left-center"
+                },
+                {
+                  "widget_id": "logo_text",
+                  "content": "prop{name}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "hero",
+                  "alignment": "left-center"
+                },
+                {
+                  "widget_id": "logo_section_spacer",
+                  "widget_type_id": "QSpacer"
+                }
+              ]
+            },
+            {
+              "widget_id": "game_list",
+              "controller": "GameListController",
+              "widget_type_id": "QScrollableWidget",
+              "layout_type_id": "QVBoxLayout",
+              "margin_right": 10
+            }
+          ]
+        },
+        {
+          "widget_id": "hl_root_divider",
+          "widget_type_id": "QVDivider"
+        },
+        {
+          "widget_id": "right_section_wrapper",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "alignment": "hcenter",
+          "children": [
+            {
+              "widget_id": "right_section",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "homeRightSection",
+              "stylesheet": {
+                "max-width": "900px"
+              },
+              "children": [
+                {
+                  "widget_id": "game_header",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "height": 130,
+                  "children": [
+                    {
+                      "widget_id": "hl_game_header",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "bottom-left",
+                      "margin_left": 10,
+                      "margin_bottom": 10,
+                      "children": [
+                        {
+                          "widget_id": "game_logo",
+                          "content": "pixmap{game{logo}, scale: 40, radius: 3}",
+                          "widget_type_id": "QLabel",
+                          "alignment": "left-vcenter",
+                          "width": 50
+                        },
+                        {
+                          "widget_id": "game_name",
+                          "content": "game{name}",
+                          "widget_type_id": "QLabel",
+                          "style_object_name": "sectionTitle",
+                          "alignment": "left-center"
+                        }
+                      ]
+                    },
+                    {
+                      "widget_id": "game_tab_bar",
+                      "controller": "GameBarController",
+                      "widget_type_id": "QTabBar",
+                      "style_object_name": "gameBar"
+                    }
+                  ]
+                },
+                {
+                  "widget_id": "game_container",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout"
+                },
+                {
+                  "widget_id": "game_container_controls_divider",
+                  "widget_type_id": "QHDivider"
+                },
+                {
+                  "widget_id": "game_controls",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QHBoxLayout",
+                  "height": 60,
+                  "margin_left": 10,
+                  "margin_right": 10,
+                  "margin_bottom": 10,
+                  "children": [
+                    {
+                      "widget_id": "save_status_container",
+                      "controller": "SaveStatusController",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QVBoxLayout",
+                      "style_object_name": "saveStatusContainer",
+                      "height": 50,
+                      "margin_left": 15,
+                      "margin_top": 5,
+                      "margin_right": 15,
+                      "margin_bottom": 5,
+                      "children": [
+                        {
+                          "widget_id": "save_status_top_wrapper",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QHBoxLayout",
+                          "alignment": "bottom-left",
+                          "children": [
+                            {
+                              "widget_id": "save_status_icon",
+                              "content": "pixmap{saveInfo{statusIcon}, scale: 15}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "accent",
+                              "alignment": "vcenter"
+                            },
+                            {
+                              "widget_id": "save_status_label",
+                              "content": "saveInfo{status}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "saveStatusLabel",
+                              "alignment": "vcenter"
+                            }
+                          ]
+                        },
+                        {
+                          "widget_id": "save_status_description",
+                          "content": "saveInfo{statusDescription}",
+                          "widget_type_id": "QLabel",
+                          "style_object_name": "smallText"
+                        }
+                      ]
+                    },
+                    {
+                      "widget_id": "game_lower_bar_spacer",
+                      "widget_type_id": "QSpacer"
+                    },
+                    {
+                      "widget_id": "game_controls_wrapper",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "bottom-right",
+                      "children": [
+                        {
+                          "widget_id": "upload_button",
+                          "content": "tr{label_UploadSaveToDrive}",
+                          "controller": "UploadButtonController",
+                          "widget_type_id": "QProgressPushButton",
+                          "width": 200,
+                          "height": 40,
+                          "properties": {
+                            "id": "uploadButton",
+                            "kind": "secondary"
+                          }
+                        },
+                        {
+                          "widget_id": "buttons_spacer",
+                          "widget_type_id": "QWidget",
+                          "width": 5
+                        },
+                        {
+                          "widget_id": "download_button",
+                          "controller": "DownloadButtonController",
+                          "widget_type_id": "QProgressPushButton",
+                          "height": 40,
+                          "properties": {
+                            "id": "downloadButton",
+                            "kind": "primary"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "widget_id": "game_history_root",
+      "section_id": "game_history",
+      "controller": "GameBarTabController",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QVBoxLayout",
+      "stylesheet": {
+        "background-color": "orange"
+      }
+    },
+    {
+      "widget_id": "game_settings_root",
+      "section_id": "game_settings",
+      "controller": "GameBarTabController",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QVBoxLayout",
+      "stylesheet": {
+        "background-color": "lime"
+      }
+    },
+    {
+      "widget_id": "window",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QHBoxLayout",
+      "children": [
+        {
+          "widget_id": "sidebar",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "style_object_name": "sidebar",
+          "width": 60,
+          "margin_top": 10,
+          "margin_bottom": 10,
+          "children": [
+            {
+              "widget_id": "menu",
+              "controller": "MenuController",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout"
+            },
+            {
+              "widget_id": "sidebar_spacer",
+              "widget_type_id": "QSpacer"
+            },
+            {
+              "widget_id": "user_picture",
+              "content": "pixmap{user{photo}, scale: 30, circle}",
+              "tooltip": "user{name}",
+              "widget_type_id": "QLabel",
+              "alignment": "bottom-center",
+              "height": 50
+            }
+          ]
+        },
+        {
+          "widget_id": "content",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "margin_top": 10,
+          "margin_right": 10,
+          "margin_bottom": 5
+        }
+      ]
+    },
+    {
+      "widget_id": "game_details_root",
+      "section_id": "game_details",
+      "controller": "GameBarTabController",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QVBoxLayout",
+      "alignment": "top",
+      "children": [
+        {
+          "widget_id": "save_details_container",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QHBoxLayout",
+          "spacing": 15,
+          "height": 200,
+          "margin_left": 10,
+          "margin_top": 10,
+          "margin_right": 10,
+          "children": [
+            {
+              "widget_id": "save_date_card",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "saveDetailsCard",
+              "children": [
+                {
+                  "widget_id": "save_date_card_vl",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "alignment": "top-left",
+                  "spacing": 2,
+                  "margin_left": 20,
+                  "margin_top": 20,
+                  "children": [
+                    {
+                      "widget_id": "save_date_card_icon",
+                      "content": "pixmap{calendar.svg, scale: 30}",
+                      "widget_type_id": "QLabel",
+                      "width": 30,
+                      "height": 30
+                    },
+                    {
+                      "widget_id": "save_date_card_label",
+                      "content": "tr{label_Date}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardTitle",
+                      "alignment": "vcenter",
+                      "height": 35
+                    },
+                    {
+                      "widget_id": "save_date_card_date",
+                      "content": "saveInfo{uploadDate}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardContent",
+                      "height": 25
+                    },
+                    {
+                      "widget_id": "save_date_card_time",
+                      "content": "saveInfo{uploadTime}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardContent",
+                      "height": 30
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "widget_id": "save_owner_card",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "saveDetailsCard",
+              "children": [
+                {
+                  "widget_id": "save_owner_card_vl",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "alignment": "top-left",
+                  "spacing": 2,
+                  "margin_left": 20,
+                  "margin_top": 20,
+                  "children": [
+                    {
+                      "widget_id": "save_owner_card_icon",
+                      "content": "pixmap{person.svg, scale: 30}",
+                      "widget_type_id": "QLabel",
+                      "width": 30,
+                      "height": 30
+                    },
+                    {
+                      "widget_id": "save_owner_card_label",
+                      "content": "tr{label_Author}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardTitle",
+                      "alignment": "vcenter",
+                      "height": 35
+                    },
+                    {
+                      "widget_id": "save_owner_card_value",
+                      "content": "saveInfo{owner}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardContent",
+                      "height": 30
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "widget_id": "save_size_card",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "saveDetailsCard",
+              "children": [
+                {
+                  "widget_id": "save_size_card_vl",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "alignment": "top-left",
+                  "spacing": 2,
+                  "margin_left": 20,
+                  "margin_top": 20,
+                  "children": [
+                    {
+                      "widget_id": "save_size_card_icon",
+                      "content": "pixmap{drive.svg, scale: 30}",
+                      "widget_type_id": "QLabel",
+                      "width": 30,
+                      "height": 30
+                    },
+                    {
+                      "widget_id": "save_size_card_label",
+                      "content": "tr{label_Size}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardTitle",
+                      "alignment": "vcenter",
+                      "height": 30
+                    },
+                    {
+                      "widget_id": "save_size_card_value",
+                      "content": "TBA",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardContent",
+                      "height": 30
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

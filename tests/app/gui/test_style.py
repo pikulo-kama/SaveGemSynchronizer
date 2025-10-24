@@ -182,7 +182,7 @@ def test_load_stylesheet(listdir_mock, read_file_mock, _mock_color_scheme):
     # Mock os.listdir to simulate 3 style files
     listdir_mock.return_value = ["base.qss", "buttons.qss", "specific.qss"]
 
-    # Mock read_file to return different content for each file
+    # Mock read_file to return different resolver for each file
     def mock_read_file_side_effect(path):
         if "base.qss" in path:
             return "QWidget { color: color('text'); }"

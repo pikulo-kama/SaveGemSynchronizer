@@ -1,0 +1,18 @@
+
+/* Non-selected (transparent stripe) */
+QCustomPushButton#gameListItem {
+
+    border: 1px solid color("surface-a30");
+    text-align: left;
+}
+
+QCustomPushButton#gameListItem[selected="true"] {
+    /* Add vertical line to indicate that game is selected. */
+    background: qlineargradient(
+        x1:0.02, y1:0, x2:1, y2:0,
+        stop:0    color("success-a10"),
+        stop:0.01 color("success-a10"),
+        stop:0.01 transparent,
+        stop:1    transparent
+    );
+}

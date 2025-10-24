@@ -127,7 +127,7 @@ def test_gui_initialization(qtbot, prop_mock, tr_mock, resolve_resource_mock, _l
     assert app_gui.windowTitle() == "Translated(window_Title)"
     resolve_resource_mock.assert_called_once()
 
-    # Check builder loading
+    # Check controller loading
     _load_builders_mock.assert_called_once()
 
     # Check centering logic
@@ -233,7 +233,7 @@ def test_gui_refresh_all(_first_builder, _second_builder, qtbot, tr_mock):
 
 def test_gui_refresh_specific_event(qtbot, _first_builder, _second_builder):
     """
-    Test refresh method with a specific event that only one builder handles.
+    Test refresh method with a specific event that only one controller handles.
     """
 
     from savegem.app.gui.constants import UIRefreshEvent

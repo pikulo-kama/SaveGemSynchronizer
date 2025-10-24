@@ -60,7 +60,7 @@ def test_download_success(path_exists_mock, module_patch, copytree_mock,
     module_patch("os.removedirs")
     path_exists_mock.return_value = True  # Directory exists
 
-    # Setup GDrive mock to return a BytesIO object (simulating file content)
+    # Setup GDrive mock to return a BytesIO object (simulating file resolver)
     mock_file_content = b"save_data"
     mock_gdrive.download_file.return_value.getvalue.return_value = mock_file_content
 

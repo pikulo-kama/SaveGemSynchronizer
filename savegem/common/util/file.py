@@ -3,7 +3,6 @@ import json
 import os.path
 import shutil
 from constants import Directory, UTF_8, SHA_256
-from savegem.common.util.graphics import get_color_mode
 
 
 def resolve_config(config_name: str):
@@ -13,24 +12,17 @@ def resolve_config(config_name: str):
     return os.path.join(Directory().Config, config_name)
 
 
-def resolve_locale(locale_name: str):
-    """
-    Used to resolve file in '{PROJECT_ROOT}/locale' directory.
-    """
-    return os.path.join(Directory().Locale, locale_name)
-
-
-def resolve_resource(resource_name: str):
+def resolve_resource(resource_name: str, include_temporary=True):
     """
     Used to resolve file in '{PROJECT_ROOT}/resource' directory.
     """
 
-    resource_path = os.path.join(Directory().Resources, get_color_mode(), resource_name)
+    temp_resource_path = os.path.join(Directory().TempResources, resource_name)
 
-    if not os.path.exists(resource_path):
-        resource_path = os.path.join(Directory().Resources, resource_name)
+    if include_temporary and os.path.exists(temp_resource_path):
+        return temp_resource_path
 
-    return resource_path
+    return os.path.join(Directory().Resources, resource_name)
 
 
 def resolve_temp_file(file_name: str):
@@ -38,6 +30,13 @@ def resolve_temp_file(file_name: str):
     Used to resolve file in '{APP_DATA}/SaveGem/output' directory.
     """
     return os.path.join(Directory().Output, file_name)
+
+
+def resolve_temp_resource(file_name: str):
+    """
+    Used to resolve file in '{APP_DATA}/Output/Resources' directory.
+    """
+    return os.path.join(Directory().TempResources, file_name)
 
 
 def resolve_app_data(file_name: str):
@@ -66,6 +65,13 @@ def resolve_project_data(file_name: str):
     Used to resolve file in '{PROJECT_ROOT}' directory.
     """
     return os.path.join(Directory().ProjectRoot, file_name)
+
+
+def resolve_import_data(file_name: str):
+    """
+    Used to resolve 'importData' file.
+    """
+    return os.path.join(Directory().ImportData, file_name)
 
 
 def cleanup_directory(directory: str):
@@ -112,7 +118,7 @@ def save_file(file_path: str, data: any, as_json: bool = False, binary: bool = F
     encoding = None if binary else UTF_8
 
     with open(file_path, mode, encoding=encoding) as file:
-        json.dump(data, file, indent=2) if as_json else file.write(data)
+        json.dump(data, file, indent=2, ensure_ascii=False) if as_json else file.write(data)
 
 
 def delete_file(file_path: str):

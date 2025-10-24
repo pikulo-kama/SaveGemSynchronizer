@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "table_name": "setup_locale",
+    "extractor": "DatabaseExtractor",
+    "extract_date": "2025-10-23T13:16:31.831907"
+  },
+  "data": [
+    {
+      "locale_id": "de_DE",
+      "locale_name": "Deutsch"
+    },
+    {
+      "locale_id": "en_US",
+      "locale_name": "English"
+    },
+    {
+      "locale_id": "es_ES",
+      "locale_name": "Español"
+    },
+    {
+      "locale_id": "fr_FR",
+      "locale_name": "Français"
+    },
+    {
+      "locale_id": "uk_UA",
+      "locale_name": "Українська"
+    }
+  ]
+}

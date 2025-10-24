@@ -32,7 +32,6 @@ def setup_file_system():
 
         os.mkdir(project_root_dir)
         os.mkdir(Directory().Config)
-        os.mkdir(Directory().Locale)
         os.mkdir(Directory().Resources)
         os.mkdir(Directory().Styles)
 

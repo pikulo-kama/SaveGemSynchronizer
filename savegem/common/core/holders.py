@@ -1,9 +1,9 @@
-import os
 from typing import Optional
 
-from constants import Directory, File
+from constants import File
 from savegem.common.core.json_config_holder import JsonConfigHolder
-from savegem.common.util.file import resolve_config, remove_extension_from_path
+from savegem.common.db.manager import db
+from savegem.common.util.file import resolve_config
 
 _app_config: Optional[JsonConfigHolder] = None
 _locales = None
@@ -19,10 +19,15 @@ def _get_app_config():
 
 
 def locales():
+    """
+    Used to get list of locale IDs configured in the system.
+    """
+
     global _locales
 
     if _locales is None:
-        _locales = [remove_extension_from_path(file) for file in os.listdir(Directory().Locale)]
+        locale_list = db().table("setup_locale").retrieve()
+        _locales = [locale.get("locale_id") for locale in locale_list]
 
     return _locales
 

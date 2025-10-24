@@ -2,10 +2,11 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QLabel
 
+from savegem.app.gui.component import CustomComponentMixin
 from savegem.common.util.file import resolve_resource
 
 
-class QIconTooltip(QLabel):
+class QIconTooltip(QLabel, CustomComponentMixin):
     """
     Wrapper component that should be used
     to display tooltip messages.
@@ -19,5 +20,5 @@ class QIconTooltip(QLabel):
         self.setCursor(Qt.CursorShape.WhatsThisCursor)
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-    def setText(self, text):
-        self.setToolTip(text)
+    def set_content(self, content):
+        self.setToolTip(content)

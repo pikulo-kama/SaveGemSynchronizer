@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "table_name": "setup_widget_type",
+    "extractor": "DatabaseExtractor",
+    "extract_date": "2025-10-22T04:12:22.862786"
+  },
+  "data": [
+    {
+      "widget_type_id": "QWidget",
+      "class_path": "savegem.app.gui.component.widget.QCustomWidget",
+      "is_interactable": 0
+    },
+    {
+      "widget_type_id": "QLabel",
+      "class_path": "savegem.app.gui.component.label.QCustomLabel",
+      "is_interactable": 0
+    },
+    {
+      "widget_type_id": "QCustomPushButton",
+      "class_path": "savegem.app.gui.component.button.QCustomPushButton",
+      "is_interactable": 1
+    },
+    {
+      "widget_type_id": "QProgressPushButton",
+      "class_path": "savegem.app.gui.component.progress_button.QProgressPushButton",
+      "is_interactable": 1
+    },
+    {
+      "widget_type_id": "QScrollableWidget",
+      "class_path": "savegem.app.gui.component.list.QScrollableWidget",
+      "is_interactable": 0
+    },
+    {
+      "widget_type_id": "QSpacer",
+      "class_path": "savegem.app.gui.component.spacer.QSpacer",
+      "is_interactable": 0
+    },
+    {
+      "widget_type_id": "QHDivider",
+      "class_path": "savegem.app.gui.component.divider.QHDivider",
+      "is_interactable": 0
+    },
+    {
+      "widget_type_id": "QVDivider",
+      "class_path": "savegem.app.gui.component.divider.QVDivider",
+      "is_interactable": 0
+    },
+    {
+      "widget_type_id": "QTabBar",
+      "class_path": "savegem.app.gui.component.tab_bar.QCustomTabBar",
+      "is_interactable": 1
+    }
+  ]
+}

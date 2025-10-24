@@ -14,12 +14,10 @@
 
   <g>
     <!-- outer shape: wider -->
-    <path d="M10 40 L28 22 L50 18 L72 22 L90 40 L50 90 L10 40 Z"
-          fill="url(#g1)" stroke="#0a6aa0" stroke-width="2"/>
+    <path d="M10 40 L28 22 L50 18 L72 22 L90 40 L50 90 L10 40 Z" fill="url(#g1)" stroke="#0a6aa0" stroke-width="2"/>
 
     <!-- top crown facets -->
-    <path d="M28 22 L50 18 L72 22 L50 28 Z"
-          fill="url(#g2)" opacity="0.9"/>
+    <path d="M28 22 L50 18 L72 22 L50 28 Z" fill="url(#g2)" opacity="0.9"/>
     <path d="M10 40 L28 22 L50 28 L28 40 Z" fill="#66d4ff" opacity="0.5"/>
     <path d="M90 40 L72 22 L50 28 L72 40 Z" fill="#66d4ff" opacity="0.5"/>
 
@@ -30,10 +28,8 @@
 
     <!-- highlights -->
     <!-- top -->
-    <path d="M32 24 L50 18 L68 24 L50 28 Z"
-          fill="#e6fbff" opacity="0.6"/>
+    <path d="M32 24 L50 18 L68 24 L50 28 Z" fill="#e6fbff" opacity="0.6"/>
     <!-- side-front highlight -->
-    <path d="M53 50 L57 45 L60 50 L57 55 Z"
-          fill="#e6fbff" opacity="0.35"/>
+    <path d="M53 50 L57 45 L60 50 L57 55 Z" fill="#e6fbff" opacity="0.35"/>
   </g>
 </svg>

@@ -11,7 +11,7 @@ from pytest_mock import MockerFixture
 def test_should_resolve_config(path_join_mock):
 
     from constants import Directory
-    from savegem.common.util.file import resolve_config, resolve_locale, resolve_resource, resolve_temp_file, \
+    from savegem.common.util.file import resolve_config, resolve_resource, resolve_temp_file, \
         resolve_app_data, resolve_log, resolve_project_data
 
     file_name = "Test"
@@ -19,11 +19,6 @@ def test_should_resolve_config(path_join_mock):
     resolve_config(file_name)
     path_join_mock.assert_has_calls([
         call(Directory().Config, file_name)
-    ])
-
-    resolve_locale(file_name)
-    path_join_mock.assert_has_calls([
-        call(Directory().Locale, file_name)
     ])
 
     resolve_resource(file_name)

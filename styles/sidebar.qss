@@ -1,0 +1,4 @@
+
+QWidget#sidebar {
+    background-color: color("surface-a20");
+}

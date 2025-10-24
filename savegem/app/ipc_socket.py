@@ -1,3 +1,5 @@
+from PyQt6.QtCore import pyqtSignal, QObject
+
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.window import gui
 from savegem.common.core.context import app
@@ -10,13 +12,23 @@ from savegem.process_watcher.ipc_socket import process_watcher_socket
 _logger = get_logger(__name__)
 
 
-class UISocket(IPCSocket):
+class UISocket(IPCSocket, QObject):
+
+    refresh_ui = pyqtSignal(str)
+    rebuild_window = pyqtSignal()
 
     def __init__(self):
         IPCSocket.__init__(self, prop("ipc.uiSocketPort"))
+        QObject.__init__(self)
+
         self.__child_processes = [google_drive_watcher_socket, process_watcher_socket]
 
     def send_ui_refresh_command(self, event: str):
+        """
+        Used to send refresh event
+        to UI socket.
+        """
+
         self.send({
             IPCProp.Command: IPCCommand.RefreshUI,
             IPCProp.Event: event
@@ -24,7 +36,10 @@ class UISocket(IPCSocket):
 
     def _handle(self, command: str, message: dict):
 
-        if command == IPCCommand.RefreshUI:
+        if command == IPCCommand.RebuildWindow:
+            self.rebuild_window.emit()  # noqa
+
+        elif command == IPCCommand.RefreshUI:
             event = message.get(IPCProp.Event)
             gui().mutex.lock()
 
@@ -50,7 +65,7 @@ class UISocket(IPCSocket):
                 gui().mutex.unlock()
 
             _logger.debug("Refreshing UI with %s event.", event)
-            gui().refresh(event)
+            self.refresh_ui.emit(event)  # noqa
 
     def notify_children(self, message: dict):
         """

@@ -1,0 +1,12 @@
+
+# Setup Tables
+setup_layout_type.json
+setup_widget_type.json
+setup_resource.json
+setup_locale.json
+setup_text_resource.json
+
+# UI Related Metadata
+ui_sections.json
+ui_widgets.json
+ui_widget_events.json

@@ -80,6 +80,7 @@ def _game(_game_path):
     return Game(
         name="Test Game",
         process_name="Test.exe",
+        logo="test",
         local_path=_game_path,
         drive_directory="test_drive_id",
         files_filter=["save.*\\.dat", "save.*\\.bak", "config\\.ini"],
@@ -242,6 +243,7 @@ def test_game_filter_patterns_no_filter(_game_path):
     game_no_filter = Game(
         name="NoFilter",
         process_name="N/A",
+        logo="test",
         local_path=_game_path,
         drive_directory="N/A",
         files_filter=[],  # Empty list
@@ -261,7 +263,7 @@ def test_game_file_list_filtering(_game, module_patch):
     Tests file_list property, ensuring files are filtered by regex.
     """
 
-    # 1. Arrange: Mock the local directory path and content
+    # 1. Arrange: Mock the local directory path and resolver
     module_patch(
         "os.path.expandvars",
         return_value="/user/home/TestSaves"

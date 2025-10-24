@@ -1,0 +1,17 @@
+
+QCustomWidget#saveDetailsCard {
+    background-color: color("surface-a10");
+    border: 1px solid color("surface-a40");
+    border-radius: 5px;
+    text-align: left;
+}
+
+QCustomWidget#saveDetailsCard QCustomLabel#cardTitle {
+    color: color("surface-a60");
+    font: font("small-text");
+    font-weight: bold;
+}
+
+QCustomWidget#saveDetailsCard QCustomLabel#cardContent {
+    font: font("body");
+}

@@ -1,20 +1,25 @@
 from PyQt6.QtGui import QKeyEvent, QMouseEvent
 from PyQt6.QtWidgets import QPushButton
 
+from savegem.app.gui.component import CustomComponentMixin
 from savegem.app.gui.constants import QAttr, QBool
 
 
-class QCustomPushButton(QPushButton):
+class QCustomPushButton(QPushButton, CustomComponentMixin):
     """
     Custom button component.
     Replaces default 'disable' behavior.
     """
 
     def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
+        QPushButton.__init__(self, *args, **kw)
+        CustomComponentMixin.__init__(self)
 
         self.__is_enabled = True
         self.setProperty(QAttr.Disabled, QBool(False))
+
+    def set_content(self, content):
+        self.setText(content)
 
     def setEnabled(self, is_enabled):
         self.__is_enabled = is_enabled

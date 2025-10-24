@@ -1,0 +1,58 @@
+
+QLabel {
+    padding: 0px;
+    margin: 0px;
+}
+
+QLabel#title {
+    font-size: 25pt;
+}
+
+QLabel#subTitle {
+    font-size: 18pt;
+}
+
+QLabel#text {
+    font-size: 14pt;
+}
+
+QLabel#secondaryText {
+    font-size: 10pt;
+}
+
+
+QCustomLabel#hero {
+    font: font("hero");
+}
+
+QCustomLabel#sectionTitle {
+    font: font("section-title");
+}
+
+QCustomLabel#subtitle {
+    font: font("subtitle");
+}
+
+QCustomLabel#cardTitle {
+    font: font("card-title");
+}
+
+QCustomLabel#accent {
+    font: font("accent");
+}
+
+QCustomLabel#body {
+    font: font("body");
+}
+
+QCustomLabel#label {
+    font: font("label");
+}
+
+QCustomLabel#smallText {
+    font: font("small-text");
+}
+
+QCustomLabel#caption {
+    font: font("caption");
+}

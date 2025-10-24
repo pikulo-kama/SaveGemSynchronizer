@@ -1,34 +1,67 @@
 {
-  "colors" : {
-    "light" : {
-      "primaryTextColor" : "#82a197",
-      "secondaryTextColor" : "#d3d3d3",
-      "headingTextColor" : "#5f6d73",
-      "accentColor" : "#e07b39",
+  "colors": {
+    "light": {
+      "light-a0": "#ffffff",
+      "dark-a0": "#000000",
 
-      "primaryStaticColor" : "#ddedde",
-      "primaryHoverColor" : "#d3e3d4",
-      "secondaryStaticColor" : "#cedfeb",
-      "secondaryHoverColor" : "#c8d6e0"
+      "primary-a10": "#00c3ff",
+      "primary-a20": "#4dcaff",
+      "primary-a30": "#6ed0ff",
+      "primary-a40": "#88d7ff",
+      "primary-a50": "#9fdeff",
+      "primary-a60": "#b4e4ff",
+
+      "surface-a10": "#202020",
+      "surface-a20": "#353535",
+      "surface-a30": "#4b4b4b",
+      "surface-a40": "#626262",
+      "surface-a50": "#7a7a7a",
+      "surface-a60": "#939393",
+
+      "success-a10": "#22946e",
+      "success-a20": "#47d5a6",
+      "success-a30": "#9ae8ce",
+
+      "warning-a10": "#a87a2a",
+      "warning-a20": "#d7ac61",
+      "warning-a30": "#ecd7b2"
     },
-    "dark" : {
-      "primaryTextColor" : "#202020",
-      "secondaryTextColor" : "#909090",
-      "headingTextColor" : "#d8e7ed",
-      "accentColor" : "#e07b39",
+    "dark": {
+      "light-a0": "#ffffff",
+      "dark-a0": "#000000",
 
-      "primaryStaticColor" : "#3f4f44",
-      "primaryHoverColor" : "#566b5c",
-      "secondaryStaticColor" : "#3c3d37",
-      "secondaryHoverColor" : "#56584f"
+      "primary-a10": "#00c3ff",
+      "primary-a20": "#4dcaff",
+      "primary-a30": "#6ed0ff",
+      "primary-a40": "#88d7ff",
+      "primary-a50": "#9fdeff",
+      "primary-a60": "#b4e4ff",
+
+      "surface-a10": "#202020",
+      "surface-a20": "#353535",
+      "surface-a30": "#4b4b4b",
+      "surface-a40": "#626262",
+      "surface-a50": "#7a7a7a",
+      "surface-a60": "#939393",
+
+      "success-a10": "#22946e",
+      "success-a20": "#47d5a6",
+      "success-a30": "#9ae8ce",
+
+      "warning-a10": "#a87a2a",
+      "warning-a20": "#d7ac61",
+      "warning-a30": "#ecd7b2"
     }
   },
-  "fonts" : {
-    "primary-xs" : "10pt 'Roboto'",
-    "primary-sm" : "12pt 'Roboto'",
-    "primary-md" : "18pt 'Roboto'",
-    "primary-lg" : "24pt 'Roboto'",
-
-    "secondary-xs" : "10pt 'Segoe UI Semibold'"
+  "fonts": {
+    "hero": "33px 'DB Sans'",
+    "section-title": "28px 'DB Sans'",
+    "subtitle": "23px 'DB Sans'",
+    "card-title": "19px 'DB Sans'",
+    "body": "16px 'Roboto'",
+    "label": "16px 'DB Sans'",
+    "accent": "14px 'Roboto'",
+    "small-text": "12px 'Segoe UI'",
+    "caption": "10px 'DB Sans'"
   }
 }

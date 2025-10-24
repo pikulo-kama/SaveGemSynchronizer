@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "table_name": "setup_layout_type",
+    "extractor": "DatabaseExtractor",
+    "extract_date": "2025-10-22T04:12:36.066165"
+  },
+  "data": [
+    {
+      "layout_type_id": "QVBoxLayout",
+      "class_path": "savegem.app.gui.component.layout.QCustomVBoxLayout"
+    },
+    {
+      "layout_type_id": "QHBoxLayout",
+      "class_path": "savegem.app.gui.component.layout.QCustomHBoxLayout"
+    },
+    {
+      "layout_type_id": "QGridLayout",
+      "class_path": "savegem.app.gui.component.layout.QCustomGridLayout"
+    }
+  ]
+}

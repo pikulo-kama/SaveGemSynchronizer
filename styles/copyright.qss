@@ -1,4 +1,0 @@
-
-QLabel#copyright {
-    font: font("secondary-xs");
-}

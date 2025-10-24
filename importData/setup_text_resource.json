@@ -1,0 +1,247 @@
+{
+  "metadata": {
+    "table_name": "setup_text_resource",
+    "extractor": "TRExtractor",
+    "extract_date": "2025-10-23T13:33:36.674720"
+  },
+  "data": {
+    "window_Title": {
+      "de_DE": "{0} Synchronisierer",
+      "en_US": "{0} Synchronizer",
+      "es_ES": "Sincronizador {0}",
+      "fr_FR": "Synchroniseur {0}",
+      "uk_UA": "Синхронізатор {0}"
+    },
+    "window_Copyright": {
+      "de_DE": "{0}™ v{1} © {2} {3}. Lizenziert unter GPLv3.",
+      "en_US": "{0}™ v{1} © {2} {3}. Licensed under GPLv3.",
+      "es_ES": "{0}™ v{1} © {2} {3}. Licenciado bajo GPLv3.",
+      "fr_FR": "{0}™ v{1} © {2} {3}. Sous licence GPLv3.",
+      "uk_UA": "{0}™ v{1} © {2} {3}. Ліцензовано за GPLv3."
+    },
+    "window_CopyrightDisclaimer": {
+      "de_DE": "{0} ist ein inoffizielles Dienstprogramm eines Drittanbieters.\\n\\nAlle Spieltitel, Logos und zugehörigen geistigen Eigentumsrechte sind Eigentum ihrer jeweiligen Inhaber.\\n{0} ist weder mit einem Spielepublisher oder -entwickler verbunden, von diesem befürwortet noch gesponsert.",
+      "en_US": "{0} is an unofficial third-party utility.\\n\\nAll game titles, logos, and associated intellectual property are the property of their respective owners.\\n{0} is not affiliated with, endorsed by, or sponsored by any game publisher or developer.",
+      "es_ES": "{0} es una utilidad no oficial de terceros.\\n\\nTodos los títulos de juegos, logotipos y propiedad intelectual asociada son propiedad de sus respectivos dueños.\\n{0} no está afiliado, respaldado ni patrocinado por ningún editor o desarrollador de juegos.",
+      "fr_FR": "{0} est un utilitaire tiers non officiel.\\n\\nTous les titres de jeux, logos et propriétés intellectuelles associées appartiennent à leurs propriétaires respectifs.\\n{0} n'est ni affilié, ni approuvé, ni sponsorisé par un éditeur ou développeur de jeux.",
+      "uk_UA": "{0} є неофіційною сторонньою утилітою.\\n\\nУсі назви ігор, логотипи та пов'язана з ними інтелектуальна власність є власністю їхніх відповідних власників.\\n{0} не пов'язаний, не схвалений і не спонсорується жодним видавцем чи розробником ігор."
+    },
+    "popup_NotificationTitle": {
+      "de_DE": "Information",
+      "en_US": "Information",
+      "es_ES": "Información",
+      "fr_FR": "Information",
+      "uk_UA": "Інформасьйон"
+    },
+    "popup_NotificationButtonClose": {
+      "de_DE": "OK",
+      "en_US": "OK",
+      "es_ES": "OK",
+      "fr_FR": "OK",
+      "uk_UA": "OK"
+    },
+    "popup_ConfirmationTitle": {
+      "de_DE": "Achtung",
+      "en_US": "Be Aware",
+      "es_ES": "Atención",
+      "fr_FR": "Attention",
+      "uk_UA": "Застереження"
+    },
+    "popup_ConfirmationButtonClose": {
+      "de_DE": "Abbrechen",
+      "en_US": "Cancel",
+      "es_ES": "Cancelar",
+      "fr_FR": "Annuler",
+      "uk_UA": "Передумав"
+    },
+    "popup_ConfirmationButtonConfirm": {
+      "de_DE": "Bestätigen",
+      "en_US": "Agree",
+      "es_ES": "Aceptar",
+      "fr_FR": "Confirmer",
+      "uk_UA": "Підтверджую"
+    },
+    "label_UploadSaveToDrive": {
+      "de_DE": "Hochladen",
+      "en_US": "Upload",
+      "es_ES": "Subir",
+      "fr_FR": "Envoyer",
+      "uk_UA": "Відвантажити"
+    },
+    "label_NoInformationAboutCurrentSaveVersion": {
+      "de_DE": "Wir sind uns nicht sicher, welcher Spielstand neuer ist, aber...",
+      "en_US": "We're not sure which save is newer, but..",
+      "es_ES": "No estamos seguros de cuál guardado es más reciente, pero...",
+      "fr_FR": "Nous ne savons pas quelle sauvegarde est la plus récente, mais...",
+      "uk_UA": "Ми не знаємо де новіший сейв, але.."
+    },
+    "label_StorageIsEmpty": {
+      "de_DE": "Der Speicher ist leer. Ein Hochladen ist erforderlich, um fortzufahren.",
+      "en_US": "Storage is empty. Upload is required to proceed.",
+      "es_ES": "El almacenamiento está vacío. Suba un archivo para continuar.",
+      "fr_FR": "Le stockage est vide. Un envoi est nécessaire pour continuer.",
+      "uk_UA": "Cховище порожнє. Потрібно виконати відвантаження."
+    },
+    "label_Details": {
+      "de_DE": "Details",
+      "en_US": "Details",
+      "es_ES": "Detalles",
+      "fr_FR": "Détails",
+      "uk_UA": "Деталі"
+    },
+    "label_History": {
+      "de_DE": "Verlauf",
+      "en_US": "History",
+      "es_ES": "Historial",
+      "fr_FR": "Historique",
+      "uk_UA": "Історія"
+    },
+    "label_Settings": {
+      "de_DE": "Einstellungen",
+      "en_US": "Settings",
+      "es_ES": "Configuración",
+      "fr_FR": "Paramètres",
+      "uk_UA": "Налаштування"
+    },
+    "label_Home": {
+      "de_DE": "Startseite",
+      "en_US": "Home",
+      "es_ES": "Inicio",
+      "fr_FR": "Accueil",
+      "uk_UA": "Головна"
+    },
+    "label_About": {
+      "de_DE": "Über uns",
+      "en_US": "About",
+      "es_ES": "Acerca de",
+      "fr_FR": "À propos",
+      "uk_UA": "Про нас"
+    },
+    "label_Offline": {
+      "de_DE": "Offline",
+      "en_US": "Offline",
+      "es_ES": "Desconectado",
+      "fr_FR": "Hors ligne",
+      "uk_UA": "Офлайн"
+    },
+    "label_Date": {
+      "de_DE": "Datum",
+      "en_US": "Date",
+      "es_ES": "Fecha",
+      "fr_FR": "Date",
+      "uk_UA": "Дата"
+    },
+    "label_Author": {
+      "de_DE": "Autor",
+      "en_US": "Author",
+      "es_ES": "Autor",
+      "fr_FR": "Auteur",
+      "uk_UA": "Автор"
+    },
+    "label_Size": {
+      "de_DE": "Größe",
+      "en_US": "Size",
+      "es_ES": "Tamaño",
+      "fr_FR": "Taille",
+      "uk_UA": "Розмір"
+    },
+    "info_SaveIsUpToDate": {
+      "de_DE": "Aktuell",
+      "en_US": "Up to date",
+      "es_ES": "Actualizado",
+      "fr_FR": "À jour",
+      "uk_UA": "Актуально"
+    },
+    "info_SaveIsUpToDateDesc": {
+      "de_DE": "Nichts Neues... Dein Spielstand ist so aktuell wie möglich.",
+      "en_US": "Nothing new... Your save is as fresh as it could be.",
+      "es_ES": "Nada nuevo... Tu guardado está lo más actualizado posible.",
+      "fr_FR": "Rien de nouveau... Votre sauvegarde est déjà à jour.",
+      "uk_UA": "Нічого нового... Твій сейв свіженький як ніколи."
+    },
+    "info_SaveNeedsToBeDownloaded": {
+      "de_DE": "Download erforderlich",
+      "en_US": "Download needed",
+      "es_ES": "Descarga necesaria",
+      "fr_FR": "Téléchargement requis",
+      "uk_UA": "Здалося б оновитись"
+    },
+    "info_SaveNeedsToBeDownloadedDesc": {
+      "de_DE": "Nun, nun, nun, was haben wir denn hier...",
+      "en_US": "Well, well, well, what do we got here...",
+      "es_ES": "Vaya, vaya, vaya, ¿qué tenemos aquí...",
+      "fr_FR": "Eh bien, eh bien, eh bien, qu'avons-nous ici...",
+      "uk_UA": "Так, так, так, що це тут у нас..."
+    },
+    "info_SaveNeedsToBeUploaded": {
+      "de_DE": "Na, verschicken wir?",
+      "en_US": "So, shall we send it?",
+      "es_ES": "Bueno, ¿lo enviamos?",
+      "fr_FR": "Alors, on envoie?",
+      "uk_UA": "Ну що? Відвантажимо?"
+    },
+    "info_NewestSaveOnDriveInformation": {
+      "de_DE": "der letzte Spielstand wurde am {0} um {1} von {2} hochgeladen",
+      "en_US": "last save was uploaded on {0} at {1} by {2}",
+      "es_ES": "el último guardado fue subido el {0} a las {1} por {2}",
+      "fr_FR": "la dernière sauvegarde a été envoyée le {0} à {1} par {2}",
+      "uk_UA": "останній сейв відвантажено {0} o {1} від {2}"
+    },
+    "notification_SaveHasBeenUploaded": {
+      "de_DE": "Spielstand erfolgreich hochgeladen.",
+      "en_US": "Save uploaded successfully.",
+      "es_ES": "Guardado subido con éxito.",
+      "fr_FR": "Sauvegarde envoyée avec succès.",
+      "uk_UA": "Сейв успішно відвантажено."
+    },
+    "notification_NewSaveHasBeenDownloaded": {
+      "de_DE": "Spielstand erfolgreich heruntergeladen.",
+      "en_US": "Save has been downloaded successfully.",
+      "es_ES": "Guardado descargado con éxito.",
+      "fr_FR": "Sauvegarde téléchargée avec succès.",
+      "uk_UA": "Свіженький сейв успішно завантажено."
+    },
+    "notification_ErrorUploadingToDrive": {
+      "de_DE": "Fehler beim Hochladen auf den Drive.",
+      "en_US": "Error occurred when uploading to drive.",
+      "es_ES": "Ocurrió un error al subir al almacenamiento.",
+      "fr_FR": "Erreur lors de l'envoi sur le drive.",
+      "uk_UA": "От халепа. Схоже щось пішло не так..."
+    },
+    "notification_ErrorSaveDirectoryMissing": {
+      "de_DE": "Speicherordner nicht gefunden. \\n{0}",
+      "en_US": "Save directory not found. \\n{0}",
+      "es_ES": "Carpeta de guardado no encontrada. \\n{0}",
+      "fr_FR": "Dossier de sauvegarde introuvable. \\n{0}",
+      "uk_UA": "Папку з сейвами не знайдено. \\n{0}"
+    },
+    "notification_AutoModeOn": {
+      "de_DE": "Automatischer Modus aktiviert.",
+      "en_US": "Automatic mode enabled.",
+      "es_ES": "Modo automático activado.",
+      "fr_FR": "Mode automatique activé.",
+      "uk_UA": "Автоматичний режим ввімкнено."
+    },
+    "notification_AutoModeOff": {
+      "de_DE": "Automatischer Modus deaktiviert.",
+      "en_US": "Automatic mode disabled.",
+      "es_ES": "Modo automático desactivado.",
+      "fr_FR": "Mode automatique désactivé.",
+      "uk_UA": "Автоматичний режим вимкнено."
+    },
+    "confirmation_ConfirmToDownloadSave": {
+      "de_DE": "Sicher? Dies überschreibt deinen vorhandenen Spielstand.",
+      "en_US": "Sure? This will erase existing save you have.",
+      "es_ES": "¿Seguro? Esto borrará el guardado existente.",
+      "fr_FR": "Êtes-vous sûr ? Cela écrasera la sauvegarde existante.",
+      "uk_UA": "Впевнений? Це знищить твій існуючий сейв."
+    },
+    "confirmation_ConfirmLogout": {
+      "de_DE": "Möchten Sie sich abmelden?",
+      "en_US": "Do you want to logout?",
+      "es_ES": "¿Desea cerrar sesión?",
+      "fr_FR": "Voulez-vous vous déconnecter?",
+      "uk_UA": "Ви хочете вийти?"
+    }
+  }
+}

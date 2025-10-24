@@ -4,11 +4,11 @@ import threading
 from PyQt6.QtWidgets import QApplication
 
 from constants import Directory
-from savegem.app.gui.style import load_stylesheet
+from savegem.app.gui.style import load_stylesheet, create_dynamic_resources
 from savegem.app.gui.window import gui
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.holders import prop
-from savegem.common.core.ipc_socket import IPCCommand
+from savegem.common.core.text_resource import TextResource
 from savegem.common.util.file import cleanup_directory
 from savegem.common.util.logger import get_logger
 from savegem.common.service.gdrive import GDrive
@@ -26,6 +26,8 @@ def main():
     _logger.info("version %s", prop("version"))
 
     application = QApplication(sys.argv)
+
+    create_dynamic_resources()
     application.setStyleSheet(load_stylesheet())
 
     # Startup initialization.
@@ -34,8 +36,8 @@ def main():
     app().games.current.meta.drive.refresh()
     app().activity.refresh()
 
-    app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
-    gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
+    # app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
+    # gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
     gui().before_destroy.connect(teardown)
     gui().build()
 
@@ -43,11 +45,30 @@ def main():
 
 
 def teardown():
+    """
+    Used to clean up temporary data.
+    """
+
     _logger.info("Cleaning up 'output' directory.")
     cleanup_directory(Directory().Output)
 
 
+def rebuild():
+    """
+    Used to rebuild window.
+    Needed mainly for development purposes
+    when data import service sends event to socket
+    after reimporting data.
+    """
+
+    app().state.refresh()
+    TextResource.reset()
+    gui().build()
+
+
 if __name__ == "__main__":  # pragma: no cover
     # Start UI socket.
+    ui_socket.refresh_ui.connect(lambda event: gui().refresh(event))
+    ui_socket.rebuild_window.connect(rebuild)
     threading.Thread(target=ui_socket.listen, daemon=True).start()
     main()

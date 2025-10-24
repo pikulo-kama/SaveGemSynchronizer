@@ -16,11 +16,15 @@ class QProgressPushButton(QCustomPushButton):
     __IN_PROGRESS_ATTR = "in-progress"
 
     def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
+        QCustomPushButton.__init__(self, *args, **kw)
 
         self.__progress_bar = QProgressBar(self)
         self.__progress_bar.setTextVisible(False)
         self.__progress_bar.setValue(0)
+
+    def refresh(self, refresh_children: bool = False):
+        super().refresh(refresh_children)
+        self.set_progress(0)
 
     def set_progress(self, progress):
         """

@@ -4,9 +4,10 @@ from typing import Final, Optional
 
 from constants import Directory, File
 from savegem.common.core.json_config_holder import JsonConfigHolder
-from savegem.common.util.file import read_file, resolve_config, resolve_resource
-from savegem.common.util.graphics import get_color_mode
+from savegem.common.db.manager import db
+from savegem.common.util.file import read_file, resolve_config, resolve_resource, save_file, resolve_temp_resource
 from savegem.common.util.logger import get_logger
+from savegem.common.util.ui import get_color_mode
 
 _logger = get_logger(__name__)
 _styles: Optional[JsonConfigHolder] = None
@@ -97,3 +98,37 @@ def load_stylesheet():
         style_string += read_file(style_path)
 
     return _resolve_style_properties(style_string)
+
+
+def create_dynamic_resources():
+    """
+    Used to create dynamic resources.
+    Mainly this applies to SVG elements
+    that are just an XML files where we can
+    replace colors.
+
+    This is needed in the first place to avoid
+    creating duplicate resources where the only
+    difference is color.
+    """
+
+    if not os.path.exists(Directory().TempResources):
+        os.mkdir(Directory().TempResources)
+
+    resources = db().table("setup_resource")
+
+    for resource in resources.retrieve():
+        name = resource.get("resource_name")
+        file_name = resource.get("resource_path")
+        current_color = resource.get("color")
+        resolved_color = color(current_color)
+
+        if resolved_color is not None:
+            current_color = resolved_color
+
+        resource_content = read_file(resolve_resource(file_name, include_temporary=False))
+
+        if color is not None:
+            resource_content = resource_content.replace("currentColor", current_color)
+
+        save_file(resolve_temp_resource(name), resource_content)

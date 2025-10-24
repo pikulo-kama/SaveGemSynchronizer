@@ -16,16 +16,16 @@ class Directory:
         return str(os.path.join(self.ProjectRoot, "config"))
 
     @property
-    def Locale(self):  # noqa
-        return os.path.join(self.ProjectRoot, "locale")
-
-    @property
     def Resources(self):  # noqa
         return os.path.join(self.ProjectRoot, "resources")
 
     @property
     def Styles(self):  # noqa
         return os.path.join(self.ProjectRoot, "styles")
+
+    @property
+    def ImportData(self):  # noqa
+        return os.path.join(self.ProjectRoot, "importData")
 
     @property
     def AppDataRoot(self):  # noqa
@@ -36,6 +36,10 @@ class Directory:
     @property
     def Output(self):  # noqa
         return os.path.join(self.AppDataRoot, "Output")
+
+    @property
+    def TempResources(self):  # noqa
+        return os.path.join(self.Output, "Resources")
 
     @property
     def Logs(self):  # noqa
@@ -56,7 +60,6 @@ class File:
     GDriveConfig: Final = "config.json"
 
     AppConfig: Final = "app.json"
-    AppState: Final = "state.json"
     Style: Final = "style.json"
 
     GUIInitializedFlag: Final = "gui_init.flag"
@@ -73,6 +76,7 @@ class Resource:
 
 
 JSON_EXTENSION: Final = ".json"
+JPG_EXTENSION: Final = ".jpg"
 ZIP_EXTENSION: Final = "zip"
 ZIP_MIME_TYPE: Final = "application/zip"
 JSON_MIME_TYPE: Final = "application/json"

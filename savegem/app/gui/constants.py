@@ -43,15 +43,8 @@ class QObjectName:
     Button: Final = "button"
     Chip: Final = "chip"
     ComboBox: Final = "comboBox"
-    SquareButton: Final = "squareButton"
-
-
-class QSizeVariant:
-    """
-    Contains names of QT size variants.
-    """
-
-    Small: Final = "small"
+    Sidebar: Final = "sidebar"
+    SidebarItem: Final = "sidebarItem"
 
 
 class QKind:
