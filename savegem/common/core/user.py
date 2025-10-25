@@ -1,46 +1,31 @@
-import socket
+import hashlib
+import json
 import urllib.request
-import uuid
-from typing import Final
 
-from constants import JPG_EXTENSION
+from constants import JPG_EXTENSION, UTF_8
 from savegem.common.core.app_data import AppData
+from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import resolve_temp_resource
 
 
-class UserState(AppData):
+class User:
     """
-    Contains information about authenticated user.
+    Represents user entity.
     """
 
-    ProfilePictureFileName: Final = f"Profile{JPG_EXTENSION}"
-
-    def __init__(self):
-        super().__init__()
-        self.__email = None
-        self.__name = None
-        self.__photo_link = None
-
-        self.__initialized = False
-
-    def initialize(self, user_provider):
-
-        if self.__initialized:
-            return
-
-        user = user_provider()
-
-        self.__email = user.get("emailAddress")
-        self.__name = user.get("displayName")
-        self.__photo_link = self.__download_photo(user.get("photoLink"))
-        self.__initialized = True
+    def __init__(self, name: str, email: str, photo_link: str):
+        self.__name = name
+        self.__email: str = email
+        self.__photo_path = self.__download_photo(photo_link)
+        self.__is_current_user = False
 
     @property
-    def email(self):
+    def id(self) -> str:
         """
-        User email.
+        Unique user ID.
+        Hash of user's email address.
         """
-        return self.__email
+        return hashlib.sha256(self.email.encode(UTF_8)).hexdigest()
 
     @property
     def name(self) -> str:
@@ -50,36 +35,47 @@ class UserState(AppData):
         return self.__name
 
     @property
-    def short_name(self):
+    def short_name(self) -> str:
         """
         Shortened user name.
         """
 
-        name = self.name or ""
-        first_name = name.split(" ")[0]
+        if len(self.name) <= 18:
+            return self.name
 
-        if len(first_name) > 10:
-            first_name = f"{first_name[:10]}..."
-
-        return first_name
+        return f"{self.name[:18]}.."
 
     @property
-    def photo(self):
+    def email(self) -> str:
         """
-        Local path to user's profile picture.
+        User email.
         """
-        return self.__photo_link
+        return self.__email
 
     @property
-    def machine_id(self):  # pragma: no cover
+    def photo(self) -> str:
         """
-        Unique ID of user's machine
-        where application is running.
+        Path to user profile picture.
         """
-        return f"{socket.gethostname()}-{uuid.getnode()}"
+        return self.__photo_path
 
-    @staticmethod
-    def __download_photo(photo_link: str):
+    @property
+    def is_current_user(self) -> bool:
+        """
+        Whether user object represents
+        currently authenticated user.
+        """
+        return self.__is_current_user
+
+    @is_current_user.setter
+    def is_current_user(self, is_current_user: bool):
+        """
+        Marks user object as currently authenticated
+        user.
+        """
+        self.__is_current_user = is_current_user
+
+    def __download_photo(self, photo_link: str):
         """
         Used to download profile photo and
         save image locally. Will return image path.
@@ -88,10 +84,90 @@ class UserState(AppData):
         if photo_link is None:
             return None
 
-        image_path = resolve_temp_resource(UserState.ProfilePictureFileName)
+        image_path = resolve_temp_resource(self.id + JPG_EXTENSION)
         urllib.request.urlretrieve(photo_link, image_path)
 
         return image_path
 
+
+class UserState(AppData):
+    """
+    Contains information about all the users
+    that have access to the app.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.__users: list[User] = []
+        self.__initialized = False
+
+    def initialize(self):
+        """
+        Used to initialize user state.
+        Can be only done once in application lifetime.
+        """
+
+        if self.__initialized:
+            return
+
+        users = GDrive.get_users_with_access(self._app.config.games_config_file_id)
+        current_user = GDrive.get_current_user()
+        current_user_email = current_user.get("emailAddress")
+        user_info = self.__upload_user_info(current_user)
+
+        self.__users.clear()
+
+        for user in users:
+            name = user.get("displayName")
+            email = user.get("emailAddress")
+            photo = user.get("photoLink")
+
+            user_obj = User(
+                name=user_info.get(email, name),
+                email=email,
+                photo_link=photo
+            )
+
+            if email == current_user_email:
+                user_obj.is_current_user = True
+
+            self.__users.append(user_obj)
+
+        self.__initialized = True
+
+    @property
+    def current(self) -> User:
+        """
+        Used to get current user.
+        """
+        return next(user for user in self.__users if user.is_current_user)
+
+    @property
+    def list(self) -> list[User]:
+        """
+        Used to get list of all users that have access to application.
+        """
+        return self.__users
+
+    def by_email(self, email: str) -> User:
+        """
+        Used to get user by email address.
+        """
+        return next((user for user in self.__users if user.email == email), None)
+
     def refresh(self):  # pragma: no cover
         pass
+
+    def __upload_user_info(self, current_user_data: dict):
+
+        with GDrive.download_file(self._app.config.users_config_file_id) as log_bytes:
+            log_bytes.seek(0)
+            user_data: dict = json.load(log_bytes)
+
+            user_email = current_user_data.get("emailAddress")
+            user_name = current_user_data.get("displayName")
+
+            user_data[user_email] = user_name
+            GDrive.update_file(self._app.config.users_config_file_id, json.dumps(user_data, indent=2))
+
+            return user_data

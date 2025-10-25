@@ -73,7 +73,7 @@ class GameConfig(AppData):
 
             # If players field is not configured it means that everyone
             # has access to the game.
-            if len(players) > 0 and self._app.user.email not in players:
+            if len(players) > 0 and self._app.user.current.email not in players:
                 continue
 
             self.__games_by_name[name] = Game(
@@ -83,7 +83,8 @@ class GameConfig(AppData):
                 local_path,
                 drive_directory,
                 files_filter,
-                allow_auto_mode
+                allow_auto_mode,
+                players
             )
 
         _logger.debug("Configuration for following game(s) was found = %s", ", ".join(self.names))
@@ -148,7 +149,8 @@ class Game:
                  local_path: str,
                  drive_directory: str,
                  files_filter: list[str],
-                 auto_mode_allowed: bool):
+                 auto_mode_allowed: bool,
+                 players: list[str]):
         self._name = name
         self._process_name = process_name
         self.__logo = self.__download_logo(logo)
@@ -156,6 +158,7 @@ class Game:
         self.__drive_directory = drive_directory
         self.__files_filter = files_filter
         self._auto_mode_allowed = auto_mode_allowed
+        self.__players = players
 
         self._metadata = MetadataWrapper(LocalMetadata(self), DriveMetadata(self))
 
@@ -240,6 +243,17 @@ class Game:
             patterns.append(self.__ALL_FILES)
 
         return [re.compile(pattern) for pattern in patterns]
+
+    @property
+    def players(self):
+        """
+        Used to get list of players that have access
+        to the game.
+
+        If list is empty it means that all players have
+        access.
+        """
+        return self.__players
 
     @property
     def metadata_file_path(self):

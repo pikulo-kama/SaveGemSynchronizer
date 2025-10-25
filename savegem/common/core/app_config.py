@@ -18,6 +18,7 @@ class AppConfig(AppData):
 
     ActivityLogFileProp: Final = "activityLogFileId"
     GameConfigFileProp: Final = "gameConfigFileId"
+    UsersConfigFileProp: Final = "usersConfigFileId"
 
     def __init__(self):
         super().__init__()
@@ -42,6 +43,15 @@ class AppConfig(AppData):
         being played by other players.
         """
         return self.__config.get_value(AppConfig.ActivityLogFileProp)
+
+    @property
+    def users_config_file_id(self):
+        """
+        ID of file in Google Drive that
+        contains information about application
+        users.
+        """
+        return self.__config.get_value(AppConfig.UsersConfigFileProp)
 
     def refresh(self):  # pragma: no cover
         # No need to reload config since it

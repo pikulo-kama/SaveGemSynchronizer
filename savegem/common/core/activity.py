@@ -39,15 +39,12 @@ class Activity(AppData):
             _logger.debug("Log Before: %s", activity_log)
 
             if len(game_names) > 0:
-                activity_log[self._app.user.machine_id] = {
-                    self.NAME_PROP: self._app.user.name,
-                    self.GAMES_PROP: game_names
-                }
+                activity_log[self._app.user.current.email] = game_names
 
             # If there are no games running then remove
             # user entry from activity log.
-            elif self._app.user.machine_id in activity_log:
-                del activity_log[self._app.user.machine_id]
+            elif self._app.user.current.email in activity_log:
+                del activity_log[self._app.user.current.email]
 
             _logger.debug("Log After: %s", activity_log)
             GDrive.update_file(self._app.config.activity_log_file_id, json.dumps(activity_log, indent=2))
@@ -63,12 +60,6 @@ class Activity(AppData):
             log_bytes.seek(0)
             activity_log: dict = json.load(log_bytes)
 
-            for machine_id, activity in activity_log.items():
-
-                # Do not display current user.
-                # Only list other players that are online.
-                if machine_id == self._app.user.machine_id:
-                    continue
-
-                if self._app.games.current.name in activity.get(self.GAMES_PROP):
-                    self.__players.append(activity.get(self.NAME_PROP, ""))
+            for user_email, games in activity_log.items():
+                if self._app.games.current.name in games:
+                    self.__players.append(self._app.user.by_email(user_email))
