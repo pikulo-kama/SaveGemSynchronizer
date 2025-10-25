@@ -1,7 +1,7 @@
 {
   "metadata": {
     "table_name": "setup_resource",
-    "extractor": "DatabaseExtractor",
+    "type": "Regular",
     "extract_date": "2025-10-22T23:16:02.784534"
   },
   "data": [

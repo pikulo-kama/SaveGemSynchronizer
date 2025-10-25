@@ -1,7 +1,7 @@
 {
   "metadata": {
     "table_name": "setup_widget_type",
-    "extractor": "DatabaseExtractor",
+    "type": "Regular",
     "extract_date": "2025-10-22T04:12:22.862786"
   },
   "data": [

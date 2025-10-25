@@ -7,7 +7,9 @@ from constants import Directory, JSON_EXTENSION
 from savegem.common.db.manager import db
 from savegem.common.util.file import save_file
 from savegem.common.util.reflection import get_members
-from savegem.initializer.util import ExtractType
+
+
+RegularExtractorName = "Regular"
 
 
 def invoke_extractor(args):
@@ -18,16 +20,25 @@ def invoke_extractor(args):
     be invoked.
     """
 
-    extractor = DatabaseExtractor()
+    extractor = RegularExtractor()
+    target_extractor_name = f"{args.type}Extractor"
 
-    for member_name, member in get_members(__package__, DatabaseExtractor):
-        if member_name.lower().startswith(args.type.lower()):
+    for member_name, member in get_extractors():
+        if target_extractor_name == member_name:
             extractor = member()
+            break
 
     extractor.do_extract(args)
 
 
-class DatabaseExtractor:
+def get_extractors():
+    """
+    Used to get list of custom widget extractors.
+    """
+    return get_members(__package__, RegularExtractor)
+
+
+class RegularExtractor:
     """
     Database extractor.
     Used to extract table data and store it
@@ -39,11 +50,7 @@ class DatabaseExtractor:
         Used to extract data from table.
         """
 
-        if args.type == ExtractType.Regular and args.table_name is None:
-            print("Argument '--table_name' is required for Regular extract.")
-            exit(1)
-
-        table_name = self._get_table_name(args)
+        table_name = args.table_name
         table = db().table(table_name).retrieve()
         table_json = [row.to_json() for row in table]
 
@@ -52,28 +59,22 @@ class DatabaseExtractor:
 
         formatted_data = copy.deepcopy(table_json)
 
+        # Remove NULL values.
         for idx, record in enumerate(table_json):
             for column_name, column_value in record.items():
                 if column_value is None:
                     del formatted_data[idx][column_name]
 
-        table_definition = {
+        content = {
             "metadata": {
                 "table_name": table_name,
-                "extractor": self.__class__.__name__,
+                "type": args.type,
                 "extract_date": datetime.now().isoformat()
             },
             "data": self._post_extract(formatted_data)
         }
 
-        save_file(str(extract_file_path), table_definition, as_json=True)
-
-    def _get_table_name(self, args):
-        """
-        Table name from which data is being
-        extracted.
-        """
-        return args.table_name
+        save_file(str(extract_file_path), content, as_json=True)
 
     def _post_extract(self, data: any):
         """

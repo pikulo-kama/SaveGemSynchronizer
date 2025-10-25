@@ -1,7 +1,7 @@
 {
   "metadata": {
     "table_name": "setup_locale",
-    "extractor": "DatabaseExtractor",
+    "type": "Regular",
     "extract_date": "2025-10-23T13:16:31.831907"
   },
   "data": [

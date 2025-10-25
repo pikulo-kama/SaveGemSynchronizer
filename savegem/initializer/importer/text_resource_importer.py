@@ -1,7 +1,7 @@
-from savegem.initializer.importer import DatabaseImporter
+from savegem.initializer.importer import RegularImporter
 
 
-class TRImporter(DatabaseImporter):
+class TextResourceImporter(RegularImporter):
     """
     Importer for text_resources table.
     """

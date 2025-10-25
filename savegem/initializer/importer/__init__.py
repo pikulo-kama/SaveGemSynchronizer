@@ -18,7 +18,7 @@ def invoke_importer(args):
     which importer implementation should be invoked.
     """
 
-    custom_importers = dict(get_members(__package__, DatabaseImporter))
+    custom_importers = dict(get_members(__package__, RegularImporter))
 
     # Handle scenario where import file name provided directly.
     if args.file_name is not None:
@@ -49,21 +49,22 @@ def invoke_importer_for_file(file_name: str, custom_importers, args):
     Used to invoke importer for provided import data file.
     """
 
-    importer = DatabaseImporter()
+    importer = RegularImporter()
     import_file = read_file(resolve_import_data(file_name), as_json=True)
 
-    importer_name: str = import_file.get("metadata").get("extractor")
-    importer_name = importer_name.replace("Extractor", "")
+    import_type: str = import_file.get("metadata").get("type")
+    importer_name = f"{import_type}Importer"
 
     for member_name, member in custom_importers.items():
-        if member_name.lower().startswith(importer_name.lower()):
+        if member_name == importer_name:
             importer = member()
+            break
 
     args.file_name = file_name
     importer.do_import(args)
 
 
-class DatabaseImporter:
+class RegularImporter:
     """
     Database importer.
     Allows to import data from

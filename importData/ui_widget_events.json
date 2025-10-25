@@ -1,81 +1,39 @@
 {
   "metadata": {
     "table_name": "ui_widget_events",
-    "extractor": "DatabaseExtractor",
-    "extract_date": "2025-10-22T04:11:41.065520"
+    "type": "WidgetEvents",
+    "extract_date": "2025-10-26T02:05:33.542583"
   },
-  "data": [
-    {
-      "widget_id": "upload_button",
-      "section_id": "home",
-      "refresh_event_id": "language_change"
-    },
-    {
-      "widget_id": "download_button",
-      "section_id": "home",
-      "refresh_event_id": "language_change"
-    },
-    {
-      "widget_id": "game_list",
-      "section_id": "home",
-      "refresh_event_id": "game_config_change"
-    },
-    {
-      "widget_id": "game_list",
-      "section_id": "home",
-      "refresh_event_id": "game_selection_change"
-    },
-    {
-      "widget_id": "game_header",
-      "section_id": "home",
-      "refresh_event_id": "game_selection_change",
-      "refresh_children": 1
-    },
-    {
-      "widget_id": "game_header",
-      "section_id": "home",
-      "refresh_event_id": "game_config_change",
-      "refresh_children": 1
-    },
-    {
-      "widget_id": "save_date_card_date",
-      "section_id": "game_details",
-      "refresh_event_id": "game_selection_change"
-    },
-    {
-      "widget_id": "save_date_card_date",
-      "section_id": "game_details",
-      "refresh_event_id": "game_config_change"
-    },
-    {
-      "widget_id": "save_date_card_time",
-      "section_id": "game_details",
-      "refresh_event_id": "game_selection_change"
-    },
-    {
-      "widget_id": "save_date_card_time",
-      "section_id": "game_details",
-      "refresh_event_id": "game_config_change"
-    },
-    {
-      "widget_id": "save_owner_card_value",
-      "section_id": "game_details",
-      "refresh_event_id": "game_selection_change"
-    },
-    {
-      "widget_id": "save_owner_card_value",
-      "section_id": "game_details",
-      "refresh_event_id": "game_config_change"
-    },
-    {
-      "widget_id": "save_size_card_value",
-      "section_id": "game_details",
-      "refresh_event_id": "cloud_files_change"
-    },
-    {
-      "widget_id": "save_size_card_value",
-      "section_id": "game_details",
-      "refresh_event_id": "game_selection_change"
-    }
-  ]
+  "data": {
+    "home.upload_button": [
+      "language_change"
+    ],
+    "home.download_button": [
+      "language_change"
+    ],
+    "home.game_list": [
+      "game_config_change",
+      "game_selection_change"
+    ],
+    "home.game_header": [
+      "game_selection_change",
+      "game_config_change"
+    ],
+    "game_details.save_date_card_date": [
+      "game_selection_change",
+      "game_config_change"
+    ],
+    "game_details.save_date_card_time": [
+      "game_selection_change",
+      "game_config_change"
+    ],
+    "game_details.save_owner_card_value": [
+      "game_selection_change",
+      "game_config_change"
+    ],
+    "game_details.save_size_card_value": [
+      "cloud_files_change",
+      "game_selection_change"
+    ]
+  }
 }

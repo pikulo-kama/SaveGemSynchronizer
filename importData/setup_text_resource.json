@@ -1,8 +1,8 @@
 {
   "metadata": {
     "table_name": "setup_text_resource",
-    "extractor": "TRExtractor",
-    "extract_date": "2025-10-25T22:49:23.871366"
+    "type": "TextResource",
+    "extract_date": "2025-10-26T02:05:06.856096"
   },
   "data": {
     "confirmation_ConfirmLogout": {
@@ -110,6 +110,13 @@
       "fr_FR": "Dernière Sauvegarde Cloud",
       "uk_UA": "Останнє Хмарне Збереження"
     },
+    "label_NA": {
+      "de_DE": "N. zutr.",
+      "en_US": "N/A",
+      "es_ES": "N/D",
+      "fr_FR": "N/A",
+      "uk_UA": "Н/Д"
+    },
     "label_NoInformationAboutCurrentSaveVersion": {
       "de_DE": "Wir sind uns nicht sicher, welcher Spielstand neuer ist, aber...",
       "en_US": "We're not sure which save is newer, but..",
@@ -145,6 +152,20 @@
       "fr_FR": "Taille",
       "uk_UA": "Розмір"
     },
+    "label_SizeKilobytes": {
+      "de_DE": "{0} KB",
+      "en_US": "{0} KB",
+      "es_ES": "{0} KB",
+      "fr_FR": "{0} Ko",
+      "uk_UA": "{0} КБ"
+    },
+    "label_SizeMegabytes": {
+      "de_DE": "{0} MB",
+      "en_US": "{0} MB",
+      "es_ES": "{0} MB",
+      "fr_FR": "{0} Mo",
+      "uk_UA": "{0} МБ"
+    },
     "label_StorageIsEmpty": {
       "de_DE": "Der Speicher ist leer. Ein Hochladen ist erforderlich, um fortzufahren.",
       "en_US": "Storage is empty. Upload is required to proceed.",
@@ -179,27 +200,6 @@
       "es_ES": "Carpeta de guardado no encontrada. \n{0}",
       "fr_FR": "Dossier de sauvegarde introuvable. \n{0}",
       "uk_UA": "Папку з сейвами не знайдено. \n{0}"
-    },
-    "label_NA": {
-      "de_DE": "N. zutr.",
-      "en_US": "N/A",
-      "es_ES": "N/D",
-      "fr_FR": "N/A",
-      "uk_UA": "Н/Д"
-    },
-    "label_SizeKilobytes": {
-      "de_DE": "{0} KB",
-      "en_US": "{0} KB",
-      "es_ES": "{0} KB",
-      "fr_FR": "{0} Ko",
-      "uk_UA": "{0} КБ"
-    },
-    "label_SizeMegabytes": {
-      "de_DE": "{0} MB",
-      "en_US": "{0} MB",
-      "es_ES": "{0} MB",
-      "fr_FR": "{0} Mo",
-      "uk_UA": "{0} МБ"
     },
     "notification_ErrorUploadingToDrive": {
       "de_DE": "Fehler beim Hochladen auf den Drive.",

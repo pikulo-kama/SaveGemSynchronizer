@@ -1,14 +1,11 @@
 import json
-from savegem.initializer.extractor import DatabaseExtractor
+from savegem.initializer.extractor import RegularExtractor
 
 
-class WidgetsExtractor(DatabaseExtractor):
+class WidgetsExtractor(RegularExtractor):
     """
     Extractor for ui_widgets table.
     """
-
-    def _get_table_name(self, args):
-        return "ui_widgets"
 
     def _post_extract(self, data: list[dict]):
         widget_data = self.__build_tree(data)

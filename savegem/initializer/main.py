@@ -2,10 +2,9 @@ import argparse
 import os
 import sys
 
-from savegem.initializer.extractor import invoke_extractor
+from savegem.initializer.extractor import invoke_extractor, get_extractors, RegularExtractorName
 
 from savegem.initializer.importer import invoke_importer
-from savegem.initializer.util import ExtractType
 from savegem.initializer.db_initializer import DatabaseInitializer
 
 
@@ -54,10 +53,13 @@ def main():
         help="Extract table data from database tables into JSON definitions"
     )
 
+    extract_types = [name.replace("Extractor", "") for name, _ in get_extractors()]
+    extract_types.insert(0, RegularExtractorName)
+
     extract_parser.add_argument(
         "--type",
-        default=ExtractType.Regular.value,
-        choices=[member.value for member in ExtractType],
+        default=RegularExtractorName,
+        choices=extract_types,
         type=str,
         help="Set type of data that is being extracted."
     )
@@ -71,6 +73,7 @@ def main():
 
     extract_parser.add_argument(
         "--table_name",
+        required=True,
         type=str,
         help="Name of the table that should be extracted."
     )

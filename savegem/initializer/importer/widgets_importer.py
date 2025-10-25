@@ -1,8 +1,8 @@
 import json
-from savegem.initializer.importer import DatabaseImporter
+from savegem.initializer.importer import RegularImporter
 
 
-class WidgetsImporter(DatabaseImporter):
+class WidgetsImporter(RegularImporter):
     """
     Importer for ui_widgets table.
     """

@@ -1,8 +1,8 @@
 {
   "metadata": {
     "table_name": "ui_widgets",
-    "extractor": "WidgetsExtractor",
-    "extract_date": "2025-10-24T12:49:13.531521"
+    "type": "Widgets",
+    "extract_date": "2025-10-26T02:05:53.754115"
   },
   "data": [
     {
@@ -256,10 +256,10 @@
       "widget_type_id": "QScrollableWidget",
       "layout_type_id": "QVBoxLayout",
       "alignment": "top",
+      "spacing": 10,
       "margin_left": 10,
       "margin_top": 10,
       "margin_right": 10,
-      "spacing": 10,
       "children": [
         {
           "widget_id": "last_cloud_save_label",

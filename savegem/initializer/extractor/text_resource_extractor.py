@@ -1,13 +1,10 @@
-from savegem.initializer.extractor import DatabaseExtractor
+from savegem.initializer.extractor import RegularExtractor
 
 
-class TRExtractor(DatabaseExtractor):
+class TextResourceExtractor(RegularExtractor):
     """
     Extractor for text_resources table.
     """
-
-    def _get_table_name(self, args):
-        return "setup_text_resource"
 
     def _post_extract(self, data: any):
         formatted_data = {}
