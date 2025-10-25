@@ -1,3 +1,4 @@
+import math
 import os
 from datetime import datetime
 import shutil
@@ -64,12 +65,13 @@ class Uploader(SubscriptableService):
 
         # Archive save contents to mitigate impact on drive storage.
         _logger.info("Archiving save files that need to be uploaded.")
-        shutil.make_archive(target_archive_path, ZIP_EXTENSION, target_archive_path)
+        archive_path = shutil.make_archive(target_archive_path, ZIP_EXTENSION, target_archive_path)
         self._complete_stage()
 
         archive_props = {
             SaveMetaProp.Owner: app().user.current.email,
-            SaveMetaProp.Checksum: game.meta.local.checksum
+            SaveMetaProp.Checksum: game.meta.local.checksum,
+            SaveMetaProp.Size: math.ceil(os.path.getsize(archive_path) / 1024)
             # No need to upload createdTime it would be populated by
             # Google Drive API. We only add it to local metadata for
             # clarity.

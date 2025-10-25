@@ -36,6 +36,7 @@ class SaveMetaProp:
     Owner: Final = "owner"
     CreatedTime: Final = "createdTime"
     Checksum: Final = "checksum"
+    Size: Final = "size"
 
 
 class MetadataWrapper:
@@ -193,6 +194,7 @@ class DriveMetadata(Metadata):
         self.__owner = None
         self.__created_time = None
         self.__checksum = None
+        self.__size = None
 
         self.__is_present = False
 
@@ -215,6 +217,10 @@ class DriveMetadata(Metadata):
     @property
     def checksum(self):
         return self.__checksum
+
+    @property
+    def size(self):
+        return self.__size
 
     def refresh(self):
         """
@@ -247,5 +253,6 @@ class DriveMetadata(Metadata):
         self.__owner = properties.get(SaveMetaProp.Owner)
         self.__created_time = file_meta.get(SaveMetaProp.CreatedTime)
         self.__checksum = properties.get(SaveMetaProp.Checksum)
+        self.__size = int(properties.get(SaveMetaProp.Size, -1))
 
         self.__is_present = True

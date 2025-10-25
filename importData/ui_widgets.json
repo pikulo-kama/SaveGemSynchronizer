@@ -409,7 +409,7 @@
                     },
                     {
                       "widget_id": "save_size_card_value",
-                      "content": "TBA",
+                      "content": "saveInfo{size}",
                       "widget_type_id": "QLabel",
                       "style_object_name": "cardContent",
                       "height": 30

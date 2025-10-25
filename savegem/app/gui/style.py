@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Final, Optional
+from typing import Optional
 
 from constants import Directory, File
 from savegem.common.core.json_config_holder import JsonConfigHolder
@@ -11,13 +11,6 @@ from savegem.common.util.ui import get_color_mode
 
 _logger = get_logger(__name__)
 _styles: Optional[JsonConfigHolder] = None
-
-_FONTS_PROP: Final = "fonts"
-_COLORS_PROP: Final = "colors"
-_IMAGES_PROP: Final = "images"
-
-_COLOR_MODE_LIGHT: Final = "light"
-_COLOR_MODE_DARK: Final = "dark"
 
 
 def _get_styles():
@@ -57,7 +50,7 @@ def color(property_name: str):
     """
 
     color_mode = get_color_mode()
-    colors = _get_styles().get_value(_COLORS_PROP).get(color_mode)
+    colors = _get_styles().get_value("colors").get(color_mode)
     return colors.get(property_name)
 
 
@@ -66,7 +59,7 @@ def font(property_name: str):
     Used to get font that corresponds
     provided property.
     """
-    return _get_styles().get_value(_FONTS_PROP).get(property_name)
+    return _get_styles().get_value("fonts").get(property_name)
 
 
 def _resolve_style_properties(style_string: str):

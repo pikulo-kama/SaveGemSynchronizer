@@ -180,6 +180,27 @@
       "fr_FR": "Dossier de sauvegarde introuvable. \n{0}",
       "uk_UA": "Папку з сейвами не знайдено. \n{0}"
     },
+    "label_NA": {
+      "de_DE": "N. zutr.",
+      "en_US": "N/A",
+      "es_ES": "N/D",
+      "fr_FR": "N/A",
+      "uk_UA": "Н/Д"
+    },
+    "label_SizeKilobytes": {
+      "de_DE": "{0} KB",
+      "en_US": "{0} KB",
+      "es_ES": "{0} KB",
+      "fr_FR": "{0} Ko",
+      "uk_UA": "{0} КБ"
+    },
+    "label_SizeMegabytes": {
+      "de_DE": "{0} MB",
+      "en_US": "{0} MB",
+      "es_ES": "{0} MB",
+      "fr_FR": "{0} Mo",
+      "uk_UA": "{0} МБ"
+    },
     "notification_ErrorUploadingToDrive": {
       "de_DE": "Fehler beim Hochladen auf den Drive.",
       "en_US": "Error occurred when uploading to drive.",

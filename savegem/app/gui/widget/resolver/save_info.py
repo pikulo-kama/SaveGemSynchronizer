@@ -43,7 +43,10 @@ class SaveInfoResolver(ContentResolver):
 
     def resolve(self, key: str, **kw):
 
-        if key == "uploadDate":
+        if key == "size":
+            return self.__get_save_size()
+
+        elif key == "uploadDate":
             return self.__get_creation_date_info()[0]
 
         elif key == "uploadTime":
@@ -112,3 +115,18 @@ class SaveInfoResolver(ContentResolver):
         creation_time = creation_datetime.strftime("%H:%M")
 
         return creation_date, creation_time
+
+    @staticmethod
+    def __get_save_size():
+
+        metadata = app().games.current.meta.drive
+
+        if not metadata.is_present or metadata.size < 0:
+            return tr("label_NA")
+
+        size = metadata.size
+
+        if size < 1000:
+            return tr("label_SizeKilobytes", size)
+        else:
+            return tr("label_SizeMegabytes", size // 1024)

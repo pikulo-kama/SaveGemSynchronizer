@@ -66,6 +66,16 @@
       "widget_id": "save_owner_card_value",
       "section_id": "game_details",
       "refresh_event_id": "game_config_change"
+    },
+    {
+      "widget_id": "save_size_card_value",
+      "section_id": "game_details",
+      "refresh_event_id": "cloud_files_change"
+    },
+    {
+      "widget_id": "save_size_card_value",
+      "section_id": "game_details",
+      "refresh_event_id": "game_selection_change"
     }
   ]
 }
