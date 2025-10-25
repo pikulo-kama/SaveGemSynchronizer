@@ -56,7 +56,6 @@ def user_config_mock(mocker: MockerFixture, app_context):
     user_mock = mocker.MagicMock()
     user_mock.machine_id = PlayerTestData.FirstPlayerMachineId
     user_mock.name = PlayerTestData.FirstPlayerName
-    user_mock.email = PlayerTestData.FirstPlayerEmail
 
     app_context.user = user_mock
 

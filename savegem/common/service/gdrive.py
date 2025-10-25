@@ -44,6 +44,20 @@ class GDrive:
         return response.get("user")
 
     @classmethod
+    def get_users_with_access(cls, file_id: str):
+        """
+        Used to get list of users that has access
+        to the file.
+        """
+
+        response = cls.__get_drive().permissions().list(
+            fileId=file_id,
+            fields="permissions(id, emailAddress, displayName, photoLink)"
+        ).execute()
+
+        return response.get("permissions")
+
+    @classmethod
     def query_single(cls, q: str, fields: str):
         """
         Used to query metadata of single file from Google Drive.

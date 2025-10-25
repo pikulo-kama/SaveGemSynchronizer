@@ -9,7 +9,7 @@ class UserResolver(ContentResolver):
 
     def resolve(self, value: str, **kw):
         if value == "name":
-            return app().user.name
+            return app().user.current.name
 
         elif value == "photo":
-            return app().user.photo
+            return app().user.current.photo

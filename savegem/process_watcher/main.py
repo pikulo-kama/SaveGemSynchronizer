@@ -7,7 +7,6 @@ from savegem.common.service.daemon import Daemon
 from savegem.common.service.downloader import Downloader
 from savegem.common.service.uploader import Uploader
 from savegem.common.core.context import app
-from savegem.common.service.gdrive import GDrive
 from savegem.process_watcher.game_process import get_running_game_processes, GameProcess
 from savegem.process_watcher.ipc_socket import process_watcher_socket
 import threading
@@ -27,7 +26,7 @@ class ProcessWatcher(Daemon):
         self.__uploader = Uploader()
 
     def _work(self):
-        app().user.initialize(GDrive.get_current_user)
+        app().user.initialize()
         app().games.download()
 
         active_processes = get_running_game_processes()

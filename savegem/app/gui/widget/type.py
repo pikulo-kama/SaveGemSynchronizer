@@ -5,11 +5,7 @@ _widget_type_pool: list["WidgetType"] = []
 _layout_type_pool: list["UIObjectType"] = []
 
 
-def get_widget_type(widget_type_name: str):
-    """
-    Used to get widget type metadata by the name.
-    """
-
+def _get_widget_type_pool():
     global _widget_type_pool
 
     if len(_widget_type_pool) == 0:
@@ -23,7 +19,21 @@ def get_widget_type(widget_type_name: str):
 
             _widget_type_pool.append(WidgetType(type_name, class_path, is_interactable))
 
-    return next((widget_type for widget_type in _widget_type_pool if widget_type.name == widget_type_name), None)
+    return _widget_type_pool
+
+
+def get_widget_type(widget_type_name: str):
+    """
+    Used to get widget type metadata by the name.
+    """
+    return next(widget_type for widget_type in _get_widget_type_pool() if widget_type.name == widget_type_name)
+
+
+def get_widget_type_by_class(widget_class: type):
+    """
+    Used to get widget type metadata by class name.
+    """
+    return next(widget_type for widget_type in _get_widget_type_pool() if widget_type.type == widget_class)
 
 
 def get_layout_type(layout_type_name: str):

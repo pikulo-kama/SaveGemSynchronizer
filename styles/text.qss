@@ -4,23 +4,6 @@ QLabel {
     margin: 0px;
 }
 
-QLabel#title {
-    font-size: 25pt;
-}
-
-QLabel#subTitle {
-    font-size: 18pt;
-}
-
-QLabel#text {
-    font-size: 14pt;
-}
-
-QLabel#secondaryText {
-    font-size: 10pt;
-}
-
-
 QCustomLabel#hero {
     font: font("hero");
 }

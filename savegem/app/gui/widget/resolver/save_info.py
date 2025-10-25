@@ -49,8 +49,11 @@ class SaveInfoResolver(ContentResolver):
         elif key == "uploadTime":
             return self.__get_creation_date_info()[1]
 
-        elif key == "owner":
-            return self.__get_owner()
+        elif key == "ownerName":
+            return self.__get_owner_property(lambda user: user.short_name)
+
+        elif key == "ownerPhoto":
+            return self.__get_owner_property(lambda user: user.photo)
 
         sync_status = app().games.current.meta.sync_status
 
@@ -64,7 +67,7 @@ class SaveInfoResolver(ContentResolver):
             return _status_icon_map.get(sync_status)
 
     @staticmethod
-    def __get_owner():
+    def __get_owner_property(function):
         """
         Used to get name of person who uploaded current
         save to drive.
@@ -75,7 +78,12 @@ class SaveInfoResolver(ContentResolver):
         if not metadata.is_present:
             return ""
 
-        return metadata.owner
+        user = app().user.by_email(metadata.owner)
+
+        if user is None:
+            return ""
+
+        return function(user)
 
     @staticmethod
     def __get_creation_date_info():

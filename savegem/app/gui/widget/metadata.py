@@ -49,6 +49,7 @@ class WidgetMetadata:
                  section_id: str,
                  widget_type: WidgetType,
                  layout_type: UIObjectType = None,
+                 grid_columns: int = None,
                  parent_widget_id: str = None,
                  controller: str = None,
                  order_id: int = None,
@@ -77,6 +78,7 @@ class WidgetMetadata:
         self.__widget_type = widget_type
         self.__layout_type = layout_type
 
+        self.__grid_columns = grid_columns
         self.__spacing = spacing
         self.__width = width
         self.__height = height
@@ -137,6 +139,7 @@ class WidgetMetadata:
             order_id=metadata_row.get("order_id"),
             widget_type=get_widget_type(metadata_row.get("widget_type_id")),
             layout_type=get_layout_type(metadata_row.get("layout_type_id")),
+            grid_columns=metadata_row.get("grid_columns"),
             spacing=metadata_row.get("spacing"),
             width=metadata_row.get("width"),
             height=metadata_row.get("height"),
@@ -240,6 +243,17 @@ class WidgetMetadata:
         Used to get metadata of layout type.
         """
         return self.__layout_type
+
+    @property
+    def grid_columns(self) -> int:
+        """
+        Used to get number of columns
+        that widget layout should have.
+
+        Only applicable if layout is of
+        Grid type.
+        """
+        return self.__grid_columns
 
     @property
     def stylesheet(self) -> str:

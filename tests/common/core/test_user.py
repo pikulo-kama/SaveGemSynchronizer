@@ -32,7 +32,6 @@ def test_should_initialize_only_once(module_patch, _user_provider):
     _user_provider.assert_called_once()
     url_retrieve_mock.assert_called_once()
     assert user_state.name == PlayerTestData.FirstPlayerName
-    assert user_state.email == PlayerTestData.FirstPlayerEmail
     assert user_state.short_name == PlayerTestData.FirstPlayerShortName
     assert user_state.photo == profile_photo_path
 

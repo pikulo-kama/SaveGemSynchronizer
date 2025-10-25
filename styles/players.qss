@@ -1,0 +1,23 @@
+
+QCustomWidget#playerCard {
+    background-color: color("surface-a20");
+    border-radius: 5px;
+    border: 1px solid transparent;
+}
+
+QCustomWidget#playerCard[id="active"] {
+    background: qlineargradient(
+        x1:0.075, y1:0, x2:1, y2:0,
+        stop:0    color("success-a20"),
+        stop:0.01 color("success-a20"),
+        stop:0.01 color("surface-a20"),
+        stop:1    color("surface-a20")
+    );
+    border-color: color("success-a10");
+}
+
+QCustomWidget#playerCard QCustomLabel {
+    color: color("light-a0");
+    font: font("accent");
+    font-weight: bold;
+}

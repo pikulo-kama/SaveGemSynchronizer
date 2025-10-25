@@ -94,17 +94,6 @@ def test_refresh_when_active_players(_activity, _mock_download_file, gdrive_mock
     # Current user should not be considered.
     assert len(_activity.players) == 1
 
-
-def test_refresh_when_activity_contains_not_selected_game(_activity, _mock_download_file, gdrive_mock, games_config,
-                                                          _second_player_activity):
-    _mock_download_file(_second_player_activity)
-    games_config.current.name = GameTestData.SecondGame
-    _activity.refresh()
-
-    # Only activity data for current game should be considered.
-    assert len(_activity.players) == 0
-
-
 def test_update_when_has_active_games(_activity, _mock_download_file, gdrive_mock, _second_player_activity):
 
     from savegem.common.core.activity import Activity

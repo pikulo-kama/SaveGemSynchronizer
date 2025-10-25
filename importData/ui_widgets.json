@@ -131,48 +131,6 @@
                   "margin_bottom": 10,
                   "children": [
                     {
-                      "widget_id": "save_status_container",
-                      "controller": "SaveStatusController",
-                      "widget_type_id": "QWidget",
-                      "layout_type_id": "QVBoxLayout",
-                      "style_object_name": "saveStatusContainer",
-                      "height": 50,
-                      "margin_left": 15,
-                      "margin_top": 5,
-                      "margin_right": 15,
-                      "margin_bottom": 5,
-                      "children": [
-                        {
-                          "widget_id": "save_status_top_wrapper",
-                          "widget_type_id": "QWidget",
-                          "layout_type_id": "QHBoxLayout",
-                          "alignment": "bottom-left",
-                          "children": [
-                            {
-                              "widget_id": "save_status_icon",
-                              "content": "pixmap{saveInfo{statusIcon}, scale: 15}",
-                              "widget_type_id": "QLabel",
-                              "style_object_name": "accent",
-                              "alignment": "vcenter"
-                            },
-                            {
-                              "widget_id": "save_status_label",
-                              "content": "saveInfo{status}",
-                              "widget_type_id": "QLabel",
-                              "style_object_name": "saveStatusLabel",
-                              "alignment": "vcenter"
-                            }
-                          ]
-                        },
-                        {
-                          "widget_id": "save_status_description",
-                          "content": "saveInfo{statusDescription}",
-                          "widget_type_id": "QLabel",
-                          "style_object_name": "smallText"
-                        }
-                      ]
-                    },
-                    {
                       "widget_id": "game_lower_bar_spacer",
                       "widget_type_id": "QSpacer"
                     },
@@ -265,7 +223,7 @@
             },
             {
               "widget_id": "user_picture",
-              "content": "pixmap{user{photo}, scale: 30, circle}",
+              "content": "pixmap{user{photo}, scale: 35, circle}",
               "tooltip": "user{name}",
               "widget_type_id": "QLabel",
               "alignment": "bottom-center",
@@ -287,19 +245,26 @@
       "widget_id": "game_details_root",
       "section_id": "game_details",
       "controller": "GameBarTabController",
-      "widget_type_id": "QWidget",
+      "widget_type_id": "QScrollableWidget",
       "layout_type_id": "QVBoxLayout",
       "alignment": "top",
+      "margin_left": 10,
+      "margin_top": 10,
+      "margin_right": 10,
+      "spacing": 10,
       "children": [
+        {
+          "widget_id": "last_cloud_save_label",
+          "content": "tr{label_LastCloudSave}",
+          "widget_type_id": "QLabel",
+          "style_object_name": "cardTitle"
+        },
         {
           "widget_id": "save_details_container",
           "widget_type_id": "QWidget",
           "layout_type_id": "QHBoxLayout",
           "spacing": 15,
-          "height": 200,
-          "margin_left": 10,
-          "margin_top": 10,
-          "margin_right": 10,
+          "height": 150,
           "children": [
             {
               "widget_id": "save_date_card",
@@ -380,11 +345,25 @@
                       "height": 35
                     },
                     {
-                      "widget_id": "save_owner_card_value",
-                      "content": "saveInfo{owner}",
-                      "widget_type_id": "QLabel",
-                      "style_object_name": "cardContent",
-                      "height": 30
+                      "widget_id": "save_owner_value_wrapper",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "vcenter",
+                      "children": [
+                        {
+                          "widget_id": "save_owner_card_user_photo",
+                          "content": "pixmap{saveInfo{ownerPhoto}, scale: 20, circle}",
+                          "widget_type_id": "QLabel",
+                          "height": 30
+                        },
+                        {
+                          "widget_id": "save_owner_card_user_name",
+                          "content": "saveInfo{ownerName}",
+                          "widget_type_id": "QLabel",
+                          "style_object_name": "cardContent",
+                          "height": 30
+                        }
+                      ]
                     }
                   ]
                 }
@@ -432,6 +411,24 @@
               ]
             }
           ]
+        },
+        {
+          "widget_id": "details_players_spacer",
+          "widget_type_id": "QWidget",
+          "height": 10
+        },
+        {
+          "widget_id": "players_label",
+          "content": "tr{label_Players}",
+          "widget_type_id": "QLabel",
+          "style_object_name": "cardTitle"
+        },
+        {
+          "widget_id": "players_container",
+          "controller": "PlayersController",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QGridLayout",
+          "grid_columns": 3
         }
       ]
     }

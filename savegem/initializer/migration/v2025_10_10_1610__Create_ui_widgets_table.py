@@ -16,6 +16,7 @@ class v2025_10_10_1610__Create_ui_widgets_table(Migration):  # noqa
                 parent_widget_id VARCHAR,
                 widget_type_id VARCHAR NOT NULL,
                 layout_type_id VARCHAR,
+                grid_columns INTEGER,
                 style_object_name VARCHAR,
                 alignment VARCHAR,
                 spacing INTEGER,

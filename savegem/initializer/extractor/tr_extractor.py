@@ -12,7 +12,7 @@ class TRExtractor(DatabaseExtractor):
     def _post_extract(self, data: any):
         formatted_data = {}
 
-        for record in data:
+        for record in sorted(data, key=lambda r: r.get("text_resource_key")):
             key = record.get("text_resource_key")
             locale = record.get("locale_id")
             value = record.get("text_resource")

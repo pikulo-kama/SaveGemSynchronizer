@@ -78,14 +78,14 @@ class WidgetManager:
                 continue
 
             if meta.parent_widget_id is None:
-                parent_layout = self.__gui.root.layout()
                 self.__root_widgets[meta.section_id] = widget
+                parent_layout = self.__gui.root.layout()
+                parent_layout.addWidget(widget)
 
             else:
                 parent = self.__widgets.get(meta.parent_widget_name)
-                parent_layout = parent.layout()
-
-            parent_layout.addWidget(widget)
+                parent_layout: QCustomLayout = parent.layout()
+                parent_layout.add_widget(widget)
 
         self.__invoke_controllers(
             lambda controller, window_widget: controller.setup(window_widget),
@@ -141,6 +141,7 @@ class WidgetManager:
         for meta in root_widget_meta:
             if clear_condition_function(meta):
                 root_widget = self.__root_widgets.get(meta.section_id)
+                root_widget.setParent(None)
                 root_widget.deleteLater()
 
                 del self.__root_widgets[meta.section_id]
@@ -155,6 +156,7 @@ class WidgetManager:
                     controller.reset_state()
 
                 widget = self.__widgets[meta.name]
+                widget.setParent(None)
                 widget.deleteLater()
 
                 del self.__widgets[meta.name]
