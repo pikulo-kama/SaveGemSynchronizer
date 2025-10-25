@@ -60,114 +60,119 @@
           "widget_type_id": "QVDivider"
         },
         {
-          "widget_id": "right_section_wrapper",
+          "widget_id": "right_section",
           "widget_type_id": "QWidget",
           "layout_type_id": "QVBoxLayout",
-          "alignment": "hcenter",
           "children": [
             {
-              "widget_id": "right_section",
+              "widget_id": "right_section_body_h_wrapper",
               "widget_type_id": "QWidget",
-              "layout_type_id": "QVBoxLayout",
-              "style_object_name": "homeRightSection",
-              "stylesheet": {
-                "max-width": "900px"
-              },
+              "layout_type_id": "QHBoxLayout",
               "children": [
                 {
-                  "widget_id": "game_header",
+                  "widget_id": "right_section_body_v_wrapper",
                   "widget_type_id": "QWidget",
                   "layout_type_id": "QVBoxLayout",
-                  "height": 130,
+                  "stylesheet": {
+                    "max-width": "900px"
+                  },
                   "children": [
                     {
-                      "widget_id": "hl_game_header",
+                      "widget_id": "game_header",
                       "widget_type_id": "QWidget",
-                      "layout_type_id": "QHBoxLayout",
-                      "alignment": "bottom-left",
-                      "margin_left": 10,
-                      "margin_bottom": 10,
+                      "layout_type_id": "QVBoxLayout",
+                      "height": 130,
                       "children": [
                         {
-                          "widget_id": "game_logo",
-                          "content": "pixmap{game{logo}, scale: 40, radius: 3}",
-                          "widget_type_id": "QLabel",
-                          "alignment": "left-vcenter",
-                          "width": 50
+                          "widget_id": "hl_game_header",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QHBoxLayout",
+                          "alignment": "bottom-left",
+                          "margin_left": 10,
+                          "margin_bottom": 10,
+                          "children": [
+                            {
+                              "widget_id": "game_logo",
+                              "content": "pixmap{game{logo}, scale: 40, radius: 3}",
+                              "widget_type_id": "QLabel",
+                              "alignment": "left-vcenter",
+                              "width": 50
+                            },
+                            {
+                              "widget_id": "game_name",
+                              "content": "game{name}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "sectionTitle",
+                              "alignment": "left-center"
+                            }
+                          ]
                         },
                         {
-                          "widget_id": "game_name",
-                          "content": "game{name}",
-                          "widget_type_id": "QLabel",
-                          "style_object_name": "sectionTitle",
-                          "alignment": "left-center"
+                          "widget_id": "game_tab_bar",
+                          "controller": "GameBarController",
+                          "widget_type_id": "QTabBar",
+                          "style_object_name": "gameBar"
                         }
                       ]
                     },
                     {
-                      "widget_id": "game_tab_bar",
-                      "controller": "GameBarController",
-                      "widget_type_id": "QTabBar",
-                      "style_object_name": "gameBar"
+                      "widget_id": "game_container",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QVBoxLayout"
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "widget_id": "game_container_controls_divider",
+              "widget_type_id": "QHDivider"
+            },
+            {
+              "widget_id": "game_controls",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QHBoxLayout",
+              "height": 60,
+              "margin_left": 10,
+              "margin_right": 10,
+              "margin_bottom": 10,
+              "children": [
+                {
+                  "widget_id": "game_lower_bar_spacer",
+                  "widget_type_id": "QSpacer"
                 },
                 {
-                  "widget_id": "game_container",
-                  "widget_type_id": "QWidget",
-                  "layout_type_id": "QVBoxLayout"
-                },
-                {
-                  "widget_id": "game_container_controls_divider",
-                  "widget_type_id": "QHDivider"
-                },
-                {
-                  "widget_id": "game_controls",
+                  "widget_id": "game_controls_wrapper",
                   "widget_type_id": "QWidget",
                   "layout_type_id": "QHBoxLayout",
-                  "height": 60,
-                  "margin_left": 10,
-                  "margin_right": 10,
-                  "margin_bottom": 10,
+                  "alignment": "bottom-right",
                   "children": [
                     {
-                      "widget_id": "game_lower_bar_spacer",
-                      "widget_type_id": "QSpacer"
+                      "widget_id": "upload_button",
+                      "content": "tr{label_UploadSaveToDrive}",
+                      "controller": "UploadButtonController",
+                      "widget_type_id": "QProgressPushButton",
+                      "width": 200,
+                      "height": 40,
+                      "properties": {
+                        "id": "uploadButton",
+                        "kind": "secondary"
+                      }
                     },
                     {
-                      "widget_id": "game_controls_wrapper",
+                      "widget_id": "buttons_spacer",
                       "widget_type_id": "QWidget",
-                      "layout_type_id": "QHBoxLayout",
-                      "alignment": "bottom-right",
-                      "children": [
-                        {
-                          "widget_id": "upload_button",
-                          "content": "tr{label_UploadSaveToDrive}",
-                          "controller": "UploadButtonController",
-                          "widget_type_id": "QProgressPushButton",
-                          "width": 200,
-                          "height": 40,
-                          "properties": {
-                            "id": "uploadButton",
-                            "kind": "secondary"
-                          }
-                        },
-                        {
-                          "widget_id": "buttons_spacer",
-                          "widget_type_id": "QWidget",
-                          "width": 5
-                        },
-                        {
-                          "widget_id": "download_button",
-                          "controller": "DownloadButtonController",
-                          "widget_type_id": "QProgressPushButton",
-                          "height": 40,
-                          "properties": {
-                            "id": "downloadButton",
-                            "kind": "primary"
-                          }
-                        }
-                      ]
+                      "width": 5
+                    },
+                    {
+                      "widget_id": "download_button",
+                      "controller": "DownloadButtonController",
+                      "widget_type_id": "QProgressPushButton",
+                      "height": 40,
+                      "properties": {
+                        "id": "downloadButton",
+                        "kind": "primary"
+                      }
                     }
                   ]
                 }
