@@ -220,7 +220,10 @@
               "widget_id": "menu",
               "controller": "MenuController",
               "widget_type_id": "QWidget",
-              "layout_type_id": "QVBoxLayout"
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "sidebarMenu",
+              "margin_left": 5,
+              "margin_right": 5
             },
             {
               "widget_id": "sidebar_spacer",

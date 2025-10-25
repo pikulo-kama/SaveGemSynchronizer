@@ -2,3 +2,15 @@
 QWidget#sidebar {
     background-color: color("surface-a20");
 }
+
+QCustomWidget#sidebarMenu QCustomPushButton {
+    border-radius: 8px;
+}
+
+QCustomWidget#sidebarMenu QCustomPushButton:hover {
+    background-color: rgba("light-a0", 0.2);
+}
+
+QCustomWidget#sidebarMenu QCustomPushButton[active="true"]:hover {
+    background-color: rgba("primary-a30", 0.33);
+}

@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QWidget
 
 from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.component.spacer import QSpacer
+from savegem.app.gui.constants import QAttr, QBool
 from savegem.app.gui.controller import WidgetController
 from savegem.app.gui.widget.resolver import resolve_content
 from savegem.common.util.file import resolve_resource
@@ -47,12 +48,14 @@ class MenuController(WidgetController):
         for section in self.sections:
             section_id = section.get("section_id")
             section_icon = section.get("section_icon")
+            is_selected = section_id == selected_section_id
 
-            if section_id == selected_section_id:
+            if is_selected:
                 section_icon = f"active_{section_icon}"
 
             menu_item = menu.findChild(QCustomPushButton, section_id)
             menu_item.setIcon(QIcon(resolve_resource(section_icon)))
+            menu_item.setProperty("active", QBool(is_selected))
 
     def __change_tab(self, section_id: str):
         """

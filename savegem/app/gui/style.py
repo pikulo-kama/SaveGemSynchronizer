@@ -33,6 +33,21 @@ def _get_styles():
     return _styles
 
 
+def rgba_color(color_key: str, alpha: str):
+    """
+    Used to get unwrap color property
+    and transform it from hexadecimal format
+    into decimal.
+    """
+
+    color_hex = color(color_key)
+    red = int(color_hex[1:3], 16)
+    green = int(color_hex[3:5], 16)
+    blue = int(color_hex[5:7], 16)
+
+    return f"rgba({red}, {green}, {blue}, {alpha})"
+
+
 def color(property_name: str):
     """
     Used to get color that corresponds
@@ -64,6 +79,13 @@ def _resolve_style_properties(style_string: str):
     style_string = re.sub(
         r"color\(['\"]([^'\"]+)['\"]\)",
         lambda match: color(match.group(1)),
+        style_string
+    )
+
+    # Resolve RGBA colors.
+    style_string = re.sub(
+        r"rgba\(\s*['\"]([^'\"]+)['\"]\s*,\s*([^)]+)\s*\)",
+        lambda match: rgba_color(match.group(1), match.group(2)),
         style_string
     )
 
