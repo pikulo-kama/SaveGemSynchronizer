@@ -51,6 +51,11 @@
         "cloud_files_change",
         "game_selection_change"
       ]
+    },
+    "game_details.players_container": {
+      "events": [
+        "game_selection_change"
+      ]
     }
   }
 }
