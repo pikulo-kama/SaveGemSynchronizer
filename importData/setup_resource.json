@@ -53,7 +53,7 @@
     {
       "resource_name": "tooltip.svg",
       "resource_path": "tooltip.svg",
-      "color": "#909090"
+      "color": "surface-a50"
     },
     {
       "resource_name": "chevron.svg",

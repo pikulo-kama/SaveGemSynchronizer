@@ -143,7 +143,7 @@ def create_dynamic_resources():
 
         resource_content = read_file(resolve_resource(file_name, include_temporary=False))
 
-        if color is not None:
+        if current_color is not None:
             resource_content = resource_content.replace("currentColor", current_color)
 
         save_file(resolve_temp_resource(name), resource_content)
