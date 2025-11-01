@@ -23,8 +23,6 @@ class WidgetManager:
     def __init__(self, gui: "GUI"):
         self.__gui = gui
         self.__widgets: dict[str, QCustomComponent] = {}
-        self.__root_widgets: dict[str, QCustomComponent] = {}
-
         self.__controllers: dict[str, WidgetController] = load_controllers(self)
 
     @property
@@ -78,7 +76,6 @@ class WidgetManager:
                 continue
 
             if meta.parent_widget_id is None:
-                self.__root_widgets[meta.section_id] = widget
                 parent_layout = self.__gui.root.layout()
                 parent_layout.addWidget(widget)
 
@@ -134,17 +131,7 @@ class WidgetManager:
         whose metadata match provided condition.
         """
 
-        root_widget_meta = copy.deepcopy([widget.metadata for widget in self.__root_widgets.values()])
         all_widget_meta = copy.deepcopy([widget.metadata for widget in self.__widgets.values()])
-
-        # Remove actual widgets.
-        for meta in root_widget_meta:
-            if clear_condition_function(meta):
-                root_widget = self.__root_widgets.get(meta.section_id)
-                root_widget.setParent(None)
-                root_widget.deleteLater()
-
-                del self.__root_widgets[meta.section_id]
 
         # Remove widget references in
         for meta in all_widget_meta:
@@ -155,11 +142,17 @@ class WidgetManager:
                 if controller is not None:
                     controller.reset_state()
 
-                widget = self.__widgets[meta.name]
+                widget = self.__widgets.get(meta.name)
+
+                if widget is None:
+                    continue
+
+                # Remove widget from manager and then remove its children.
+                del self.__widgets[meta.name]
+                self.remove_widgets(lambda m: m.parent_widget_name == meta.name)
+
                 widget.setParent(None)
                 widget.deleteLater()
-
-                del self.__widgets[meta.name]
 
     def __invoke_controllers(self, invoker: Callable[[WidgetController, QCustomComponent], None],
                              section_id: str = None):

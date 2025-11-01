@@ -15,7 +15,9 @@ class PlayersController(WidgetController):
     def refresh(self, players_container: QCustomWidget):
 
         players_layout: QCustomLayout = players_container.layout()
-        self.manager.remove_widgets(lambda meta: meta.parent_widget_name == players_container.metadata.name)
+        self.manager.remove_widgets(
+            lambda meta: meta.parent_widget_name == players_container.metadata.name
+        )
 
         # Sort by name but make sure to show players that are online first.
         user_list = sorted(app().user.list, key=lambda u: (u not in app().activity.players, u.name))
