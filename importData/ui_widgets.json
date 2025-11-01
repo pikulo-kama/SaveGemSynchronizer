@@ -196,11 +196,56 @@
       "widget_id": "game_settings_root",
       "section_id": "game_settings",
       "controller": "GameBarTabController",
-      "widget_type_id": "QWidget",
+      "widget_type_id": "QScrollableWidget",
       "layout_type_id": "QVBoxLayout",
-      "stylesheet": {
-        "background-color": "lime"
-      }
+      "alignment": "left",
+      "children": [
+        {
+          "widget_id": "auto_mode_setting",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QHBoxLayout",
+          "height": 100,
+          "margin_left": 50,
+          "margin_right": 50,
+          "alignment": "left",
+          "children": [
+            {
+              "widget_id": "auto_mode_setting_vl",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "children": [
+                {
+                  "widget_id": "auto_mode_setting_title",
+                  "content": "Auto Mode",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "body",
+                  "stylesheet": {
+                    "font-weight": "bold"
+                  }
+                },
+                {
+                  "widget_id": "auto_mode_setting_description",
+                  "content": "Automatically uploads/downloads save when game is ...",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "smallText"
+                }
+              ]
+            },
+            {
+              "widget_id": "auto_mode_settings_spacer",
+              "widget_type_id": "QSpacer"
+            },
+            {
+              "widget_id": "auto_mode_toggle",
+              "widget_type_id": "QToggle"
+            }
+          ]
+        },
+        {
+          "widget_id": "game_settings_spacer",
+          "widget_type_id": "QSpacer"
+        }
+      ]
     },
     {
       "widget_id": "window",

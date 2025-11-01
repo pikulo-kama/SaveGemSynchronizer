@@ -49,6 +49,11 @@
       "widget_type_id": "QTabBar",
       "class_path": "savegem.app.gui.component.tab_bar.QCustomTabBar",
       "is_interactable": 1
+    },
+    {
+      "widget_type_id": "QToggle",
+      "class_path": "savegem.app.gui.component.toggle.QCustomToggle",
+      "is_interactable": 1
     }
   ]
 }
