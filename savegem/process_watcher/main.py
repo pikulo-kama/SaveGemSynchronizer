@@ -40,8 +40,7 @@ class ProcessWatcher(Daemon):
         game_names = [process.game.name for process in active_processes if not process.has_closed]
         app().activity.update(game_names)
 
-        if app().state.is_auto_mode:
-            self.__perform_automatic_actions(active_processes)
+        self.__perform_automatic_actions(active_processes)
 
     def __perform_automatic_actions(self, processes: list[GameProcess]):
         """
@@ -53,6 +52,10 @@ class ProcessWatcher(Daemon):
             # No need to perform extra actions such as metadata download
             # if process is in running state and no action is required.
             if not process.has_started and not process.has_closed:
+                continue
+
+            # Only do automatic actions if user enabled auto mode for the game.
+            if not process.game.settings.auto_mode:
                 continue
 
             # Do not perform anything if auto mode is forcefully

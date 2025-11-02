@@ -56,6 +56,11 @@
       "events": [
         "game_selection_change"
       ]
+    },
+    "game_settings.auto_mode_toggle": {
+      "events": [
+        "game_selection_change"
+      ]
     }
   }
 }

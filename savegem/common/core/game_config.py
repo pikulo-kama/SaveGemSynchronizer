@@ -7,6 +7,7 @@ from typing import Final
 from constants import File, JPG_EXTENSION
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
+from savegem.common.db.manager import db
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import delete_file, resolve_app_data, resolve_resource, resolve_temp_resource
 from savegem.common.util.logger import get_logger
@@ -134,6 +135,54 @@ class GameConfig(AppData):
             game.meta.local.refresh()
 
 
+class GameSettings:
+    """
+    Represents game configuration
+    controllable by the user.
+    """
+
+    def __init__(self, game: "Game"):
+        self.__game = game
+        self.__settings = self.__get_settings_table()
+
+    @property
+    def auto_mode(self):
+        """
+        Used to check if auto download/upload mode is enabled.
+        """
+        return self.__settings.get_first("auto_mode_enabled") == 1
+
+    @auto_mode.setter
+    def auto_mode(self, enabled: bool):
+        """
+        Used to enable/disabled auto mode.
+        """
+
+        self.__settings.set_first("auto_mode_enabled", 1 if enabled else 0)
+        self.__settings.save()
+
+    def __get_settings_table(self):
+        """
+        Used to load game settings from database.
+        If there are no settings for the game new
+        entry would be created.
+        """
+
+        settings = db() \
+            .table("game_settings") \
+            .where("game_name = ?", self.__game.name) \
+            .retrieve()
+
+        if len(settings.rows) == 1:
+            return settings
+
+        row = settings.add_row()
+        settings.set(row, "game_name", self.__game.name)
+        settings.save()
+
+        return settings
+
+
 class Game:
     """
     Represents a game.
@@ -161,6 +210,7 @@ class Game:
         self.__players = players
 
         self._metadata = MetadataWrapper(LocalMetadata(self), DriveMetadata(self))
+        self.__settings = GameSettings(self)
 
     @property
     def name(self):
@@ -207,6 +257,13 @@ class Game:
         and metadata of latest save on drive.
         """
         return self._metadata
+
+    @property
+    def settings(self) -> GameSettings:
+        """
+        Used to get game settings.
+        """
+        return self.__settings
 
     @property
     def auto_mode_allowed(self):

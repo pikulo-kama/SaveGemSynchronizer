@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-10-26T02:05:53.754115"
+    "extract_date": "2025-11-02T03:01:28.306455"
   },
   "data": [
     {
@@ -198,16 +198,15 @@
       "controller": "GameBarTabController",
       "widget_type_id": "QScrollableWidget",
       "layout_type_id": "QVBoxLayout",
-      "alignment": "left",
       "children": [
         {
           "widget_id": "auto_mode_setting",
           "widget_type_id": "QWidget",
           "layout_type_id": "QHBoxLayout",
+          "alignment": "left-vcenter",
           "height": 100,
           "margin_left": 50,
           "margin_right": 50,
-          "alignment": "left",
           "children": [
             {
               "widget_id": "auto_mode_setting_vl",
@@ -216,7 +215,7 @@
               "children": [
                 {
                   "widget_id": "auto_mode_setting_title",
-                  "content": "Auto Mode",
+                  "content": "tr{label_AutoModeGameSetting}",
                   "widget_type_id": "QLabel",
                   "style_object_name": "body",
                   "stylesheet": {
@@ -225,7 +224,7 @@
                 },
                 {
                   "widget_id": "auto_mode_setting_description",
-                  "content": "Automatically uploads/downloads save when game is ...",
+                  "content": "tr{label_AutoModeGameSettingDesc}",
                   "widget_type_id": "QLabel",
                   "style_object_name": "smallText"
                 }
@@ -237,7 +236,10 @@
             },
             {
               "widget_id": "auto_mode_toggle",
-              "widget_type_id": "QToggle"
+              "controller": "AutoModeController",
+              "widget_type_id": "QToggle",
+              "width": 64,
+              "height": 30
             }
           ]
         },

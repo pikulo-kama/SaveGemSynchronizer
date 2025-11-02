@@ -93,6 +93,11 @@ class QCustomToggle(QPushButton, CustomComponentMixin):
         self.__border_color = color
         self.update()
 
+    def setChecked(self, checked):
+        super().setChecked(checked)
+        self.__animate_toggle()
+        self.__on_toggle(checked)
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -120,6 +125,7 @@ class QCustomToggle(QPushButton, CustomComponentMixin):
         """
 
         end_value = self.width() - self.height() if self.isChecked() else 0
+
         self.__animation.setStartValue(self.__thumb_offset)
         self.__animation.setEndValue(end_value)
         self.__animation.start()

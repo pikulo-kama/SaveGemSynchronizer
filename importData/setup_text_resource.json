@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "setup_text_resource",
     "type": "TextResource",
-    "extract_date": "2025-10-26T02:05:06.856096"
+    "extract_date": "2025-11-02T03:01:05.028863"
   },
   "data": {
     "confirmation_ConfirmLogout": {
@@ -74,6 +74,20 @@
       "es_ES": "Autor",
       "fr_FR": "Auteur",
       "uk_UA": "Автор"
+    },
+    "label_AutoModeGameSetting": {
+      "de_DE": "Auto-Modus",
+      "en_US": "Auto Mode",
+      "es_ES": "Modo Automático",
+      "fr_FR": "Mode Auto",
+      "uk_UA": "Автоматичний Режим"
+    },
+    "label_AutoModeGameSettingDesc": {
+      "de_DE": "Synchronisiert Spielstände automatisch, wenn das Spiel gestartet oder geschlossen wird.",
+      "en_US": "Automatically syncs save files when the game starts or closes.",
+      "es_ES": "Sincroniza automáticamente los archivos de guardado al iniciar o cerrar el juego.",
+      "fr_FR": "Synchronise automatiquement les fichiers de sauvegarde à l'ouverture ou à la fermeture du jeu.",
+      "uk_UA": "Автоматично синхронізує файли збережень, коли гра запускається або закривається."
     },
     "label_Date": {
       "de_DE": "Datum",
