@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="DB Extract Widgets (home)" type="PythonConfigurationType" factoryName="Python" folderName="DB Custom">
+  <configuration default="false" name="DB Extract Widgets (game details)" type="PythonConfigurationType" factoryName="Python" folderName="DB Custom">
     <module name="SaveGemSynchronizer" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
@@ -13,7 +13,7 @@
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/savegem/initializer/main.py" />
-    <option name="PARAMETERS" value="extract --type=Widgets --table_name=ui_widgets --filter=&quot;section_id = 'home'&quot;" />
+    <option name="PARAMETERS" value="extract --type=Widgets --table_name=ui_widgets --filter=&quot;section_id = 'game_details'&quot;" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

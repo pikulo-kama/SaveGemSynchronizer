@@ -91,7 +91,7 @@ class RegularImporter:
         table_name = metadata.get("table_name")
         filter_string = metadata.get("filter")
         data: list[dict] = import_file.get("data", [])
-        data = self._format_data(data)
+        data = self._format_data(data, metadata)
 
         import_table = db().table(table_name)
 
@@ -112,7 +112,7 @@ class RegularImporter:
 
         import_table.save()
 
-    def _format_data(self, data: any):
+    def _format_data(self, data: any, metadata: dict):
         """
         Allows to format JSON data before
         persisting it in database.

@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2025-11-02T21:36:21.771710",
+    "filter": "section_id = 'game_history'"
+  },
+  "data": [
+    {
+      "widget_id": "game_history_root",
+      "section_id": "game_history",
+      "controller": "GameBarTabController",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QVBoxLayout",
+      "stylesheet": {
+        "background-color": "orange"
+      }
+    }
+  ]
+}

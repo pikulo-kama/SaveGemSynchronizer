@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2025-11-02T21:35:41.590456",
+    "filter": "section_id = 'game_details'"
+  },
+  "data": [
+    {
+      "widget_id": "game_details_root",
+      "section_id": "game_details",
+      "controller": "GameBarTabController",
+      "widget_type_id": "QScrollableWidget",
+      "layout_type_id": "QVBoxLayout",
+      "alignment": "top",
+      "spacing": 10,
+      "margin_left": 10,
+      "margin_top": 20,
+      "margin_right": 10,
+      "children": [
+        {
+          "widget_id": "last_cloud_save_label",
+          "content": "tr{label_LastCloudSave}",
+          "widget_type_id": "QLabel",
+          "style_object_name": "cardTitle"
+        },
+        {
+          "widget_id": "save_details_container",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QHBoxLayout",
+          "spacing": 15,
+          "height": 150,
+          "children": [
+            {
+              "widget_id": "save_date_card",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "saveDetailsCard",
+              "children": [
+                {
+                  "widget_id": "save_date_card_vl",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "alignment": "top-left",
+                  "spacing": 2,
+                  "margin_left": 20,
+                  "margin_top": 20,
+                  "children": [
+                    {
+                      "widget_id": "save_date_card_icon",
+                      "content": "pixmap{calendar.svg, scale: 30}",
+                      "widget_type_id": "QLabel",
+                      "width": 30,
+                      "height": 30
+                    },
+                    {
+                      "widget_id": "save_date_card_label",
+                      "content": "tr{label_Date}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardTitle",
+                      "alignment": "vcenter",
+                      "height": 35
+                    },
+                    {
+                      "widget_id": "save_date_card_date",
+                      "content": "saveInfo{uploadDate}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardContent",
+                      "height": 25,
+                      "refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ]
+                    },
+                    {
+                      "widget_id": "save_date_card_time",
+                      "content": "saveInfo{uploadTime}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardContent",
+                      "height": 30,
+                      "refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "widget_id": "save_owner_card",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "saveDetailsCard",
+              "children": [
+                {
+                  "widget_id": "save_owner_card_vl",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "alignment": "top-left",
+                  "spacing": 2,
+                  "margin_left": 20,
+                  "margin_top": 20,
+                  "children": [
+                    {
+                      "widget_id": "save_owner_card_icon",
+                      "content": "pixmap{person.svg, scale: 30}",
+                      "widget_type_id": "QLabel",
+                      "width": 30,
+                      "height": 30
+                    },
+                    {
+                      "widget_id": "save_owner_card_label",
+                      "content": "tr{label_Author}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardTitle",
+                      "alignment": "vcenter",
+                      "height": 35
+                    },
+                    {
+                      "widget_id": "save_owner_value_wrapper",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "vcenter",
+                      "refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ],
+                      "recursive_refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ],
+                      "children": [
+                        {
+                          "widget_id": "save_owner_card_user_photo",
+                          "content": "pixmap{saveInfo{ownerPhoto}, scale: 20, circle}",
+                          "widget_type_id": "QLabel",
+                          "height": 30
+                        },
+                        {
+                          "widget_id": "save_owner_card_user_name",
+                          "content": "saveInfo{ownerName}",
+                          "widget_type_id": "QLabel",
+                          "style_object_name": "cardContent",
+                          "height": 30
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "widget_id": "save_size_card",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "saveDetailsCard",
+              "children": [
+                {
+                  "widget_id": "save_size_card_vl",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "alignment": "top-left",
+                  "spacing": 2,
+                  "margin_left": 20,
+                  "margin_top": 20,
+                  "children": [
+                    {
+                      "widget_id": "save_size_card_icon",
+                      "content": "pixmap{drive.svg, scale: 30}",
+                      "widget_type_id": "QLabel",
+                      "width": 30,
+                      "height": 30
+                    },
+                    {
+                      "widget_id": "save_size_card_label",
+                      "content": "tr{label_Size}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardTitle",
+                      "alignment": "vcenter",
+                      "height": 30
+                    },
+                    {
+                      "widget_id": "save_size_card_value",
+                      "content": "saveInfo{size}",
+                      "widget_type_id": "QLabel",
+                      "style_object_name": "cardContent",
+                      "height": 30,
+                      "refresh_events": [
+                        "cloud_files_change",
+                        "game_selection_change"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "widget_id": "details_players_spacer",
+          "widget_type_id": "QWidget",
+          "height": 10
+        },
+        {
+          "widget_id": "players_label",
+          "content": "tr{label_Players}",
+          "widget_type_id": "QLabel",
+          "style_object_name": "cardTitle"
+        },
+        {
+          "widget_id": "players_container",
+          "controller": "PlayersController",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QGridLayout",
+          "grid_columns": 3,
+          "style_object_name": "playersContainer",
+          "refresh_events": [
+            "game_selection_change"
+          ]
+        }
+      ]
+    }
+  ]
+}

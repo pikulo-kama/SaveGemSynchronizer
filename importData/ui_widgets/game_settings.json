@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2025-11-02T21:34:58.993810",
+    "filter": "section_id = 'game_settings'"
+  },
+  "data": [
+    {
+      "widget_id": "game_settings_root",
+      "section_id": "game_settings",
+      "controller": "GameBarTabController",
+      "widget_type_id": "QScrollableWidget",
+      "layout_type_id": "QVBoxLayout",
+      "margin_left": 20,
+      "margin_top": 20,
+      "margin_right": 20,
+      "children": [
+        {
+          "widget_id": "auto_mode_setting",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QHBoxLayout",
+          "style_object_name": "settingCard",
+          "alignment": "left-vcenter",
+          "height": 75,
+          "margin_left": 10,
+          "margin_right": 10,
+          "children": [
+            {
+              "widget_id": "auto_mode_setting_vl",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "width": 100,
+              "children": [
+                {
+                  "widget_id": "auto_mode_setting_title",
+                  "content": "tr{label_AutoModeGameSetting}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "body",
+                  "stylesheet": {
+                    "font-weight": "bold"
+                  }
+                },
+                {
+                  "widget_id": "auto_mode_setting_description",
+                  "content": "tr{label_AutoModeGameSettingDesc}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "smallText"
+                }
+              ]
+            },
+            {
+              "widget_id": "auto_mode_settings_spacer",
+              "widget_type_id": "QSpacer"
+            },
+            {
+              "widget_id": "auto_mode_toggle",
+              "controller": "AutoModeController",
+              "widget_type_id": "QToggle",
+              "width": 55,
+              "height": 25,
+              "refresh_events": [
+                "game_selection_change"
+              ]
+            }
+          ]
+        },
+        {
+          "widget_id": "game_settings_spacer",
+          "widget_type_id": "QSpacer"
+        }
+      ]
+    }
+  ]
+}

@@ -9,14 +9,17 @@ class WidgetsImporter(RegularImporter):
     Importer for ui_widgets table.
     """
 
-    def _format_data(self, data: list[dict]):
+    def _format_data(self, data: list[dict], metadata: dict):
         formatted_data = []
+        filter_string = metadata.get("filter")
 
-        # Remove all widget events before importing.
-        events_table = db() \
-            .table("ui_widget_events") \
-            .retrieve()
+        events_table = db().table("ui_widget_events")
 
+        if filter_string:
+            events_table.where(filter_string)
+
+        # Remove widget events before importing.
+        events_table.retrieve()
         events_table.remove_all()
         events_table.save()
 

@@ -10,4 +10,7 @@ setup_text_resource.json
 ui_sections.json
 ui_widgets/root.json
 ui_widgets/home.json
+ui_widgets/game_details.json
+ui_widgets/game_history.json
+ui_widgets/game_settings.json
 ui_widgets/settings.json
