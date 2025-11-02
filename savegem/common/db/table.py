@@ -279,6 +279,8 @@ class DatabaseTable:
             """
 
             self.__db.execute(sql, insert_field_values)
+            record._apply_edits()  # noqa
+            record.is_new = False
 
     def remove(self, row_number: int):
         """

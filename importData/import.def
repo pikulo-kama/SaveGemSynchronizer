@@ -9,4 +9,3 @@ setup_text_resource.json
 # UI Related Metadata
 ui_sections.json
 ui_widgets.json
-ui_widget_events.json

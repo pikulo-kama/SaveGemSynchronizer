@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T03:01:28.306455"
+    "extract_date": "2025-11-02T03:33:31.443493"
   },
   "data": [
     {
@@ -51,7 +51,11 @@
               "controller": "GameListController",
               "widget_type_id": "QScrollableWidget",
               "layout_type_id": "QVBoxLayout",
-              "margin_right": 10
+              "margin_right": 10,
+              "refresh_events": [
+                "game_config_change",
+                "game_selection_change"
+              ]
             }
           ]
         },
@@ -82,6 +86,14 @@
                       "widget_type_id": "QWidget",
                       "layout_type_id": "QVBoxLayout",
                       "height": 130,
+                      "refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ],
+                      "recursive_refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ],
                       "children": [
                         {
                           "widget_id": "hl_game_header",
@@ -157,7 +169,10 @@
                       "properties": {
                         "id": "uploadButton",
                         "kind": "secondary"
-                      }
+                      },
+                      "refresh_events": [
+                        "language_change"
+                      ]
                     },
                     {
                       "widget_id": "buttons_spacer",
@@ -172,7 +187,10 @@
                       "properties": {
                         "id": "downloadButton",
                         "kind": "primary"
-                      }
+                      },
+                      "refresh_events": [
+                        "language_change"
+                      ]
                     }
                   ]
                 }
@@ -239,7 +257,10 @@
               "controller": "AutoModeController",
               "widget_type_id": "QToggle",
               "width": 64,
-              "height": 30
+              "height": 30,
+              "refresh_events": [
+                "game_selection_change"
+              ]
             }
           ]
         },
@@ -356,14 +377,22 @@
                       "content": "saveInfo{uploadDate}",
                       "widget_type_id": "QLabel",
                       "style_object_name": "cardContent",
-                      "height": 25
+                      "height": 25,
+                      "refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ]
                     },
                     {
                       "widget_id": "save_date_card_time",
                       "content": "saveInfo{uploadTime}",
                       "widget_type_id": "QLabel",
                       "style_object_name": "cardContent",
-                      "height": 30
+                      "height": 30,
+                      "refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ]
                     }
                   ]
                 }
@@ -404,6 +433,14 @@
                       "widget_type_id": "QWidget",
                       "layout_type_id": "QHBoxLayout",
                       "alignment": "vcenter",
+                      "refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ],
+                      "recursive_refresh_events": [
+                        "game_config_change",
+                        "game_selection_change"
+                      ],
                       "children": [
                         {
                           "widget_id": "save_owner_card_user_photo",
@@ -459,7 +496,11 @@
                       "content": "saveInfo{size}",
                       "widget_type_id": "QLabel",
                       "style_object_name": "cardContent",
-                      "height": 30
+                      "height": 30,
+                      "refresh_events": [
+                        "cloud_files_change",
+                        "game_selection_change"
+                      ]
                     }
                   ]
                 }
@@ -483,7 +524,10 @@
           "controller": "PlayersController",
           "widget_type_id": "QWidget",
           "layout_type_id": "QGridLayout",
-          "grid_columns": 3
+          "grid_columns": 3,
+          "refresh_events": [
+            "game_selection_change"
+          ]
         }
       ]
     }

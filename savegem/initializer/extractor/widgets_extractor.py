@@ -1,4 +1,6 @@
 import json
+
+from savegem.common.db.manager import db
 from savegem.initializer.extractor import RegularExtractor
 
 
@@ -25,6 +27,30 @@ class WidgetsExtractor(RegularExtractor):
             widget_parent_id = widget.get("parent_widget_id")
             widget_unique_id = f"{section_id}.{widget_id}"
             widget_unique_parent_id = f"{section_id}.{widget_parent_id}"
+
+            events = db() \
+                .table("ui_widget_events") \
+                .where("section_id = ? and widget_id = ?", section_id, widget_id) \
+                .retrieve()
+
+            refresh_events = []
+            refresh_events_with_children = []
+
+            # Collect widget events.
+            for event in events:
+                event_id = event.get("refresh_event_id")
+                should_refresh_children = event.get("refresh_children") == 1
+
+                refresh_events.append(event_id)
+
+                if should_refresh_children:
+                    refresh_events_with_children.append(event_id)
+
+            if len(refresh_events) > 0:
+                widget["refresh_events"] = refresh_events
+
+            if len(refresh_events_with_children) > 0:
+                widget["recursive_refresh_events"] = refresh_events_with_children
 
             if widget_unique_parent_id == parent_id or (parent_id is None and widget_parent_id is None):
                 children = self.__build_tree(widget_data, parent_id=widget_unique_id)
