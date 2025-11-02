@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T16:54:51.189706"
+    "extract_date": "2025-11-02T21:15:29.685616"
   },
   "data": [
     {
@@ -26,10 +26,7 @@
               "layout_type_id": "QVBoxLayout",
               "style_object_name": "sidebarMenu",
               "margin_left": 5,
-              "margin_right": 5,
-              "refresh_events": [
-                "language_change"
-              ]
+              "margin_right": 5
             },
             {
               "widget_id": "sidebar_spacer",
@@ -101,8 +98,8 @@
               "controller": "GameListController",
               "widget_type_id": "QScrollableWidget",
               "layout_type_id": "QVBoxLayout",
-              "margin_right": 10,
               "style_object_name": "gameList",
+              "margin_right": 10,
               "refresh_events": [
                 "game_config_change",
                 "game_selection_change"
@@ -458,8 +455,8 @@
           "controller": "PlayersController",
           "widget_type_id": "QWidget",
           "layout_type_id": "QGridLayout",
-          "style_object_name": "playersContainer",
           "grid_columns": 3,
+          "style_object_name": "playersContainer",
           "refresh_events": [
             "game_selection_change"
           ]
@@ -482,19 +479,19 @@
       "controller": "GameBarTabController",
       "widget_type_id": "QScrollableWidget",
       "layout_type_id": "QVBoxLayout",
-      "margin_top": 20,
       "margin_left": 20,
+      "margin_top": 20,
       "margin_right": 20,
       "children": [
         {
           "widget_id": "auto_mode_setting",
           "widget_type_id": "QWidget",
           "layout_type_id": "QHBoxLayout",
+          "style_object_name": "settingCard",
           "alignment": "left-vcenter",
           "height": 75,
           "margin_left": 10,
           "margin_right": 10,
-          "style_object_name": "settingCard",
           "children": [
             {
               "widget_id": "auto_mode_setting_vl",
@@ -597,16 +594,16 @@
               "widget_type_id": "QScrollableWidget",
               "layout_type_id": "QVBoxLayout",
               "alignment": "top",
-              "margin_top": 20,
               "spacing": 15,
+              "margin_top": 20,
               "children": [
                 {
                   "widget_id": "general_settings_section_label",
                   "content": "tr{label_GeneralSettings}",
                   "widget_type_id": "QLabel",
-                  "height": 30,
-                  "alignment": "top",
                   "style_object_name": "subtitle",
+                  "alignment": "top",
+                  "height": 30,
                   "refresh_events": [
                     "language_change"
                   ]
@@ -621,8 +618,8 @@
                       "widget_id": "language_setting",
                       "widget_type_id": "QWidget",
                       "layout_type_id": "QHBoxLayout",
-                      "height": 75,
                       "alignment": "vcenter",
+                      "height": 75,
                       "margin_left": 10,
                       "margin_right": 10,
                       "children": [
@@ -660,8 +657,8 @@
                         },
                         {
                           "widget_id": "language_setting_dropdown",
-                          "widget_type_id": "QComboBox",
                           "controller": "LanguageDropdownController",
+                          "widget_type_id": "QComboBox",
                           "width": 150,
                           "height": 30
                         }
@@ -684,8 +681,8 @@
                       "widget_id": "time_format_setting",
                       "widget_type_id": "QWidget",
                       "layout_type_id": "QHBoxLayout",
-                      "height": 75,
                       "alignment": "vcenter",
+                      "height": 75,
                       "margin_left": 10,
                       "margin_right": 10,
                       "children": [
@@ -723,8 +720,8 @@
                         },
                         {
                           "widget_id": "time_format_setting_dropdown",
-                          "widget_type_id": "QComboBox",
                           "controller": "TimeFormatDropdownController",
+                          "widget_type_id": "QComboBox",
                           "width": 150,
                           "height": 30,
                           "refresh_events": [
@@ -736,29 +733,76 @@
                   ]
                 },
                 {
-                  "widget_id": "general_settings_logout_divider",
-                  "widget_type_id": "QHDivider"
+                  "widget_id": "account_settings_section_label",
+                  "content": "tr{label_AccountSettings}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "subtitle",
+                  "alignment": "vcenter",
+                  "height": 50,
+                  "refresh_events": [
+                    "language_change"
+                  ]
                 },
                 {
-                  "widget_id": "logout_section",
+                  "widget_id": "account_settings_section",
                   "widget_type_id": "QWidget",
-                  "layout_type_id": "QHBoxLayout",
+                  "layout_type_id": "QVBoxLayout",
+                  "style_object_name": "settingGroup",
                   "children": [
                     {
-                      "widget_id": "logout_button",
-                      "content": "tr{label_LogOut}",
-                      "alignment": "left",
-                      "controller": "LogoutController",
-                      "widget_type_id": "QPushButton",
-                      "width": 50,
-                      "style_object_name": "logoutButton",
-                      "refresh_events": [
-                        "language_change"
+                      "widget_id": "logout_section",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "vcenter",
+                      "height": 75,
+                      "margin_left": 10,
+                      "margin_right": 10,
+                      "children": [
+                        {
+                          "widget_id": "logout_section_label_wrapper",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QVBoxLayout",
+                          "children": [
+                            {
+                              "widget_id": "logout_section_label",
+                              "content": "tr{label_Logout}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "body",
+                              "stylesheet": {
+                                "font-weight": "bold"
+                              },
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            },
+                            {
+                              "widget_id": "logout_section_label_description",
+                              "content": "tr{label_LogoutDesc}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "smallText",
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "widget_id": "logout_section_spacer",
+                          "widget_type_id": "QSpacer"
+                        },
+                        {
+                          "widget_id": "logout_button",
+                          "content": "tr{label_Logout}",
+                          "controller": "LogoutController",
+                          "widget_type_id": "QPushButton",
+                          "style_object_name": "logoutButton",
+                          "alignment": "left",
+                          "width": 50,
+                          "refresh_events": [
+                            "language_change"
+                          ]
+                        }
                       ]
-                    },
-                    {
-                      "widget_id": "logout_spacer",
-                      "widget_type_id": "QSpacer"
                     }
                   ]
                 }

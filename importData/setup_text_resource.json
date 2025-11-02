@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "setup_text_resource",
     "type": "TextResource",
-    "extract_date": "2025-11-02T03:01:05.028863"
+    "extract_date": "2025-11-02T21:16:43.279625"
   },
   "data": {
     "confirmation_ConfirmLogout": {
@@ -68,6 +68,13 @@
       "fr_FR": "À propos",
       "uk_UA": "Про нас"
     },
+    "label_AccountSettings": {
+      "de_DE": "Konto",
+      "en_US": "Account",
+      "es_ES": "Cuenta",
+      "fr_FR": "Compte",
+      "uk_UA": "Обліковий Запис"
+    },
     "label_Author": {
       "de_DE": "Autor",
       "en_US": "Author",
@@ -103,6 +110,13 @@
       "fr_FR": "Détails",
       "uk_UA": "Деталі"
     },
+    "label_GeneralSettings": {
+      "de_DE": "Allgemein",
+      "en_US": "General",
+      "es_ES": "General",
+      "fr_FR": "Général",
+      "uk_UA": "Загальні"
+    },
     "label_History": {
       "de_DE": "Verlauf",
       "en_US": "History",
@@ -117,20 +131,6 @@
       "fr_FR": "Accueil",
       "uk_UA": "Головна"
     },
-    "label_LastCloudSave": {
-      "de_DE": "Letzter Cloud-Speicherstand",
-      "en_US": "Last Cloud Save",
-      "es_ES": "Última Partida Guardada en la Nube",
-      "fr_FR": "Dernière Sauvegarde Cloud",
-      "uk_UA": "Останнє Хмарне Збереження"
-    },
-    "label_NA": {
-      "de_DE": "N. zutr.",
-      "en_US": "N/A",
-      "es_ES": "N/D",
-      "fr_FR": "N/A",
-      "uk_UA": "Н/Д"
-    },
     "label_Language": {
       "de_DE": "Sprache",
       "en_US": "Language",
@@ -138,47 +138,40 @@
       "fr_FR": "Langue",
       "uk_UA": "Мова"
     },
-    "label_GeneralSettings": {
-      "de_DE": "Allgemein",
-      "en_US": "General",
-      "es_ES": "General",
-      "fr_FR": "Général",
-      "uk_UA": "Загальні"
-    },
-    "label_TimeFormat": {
-      "de_DE": "Zeitformat",
-      "en_US": "Time Format",
-      "es_ES": "Formato de Hora",
-      "fr_FR": "Format de l'Heure",
-      "uk_UA": "Формат Часу"
-    },
-    "label_TimeFormatDesc": {
-      "de_DE": "Wählen Sie zwischen dem 12-Stunden- (AM/PM) und dem 24-Stunden-Zeitformat.",
-      "en_US": "Choose between the 12-hour (AM/PM) and 24-hour time formats.",
-      "es_ES": "Elija entre el formato de 12 horas (AM/PM) y el formato de 24 horas.",
-      "fr_FR": "Choisissez entre le format horaire de 12 heures (AM/PM) et celui de 24 heures.",
-      "uk_UA": "Оберіть між 12-годинним (AM/PM) та 24-годинним форматом часу."
-    },
-    "label_TimeFormat12": {
-      "de_DE": "12-Stunden-Format (AM/PM)",
-      "en_US": "12-Hour Format (AM/PM)",
-      "es_ES": "Formato de 12 Horas (AM/PM)",
-      "fr_FR": "Format 12 Heures (AM/PM)",
-      "uk_UA": "12-годинний Формат (AM/PM)"
-    },
-    "label_TimeFormat24": {
-      "de_DE": "24-Stunden-Format (Militärzeit)",
-      "en_US": "24-Hour Format (Military Time)",
-      "es_ES": "Formato de 24 Horas (Hora Militar)",
-      "fr_FR": "Format 24 Heures (Heure Militaire)",
-      "uk_UA": "24-годинний Формат (Військовий Час)"
-    },
     "label_LanguageDesc": {
       "de_DE": "Wählen Sie die Anzeigesprache für die Benutzeroberfläche der Anwendung.",
       "en_US": "Select the display language for the application interface.",
       "es_ES": "Seleccione el idioma de visualización para la interfaz de la aplicación.",
       "fr_FR": "Sélectionnez la langue d'affichage pour l'interface de l'application.",
       "uk_UA": "Оберіть мову відображення для інтерфейсу програми."
+    },
+    "label_LastCloudSave": {
+      "de_DE": "Letzter Cloud-Speicherstand",
+      "en_US": "Last Cloud Save",
+      "es_ES": "Última Partida Guardada en la Nube",
+      "fr_FR": "Dernière Sauvegarde Cloud",
+      "uk_UA": "Останнє Хмарне Збереження"
+    },
+    "label_Logout": {
+      "de_DE": "Abmelden",
+      "en_US": "Log Out",
+      "es_ES": "Cerrar Sesión",
+      "fr_FR": "Déconnexion",
+      "uk_UA": "Вийти"
+    },
+    "label_LogoutDesc": {
+      "de_DE": "Beendet Ihre lokale Sitzung, ohne gespeicherte Daten oder Einstellungen zu entfernen.",
+      "en_US": "Ends your local session without removing any stored data or settings.",
+      "es_ES": "Finaliza su sesión local sin eliminar datos o configuraciones guardadas.",
+      "fr_FR": "Met fin à votre session locale sans supprimer aucune donnée ou paramètre enregistré.",
+      "uk_UA": "Завершує ваш локальний сеанс, не видаляючи збережені дані чи налаштування."
+    },
+    "label_NA": {
+      "de_DE": "N. zutr.",
+      "en_US": "N/A",
+      "es_ES": "N/D",
+      "fr_FR": "N/A",
+      "uk_UA": "Н/Д"
     },
     "label_NoInformationAboutCurrentSaveVersion": {
       "de_DE": "Wir sind uns nicht sicher, welcher Spielstand neuer ist, aber...",
@@ -235,6 +228,34 @@
       "es_ES": "El almacenamiento está vacío. Suba un archivo para continuar.",
       "fr_FR": "Le stockage est vide. Un envoi est nécessaire pour continuer.",
       "uk_UA": "Cховище порожнє. Потрібно виконати відвантаження."
+    },
+    "label_TimeFormat": {
+      "de_DE": "Zeitformat",
+      "en_US": "Time Format",
+      "es_ES": "Formato de Hora",
+      "fr_FR": "Format de l'Heure",
+      "uk_UA": "Формат Часу"
+    },
+    "label_TimeFormat12": {
+      "de_DE": "12-Stunden-Format (AM/PM)",
+      "en_US": "12-Hour Format (AM/PM)",
+      "es_ES": "Formato de 12 Horas (AM/PM)",
+      "fr_FR": "Format 12 Heures (AM/PM)",
+      "uk_UA": "12-годинний Формат (AM/PM)"
+    },
+    "label_TimeFormat24": {
+      "de_DE": "24-Stunden-Format (Militärzeit)",
+      "en_US": "24-Hour Format (Military Time)",
+      "es_ES": "Formato de 24 Horas (Hora Militar)",
+      "fr_FR": "Format 24 Heures (Heure Militaire)",
+      "uk_UA": "24-годинний Формат (Військовий Час)"
+    },
+    "label_TimeFormatDesc": {
+      "de_DE": "Wählen Sie zwischen dem 12-Stunden- (AM/PM) und dem 24-Stunden-Zeitformat.",
+      "en_US": "Choose between the 12-hour (AM/PM) and 24-hour time formats.",
+      "es_ES": "Elija entre el formato de 12 horas (AM/PM) y el formato de 24 horas.",
+      "fr_FR": "Choisissez entre le format horaire de 12 heures (AM/PM) et celui de 24 heures.",
+      "uk_UA": "Оберіть між 12-годинним (AM/PM) та 24-годинним форматом часу."
     },
     "label_UploadSaveToDrive": {
       "de_DE": "Hochladen",
@@ -305,13 +326,6 @@
       "es_ES": "Atención",
       "fr_FR": "Attention",
       "uk_UA": "Застереження"
-    },
-    "label_LogOut": {
-      "de_DE": "Abmelden",
-      "en_US": "Log Out",
-      "es_ES": "Cerrar Sesión",
-      "fr_FR": "Déconnexion",
-      "uk_UA": "Вийти"
     },
     "popup_NotificationButtonClose": {
       "de_DE": "OK",
