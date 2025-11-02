@@ -230,6 +230,7 @@
               "widget_id": "auto_mode_setting_vl",
               "widget_type_id": "QWidget",
               "layout_type_id": "QVBoxLayout",
+              "width": 100,
               "children": [
                 {
                   "widget_id": "auto_mode_setting_title",
@@ -256,8 +257,8 @@
               "widget_id": "auto_mode_toggle",
               "controller": "AutoModeController",
               "widget_type_id": "QToggle",
-              "width": 64,
-              "height": 30,
+              "width": 55,
+              "height": 25,
               "refresh_events": [
                 "game_selection_change"
               ]
@@ -326,7 +327,7 @@
       "alignment": "top",
       "spacing": 10,
       "margin_left": 10,
-      "margin_top": 10,
+      "margin_top": 20,
       "margin_right": 10,
       "children": [
         {

@@ -17,6 +17,9 @@ class QCustomToggle(QPushButton, CustomComponentMixin):
         self.setCheckable(True)
         self.__polishRecursionGuard = False
 
+        self.__width = 60
+        self.__height = 30
+
         self.__track_color = QColor("gray")
         self.__thumb_color = QColor("white")
         self.__border_color = QColor("transparent")
@@ -94,29 +97,40 @@ class QCustomToggle(QPushButton, CustomComponentMixin):
         self.update()
 
     def setChecked(self, checked):
+        """
+        Used to change state of toggle.
+        Will also run animations.
+        """
+
         super().setChecked(checked)
         self.__animate_toggle()
         self.__on_toggle(checked)
+
+    def setFixedWidth(self, width):
+        self.__width = width
+        super().setFixedWidth(width)
+
+    def setFixedHeight(self, height):
+        self.__height = height
+        super().setFixedHeight(height)
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        # Define sizes
-        height = self.height()
-        width = self.width()
-        radius = height / 2
+        radius = self.__height / 2
 
         # Draw track
         painter.setBrush(QBrush(self.__track_color))
         painter.setPen(QPen(self.__border_color, 1))
-        painter.drawRoundedRect(0, 0, width, height, radius, radius)
+        painter.drawRoundedRect(0, 0, self.__width, self.__height, radius, radius)
 
         # Draw thumb
-        thumb_size = height - 4  # slightly smaller than track height
+        thumb_size = self.__height - 4  # slightly smaller than track height
         thumb_rect = QRect(self.__thumb_offset + 2, 2, thumb_size, thumb_size)
         painter.setBrush(QBrush(self.__thumb_color))
-        painter.setPen(QPen(Qt.PenStyle.NoPen))  # No border for thumb
+        # No border for thumb
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
         painter.drawEllipse(thumb_rect)
 
     def __animate_toggle(self):
@@ -124,7 +138,7 @@ class QCustomToggle(QPushButton, CustomComponentMixin):
         Toggle animation callback.
         """
 
-        end_value = self.width() - self.height() if self.isChecked() else 0
+        end_value = self.__width - self.__height if self.isChecked() else 0
 
         self.__animation.setStartValue(self.__thumb_offset)
         self.__animation.setEndValue(end_value)
