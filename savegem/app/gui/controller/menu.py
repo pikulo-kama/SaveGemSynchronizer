@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QWidget
 
 from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.component.spacer import QSpacer
-from savegem.app.gui.constants import QAttr, QBool
+from savegem.app.gui.constants import QBool
 from savegem.app.gui.controller import WidgetController
 from savegem.app.gui.widget.resolver import resolve_content
 from savegem.common.util.file import resolve_resource
@@ -26,12 +26,10 @@ class MenuController(WidgetController):
 
         for section in self.sections:
             section_id = section.get("section_id")
-            section_label = resolve_content(section.get("section_label"))
 
             menu_item = QCustomPushButton()
             menu_item.setObjectName(section_id)
             menu_item.setIconSize(QSize(25, 25))
-            menu_item.setToolTip(section_label)
             menu_item.clicked.connect(change_tab(section_id))  # noqa
 
             menu.layout().add_dynamic_widget(menu_item)
@@ -48,6 +46,7 @@ class MenuController(WidgetController):
         for section in self.sections:
             section_id = section.get("section_id")
             section_icon = section.get("section_icon")
+            section_label = resolve_content(section.get("section_label"))
             is_selected = section_id == selected_section_id
 
             if is_selected:
@@ -55,6 +54,7 @@ class MenuController(WidgetController):
 
             menu_item = menu.findChild(QCustomPushButton, section_id)
             menu_item.setIcon(QIcon(resolve_resource(section_icon)))
+            menu_item.setToolTip(section_label)
             menu_item.setProperty("active", QBool(is_selected))
 
     def __change_tab(self, section_id: str):

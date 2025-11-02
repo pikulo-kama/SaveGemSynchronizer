@@ -4,6 +4,7 @@ import pytz
 from babel.dates import format_datetime
 from babel.localtime import get_localzone
 
+from constants import TimeFormat
 from savegem.app.gui.widget.resolver import ContentResolver
 from savegem.common.core.context import app
 from savegem.common.core.save_meta import SyncStatus
@@ -112,7 +113,14 @@ class SaveInfoResolver(ContentResolver):
             date_format += " YYYY"
 
         creation_date = format_datetime(creation_datetime, date_format, locale=app().state.locale)
-        creation_time = creation_datetime.strftime("%H:%M")
+
+        # 24-hour format.
+        time_format = "%H:%M"
+
+        if app().state.time_format == TimeFormat.Regular:
+            time_format = "%I:%M %p"
+
+        creation_time = creation_datetime.strftime(time_format)
 
         return creation_date, creation_time
 

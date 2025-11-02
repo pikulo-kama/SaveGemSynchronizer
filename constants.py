@@ -75,6 +75,22 @@ class Resource:
     ConfirmationIco: Final = "confirmation.svg"
 
 
+class TimeFormat:
+    """
+    Contains list of supported time formats.
+    """
+
+    """
+    12-hour format
+    """
+    Regular: Final = 0
+
+    """
+    24-hour format.
+    """
+    Military: Final = 1
+
+
 JSON_EXTENSION: Final = ".json"
 JPG_EXTENSION: Final = ".jpg"
 ZIP_EXTENSION: Final = "zip"

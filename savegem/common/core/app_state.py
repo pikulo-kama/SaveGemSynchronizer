@@ -1,5 +1,6 @@
 from typing import Final
 
+from constants import TimeFormat
 from savegem.common.core.app_data import AppData
 from savegem.common.core.holders import locales, prop
 from savegem.common.db.manager import db
@@ -19,7 +20,7 @@ class AppState(AppData):
 
     SelectedGame: Final = "current_game"
     SelectedLocale: Final = "language"
-    IsAutoMode: Final = "is_auto_mode"
+    TimeFormatId: Final = "time_format_id"
     WindowWidth: Final = "window_width"
     WindowHeight: Final = "window_height"
 
@@ -81,19 +82,27 @@ class AppState(AppData):
         self.__set_state_value(self.SelectedLocale, locale, execute_callback=True)
 
     @property
-    def is_auto_mode(self):
+    def time_format(self):
         """
-        Used to check if auto download/upload mode is enabled.
-        """
-        return self.__table.get_first(self.IsAutoMode) == 1
+        Used to get configured time format.
 
-    @is_auto_mode.setter
-    def is_auto_mode(self, is_auto_mode):
+        0 - 12-hour format
+        1 - 24-hour format
         """
-        Used to enable/disabled auto mode.
+
+        time_format = self.__table.get_first(self.TimeFormatId)
+
+        if time_format is None:
+            time_format = TimeFormat.Military
+
+        return time_format
+
+    @time_format.setter
+    def time_format(self, time_format_id):
         """
-        is_auto_mode = 1 if is_auto_mode else 0
-        self.__set_state_value(self.IsAutoMode, is_auto_mode, execute_callback=True)
+        Used to set time format.
+        """
+        self.__set_state_value(self.TimeFormatId, time_format_id)
 
     @property
     def width(self):

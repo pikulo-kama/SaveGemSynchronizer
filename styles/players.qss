@@ -1,11 +1,11 @@
 
-QCustomWidget#playerCard {
+QCustomWidget#playersContainer QCustomWidget {
     background-color: rgba("surface-a20", 0.3);
     border-radius: 5px;
     border: 1px solid color("surface-a20");
 }
 
-QCustomWidget#playerCard[id="active"] {
+QCustomWidget#playersContainer QCustomWidget[id="active"] {
     background: qlineargradient(
         x1:0.2, y1:0, x2:1, y2:0,
         stop:0       color("surface-a20"),
@@ -16,7 +16,7 @@ QCustomWidget#playerCard[id="active"] {
     border-color: color("success-a10");
 }
 
-QCustomWidget#playerCard QCustomLabel {
+QCustomWidget#playersContainer QCustomWidget QCustomLabel {
     color: color("light-a0");
     font: font("accent");
     font-weight: bold;

@@ -2,8 +2,10 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QMouseEvent, QKeyEvent
 from PyQt6.QtWidgets import QComboBox
 
+from savegem.app.gui.component import CustomComponentMixin
 
-class QCustomComboBox(QComboBox):
+
+class QCustomComboBox(QComboBox, CustomComponentMixin):
     """
     Custom QT ComboBox component.
     Overwrites default QComboBox

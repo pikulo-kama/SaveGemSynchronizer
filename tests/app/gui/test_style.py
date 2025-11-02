@@ -142,7 +142,7 @@ def test_resolve_style_properties(_mock_color_scheme):
     Test _resolve_style_properties correctly replaces color(), font(), and image() tokens.
     """
 
-    from savegem.app.gui.style import _resolve_style_properties
+    from savegem.app.gui.style import resolve_style_properties
 
     _mock_color_scheme(Qt.ColorScheme.Dark)
 
@@ -160,7 +160,7 @@ def test_resolve_style_properties(_mock_color_scheme):
         padding: 5px;
     """
 
-    result = _resolve_style_properties(input_style)
+    result = resolve_style_properties(input_style)
 
     # Remove whitespace for a reliable comparison
     clean_result = re.sub(r'\s+', '', result)

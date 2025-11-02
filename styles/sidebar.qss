@@ -4,6 +4,8 @@ QWidget#sidebar {
 }
 
 QCustomWidget#sidebarMenu QCustomPushButton {
+    background-color: transparent;
+    border-color: transparent;
     border-radius: 8px;
 }
 

@@ -50,7 +50,11 @@
 
       "warning-a10": "#a87a2a",
       "warning-a20": "#d7ac61",
-      "warning-a30": "#ecd7b2"
+      "warning-a30": "#ecd7b2",
+
+      "danger-a10": "#9c2121",
+      "danger-a20": "#d94a4a",
+      "danger-a30": "#eb9e9e"
     }
   },
   "fonts": {

@@ -34,8 +34,6 @@ class PlayersController(WidgetController):
             profile_picture_label = QCustomLabel()
             user_name_label = QCustomLabel()
 
-            player_card.setObjectName("playerCard")
-
             if user in app().activity.players:
                 player_card.setProperty(QAttr.Id, "active")
 

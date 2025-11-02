@@ -62,7 +62,7 @@ def font(property_name: str):
     return _get_styles().get_value("fonts").get(property_name)
 
 
-def _resolve_style_properties(style_string: str):
+def resolve_style_properties(style_string: str):
     """
     Used to resolve color/font
     properties in string.
@@ -112,7 +112,7 @@ def load_stylesheet():
         style_path = os.path.join(Directory().Styles, style)
         style_string += read_file(style_path)
 
-    return _resolve_style_properties(style_string)
+    return resolve_style_properties(style_string)
 
 
 def create_dynamic_resources():

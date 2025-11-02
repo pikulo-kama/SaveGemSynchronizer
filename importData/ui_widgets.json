@@ -2,11 +2,61 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T03:33:31.443493"
+    "extract_date": "2025-11-02T16:54:51.189706"
   },
   "data": [
     {
-      "widget_id": "hl_root",
+      "widget_id": "window",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QHBoxLayout",
+      "children": [
+        {
+          "widget_id": "sidebar",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "style_object_name": "sidebar",
+          "width": 60,
+          "margin_top": 10,
+          "margin_bottom": 10,
+          "children": [
+            {
+              "widget_id": "menu",
+              "controller": "MenuController",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "sidebarMenu",
+              "margin_left": 5,
+              "margin_right": 5,
+              "refresh_events": [
+                "language_change"
+              ]
+            },
+            {
+              "widget_id": "sidebar_spacer",
+              "widget_type_id": "QSpacer"
+            },
+            {
+              "widget_id": "user_picture",
+              "content": "pixmap{user{photo}, scale: 35, circle}",
+              "tooltip": "user{name}",
+              "widget_type_id": "QLabel",
+              "alignment": "bottom-center",
+              "height": 50
+            }
+          ]
+        },
+        {
+          "widget_id": "content",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "margin_top": 10,
+          "margin_right": 10,
+          "margin_bottom": 5
+        }
+      ]
+    },
+    {
+      "widget_id": "home_root",
       "section_id": "home",
       "controller": "MenuItemController",
       "widget_type_id": "QWidget",
@@ -52,6 +102,7 @@
               "widget_type_id": "QScrollableWidget",
               "layout_type_id": "QVBoxLayout",
               "margin_right": 10,
+              "style_object_name": "gameList",
               "refresh_events": [
                 "game_config_change",
                 "game_selection_change"
@@ -197,124 +248,6 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "widget_id": "game_history_root",
-      "section_id": "game_history",
-      "controller": "GameBarTabController",
-      "widget_type_id": "QWidget",
-      "layout_type_id": "QVBoxLayout",
-      "stylesheet": {
-        "background-color": "orange"
-      }
-    },
-    {
-      "widget_id": "game_settings_root",
-      "section_id": "game_settings",
-      "controller": "GameBarTabController",
-      "widget_type_id": "QScrollableWidget",
-      "layout_type_id": "QVBoxLayout",
-      "children": [
-        {
-          "widget_id": "auto_mode_setting",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QHBoxLayout",
-          "alignment": "left-vcenter",
-          "height": 100,
-          "margin_left": 50,
-          "margin_right": 50,
-          "children": [
-            {
-              "widget_id": "auto_mode_setting_vl",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QVBoxLayout",
-              "width": 100,
-              "children": [
-                {
-                  "widget_id": "auto_mode_setting_title",
-                  "content": "tr{label_AutoModeGameSetting}",
-                  "widget_type_id": "QLabel",
-                  "style_object_name": "body",
-                  "stylesheet": {
-                    "font-weight": "bold"
-                  }
-                },
-                {
-                  "widget_id": "auto_mode_setting_description",
-                  "content": "tr{label_AutoModeGameSettingDesc}",
-                  "widget_type_id": "QLabel",
-                  "style_object_name": "smallText"
-                }
-              ]
-            },
-            {
-              "widget_id": "auto_mode_settings_spacer",
-              "widget_type_id": "QSpacer"
-            },
-            {
-              "widget_id": "auto_mode_toggle",
-              "controller": "AutoModeController",
-              "widget_type_id": "QToggle",
-              "width": 55,
-              "height": 25,
-              "refresh_events": [
-                "game_selection_change"
-              ]
-            }
-          ]
-        },
-        {
-          "widget_id": "game_settings_spacer",
-          "widget_type_id": "QSpacer"
-        }
-      ]
-    },
-    {
-      "widget_id": "window",
-      "widget_type_id": "QWidget",
-      "layout_type_id": "QHBoxLayout",
-      "children": [
-        {
-          "widget_id": "sidebar",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QVBoxLayout",
-          "style_object_name": "sidebar",
-          "width": 60,
-          "margin_top": 10,
-          "margin_bottom": 10,
-          "children": [
-            {
-              "widget_id": "menu",
-              "controller": "MenuController",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QVBoxLayout",
-              "style_object_name": "sidebarMenu",
-              "margin_left": 5,
-              "margin_right": 5
-            },
-            {
-              "widget_id": "sidebar_spacer",
-              "widget_type_id": "QSpacer"
-            },
-            {
-              "widget_id": "user_picture",
-              "content": "pixmap{user{photo}, scale: 35, circle}",
-              "tooltip": "user{name}",
-              "widget_type_id": "QLabel",
-              "alignment": "bottom-center",
-              "height": 50
-            }
-          ]
-        },
-        {
-          "widget_id": "content",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QVBoxLayout",
-          "margin_top": 10,
-          "margin_right": 10,
-          "margin_bottom": 5
         }
       ]
     },
@@ -525,9 +458,312 @@
           "controller": "PlayersController",
           "widget_type_id": "QWidget",
           "layout_type_id": "QGridLayout",
+          "style_object_name": "playersContainer",
           "grid_columns": 3,
           "refresh_events": [
             "game_selection_change"
+          ]
+        }
+      ]
+    },
+    {
+      "widget_id": "game_history_root",
+      "section_id": "game_history",
+      "controller": "GameBarTabController",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QVBoxLayout",
+      "stylesheet": {
+        "background-color": "orange"
+      }
+    },
+    {
+      "widget_id": "game_settings_root",
+      "section_id": "game_settings",
+      "controller": "GameBarTabController",
+      "widget_type_id": "QScrollableWidget",
+      "layout_type_id": "QVBoxLayout",
+      "margin_top": 20,
+      "margin_left": 20,
+      "margin_right": 20,
+      "children": [
+        {
+          "widget_id": "auto_mode_setting",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QHBoxLayout",
+          "alignment": "left-vcenter",
+          "height": 75,
+          "margin_left": 10,
+          "margin_right": 10,
+          "style_object_name": "settingCard",
+          "children": [
+            {
+              "widget_id": "auto_mode_setting_vl",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "width": 100,
+              "children": [
+                {
+                  "widget_id": "auto_mode_setting_title",
+                  "content": "tr{label_AutoModeGameSetting}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "body",
+                  "stylesheet": {
+                    "font-weight": "bold"
+                  }
+                },
+                {
+                  "widget_id": "auto_mode_setting_description",
+                  "content": "tr{label_AutoModeGameSettingDesc}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "smallText"
+                }
+              ]
+            },
+            {
+              "widget_id": "auto_mode_settings_spacer",
+              "widget_type_id": "QSpacer"
+            },
+            {
+              "widget_id": "auto_mode_toggle",
+              "controller": "AutoModeController",
+              "widget_type_id": "QToggle",
+              "width": 55,
+              "height": 25,
+              "refresh_events": [
+                "game_selection_change"
+              ]
+            }
+          ]
+        },
+        {
+          "widget_id": "game_settings_spacer",
+          "widget_type_id": "QSpacer"
+        }
+      ]
+    },
+    {
+      "widget_id": "settings_root",
+      "section_id": "settings",
+      "controller": "MenuItemController",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QHBoxLayout",
+      "alignment": "left",
+      "margin_left": 20,
+      "margin_top": 20,
+      "margin_right": 20,
+      "children": [
+        {
+          "widget_id": "settings_root_wrapper",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "stylesheet": {
+            "max-width": "900px"
+          },
+          "children": [
+            {
+              "widget_id": "settings_title_wrapper",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QHBoxLayout",
+              "margin_bottom": 10,
+              "children": [
+                {
+                  "widget_id": "logo_image",
+                  "content": "pixmap{gem_outline.svg, scale: 40}",
+                  "widget_type_id": "QLabel",
+                  "alignment": "left-center"
+                },
+                {
+                  "widget_id": "settings_title",
+                  "content": "tr{label_Settings}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "hero",
+                  "alignment": "left-center",
+                  "refresh_events": [
+                    "language_change"
+                  ]
+                },
+                {
+                  "widget_id": "title_section_spacer",
+                  "widget_type_id": "QSpacer"
+                }
+              ]
+            },
+            {
+              "widget_id": "settings_title_divider",
+              "widget_type_id": "QHDivider"
+            },
+            {
+              "widget_id": "settings_container",
+              "widget_type_id": "QScrollableWidget",
+              "layout_type_id": "QVBoxLayout",
+              "alignment": "top",
+              "margin_top": 20,
+              "spacing": 15,
+              "children": [
+                {
+                  "widget_id": "general_settings_section_label",
+                  "content": "tr{label_GeneralSettings}",
+                  "widget_type_id": "QLabel",
+                  "height": 30,
+                  "alignment": "top",
+                  "style_object_name": "subtitle",
+                  "refresh_events": [
+                    "language_change"
+                  ]
+                },
+                {
+                  "widget_id": "general_settings_section",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "style_object_name": "settingGroup",
+                  "children": [
+                    {
+                      "widget_id": "language_setting",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "height": 75,
+                      "alignment": "vcenter",
+                      "margin_left": 10,
+                      "margin_right": 10,
+                      "children": [
+                        {
+                          "widget_id": "language_setting_label_wrapper",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QVBoxLayout",
+                          "children": [
+                            {
+                              "widget_id": "language_setting_label",
+                              "content": "tr{label_Language}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "body",
+                              "stylesheet": {
+                                "font-weight": "bold"
+                              },
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            },
+                            {
+                              "widget_id": "language_setting_label_description",
+                              "content": "tr{label_LanguageDesc}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "smallText",
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "widget_id": "language_setting_spacer",
+                          "widget_type_id": "QSpacer"
+                        },
+                        {
+                          "widget_id": "language_setting_dropdown",
+                          "widget_type_id": "QComboBox",
+                          "controller": "LanguageDropdownController",
+                          "width": 150,
+                          "height": 30
+                        }
+                      ]
+                    },
+                    {
+                      "widget_id": "language_time_format_divider_wrapper",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "margin_left": 20,
+                      "margin_right": 20,
+                      "children": [
+                        {
+                          "widget_id": "language_time_format_divider",
+                          "widget_type_id": "QHDivider"
+                        }
+                      ]
+                    },
+                    {
+                      "widget_id": "time_format_setting",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "height": 75,
+                      "alignment": "vcenter",
+                      "margin_left": 10,
+                      "margin_right": 10,
+                      "children": [
+                        {
+                          "widget_id": "time_format_setting_label_wrapper",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QVBoxLayout",
+                          "children": [
+                            {
+                              "widget_id": "time_format_setting_label",
+                              "content": "tr{label_TimeFormat}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "body",
+                              "stylesheet": {
+                                "font-weight": "bold"
+                              },
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            },
+                            {
+                              "widget_id": "time_format_setting_label_description",
+                              "content": "tr{label_TimeFormatDesc}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "smallText",
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "widget_id": "time_format_setting_spacer",
+                          "widget_type_id": "QSpacer"
+                        },
+                        {
+                          "widget_id": "time_format_setting_dropdown",
+                          "widget_type_id": "QComboBox",
+                          "controller": "TimeFormatDropdownController",
+                          "width": 150,
+                          "height": 30,
+                          "refresh_events": [
+                            "language_change"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "widget_id": "general_settings_logout_divider",
+                  "widget_type_id": "QHDivider"
+                },
+                {
+                  "widget_id": "logout_section",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QHBoxLayout",
+                  "children": [
+                    {
+                      "widget_id": "logout_button",
+                      "content": "tr{label_LogOut}",
+                      "alignment": "left",
+                      "controller": "LogoutController",
+                      "widget_type_id": "QPushButton",
+                      "width": 50,
+                      "style_object_name": "logoutButton",
+                      "refresh_events": [
+                        "language_change"
+                      ]
+                    },
+                    {
+                      "widget_id": "logout_spacer",
+                      "widget_type_id": "QSpacer"
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         }
       ]

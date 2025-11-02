@@ -5,6 +5,7 @@ from typing import Final
 from PyQt6.QtCore import Qt
 
 from savegem.app.gui.constants import UIRefreshEvent
+from savegem.app.gui.style import resolve_style_properties
 from savegem.app.gui.widget.type import WidgetType, UIObjectType, get_widget_type, get_layout_type
 from savegem.common.db.manager import db
 from savegem.common.db.table import DatabaseRow
@@ -90,7 +91,7 @@ class WidgetMetadata:
         self.__alignment = alignment
         self.__content = content
         self.__tooltip = tooltip
-        self.__stylesheet = stylesheet
+        self.__stylesheet = resolve_style_properties(stylesheet)
         self.__properties = properties or {}
         self.__refresh_events = refresh_events or []
         self.__refresh_event_meta = refresh_events_meta or {}
@@ -120,11 +121,14 @@ class WidgetMetadata:
         if metadata_row.get("stylesheet"):
             stylesheet = json.loads(metadata_row.get("stylesheet"))
 
-        events = db().table("ui_widget_events") \
-            .where("widget_id = ? AND section_id = ?", widget_id, section_id) \
-            .retrieve()
+        events = db().table("ui_widget_events")
 
-        for event in events:
+        if section_id is not None:
+            events.where("widget_id = ? AND section_id = ?", widget_id, section_id)
+        else:
+            events.where("widget_id = ? AND section_id IS NULL", widget_id)
+
+        for event in events.retrieve():
             refresh_event = event.get("refresh_event_id")
             refresh_children = event.get("refresh_children") == 1
 

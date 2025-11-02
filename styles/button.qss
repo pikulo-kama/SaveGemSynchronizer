@@ -1,0 +1,10 @@
+
+QCustomPushButton {
+    background-color: rgba("surface-a20", 0.3);
+    border: 1px solid color("surface-a30");
+    color: color("light-a0");
+    outline: 1px solid transparent;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font: font("label");
+}

@@ -34,7 +34,6 @@ class GameListController(WidgetController):
         for game in app().games.list:
             game_button = QCustomPushButton()
             game_button.setText(game.name)
-            game_button.setObjectName("gameListItem")
             game_button.clicked.connect(change_name(game.name))  # noqa
 
             if game == app().games.current:

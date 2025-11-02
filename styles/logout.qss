@@ -1,0 +1,9 @@
+
+QCustomPushButton#logoutButton {
+    color: color("danger-a20");
+}
+
+QCustomPushButton#logoutButton:hover {
+    color: color("light-a0");
+    background-color: color("danger-a20");
+}

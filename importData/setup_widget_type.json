@@ -16,7 +16,7 @@
       "is_interactable": 0
     },
     {
-      "widget_type_id": "QCustomPushButton",
+      "widget_type_id": "QPushButton",
       "class_path": "savegem.app.gui.component.button.QCustomPushButton",
       "is_interactable": 1
     },
@@ -53,6 +53,11 @@
     {
       "widget_type_id": "QToggle",
       "class_path": "savegem.app.gui.component.toggle.QCustomToggle",
+      "is_interactable": 1
+    },
+    {
+      "widget_type_id": "QComboBox",
+      "class_path": "savegem.app.gui.component.combobox.QCustomComboBox",
       "is_interactable": 1
     }
   ]

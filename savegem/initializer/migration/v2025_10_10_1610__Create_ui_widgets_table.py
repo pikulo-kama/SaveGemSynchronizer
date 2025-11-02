@@ -40,7 +40,7 @@ class v2025_10_10_1610__Create_ui_widgets_table(Migration):  # noqa
         connection.execute("""
             CREATE TABLE IF NOT EXISTS ui_widget_events (
                 widget_id VARCHAR NOT NULL,
-                section_id VARCHAR NOT NULL,
+                section_id VARCHAR,
                 refresh_event_id VARCHAR NOT NULL,
                 refresh_children INTEGER DEFAULT 0,
                 

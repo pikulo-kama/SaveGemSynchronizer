@@ -10,9 +10,9 @@ class v2025_10_10_0233__Create_state_table(Migration):  # noqa
             CREATE TABLE IF NOT EXISTS app_state (
                 language        VARCHAR,
                 current_game    VARCHAR,
+                time_format_id  INTEGER,
                 window_width    INTEGER,
-                window_height   INTEGER,
-                is_auto_mode    INTEGER
+                window_height   INTEGER
             )
         """)
 
