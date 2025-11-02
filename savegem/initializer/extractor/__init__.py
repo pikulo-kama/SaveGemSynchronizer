@@ -51,8 +51,12 @@ class RegularExtractor:
         """
 
         table_name = args.table_name
-        table = db().table(table_name).retrieve()
-        table_json = [row.to_json() for row in table]
+        table = db().table(table_name)
+
+        if args.filter:
+            table.where(args.filter)
+
+        table_json = [row.to_json() for row in table.retrieve()]
 
         extract_file_path = Path(str(os.path.join(Directory().ProjectRoot, args.output, table_name + JSON_EXTENSION)))
         extract_file_path.parent.mkdir(parents=True, exist_ok=True)
@@ -73,6 +77,9 @@ class RegularExtractor:
             },
             "data": self._post_extract(formatted_data)
         }
+
+        if args.filter:
+            content["metadata"]["filter"] = args.filter
 
         save_file(str(extract_file_path), content, as_json=True)
 

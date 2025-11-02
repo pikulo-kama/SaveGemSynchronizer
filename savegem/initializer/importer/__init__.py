@@ -1,3 +1,5 @@
+import os
+
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.db.manager import db
@@ -30,7 +32,7 @@ def invoke_importer(args):
 
     # Handle definition_file argument.
     for line in definition_file.split("\n"):
-        line = line.strip()
+        line = line.strip().replace("/", os.path.sep)
 
         # Allow comments and skip empty lines.
         if line.startswith("#") or len(line) == 0:
@@ -85,11 +87,18 @@ class RegularImporter:
             exit(1)
 
         import_file = read_file(resolve_import_data(args.file_name), as_json=True)
-        table_name = import_file.get("metadata", {}).get("table_name")
+        metadata = import_file.get("metadata", {})
+        table_name = metadata.get("table_name")
+        filter_string = metadata.get("filter")
         data: list[dict] = import_file.get("data", [])
         data = self._format_data(data)
 
-        import_table = db().table(table_name).retrieve()
+        import_table = db().table(table_name)
+
+        if filter_string:
+            import_table.where(filter_string)
+
+        import_table.retrieve()
 
         # Remove all existing data.
         import_table.remove_all()

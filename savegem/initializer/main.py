@@ -110,6 +110,12 @@ def add_extract_command(subparsers):
     )
 
     extract_parser.add_argument(
+        "--filter",
+        type=str,
+        help="Set filter that would limit extracted dataset."
+    )
+
+    extract_parser.add_argument(
         '--output',
         default=os.path.join("output", "extract"),
         type=str,

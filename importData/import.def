@@ -8,4 +8,6 @@ setup_text_resource.json
 
 # UI Related Metadata
 ui_sections.json
-ui_widgets.json
+ui_widgets/root.json
+ui_widgets/home.json
+ui_widgets/settings.json

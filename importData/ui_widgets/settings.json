@@ -1,0 +1,284 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2025-11-02T21:25:24.481601",
+    "filter": "section_id = 'settings'"
+  },
+  "data": [
+    {
+      "widget_id": "settings_root",
+      "section_id": "settings",
+      "controller": "MenuItemController",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QHBoxLayout",
+      "alignment": "left",
+      "margin_left": 20,
+      "margin_top": 20,
+      "margin_right": 20,
+      "children": [
+        {
+          "widget_id": "settings_root_wrapper",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "stylesheet": {
+            "max-width": "900px"
+          },
+          "children": [
+            {
+              "widget_id": "settings_title_wrapper",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QHBoxLayout",
+              "margin_bottom": 10,
+              "children": [
+                {
+                  "widget_id": "logo_image",
+                  "content": "pixmap{gem_outline.svg, scale: 40}",
+                  "widget_type_id": "QLabel",
+                  "alignment": "left-center"
+                },
+                {
+                  "widget_id": "settings_title",
+                  "content": "tr{label_Settings}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "hero",
+                  "alignment": "left-center",
+                  "refresh_events": [
+                    "language_change"
+                  ]
+                },
+                {
+                  "widget_id": "title_section_spacer",
+                  "widget_type_id": "QSpacer"
+                }
+              ]
+            },
+            {
+              "widget_id": "settings_title_divider",
+              "widget_type_id": "QHDivider"
+            },
+            {
+              "widget_id": "settings_container",
+              "widget_type_id": "QScrollableWidget",
+              "layout_type_id": "QVBoxLayout",
+              "alignment": "top",
+              "spacing": 15,
+              "margin_top": 20,
+              "children": [
+                {
+                  "widget_id": "general_settings_section_label",
+                  "content": "tr{label_GeneralSettings}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "subtitle",
+                  "alignment": "top",
+                  "height": 30,
+                  "refresh_events": [
+                    "language_change"
+                  ]
+                },
+                {
+                  "widget_id": "general_settings_section",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "style_object_name": "settingGroup",
+                  "children": [
+                    {
+                      "widget_id": "language_setting",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "vcenter",
+                      "height": 75,
+                      "margin_left": 10,
+                      "margin_right": 10,
+                      "children": [
+                        {
+                          "widget_id": "language_setting_label_wrapper",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QVBoxLayout",
+                          "children": [
+                            {
+                              "widget_id": "language_setting_label",
+                              "content": "tr{label_Language}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "body",
+                              "stylesheet": {
+                                "font-weight": "bold"
+                              },
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            },
+                            {
+                              "widget_id": "language_setting_label_description",
+                              "content": "tr{label_LanguageDesc}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "smallText",
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "widget_id": "language_setting_spacer",
+                          "widget_type_id": "QSpacer"
+                        },
+                        {
+                          "widget_id": "language_setting_dropdown",
+                          "controller": "LanguageDropdownController",
+                          "widget_type_id": "QComboBox",
+                          "width": 150,
+                          "height": 30
+                        }
+                      ]
+                    },
+                    {
+                      "widget_id": "language_time_format_divider_wrapper",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "margin_left": 20,
+                      "margin_right": 20,
+                      "children": [
+                        {
+                          "widget_id": "language_time_format_divider",
+                          "widget_type_id": "QHDivider"
+                        }
+                      ]
+                    },
+                    {
+                      "widget_id": "time_format_setting",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "vcenter",
+                      "height": 75,
+                      "margin_left": 10,
+                      "margin_right": 10,
+                      "children": [
+                        {
+                          "widget_id": "time_format_setting_label_wrapper",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QVBoxLayout",
+                          "children": [
+                            {
+                              "widget_id": "time_format_setting_label",
+                              "content": "tr{label_TimeFormat}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "body",
+                              "stylesheet": {
+                                "font-weight": "bold"
+                              },
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            },
+                            {
+                              "widget_id": "time_format_setting_label_description",
+                              "content": "tr{label_TimeFormatDesc}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "smallText",
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "widget_id": "time_format_setting_spacer",
+                          "widget_type_id": "QSpacer"
+                        },
+                        {
+                          "widget_id": "time_format_setting_dropdown",
+                          "controller": "TimeFormatDropdownController",
+                          "widget_type_id": "QComboBox",
+                          "width": 150,
+                          "height": 30,
+                          "refresh_events": [
+                            "language_change"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "widget_id": "account_settings_section_label",
+                  "content": "tr{label_AccountSettings}",
+                  "widget_type_id": "QLabel",
+                  "style_object_name": "subtitle",
+                  "alignment": "vcenter",
+                  "height": 50,
+                  "refresh_events": [
+                    "language_change"
+                  ]
+                },
+                {
+                  "widget_id": "account_settings_section",
+                  "widget_type_id": "QWidget",
+                  "layout_type_id": "QVBoxLayout",
+                  "style_object_name": "settingGroup",
+                  "children": [
+                    {
+                      "widget_id": "logout_section",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "vcenter",
+                      "height": 75,
+                      "margin_left": 10,
+                      "margin_right": 10,
+                      "children": [
+                        {
+                          "widget_id": "logout_section_label_wrapper",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QVBoxLayout",
+                          "children": [
+                            {
+                              "widget_id": "logout_section_label",
+                              "content": "tr{label_Logout}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "body",
+                              "stylesheet": {
+                                "font-weight": "bold"
+                              },
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            },
+                            {
+                              "widget_id": "logout_section_label_description",
+                              "content": "tr{label_LogoutDesc}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "smallText",
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "widget_id": "logout_section_spacer",
+                          "widget_type_id": "QSpacer"
+                        },
+                        {
+                          "widget_id": "logout_button",
+                          "content": "tr{label_Logout}",
+                          "controller": "LogoutController",
+                          "widget_type_id": "QPushButton",
+                          "style_object_name": "logoutButton",
+                          "alignment": "left",
+                          "width": 50,
+                          "refresh_events": [
+                            "language_change"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

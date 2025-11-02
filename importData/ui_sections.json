@@ -10,14 +10,14 @@
       "section_label": "tr{label_Home}",
       "section_icon": "home.svg",
       "controller": "MenuController",
-      "order_id": 2
+      "order_id": 1
     },
     {
       "section_id": "settings",
       "section_label": "tr{label_Settings}",
       "section_icon": "gear.svg",
       "controller": "MenuController",
-      "order_id": 1
+      "order_id": 2
     },
     {
       "section_id": "about",

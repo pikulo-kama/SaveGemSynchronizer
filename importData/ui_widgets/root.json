@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2025-11-02T21:21:53.662522",
+    "filter": "section_id IS NULL"
+  },
+  "data": [
+    {
+      "widget_id": "window",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QHBoxLayout",
+      "children": [
+        {
+          "widget_id": "sidebar",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "style_object_name": "sidebar",
+          "width": 60,
+          "margin_top": 10,
+          "margin_bottom": 10,
+          "children": [
+            {
+              "widget_id": "menu",
+              "controller": "MenuController",
+              "widget_type_id": "QWidget",
+              "layout_type_id": "QVBoxLayout",
+              "style_object_name": "sidebarMenu",
+              "margin_left": 5,
+              "margin_right": 5
+            },
+            {
+              "widget_id": "sidebar_spacer",
+              "widget_type_id": "QSpacer"
+            },
+            {
+              "widget_id": "user_picture",
+              "content": "pixmap{user{photo}, scale: 35, circle}",
+              "tooltip": "user{name}",
+              "widget_type_id": "QLabel",
+              "alignment": "bottom-center",
+              "height": 50
+            }
+          ]
+        },
+        {
+          "widget_id": "content",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "margin_top": 10,
+          "margin_right": 10,
+          "margin_bottom": 5
+        }
+      ]
+    }
+  ]
+}
