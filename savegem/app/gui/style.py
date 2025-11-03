@@ -1,5 +1,6 @@
 import os
 import re
+from pathlib import Path
 from typing import Optional
 
 from constants import Directory, File
@@ -99,18 +100,27 @@ def resolve_style_properties(style_string: str):
     return style_string
 
 
-def load_stylesheet():
+def load_stylesheet(directory: str = None):
     """
     Used to load all stylesheets and combine
     them into single string.
+
+    Will also load styles from nested directories.
     """
 
     style_string = ""
 
+    if directory is None:
+        directory = Directory().Styles
+
     # Get all style files and join them together.
-    for style in os.listdir(Directory().Styles):
-        style_path = os.path.join(Directory().Styles, style)
-        style_string += read_file(style_path)
+    for file_name in os.listdir(directory):
+        file_path = Path(os.path.join(directory, file_name))
+
+        if file_path.is_dir():
+            style_string += load_stylesheet(str(file_path))
+        else:
+            style_string += read_file(str(file_path))
 
     return resolve_style_properties(style_string)
 
