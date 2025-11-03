@@ -1,3 +1,4 @@
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QLabel
 
@@ -9,6 +10,11 @@ class QCustomLabel(QLabel, CustomComponentMixin):
     Custom QT QLabel widget.
     """
 
+    def __init__(self, *args, **kw):
+        QLabel.__init__(self, *args, **kw)
+        CustomComponentMixin.__init__(self)
+        self.setTextFormat(Qt.TextFormat.PlainText)
+
     def set_content(self, content):
 
         if isinstance(content, QPixmap):
@@ -18,3 +24,15 @@ class QCustomLabel(QLabel, CustomComponentMixin):
 
     def apply_alignment(self):
         self.setAlignment(self.metadata.alignment)
+
+
+class QRichLabel(QCustomLabel):
+    """
+    Custom QT QLabel widget.
+    Handles hyperlinks and other rich text.
+    """
+
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+        self.setTextFormat(Qt.TextFormat.RichText)
+        self.setOpenExternalLinks(True)

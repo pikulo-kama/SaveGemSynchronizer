@@ -7,7 +7,7 @@ class GameResolver(ContentResolver):
     Used to provide current game related properties.
     """
 
-    def resolve(self, value: str, **kw):
+    def resolve(self, value: str, *args, **kw):
 
         content = ""
 

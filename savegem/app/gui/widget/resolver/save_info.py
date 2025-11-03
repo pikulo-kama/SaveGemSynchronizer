@@ -42,7 +42,7 @@ class SaveInfoResolver(ContentResolver):
     tokens.
     """
 
-    def resolve(self, key: str, **kw):
+    def resolve(self, key: str, *args, **kw):
 
         if key == "size":
             return self.__get_save_size()

@@ -13,42 +13,48 @@ def resolve_content(content: str):
     Example of token: pixmap{user{logo}, scaled: 123, radius: 20}
     """
 
-    has_token = re.compile(r"^(\w+)\{(.*?)}$").match(content)
+    match = re.compile(r"(\w+)\{(.*)}").match(content)
 
     # If no token has been found then
     # treat it as regular string.
-    if not has_token:
+    if not match:
         return content
 
-    token_start = content.index("{")
-    token_end = content.rindex("}")
+    full_token = match.group(0)
+    token_name = match.group(1)
+    properties = match.group(2).split(",")
 
-    token_name = content[0:token_start]
-    token_args = content[token_start + 1:token_end]
-
-    properties = token_args.split(",")
     # Recursively check for nested tokens.
     parameter = resolve_content(properties.pop(0))
-    key_args = {}
+    args = []
+    kw = {}
 
     # Collect token properties.
     for prop in properties:
         prop_parts = prop.split(":")
-        key = prop_parts[0].strip()
-        value = True
+        key = resolve_content(prop_parts[0].strip())
 
-        if len(prop_parts) == 2:
-            value = prop_parts[1].strip()
+        if len(prop_parts) == 1:
+            args.append(key)
+
+        elif len(prop_parts) == 2:
+            value = resolve_content(prop_parts[1].strip())
 
             if value.isdigit():
                 value = int(value)
 
-        key_args[key] = value
+            kw[key] = value
 
     resolver_name = f"{token_name.lower()}resolver"
     resolver: ContentResolver = get_resolver(resolver_name)
 
-    return resolver.resolve(parameter, **key_args) or ""
+    resolved_content = resolver.resolve(parameter, *args, **kw) or ""
+
+    # This will allow to have tokenised values together with other text.
+    if isinstance(resolved_content, str):
+        resolved_content = content.replace(full_token, resolved_content)
+
+    return resolved_content
 
 
 def get_resolver(resolver_name: str):
@@ -71,7 +77,7 @@ class ContentResolver:
     Used to resolve specific tokens.
     """
 
-    def resolve(self, value: any, **kw):
+    def resolve(self, value: any, *args, **kw):
         """
         Used to resolve token
         considering its value and properties.

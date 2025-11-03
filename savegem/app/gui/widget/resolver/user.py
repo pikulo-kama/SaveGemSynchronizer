@@ -7,7 +7,7 @@ class UserResolver(ContentResolver):
     Used to resolve user related properties.
     """
 
-    def resolve(self, value: str, **kw):
+    def resolve(self, value: str, *args, **kw):
         if value == "name":
             return app().user.current.name
 

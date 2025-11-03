@@ -16,6 +16,11 @@
       "is_interactable": 0
     },
     {
+      "widget_type_id": "QRichLabel",
+      "class_path": "savegem.app.gui.component.label.QRichLabel",
+      "is_interactable": 0
+    },
+    {
       "widget_type_id": "QPushButton",
       "class_path": "savegem.app.gui.component.button.QCustomPushButton",
       "is_interactable": 1

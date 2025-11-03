@@ -7,5 +7,5 @@ class PropResolver(ContentResolver):
     Used to resolve app configuration tokens.
     """
 
-    def resolve(self, property_name: str, **kw):
+    def resolve(self, property_name: str, *args, **kw):
         return prop(property_name)

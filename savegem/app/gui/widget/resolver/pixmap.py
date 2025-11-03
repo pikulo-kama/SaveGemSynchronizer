@@ -11,7 +11,7 @@ class PixmapResolver(ContentResolver):
     Allow to scale and round image.
     """
 
-    def resolve(self, file_path: str, **kw):
+    def resolve(self, file_path: str, *args, **kw):
 
         if file_path is None:
             return QPixmap()
@@ -19,7 +19,7 @@ class PixmapResolver(ContentResolver):
         file_path = resolve_resource(file_path)
         scale = kw.get("scale")
         radius = kw.get("radius")
-        make_circular = kw.get("circle")
+        make_circular = "circle" in args
 
         pixmap = QPixmap(file_path)
 
