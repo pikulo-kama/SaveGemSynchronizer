@@ -9,7 +9,7 @@ from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
 from savegem.common.db.manager import db
 from savegem.common.service.gdrive import GDrive
-from savegem.common.util.file import delete_file, resolve_app_data, resolve_resource, resolve_temp_resource
+from savegem.common.util.file import delete_file, resolve_resource, resolve_temp_resource, resolve_app_data
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -41,7 +41,7 @@ class GameConfig(AppData):
         """
 
         _logger.debug("Downloading game configuration from drive.")
-        game_config = GDrive.download_file(self._app.config.games_config_file_id)
+        game_config = GDrive.download_file(self.app.config.games_config_file_id)
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
@@ -74,10 +74,11 @@ class GameConfig(AppData):
 
             # If players field is not configured it means that everyone
             # has access to the game.
-            if len(players) > 0 and self._app.user.current.email not in players:
+            if len(players) > 0 and self.app.user.current.email not in players:
                 continue
 
             self.__games_by_name[name] = Game(
+                self,
                 name,
                 process_name,
                 logo,
@@ -110,7 +111,7 @@ class GameConfig(AppData):
         """
         Used to get currently selected game configuration.
         """
-        return self.by_name(self._app.state.game_name)
+        return self.by_name(self.app.state.game_name)
 
     def by_name(self, game_name: str):
         """
@@ -141,9 +142,9 @@ class GameSettings:
     controllable by the user.
     """
 
-    def __init__(self, game: "Game"):
+    def __init__(self, game: "Game", game_config: GameConfig):
         self.__game = game
-        self.__settings = self.__get_settings_table()
+        self.__settings = self.__get_settings_table(game_config)
 
     @property
     def auto_mode(self):
@@ -161,22 +162,25 @@ class GameSettings:
         self.__settings.set_first("auto_mode_enabled", 1 if enabled else 0)
         self.__settings.save()
 
-    def __get_settings_table(self):
+    def __get_settings_table(self, game_config: GameConfig):
         """
         Used to load game settings from database.
         If there are no settings for the game new
         entry would be created.
         """
 
+        user_id = game_config.app.user.current.id
+
         settings = db() \
             .table("game_settings") \
-            .where("game_name = ?", self.__game.name) \
+            .where("user_id = ? AND game_name = ?", user_id, self.__game.name) \
             .retrieve()
 
         if len(settings.rows) == 1:
             return settings
 
         row = settings.add_row()
+        settings.set(row, "user_id", user_id)
         settings.set(row, "game_name", self.__game.name)
         settings.save()
 
@@ -192,6 +196,7 @@ class Game:
     __ALL_FILES: Final = ".*"
 
     def __init__(self,
+                 game_config: GameConfig,
                  name: str,
                  process_name: str,
                  logo: str,
@@ -210,7 +215,7 @@ class Game:
         self.__players = players
 
         self._metadata = MetadataWrapper(LocalMetadata(self), DriveMetadata(self))
-        self.__settings = GameSettings(self)
+        self.__settings = GameSettings(self, game_config)
 
     @property
     def name(self):

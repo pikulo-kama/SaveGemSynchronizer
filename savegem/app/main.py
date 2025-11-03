@@ -31,6 +31,7 @@ def main():
 
     # Startup initialization.
     app().user.initialize()
+    app().state.initialize()
     app().games.download()
     app().games.current.meta.drive.refresh()
     app().activity.refresh()

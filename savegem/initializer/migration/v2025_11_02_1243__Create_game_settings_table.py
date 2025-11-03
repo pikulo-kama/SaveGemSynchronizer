@@ -9,7 +9,10 @@ class v2025_11_02_1243__Create_game_settings_table(Migration):  # noqa
 
         connection.execute("""
             CREATE TABLE IF NOT EXISTS game_settings (
-                game_name VARCHAR PRIMARY KEY,
-                auto_mode_enabled INTEGER
+                user_id   VARCHAR,
+                game_name VARCHAR,
+                auto_mode_enabled INTEGER,
+                
+                PRIMARY KEY (user_id, game_name)
             )
         """)

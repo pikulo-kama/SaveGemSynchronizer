@@ -110,7 +110,7 @@ class UserState(AppData):
         if self.__initialized:
             return
 
-        users = GDrive.get_users_with_access(self._app.config.games_config_file_id)
+        users = GDrive.get_users_with_access(self.app.config.games_config_file_id)
         current_user = GDrive.get_current_user()
         current_user_email = current_user.get("emailAddress")
         user_info = self.__upload_user_info(current_user)
@@ -160,7 +160,7 @@ class UserState(AppData):
 
     def __upload_user_info(self, current_user_data: dict):
 
-        with GDrive.download_file(self._app.config.users_config_file_id) as log_bytes:
+        with GDrive.download_file(self.app.config.users_config_file_id) as log_bytes:
             log_bytes.seek(0)
             user_data: dict = json.load(log_bytes)
 
@@ -168,6 +168,6 @@ class UserState(AppData):
             user_name = current_user_data.get("displayName")
 
             user_data[user_email] = user_name
-            GDrive.update_file(self._app.config.users_config_file_id, json.dumps(user_data, indent=2))
+            GDrive.update_file(self.app.config.users_config_file_id, json.dumps(user_data, indent=2))
 
             return user_data

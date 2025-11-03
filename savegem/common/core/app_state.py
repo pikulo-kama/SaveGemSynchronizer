@@ -1,9 +1,10 @@
-from typing import Final
+from typing import Final, Optional
 
 from constants import TimeFormat
 from savegem.common.core.app_data import AppData
 from savegem.common.core.holders import locales, prop
 from savegem.common.db.manager import db
+from savegem.common.db.table import DatabaseTable
 from savegem.common.util.logger import get_logger
 
 
@@ -26,10 +27,26 @@ class AppState(AppData):
 
     def __init__(self):
         super().__init__()
-        self.__table = db().table(self.AppStateTable)
-        self.__table.retrieve()
-
+        self.__state_table: Optional[DatabaseTable] = None
         self.__on_state_change = None
+
+    def initialize(self):
+        """
+        Used to load user configuration from database.
+        If configuration is missing then new one would be
+        created.
+        """
+
+        state = db().table("app_state") \
+            .where("user_id = ?", self.app.user.current.id) \
+            .retrieve()
+
+        if len(state.rows) == 0:
+            row = state.add_row()
+            state.set(row, "user_id", self.app.user.current.id)
+            state.save()
+
+        self.__state_table = state
 
     @property
     def game_name(self):
@@ -37,10 +54,10 @@ class AppState(AppData):
         Get active game.
         """
 
-        game_name = self.__table.get_first(self.SelectedGame)
+        game_name = self.__state_table.get_first(self.SelectedGame)
 
-        if game_name not in self._app.games.names:
-            default_game = self._app.games.names[0]
+        if game_name not in self.app.games.names:
+            default_game = self.app.games.names[0]
             _logger.warning("Game '%s' was not found. Using game '%s' as default.", str(game_name), default_game)
 
             game_name = default_game
@@ -62,7 +79,7 @@ class AppState(AppData):
         Get active locale.
         """
 
-        locale = self.__table.get_first(self.SelectedLocale)
+        locale = self.__state_table.get_first(self.SelectedLocale)
 
         if locale not in locales():
             default_locale = prop("defaultLocale")
@@ -90,7 +107,7 @@ class AppState(AppData):
         1 - 24-hour format
         """
 
-        time_format = self.__table.get_first(self.TimeFormatId)
+        time_format = self.__state_table.get_first(self.TimeFormatId)
 
         if time_format is None:
             time_format = TimeFormat.Military
@@ -109,7 +126,7 @@ class AppState(AppData):
         """
         Used to get window width.
         """
-        return self.__table.get_first(self.WindowWidth) or prop("windowWidth")
+        return self.__state_table.get_first(self.WindowWidth) or prop("windowWidth")
 
     @width.setter
     def width(self, width: int):
@@ -123,7 +140,7 @@ class AppState(AppData):
         """
         Used to get window height.
         """
-        return self.__table.get_first(self.WindowHeight) or prop("windowHeight")
+        return self.__state_table.get_first(self.WindowHeight) or prop("windowHeight")
 
     @height.setter
     def height(self, height: int):
@@ -136,7 +153,7 @@ class AppState(AppData):
         """
         Used to reload application state.
         """
-        self.__table.retrieve()
+        self.__state_table.retrieve()
 
     def on_change(self, callback):
         """
@@ -150,8 +167,8 @@ class AppState(AppData):
         Will call on state change callback if defined.
         """
 
-        self.__table.set_first(property_name, value)
-        self.__table.save()
+        self.__state_table.set_first(property_name, value)
+        self.__state_table.save()
 
         if execute_callback and self.__on_state_change is not None:
             self.__on_state_change()

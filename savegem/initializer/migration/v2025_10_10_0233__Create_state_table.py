@@ -8,6 +8,7 @@ class v2025_10_10_0233__Create_state_table(Migration):  # noqa
 
         connection.execute("""
             CREATE TABLE IF NOT EXISTS app_state (
+                user_id         VARCHAR PRIMARY KEY,
                 language        VARCHAR,
                 current_game    VARCHAR,
                 time_format_id  INTEGER,
@@ -15,6 +16,3 @@ class v2025_10_10_0233__Create_state_table(Migration):  # noqa
                 window_height   INTEGER
             )
         """)
-
-        # App State should be oneline configuration.
-        connection.execute("INSERT INTO app_state DEFAULT VALUES")

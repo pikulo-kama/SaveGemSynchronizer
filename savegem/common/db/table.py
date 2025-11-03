@@ -231,20 +231,58 @@ class DatabaseTable:
         to table data in database.
         """
 
-        pk_column = self.__get_pk_column()
+        self.__delete_records()
+        self.__update_records()
+        self.__insert_records()
 
-        # Remove deleted records.
-        record_ids_to_delete = [record.get(pk_column) for record in self.__deleted_records]
-        in_clause = ", ".join("?" for _ in record_ids_to_delete)
+    def remove(self, row_number: int):
+        """
+        Used to remove record that corresponds
+        provided row number.
+        """
+        self.__remove_internal(lambda record: record.row_number == row_number)
+
+    def remove_all(self):
+        """
+        Used to remove all records from the table.
+        """
+        self.__remove_internal(lambda record: True)
+
+    def __delete_records(self):
+        """
+        Part of save process.
+        Used to delete records in database.
+        """
+
+        pk_columns = self.__get_pk_columns()
+        pk_filter_single = " AND ".join([f"{column} = ?" for column in pk_columns])
+        pk_filter_sql = []
+        pk_filter_values = []
+
+        if len(self.__deleted_records) == 0:
+            return
+
+        for record in self.__deleted_records:
+            for pk_column in pk_columns:
+                pk_filter_values.append(record.get(pk_column))
+
+            pk_filter_sql.append(f"({pk_filter_single})")
 
         self.__db.execute(f"""
             DELETE FROM {self.__table_name}
-            WHERE {pk_column} IN ({in_clause})
-        """, tuple(record_ids_to_delete))
+            WHERE {" OR ".join(pk_filter_sql)}
+        """, tuple(pk_filter_values))
 
         self.__deleted_records.clear()
 
-        # Update data in database.
+    def __update_records(self):
+        """
+        Part of save process.
+        Used to update records in database.
+        """
+
+        pk_columns = self.__get_pk_columns()
+
         for record in self.__records:
             if not record.has_edits() or record.is_new:
                 continue
@@ -257,14 +295,26 @@ class DatabaseTable:
                 SET {update_fields}
             """
 
-            if pk_column is not None:
-                sql += f" WHERE {pk_column} = ?"
-                values += (record.get(pk_column),)
+            if len(pk_columns) > 0:
+                filter_conditions = []
+                filter_values = []
+
+                for pk_column in pk_columns:
+                    filter_conditions.append(f"{pk_column} = ?")
+                    filter_values.append(record.get(pk_column))
+
+                sql += f" WHERE {" AND ".join(filter_conditions)}"
+                values += tuple(filter_values)
 
             self.__db.execute(sql, values)
             record._apply_edits()  # noqa
 
-        # Insert new data.
+    def __insert_records(self):
+        """
+        Part of save process.
+        Used to insert new records into database.
+        """
+
         for record in self.__records:
             if not record.is_new:
                 continue
@@ -282,19 +332,6 @@ class DatabaseTable:
             record._apply_edits()  # noqa
             record.is_new = False
 
-    def remove(self, row_number: int):
-        """
-        Used to remove record that corresponds
-        provided row number.
-        """
-        self.__remove_internal(lambda record: record.row_number == row_number)
-
-    def remove_all(self):
-        """
-        Used to remove all records from the table.
-        """
-        self.__remove_internal(lambda record: True)
-
     def __remove_internal(self, remove_condition: Callable[[DatabaseRow], bool]):
         """
         Internal row remove method.
@@ -308,7 +345,7 @@ class DatabaseTable:
         for record in self.__deleted_records:
             self.__records.remove(record)
 
-    def __get_pk_column(self):
+    def __get_pk_columns(self):
         """
         Used to get name of primary key column
         of table.
@@ -316,10 +353,11 @@ class DatabaseTable:
 
         cursor = self.__db.select(f"PRAGMA table_info({self.__table_name})")
         columns = cursor.fetchall()
+        pk_columns = []
 
         for col in columns:
             cid, name, type_, notnull, default_value, pk = col
             if pk:
-                return name
+                pk_columns.append(name)
 
-        return None
+        return pk_columns

@@ -12,13 +12,21 @@ class AppData(abc.ABC):  # pragma: no cover
     """
 
     def __init__(self):
-        self._app: "ApplicationContext|None" = None
+        self.__app: "ApplicationContext|None" = None
 
     def link(self, app: "ApplicationContext"):
         """
         Used to link application context to app data.
         """
-        self._app = app
+        self.__app = app
+
+    @property
+    def app(self) -> "ApplicationContext":
+        """
+        Used to get application context linked
+        to app data instance.
+        """
+        return self.__app
 
     @abc.abstractmethod
     def refresh(self):
