@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "setup_text_resource",
     "type": "TextResource",
-    "extract_date": "2025-11-02T21:16:43.279625"
+    "extract_date": "2025-11-03T02:41:13.928129"
   },
   "data": {
     "confirmation_ConfirmLogout": {
@@ -75,6 +75,20 @@
       "fr_FR": "Compte",
       "uk_UA": "Обліковий Запис"
     },
+    "label_AppDescription": {
+      "de_DE": "Ein einfaches, aber leistungsstarkes Dienstprogramm zur Verwaltung von Spielständen",
+      "en_US": "A simple, yet powerful utility to manage game saves",
+      "es_ES": "Una utilidad sencilla, pero potente, para gestionar partidas guardadas",
+      "fr_FR": "Un utilitaire simple, mais puissant, pour gérer les sauvegardes de jeux",
+      "uk_UA": "Проста, але потужна утиліта для керування збереженнями ігор"
+    },
+    "label_ApplicationDetails": {
+      "de_DE": "Anwendungsdetails",
+      "en_US": "Application Details",
+      "es_ES": "Detalles de la Aplicación",
+      "fr_FR": "Détails de l'Application",
+      "uk_UA": "Деталі Програми"
+    },
     "label_Author": {
       "de_DE": "Autor",
       "en_US": "Author",
@@ -96,6 +110,13 @@
       "fr_FR": "Synchronise automatiquement les fichiers de sauvegarde à l'ouverture ou à la fermeture du jeu.",
       "uk_UA": "Автоматично синхронізує файли збережень, коли гра запускається або закривається."
     },
+    "label_ContactUs": {
+      "de_DE": "Kontakt",
+      "en_US": "Contact Us",
+      "es_ES": "Contáctenos",
+      "fr_FR": "Nous Contacter",
+      "uk_UA": "Зв'язатися З Нами"
+    },
     "label_Date": {
       "de_DE": "Datum",
       "en_US": "Date",
@@ -109,6 +130,13 @@
       "es_ES": "Detalles",
       "fr_FR": "Détails",
       "uk_UA": "Деталі"
+    },
+    "label_Email": {
+      "de_DE": "E-Mail",
+      "en_US": "Email",
+      "es_ES": "Correo Electrónico",
+      "fr_FR": "E-mail",
+      "uk_UA": "Електронна Пошта"
     },
     "label_GeneralSettings": {
       "de_DE": "Allgemein",
@@ -264,6 +292,13 @@
       "fr_FR": "Envoyer",
       "uk_UA": "Відвантажити"
     },
+    "label_Version": {
+      "de_DE": "Version",
+      "en_US": "Version",
+      "es_ES": "Versión",
+      "fr_FR": "Version",
+      "uk_UA": "Версія"
+    },
     "notification_AutoModeOff": {
       "de_DE": "Automatischer Modus deaktiviert.",
       "en_US": "Automatic mode disabled.",
@@ -342,11 +377,11 @@
       "uk_UA": "Інформасьйон"
     },
     "window_Copyright": {
-      "de_DE": "{0}™ v{1} © {2} {3}. Lizenziert unter GPLv3.",
-      "en_US": "{0}™ v{1} © {2} {3}. Licensed under GPLv3.",
-      "es_ES": "{0}™ v{1} © {2} {3}. Licenciado bajo GPLv3.",
-      "fr_FR": "{0}™ v{1} © {2} {3}. Sous licence GPLv3.",
-      "uk_UA": "{0}™ v{1} © {2} {3}. Ліцензовано за GPLv3."
+      "de_DE": "© {0} {1}™. Lizenziert unter GPLv3.",
+      "en_US": "© {0} {1}™. Licensed under GPLv3.",
+      "es_ES": "© {0} {1}™. Licenciado bajo GPLv3.",
+      "fr_FR": "© {0} {1}™. Sous licence GPLv3.",
+      "uk_UA": "© {0} {1}™. Ліцензовано за GPLv3."
     },
     "window_CopyrightDisclaimer": {
       "de_DE": "{0} ist ein inoffizielles Dienstprogramm eines Drittanbieters.\n\nAlle Spieltitel, Logos und zugehörigen geistigen Eigentumsrechte sind Eigentum ihrer jeweiligen Inhaber.\n{0} ist weder mit einem Spielepublisher oder -entwickler verbunden, von diesem befürwortet noch gesponsert.",

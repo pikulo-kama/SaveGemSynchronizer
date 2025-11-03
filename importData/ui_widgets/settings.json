@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T21:25:24.481601",
+    "extract_date": "2025-11-03T02:39:24.254058",
     "filter": "section_id = 'settings'"
   },
   "data": [
@@ -29,20 +29,21 @@
               "widget_id": "settings_title_wrapper",
               "widget_type_id": "QWidget",
               "layout_type_id": "QHBoxLayout",
+              "spacing": 10,
               "margin_bottom": 10,
               "children": [
                 {
                   "widget_id": "logo_image",
-                  "content": "pixmap{gem_outline.svg, scale: 40}",
+                  "content": "pixmap{gear.svg, scale: 30}",
                   "widget_type_id": "QLabel",
-                  "alignment": "left-center"
+                  "alignment": "left-vcenter"
                 },
                 {
                   "widget_id": "settings_title",
                   "content": "tr{label_Settings}",
                   "widget_type_id": "QLabel",
                   "style_object_name": "hero",
-                  "alignment": "left-center",
+                  "alignment": "left-vcenter",
                   "refresh_events": [
                     "language_change"
                   ]
@@ -128,7 +129,7 @@
                           "controller": "LanguageDropdownController",
                           "widget_type_id": "QComboBox",
                           "width": 150,
-                          "height": 30
+                          "height": 35
                         }
                       ]
                     },
@@ -191,7 +192,7 @@
                           "controller": "TimeFormatDropdownController",
                           "widget_type_id": "QComboBox",
                           "width": 150,
-                          "height": 30,
+                          "height": 35,
                           "refresh_events": [
                             "language_change"
                           ]
