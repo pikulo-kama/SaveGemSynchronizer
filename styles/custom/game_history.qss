@@ -1,7 +1,7 @@
 
 QCustomWidget#saveListRecord {
     background-color: rgba("surface-a20", 0.3);
-    border: 1px solid color("surface-a20");
+    border: 1px solid color("surface-a30");
     border-radius: 5px;
 }
 

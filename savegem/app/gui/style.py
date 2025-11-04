@@ -1,18 +1,49 @@
 import os
 import re
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Final
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 
 from constants import Directory
+from savegem.common.core.context import app
 from savegem.common.db.manager import db
 from savegem.common.db.table import DatabaseTable
 from savegem.common.util.file import read_file, resolve_resource, save_file, resolve_temp_resource
 from savegem.common.util.logger import get_logger
-from savegem.common.util.ui import get_color_mode
 
 _logger = get_logger(__name__)
 _colors: Optional[DatabaseTable] = None
 _fonts: dict[str, str] = {}
+
+
+class ColorMode:
+    """
+    Represents application color modes.
+    """
+
+    Light: Final = "light"
+    Dark: Final = "dark"
+
+
+def get_system_color_mode():
+    """
+    Used to get current color mode.
+    """
+
+    mode = ColorMode.Light
+    application = QApplication.instance()
+
+    if application is None:
+        return mode
+
+    color_scheme = application.styleHints().colorScheme()  # noqa
+
+    if color_scheme == Qt.ColorScheme.Dark:
+        mode = ColorMode.Dark
+
+    return mode
 
 
 def _get_colors():
@@ -71,10 +102,12 @@ def color(color_id: str):
     Will get property depending on system color scheme.s
     """
 
-    color_mode = get_color_mode()
-    colors = _get_colors()
+    color_mode = app().state.color_theme
 
-    for color_record in colors:
+    if color_mode is None:
+        color_mode = get_system_color_mode()
+
+    for color_record in _get_colors():
         if color_id == color_record.get("color_id"):
             return color_record.get(color_mode)
 

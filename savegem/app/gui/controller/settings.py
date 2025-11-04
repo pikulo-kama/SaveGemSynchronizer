@@ -1,11 +1,10 @@
-from PyQt6.QtWidgets import QWidget
-
 from constants import TimeFormat, File
 from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.component.combobox import QCustomComboBox
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.controller import WidgetController
 from savegem.app.gui.popup.confirmation import confirmation
+from savegem.app.gui.style import ColorMode
 from savegem.app.gui.window import gui
 from savegem.common.core.context import app
 from savegem.common.core.text_resource import tr
@@ -67,6 +66,34 @@ class TimeFormatDropdownController(WidgetController):
     def refresh(self, time_format_dropdown: QCustomComboBox):
         time_format_dropdown.setItemText(0, tr("label_TimeFormat12"))
         time_format_dropdown.setItemText(1, tr("label_TimeFormat24"))
+
+
+class ColorThemeDropdownController(WidgetController):
+    """
+    Used to control dropdown with application color modes.
+    """
+
+    def setup(self, theme_dropdown: QCustomComboBox):
+
+        def on_theme_change(index: int):
+            color_theme = theme_dropdown.itemData(index)
+            app().state.color_theme = color_theme
+
+            gui().reload_styles()
+            self.manager.refresh()
+
+        theme_dropdown.addItem(tr("label_ColorModeSystem"), None)
+        theme_dropdown.addItem(tr("label_ColorModeLight"), ColorMode.Light)
+        theme_dropdown.addItem(tr("label_ColorModeDark"), ColorMode.Dark)
+
+        current_theme_index = theme_dropdown.findData(app().state.color_theme)
+        theme_dropdown.setCurrentIndex(current_theme_index)
+        theme_dropdown.currentIndexChanged.connect(on_theme_change)  # noqa
+
+    def refresh(self, theme_dropdown: QCustomComboBox):
+        theme_dropdown.setItemText(0, tr("label_ColorModeSystem"))
+        theme_dropdown.setItemText(1, tr("label_ColorModeLight"))
+        theme_dropdown.setItemText(2, tr("label_ColorModeDark"))
 
 
 class LogoutController(WidgetController):

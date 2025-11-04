@@ -11,6 +11,8 @@ QCustomComboBox {
 
 QCustomComboBox QAbstractItemView {
     color: color("light-a0");
+    background-color: color("surface-a20");
+    border: 1px solid color("surface-a50");
     border-radius: 5px;
 }
 

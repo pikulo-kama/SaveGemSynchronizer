@@ -26,9 +26,6 @@ def main():
 
     application = QApplication(sys.argv)
 
-    create_dynamic_resources()
-    application.setStyleSheet(load_stylesheet())
-
     # Startup initialization.
     app().user.initialize()
     app().state.initialize()
@@ -38,6 +35,7 @@ def main():
 
     # app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     # gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
+    gui().application = application
     gui().before_destroy.connect(teardown)
     gui().build()
 

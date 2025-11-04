@@ -82,6 +82,8 @@
                   "widget_type_id": "QWidget",
                   "layout_type_id": "QVBoxLayout",
                   "style_object_name": "settingGroup",
+                  "margin_left": 20,
+                  "margin_right": 20,
                   "children": [
                     {
                       "widget_id": "language_setting",
@@ -89,8 +91,6 @@
                       "layout_type_id": "QHBoxLayout",
                       "alignment": "vcenter",
                       "height": 75,
-                      "margin_left": 10,
-                      "margin_right": 10,
                       "children": [
                         {
                           "widget_id": "language_setting_label_wrapper",
@@ -134,17 +134,8 @@
                       ]
                     },
                     {
-                      "widget_id": "language_time_format_divider_wrapper",
-                      "widget_type_id": "QWidget",
-                      "layout_type_id": "QHBoxLayout",
-                      "margin_left": 20,
-                      "margin_right": 20,
-                      "children": [
-                        {
-                          "widget_id": "language_time_format_divider",
-                          "widget_type_id": "QHDivider"
-                        }
-                      ]
+                      "widget_id": "language_time_format_divider",
+                      "widget_type_id": "QHDivider"
                     },
                     {
                       "widget_id": "time_format_setting",
@@ -152,8 +143,6 @@
                       "layout_type_id": "QHBoxLayout",
                       "alignment": "vcenter",
                       "height": 75,
-                      "margin_left": 10,
-                      "margin_right": 10,
                       "children": [
                         {
                           "widget_id": "time_format_setting_label_wrapper",
@@ -198,6 +187,61 @@
                           ]
                         }
                       ]
+                    },
+                    {
+                      "widget_id": "time_format_theme_divider",
+                      "widget_type_id": "QHDivider"
+                    },
+                    {
+                      "widget_id": "theme_setting",
+                      "widget_type_id": "QWidget",
+                      "layout_type_id": "QHBoxLayout",
+                      "alignment": "vcenter",
+                      "height": 75,
+                      "children": [
+                        {
+                          "widget_id": "theme_setting_label_wrapper",
+                          "widget_type_id": "QWidget",
+                          "layout_type_id": "QVBoxLayout",
+                          "children": [
+                            {
+                              "widget_id": "theme_setting_label",
+                              "content": "tr{label_Theme}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "body",
+                              "stylesheet": {
+                                "font-weight": "bold"
+                              },
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            },
+                            {
+                              "widget_id": "theme_setting_label_description",
+                              "content": "tr{label_ThemeDesc}",
+                              "widget_type_id": "QLabel",
+                              "style_object_name": "smallText",
+                              "refresh_events": [
+                                "language_change"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "widget_id": "theme_setting_spacer",
+                          "widget_type_id": "QSpacer"
+                        },
+                        {
+                          "widget_id": "theme_setting_dropdown",
+                          "controller": "ColorThemeDropdownController",
+                          "widget_type_id": "QComboBox",
+                          "width": 150,
+                          "height": 35,
+                          "refresh_events": [
+                            "language_change"
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },
@@ -217,6 +261,8 @@
                   "widget_type_id": "QWidget",
                   "layout_type_id": "QVBoxLayout",
                   "style_object_name": "settingGroup",
+                  "margin_left": 20,
+                  "margin_right": 20,
                   "children": [
                     {
                       "widget_id": "logout_section",
@@ -224,8 +270,6 @@
                       "layout_type_id": "QHBoxLayout",
                       "alignment": "vcenter",
                       "height": 75,
-                      "margin_left": 10,
-                      "margin_right": 10,
                       "children": [
                         {
                           "widget_id": "logout_section_label_wrapper",

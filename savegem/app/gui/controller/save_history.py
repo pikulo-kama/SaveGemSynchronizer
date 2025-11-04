@@ -1,3 +1,5 @@
+from PyQt6.QtCore import Qt
+
 from savegem.app.gui.component.label import QCustomLabel
 from savegem.app.gui.component.layout import QCustomVBoxLayout, QCustomHBoxLayout, QCustomLayout
 from savegem.app.gui.component.list import QScrollableWidget
@@ -40,12 +42,14 @@ class SaveHistoryListController(WidgetController):
             record_container = QCustomWidget()
             record_container.setObjectName("saveListRecord")
             record_container.setProperty("active", QBool(is_current_save))
-            record_container.setFixedHeight(70)
+            record_container.setFixedHeight(65)
             record_container_layout = QCustomHBoxLayout(record_container)
 
             # Wrapper for upload date and owner.
             details_container = QCustomWidget()
             details_container_layout = QCustomVBoxLayout(details_container)
+            details_container_layout.setContentsMargins(0, 0, 0, 0)
+            details_container_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
             version_label = QCustomLabel()
             version_label.setObjectName("saveListRecordVersion")

@@ -1,8 +1,11 @@
+from typing import Optional
+
 from PyQt6.QtCore import QMutex, pyqtSignal
 from PyQt6.QtGui import QIcon, QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout
 
 from constants import Resource
+from savegem.app.gui.style import create_dynamic_resources, load_stylesheet
 from savegem.app.gui.widget.manager import WidgetManager
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.common.core.context import app
@@ -44,6 +47,7 @@ class GUI(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.__application: Optional[QApplication] = None
         self.__manager = WidgetManager(self)
 
         self.__root = QWidget()
@@ -65,6 +69,24 @@ class GUI(QMainWindow):
         """
         return self.__root
 
+    @property
+    def application(self):
+        return self.__application
+
+    @application.setter
+    def application(self, application: QApplication):
+        self.__application = application
+
+    def reload_styles(self):
+        """
+        Used to reload application styles.
+        This includes recalculation of QSS as well
+        as recreation of dynamic resources.
+        """
+
+        create_dynamic_resources()
+        self.application.setStyleSheet(load_stylesheet())
+
     def build(self):
         """
         Used to build GUI.
@@ -73,6 +95,7 @@ class GUI(QMainWindow):
 
         _logger.info("Building UI.")
 
+        self.reload_styles()
         self.__manager.remove_widgets(lambda _: True)
         self.__manager.build()
         self.is_blocked = False

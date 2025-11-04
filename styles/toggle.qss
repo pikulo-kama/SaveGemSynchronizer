@@ -1,7 +1,7 @@
 
 
 QCustomToggle {
-    qproperty-track_color: color("surface-a20");
+    qproperty-track_color: color("surface-a30");
     qproperty-thumb_color: color("light-a20");
 }
 

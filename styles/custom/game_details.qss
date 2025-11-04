@@ -7,7 +7,7 @@ QCustomWidget#saveDetailsCard {
 }
 
 QCustomWidget#saveDetailsCard QCustomLabel#cardTitle {
-    color: color("surface-a60");
+    color: rgba("light-a0", 0.4);
     font: font("small-text");
     font-weight: bold;
 }

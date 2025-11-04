@@ -19,6 +19,41 @@
       "fr_FR": "Êtes-vous sûr ? Cela écrasera la sauvegarde existante.",
       "uk_UA": "Впевнений? Це знищить твій існуючий сейв."
     },
+    "label_Theme": {
+      "de_DE": "Design",
+      "en_US": "Theme",
+      "es_ES": "Tema",
+      "fr_FR": "Thème",
+      "uk_UA": "Тема Оформлення"
+    },
+    "label_ThemeDesc": {
+      "de_DE": "Ändert das gesamte Erscheinungsbild der Anwendung, einschließlich Farbpalette und Hintergrundtöne.",
+      "en_US": "Changes the overall visual appearance of the application, including color palette and background tones.",
+      "es_ES": "Cambia la apariencia visual general de la aplicación, incluida la paleta de colores y los tonos de fondo.",
+      "fr_FR": "Modifie l'apparence visuelle globale de l'application, y compris la palette de couleurs et les tons d'arrière-plan.",
+      "uk_UA": "Змінює загальний візуальний вигляд програми, включаючи колірну палітру та фонові тони."
+    },
+    "label_ColorModeLight": {
+      "de_DE": "Hell",
+      "en_US": "Light",
+      "es_ES": "Claro",
+      "fr_FR": "Clair",
+      "uk_UA": "Світла"
+    },
+    "label_ColorModeDark": {
+      "de_DE": "Dunkel",
+      "en_US": "Dark",
+      "es_ES": "Oscuro",
+      "fr_FR": "Foncé",
+      "uk_UA": "Темна"
+    },
+    "label_ColorModeSystem": {
+      "de_DE": "System",
+      "en_US": "System",
+      "es_ES": "Sistema",
+      "fr_FR": "Système",
+      "uk_UA": "Системна"
+    },
     "info_NewestSaveOnDriveInformation": {
       "de_DE": "der letzte Spielstand wurde am {0} um {1} von {2} hochgeladen",
       "en_US": "last save was uploaded on {0} at {1} by {2}",

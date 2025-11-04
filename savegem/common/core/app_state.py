@@ -22,6 +22,7 @@ class AppState(AppData):
     SelectedGame: Final = "current_game"
     SelectedLocale: Final = "language"
     TimeFormatId: Final = "time_format_id"
+    ColorTheme: Final = "color_theme"
     WindowWidth: Final = "window_width"
     WindowHeight: Final = "window_height"
 
@@ -97,6 +98,20 @@ class AppState(AppData):
         Set active locale.
         """
         self.__set_state_value(self.SelectedLocale, locale, execute_callback=True)
+
+    @property
+    def color_theme(self):
+        """
+        Used to get configured application color theme.
+        """
+        return self.__state_table.get_first(self.ColorTheme)
+
+    @color_theme.setter
+    def color_theme(self, color_theme: str):
+        """
+        Used to set application color theme.
+        """
+        self.__set_state_value(self.ColorTheme, color_theme)
 
     @property
     def time_format(self):

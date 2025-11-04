@@ -13,7 +13,7 @@ def resolve_content(content: str):
     Example of token: pixmap{user{logo}, scaled: 123, radius: 20}
     """
 
-    match = re.compile(r"(\w+)\{(.*)}").match(content)
+    match = re.compile(r"(\w+)\{(.*)}").search(content)
 
     # If no token has been found then
     # treat it as regular string.

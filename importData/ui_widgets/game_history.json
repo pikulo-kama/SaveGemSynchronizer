@@ -22,7 +22,6 @@
           "controller": "SaveHistoryListController",
           "widget_type_id": "QScrollableWidget",
           "layout_type_id": "QVBoxLayout",
-          "style_object_name": "saveList",
           "margin_right": 10,
           "refresh_events": [
             "game_config_change",
