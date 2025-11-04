@@ -95,7 +95,7 @@ class QCustomGridLayout(QGridLayout, CustomLayoutMixin):
         order_id = widget.metadata.order_id - 1
 
         # Make sure columns have equal weight
-        # so that when there are less widgets than
+        # so that when there are fewer widgets than
         # amount of configured columns it will not fill
         # all available space.
         for column_id in range(grid_columns):

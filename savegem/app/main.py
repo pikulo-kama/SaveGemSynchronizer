@@ -1,10 +1,10 @@
+import os
 import sys
 import threading
 
 from PyQt6.QtWidgets import QApplication
 
 from constants import Directory
-from savegem.app.gui.style import load_stylesheet, create_dynamic_resources
 from savegem.app.gui.window import gui
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.holders import prop
@@ -24,8 +24,6 @@ def main():
     _logger.info("Starting SaveGem application.")
     _logger.info("version %s", prop("version"))
 
-    application = QApplication(sys.argv)
-
     # Startup initialization.
     app().user.initialize()
     app().state.initialize()
@@ -33,13 +31,14 @@ def main():
     app().games.current.meta.drive.refresh()
     app().activity.refresh()
 
+    gui().application = QApplication(sys.argv)
+
     # app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     # gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
-    gui().application = application
     gui().before_destroy.connect(teardown)
     gui().build()
 
-    sys.exit(application.exec())
+    sys.exit(gui().application.exec())
 
 
 def teardown():
@@ -49,6 +48,8 @@ def teardown():
 
     _logger.info("Cleaning up 'output' directory.")
     cleanup_directory(Directory().Output)
+    _logger.info("Creating directory for dynamic resources.")
+    os.mkdir(Directory().TempResources)
 
 
 def rebuild():

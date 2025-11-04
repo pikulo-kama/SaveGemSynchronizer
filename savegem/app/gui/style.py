@@ -196,9 +196,6 @@ def create_dynamic_resources():
     difference is color.
     """
 
-    if not os.path.exists(Directory().TempResources):
-        os.mkdir(Directory().TempResources)
-
     resources = db().table("setup_resource")
 
     for resource in resources.retrieve():
