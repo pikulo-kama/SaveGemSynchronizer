@@ -8,17 +8,17 @@
     {
       "resource_name": "about.svg",
       "resource_path": "about.svg",
-      "color": "light-a0"
+      "color": "text-primary"
     },
     {
       "resource_name": "gear.svg",
       "resource_path": "gear.svg",
-      "color": "light-a0"
+      "color": "text-primary"
     },
     {
       "resource_name": "home.svg",
       "resource_path": "home.svg",
-      "color": "light-a0"
+      "color": "text-primary"
     },
     {
       "resource_name": "active_about.svg",
@@ -58,7 +58,7 @@
     {
       "resource_name": "chevron.svg",
       "resource_path": "chevron.svg",
-      "color": "light-a0"
+      "color": "text-primary"
     },
     {
       "resource_name": "download.svg",
@@ -68,7 +68,7 @@
     {
       "resource_name": "upload.svg",
       "resource_path": "upload.svg",
-      "color": "light-a0"
+      "color": "text-primary"
     },
     {
       "resource_name": "checkmark.svg",

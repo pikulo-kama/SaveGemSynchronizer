@@ -64,7 +64,7 @@
               "widget_type_id": "QLabel",
               "style_object_name": "body",
               "stylesheet": {
-                "color": "rgba('light-a0', 0.6)"
+                "color": "rgba('text-primary', 0.6)"
               }
             },
             {
@@ -128,7 +128,7 @@
               "widget_type_id": "QLabel",
               "style_object_name": "body",
               "stylesheet": {
-                "color": "rgba('light-a0', 0.6)"
+                "color": "rgba('text-primary', 0.6)"
               }
             },
             {
@@ -191,7 +191,7 @@
           "controller": "CopyrightController",
           "widget_type_id": "QLabel",
           "stylesheet": {
-            "color": "rgba('light-a0', 0.7)"
+            "color": "rgba('text-primary', 0.7)"
           }
         }
       ]

@@ -16,7 +16,7 @@ QProgressBar::chunk {
 QProgressPushButton {
     outline: 1px dashed transparent;
     background-color: color("surface-a20");
-    color: color("light-a0");
+    color: color("text-primary");
     border: 1px solid color("surface-a40");
     font: font("label");
 }
@@ -32,12 +32,12 @@ QProgressPushButton:pressed,
 QProgressPushButton[is-disabled="true"]:hover,
 QProgressBar:pressed {
     background-color: color("surface-a20");
-    color: color("light-a0");
+    color: color("text-primary");
     border: 1px solid color("surface-a40");
 }
 
 QProgressBar {
-    color: color("light-a0");
+    color: color("text-primary");
 }
 
 QProgressPushButton:hover,
@@ -53,17 +53,17 @@ QProgressPushButton[kind="primary"]:pressed,
 QProgressPushButton[kind="primary"][is-disabled="true"]:hover,
 QProgressBar[kind="QProgressPushButton-primary"]:pressed {
     background-color: color("primary-a30");
-    color: color("dark-a0");
+    color: color("text-inverted");
 }
 
 QProgressBar[kind="QProgressPushButton-primary"] {
-    color: color("dark-a0");
+    color: color("text-inverted");
 }
 
 QProgressPushButton[kind="primary"]:hover,
 QProgressBar[kind="QProgressPushButton-primary"]::chunk,
 QProgressBar[kind="QProgressPushButton-primary"]::chunk:hover {
     background-color: color("primary-a20");
-    color: color("dark-a0");
+    color: color("text-inverted");
 }
 

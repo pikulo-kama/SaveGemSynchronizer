@@ -17,5 +17,5 @@ QCustomLabel#saveListRecordVersion {
 
 QCustomLabel#saveListRecordOwner {
     font: font("small-text");
-    color: rgba('light-a0', 0.7);
+    color: rgba('text-primary', 0.7);
 }

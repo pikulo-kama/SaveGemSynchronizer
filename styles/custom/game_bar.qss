@@ -7,7 +7,7 @@ QCustomTabBar#gameBar::tab {
 }
 
 QCustomTabBar#gameBar::tab:!selected {
-    color: color("light-a0");
+    color: color("text-primary");
 }
 
 QCustomTabBar#gameBar::tab:selected {

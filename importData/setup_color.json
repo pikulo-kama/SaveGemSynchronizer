@@ -6,12 +6,12 @@
   },
   "data": [
     {
-      "color_id": "light-a0",
+      "color_id": "text-primary",
       "light": "#000000",
       "dark": "#ffffff"
     },
     {
-      "color_id": "dark-a0",
+      "color_id": "text-inverted",
       "light": "#ffffff",
       "dark": "#000000"
     },

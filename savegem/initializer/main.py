@@ -69,7 +69,7 @@ def add_import_command(subparsers):
     import_parser.add_argument(
         "--file_name",
         type=str,
-        help="Name of the import that needs to be imported"
+        help="Name of the import that needs to be imported."
     )
 
     import_parser.add_argument(
@@ -91,7 +91,7 @@ def add_extract_command(subparsers):
 
     extract_parser = subparsers.add_parser(
         "extract",
-        help="Extract table data from database tables into JSON definitions"
+        help="Extract table data from database tables into JSON definitions."
     )
 
     extract_parser.add_argument(

@@ -1,13 +1,13 @@
 
 QCustomWidget#saveDetailsCard {
-    background-color: color("surface-a20");
+    background-color: rgba("surface-a20", 0.7);
     border: 1px solid color("surface-a40");
     border-radius: 5px;
     text-align: left;
 }
 
 QCustomWidget#saveDetailsCard QCustomLabel#cardTitle {
-    color: rgba("light-a0", 0.4);
+    color: rgba("text-primary", 0.4);
     font: font("small-text");
     font-weight: bold;
 }
