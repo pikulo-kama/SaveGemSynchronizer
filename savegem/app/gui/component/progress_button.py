@@ -35,9 +35,6 @@ class QProgressPushButton(QCustomPushButton):
         self.__progress_bar.setValue(progress)
         in_progress = progress > 0
 
-        if in_progress:
-            self.setText("")
-
         self.__progress_bar.setTextVisible(in_progress is True)
         self.setProperty(self.__IN_PROGRESS_ATTR, QBool(in_progress))
         self.setEnabled(in_progress is False)

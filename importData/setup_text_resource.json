@@ -26,6 +26,13 @@
       "fr_FR": "la dernière sauvegarde a été envoyée le {0} à {1} par {2}",
       "uk_UA": "останній сейв відвантажено {0} o {1} від {2}"
     },
+    "label_Restore": {
+      "de_DE": "Wiederherstellen",
+      "en_US": "Restore",
+      "es_ES": "Restaurar",
+      "fr_FR": "Restaurer",
+      "uk_UA": "Відновити"
+    },
     "info_SaveIsUpToDate": {
       "de_DE": "Aktuell",
       "en_US": "Up to date",

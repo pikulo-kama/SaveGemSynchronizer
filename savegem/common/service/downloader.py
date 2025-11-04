@@ -19,7 +19,7 @@ class Downloader(SubscriptableService):
 
     BackupSuffix: Final = "_backup"
 
-    def download(self, game: Game):
+    def download(self, game: Game, file_id: str = None):
         """
         Used to download latest save from Google Drive
         also responsible for making backup of old save.
@@ -50,10 +50,15 @@ class Downloader(SubscriptableService):
             self._send_event(ErrorEvent(EventKind.DriveMetadataMissing))
             return
 
+        drive_file_metadata = game.meta.drive.latest
+
+        if file_id is not None:
+            drive_file_metadata = game.meta.drive.by_id(file_id)
+
         # Download file and write it to zip file locally (in output directory)
         _logger.info("Downloading save archive.")
         file = GDrive.download_file(
-            game.meta.drive.id,
+            drive_file_metadata.id,
             subscriber=lambda completion: self._complete_stage(completion)
         ).getvalue()
 
@@ -75,7 +80,7 @@ class Downloader(SubscriptableService):
         self._complete_stage()
 
         # Update metadata in memory.
-        game.meta.local.checksum = game.meta.drive.checksum
+        game.meta.local.checksum = drive_file_metadata.checksum
         self._complete_stage()
 
         self._send_event(DoneEvent(None))

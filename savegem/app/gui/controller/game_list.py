@@ -27,9 +27,7 @@ class GameListController(WidgetController):
         def change_name(game_name: str):
             return lambda: self.__change_game(game_name)
 
-        self.manager.remove_widgets(
-            lambda meta: meta.parent_widget_name == game_list.metadata.name
-        )
+        self.manager.remove_child_widgets(game_list)
 
         for game in app().games.list:
             game_button = QCustomPushButton()

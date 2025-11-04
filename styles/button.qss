@@ -8,3 +8,7 @@ QCustomPushButton {
     padding: 8px 16px;
     font: font("label");
 }
+
+QCustomPushButton:hover {
+    background-color: color("surface-a30");
+}

@@ -169,8 +169,7 @@
                       "width": 200,
                       "height": 40,
                       "properties": {
-                        "id": "uploadButton",
-                        "kind": "secondary"
+                        "id": "uploadButton"
                       },
                       "refresh_events": [
                         "language_change"

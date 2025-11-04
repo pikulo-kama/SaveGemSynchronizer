@@ -10,7 +10,7 @@ QProgressBar {
 }
 
 QProgressBar::chunk {
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
 QProgressPushButton {
@@ -20,7 +20,27 @@ QProgressPushButton {
 
 /* Remove icon when progress bar is active. */
 QProgressPushButton[in-progress="true"] {
+    color: transparent;
     icon: none;
+}
+
+QProgressPushButton,
+QProgressPushButton:pressed,
+QProgressPushButton[is-disabled="true"]:hover,
+QProgressBar:pressed {
+    background-color: color("surface-a20");
+    color: color("light-a0");
+    border: 1px solid color("surface-a40");
+}
+
+QProgressBar {
+    color: color("light-a0");
+}
+
+QProgressPushButton:hover,
+QProgressBar::chunk,
+QProgressBar::chunk:hover {
+    background-color: color("surface-a30");
 }
 
 
@@ -44,23 +64,3 @@ QProgressBar[kind="QProgressPushButton-primary"]::chunk:hover {
     color: color("dark-a0");
 }
 
-
-/* Style for secondary button */
-QProgressPushButton[kind="secondary"],
-QProgressPushButton[kind="secondary"]:pressed,
-QProgressPushButton[kind="secondary"][is-disabled="true"]:hover,
-QProgressBar[kind="QProgressPushButton-secondary"]:pressed {
-    background-color: color("surface-a20");
-    color: color("light-a0");
-    border: 1px solid color("surface-a40");
-}
-
-QProgressBar[kind="QProgressPushButton-secondary"] {
-    color: color("light-a0");
-}
-
-QProgressPushButton[kind="secondary"]:hover,
-QProgressBar[kind="QProgressPushButton-secondary"]::chunk,
-QProgressBar[kind="QProgressPushButton-secondary"]::chunk:hover {
-    background-color: color("surface-a30");
-}

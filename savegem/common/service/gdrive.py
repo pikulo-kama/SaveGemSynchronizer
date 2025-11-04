@@ -58,7 +58,7 @@ class GDrive:
         return response.get("permissions")
 
     @classmethod
-    def query_single(cls, q: str, fields: str):
+    def query_metadata(cls, q: str, fields: str, page_size: int = 1000):
         """
         Used to query metadata of single file from Google Drive.
         """
@@ -69,7 +69,7 @@ class GDrive:
                 spaces="drive",
                 fields=fields,
                 pageToken=None,
-                pageSize=1
+                pageSize=page_size
             ).execute()
 
         except HttpError as error:

@@ -125,6 +125,15 @@ class WidgetManager:
 
         self.__invoke_controllers(lambda controller, window_widget: controller.disable(window_widget))
 
+    def remove_child_widgets(self, widget: QCustomComponent):
+        """
+        Used to remove all child widgets of provided widget
+        from manager.
+
+        Will not remove provided widget itself.
+        """
+        self.remove_widgets(lambda meta: meta.parent_widget_name == widget.metadata.name)
+
     def remove_widgets(self, clear_condition_function):
         """
         Used to remove all widgets from manager

@@ -96,6 +96,7 @@ class UploadButtonController(WidgetController):
             worker.progress.connect(_progress_subscriber(upload_button))
             worker.completed.connect(_done_subscriber("notification_SaveHasBeenUploaded"))
             worker.completed.connect(upload_button.refresh)
+            worker.completed.connect(lambda: app().games.current.meta.drive.refresh())
 
             self._do_work(worker)
 

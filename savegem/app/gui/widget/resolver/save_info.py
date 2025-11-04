@@ -1,15 +1,10 @@
-from datetime import datetime, date
+from datetime import date
 
-import pytz
-from babel.dates import format_datetime
-from babel.localtime import get_localzone
-
-from constants import TimeFormat
 from savegem.app.gui.widget.resolver import ContentResolver
 from savegem.common.core.context import app
 from savegem.common.core.save_meta import SyncStatus
 from savegem.common.core.text_resource import tr
-
+from savegem.common.util.date import string_to_date, get_verbose_time, get_verbose_date
 
 _status_desc_map = {
     SyncStatus.LocalOnly: "label_StorageIsEmptyDesc",
@@ -101,26 +96,11 @@ class SaveInfoResolver(ContentResolver):
         if not metadata.is_present:
             return "", ""
 
-        creation_datetime_naive = datetime.strptime(metadata.created_time, "%Y-%m-%dT%H:%M:%S.%fZ")
-        utc_datetime = pytz.utc.localize(creation_datetime_naive)
-        time_zone = pytz.timezone(str(get_localzone()))
-        creation_datetime = utc_datetime.astimezone(time_zone)
+        creation_datetime = string_to_date(metadata.created_time)
 
-        date_format = "d MMMM"
-
-        # Only show year if it's not current one, just to avoid extra information.
-        if creation_datetime.year != date.today().year:
-            date_format += " YYYY"
-
-        creation_date = format_datetime(creation_datetime, date_format, locale=app().state.locale)
-
-        # 24-hour format.
-        time_format = "%H:%M"
-
-        if app().state.time_format == TimeFormat.Regular:
-            time_format = "%I:%M %p"
-
-        creation_time = creation_datetime.strftime(time_format)
+        # Don't show year if it's current year.
+        creation_date = get_verbose_date(creation_datetime, creation_datetime.year != date.today().year)
+        creation_time = get_verbose_time(creation_datetime)
 
         return creation_date, creation_time
 

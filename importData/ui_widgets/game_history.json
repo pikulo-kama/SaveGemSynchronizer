@@ -12,9 +12,25 @@
       "controller": "GameBarTabController",
       "widget_type_id": "QWidget",
       "layout_type_id": "QVBoxLayout",
-      "stylesheet": {
-        "background-color": "orange"
-      }
+      "margin_top": 20,
+      "margin_left": 10,
+      "margin_right": 10,
+      "margin_bottom": 20,
+      "children": [
+        {
+          "widget_id": "save_history_list",
+          "controller": "SaveHistoryListController",
+          "widget_type_id": "QScrollableWidget",
+          "layout_type_id": "QVBoxLayout",
+          "style_object_name": "saveList",
+          "margin_right": 10,
+          "refresh_events": [
+            "game_config_change",
+            "game_selection_change",
+            "save_downloaded"
+          ]
+        }
+      ]
     }
   ]
 }

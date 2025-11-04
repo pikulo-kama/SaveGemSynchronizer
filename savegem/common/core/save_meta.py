@@ -50,7 +50,7 @@ class MetadataWrapper:
         self.__drive = drive
 
     @property
-    def local(self):
+    def local(self) -> "LocalMetadata":
         """
         Represents local metadata stored
         on user machine.
@@ -58,7 +58,7 @@ class MetadataWrapper:
         return self.__local
 
     @property
-    def drive(self):
+    def drive(self) -> "DriveMetadata":
         """
         Represents metadata of last save
         available on Google Drive.
@@ -66,7 +66,7 @@ class MetadataWrapper:
         return self.__drive
 
     @property
-    def sync_status(self):
+    def sync_status(self) -> SyncStatus:
         """
         Used to get current sync status.
         """
@@ -102,7 +102,7 @@ class Metadata(abc.ABC):  # pragma: no cover
 
     @property
     @abc.abstractmethod
-    def owner(self):
+    def owner(self) -> str:
         """
         Used to get owner of save.
         Name of person that created save.
@@ -111,7 +111,7 @@ class Metadata(abc.ABC):  # pragma: no cover
 
     @property
     @abc.abstractmethod
-    def created_time(self):
+    def created_time(self) -> str:
         """
         Used to get date when save was uploaded.
         """
@@ -134,6 +134,9 @@ class Metadata(abc.ABC):  # pragma: no cover
 
 
 class LocalMetadata(Metadata):
+    """
+    Used to hold metadata of local save on user machine.
+    """
 
     def __init__(self, game: "Game"):
         super().__init__(game)
@@ -183,44 +186,131 @@ class LocalMetadata(Metadata):
         self.__metadata = EditableJsonConfigHolder(self._game.metadata_file_path)
 
 
+class DriveFileMetadata(Metadata):
+    """
+    Used to hold metadata of single save on drive.
+    """
+
+    def __init__(self, game: "Game", file_id: str, owner: str, created_time: str, checksum: str, size: int):
+        super().__init__(game)
+
+        self.__id = file_id
+        self.__owner = owner
+        self.__created_time = created_time
+        self.__checksum = checksum
+        self.__size = size
+
+    @property
+    def id(self):
+        """
+        Used to get ID of save on drive.
+        """
+        return self.__id
+
+    @property
+    def owner(self):
+        """
+        Used to get owner of save.
+        """
+        return self.__owner
+
+    @property
+    def created_time(self):
+        """
+        Used to get date when save was uploaded.
+        """
+        return self.__created_time
+
+    @property
+    def checksum(self):
+        """
+        Used to get checksum of save.
+        """
+        return self.__checksum
+
+    @property
+    def size(self):
+        """
+        Used to get size of save.
+        """
+        return self.__size
+
+    def refresh(self):
+        pass
+
+
 class DriveMetadata(Metadata):
+    """
+    Holds metadata of all save files in drive.
+    """
 
     __ID_PROP: Final = "id"
 
     def __init__(self, game: "Game"):
         super().__init__(game)
-
-        self.__id = None
-        self.__owner = None
-        self.__created_time = None
-        self.__checksum = None
-        self.__size = None
-
-        self.__is_present = False
+        self.__files_metadata: list[DriveFileMetadata] = []
 
     @property
     def is_present(self):
-        return self.__is_present
+        """
+        Used to check if there are saves in cloud.
+        """
+        return len(self.__files_metadata) > 0
+
+    @property
+    def latest(self):
+        """
+        Used to get metadata of latest upload save.
+        """
+        return self.__files_metadata[0]
+
+    @property
+    def list(self):
+        """
+        Used to get list of save metadata on drive.
+        """
+        return self.__files_metadata
+
+    def by_id(self, file_id: str):
+        """
+        Used to get metadata of specific save.
+        """
+        return next(meta for meta in self.__files_metadata if meta.id == file_id)
 
     @property
     def id(self):
-        return self.__id
+        """
+        Used to get ID of latest save on drive.
+        """
+        return self.latest.id
 
     @property
     def owner(self):
-        return self.__owner
+        """
+        Used to get owner of latest save on drive.
+        """
+        return self.latest.owner
 
     @property
     def created_time(self):
-        return self.__created_time
+        """
+        Used to get date when latest save was uploaded to drive.
+        """
+        return self.latest.created_time
 
     @property
     def checksum(self):
-        return self.__checksum
+        """
+        Used to get checksum of latest save.
+        """
+        return self.latest.checksum
 
     @property
     def size(self):
-        return self.__size
+        """
+        Used to get size of latest save.
+        """
+        return self.latest.size
 
     def refresh(self):
         """
@@ -228,7 +318,9 @@ class DriveMetadata(Metadata):
         metadata from Google Drive.
         """
 
-        metadata = GDrive.query_single(
+        self.__files_metadata.clear()
+
+        metadata = GDrive.query_metadata(
             f"mimeType='{ZIP_MIME_TYPE}' and '{self._game.drive_directory}' in parents and trashed=false",
             "files(id, appProperties, createdTime)"
         )
@@ -243,16 +335,18 @@ class DriveMetadata(Metadata):
 
         if len(files_meta) == 0:
             _logger.warning("There are no saves on Google Drive for %s.", self._game.name)
-            self.__is_present = False
             return
 
-        file_meta = files_meta[0]
-        properties = file_meta.get("appProperties") or {}
+        for file_meta in files_meta:
+            properties = file_meta.get("appProperties") or {}
 
-        self.__id = file_meta.get(self.__ID_PROP)
-        self.__owner = properties.get(SaveMetaProp.Owner)
-        self.__created_time = file_meta.get(SaveMetaProp.CreatedTime)
-        self.__checksum = properties.get(SaveMetaProp.Checksum)
-        self.__size = int(properties.get(SaveMetaProp.Size, -1))
+            file_metadata = DriveFileMetadata(
+                game=self._game,
+                file_id=file_meta.get(self.__ID_PROP),
+                owner=properties.get(SaveMetaProp.Owner),
+                created_time=file_meta.get(SaveMetaProp.CreatedTime),
+                checksum=properties.get(SaveMetaProp.Checksum),
+                size=int(properties.get(SaveMetaProp.Size, -1))
+            )
 
-        self.__is_present = True
+            self.__files_metadata.append(file_metadata)
