@@ -1,8 +1,8 @@
 
 QCustomWidget#playersContainer QCustomWidget {
-    background-color: rgba("surface-a20", 0.3);
+    background-color: rgba("surface-a20", 0.5);
     border-radius: 5px;
-    border: 1px solid color("surface-a20");
+    border: 1px solid color("surface-a30");
 }
 
 QCustomWidget#playersContainer QCustomWidget[id="active"] {
@@ -17,7 +17,5 @@ QCustomWidget#playersContainer QCustomWidget[id="active"] {
 }
 
 QCustomWidget#playersContainer QCustomWidget QCustomLabel {
-    color: color("light-a0");
     font: font("accent");
-    font-weight: bold;
 }

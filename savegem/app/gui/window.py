@@ -48,6 +48,7 @@ class GUI(QMainWindow):
 
         self.__root = QWidget()
         self.setCentralWidget(self.__root)
+        self.__root.setObjectName("root")
         self.__root_layout = QHBoxLayout(self.__root)
         self.__root_layout.setContentsMargins(0, 0, 0, 0)
 

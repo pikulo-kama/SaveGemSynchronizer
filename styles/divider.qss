@@ -1,0 +1,5 @@
+
+QHDivider,
+QVDivider {
+    background-color: color("surface-a30");
+}

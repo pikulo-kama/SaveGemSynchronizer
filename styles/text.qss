@@ -2,6 +2,8 @@
 QLabel {
     padding: 0px;
     margin: 0px;
+
+    color: color("light-a0");
 }
 
 QCustomLabel#hero {

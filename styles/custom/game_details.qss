@@ -1,6 +1,6 @@
 
 QCustomWidget#saveDetailsCard {
-    background-color: color("surface-a10");
+    background-color: color("surface-a20");
     border: 1px solid color("surface-a40");
     border-radius: 5px;
     text-align: left;

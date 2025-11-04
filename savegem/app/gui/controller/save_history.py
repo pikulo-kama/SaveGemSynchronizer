@@ -65,7 +65,8 @@ class SaveHistoryListController(WidgetController):
             record_container_layout.add_dynamic_widget(details_container)
             record_container_layout.add_dynamic_widget(QSpacer())
 
-            # Don't show restore button if checksum of save matches checksum of local save.
+            # Don't show restore button if checksum
+            # of drive save matches checksum of local save.
             if not is_current_save:
                 record_container_layout.add_dynamic_widget(restore_button)
 

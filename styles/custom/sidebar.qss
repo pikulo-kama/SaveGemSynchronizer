@@ -1,5 +1,6 @@
 
-QWidget#sidebar {
+QWidget#sidebar,
+QWidget#sidebarMenu {
     background-color: color("surface-a20");
 }
 

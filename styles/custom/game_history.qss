@@ -1,21 +1,21 @@
 
-#saveListRecord {
+QCustomWidget#saveListRecord {
     background-color: rgba("surface-a20", 0.3);
     border: 1px solid color("surface-a20");
     border-radius: 5px;
 }
 
-#saveListRecord[active="true"] {
+QCustomWidget#saveListRecord[active="true"] {
     border-color: color("success-a20");
     background-color: color("surface-a10");
 }
 
-#saveListRecordVersion {
+QCustomLabel#saveListRecordVersion {
     font: font("accent");
     font-weight: bold;
 }
 
-#saveListRecordOwner {
+QCustomLabel#saveListRecordOwner {
     font: font("small-text");
     color: rgba('light-a0', 0.7);
 }

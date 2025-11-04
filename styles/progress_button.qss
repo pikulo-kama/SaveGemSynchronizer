@@ -15,6 +15,9 @@ QProgressBar::chunk {
 
 QProgressPushButton {
     outline: 1px dashed transparent;
+    background-color: color("surface-a20");
+    color: color("light-a0");
+    border: 1px solid color("surface-a40");
     font: font("label");
 }
 

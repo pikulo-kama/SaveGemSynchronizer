@@ -32,7 +32,7 @@
               "children": [
                 {
                   "widget_id": "app_icon",
-                  "content": "pixmap{gem.svg, scale: 50}",
+                  "content": "pixmap{gem_outline.svg, scale: 50}",
                   "widget_type_id": "QLabel",
                   "alignment": "vcenter"
                 },

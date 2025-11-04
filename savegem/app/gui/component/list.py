@@ -18,6 +18,7 @@ class QScrollableWidget(QScrollArea, CustomComponentMixin):
         CustomComponentMixin.__init__(self)
 
         self.__content = QCustomWidget()
+        self.__content.setObjectName("scrollableRoot")
         self.setWidget(self.__content)
         self.setWidgetResizable(True)
 
