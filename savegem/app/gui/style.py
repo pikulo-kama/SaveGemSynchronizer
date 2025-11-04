@@ -3,28 +3,49 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from constants import Directory, File
-from savegem.common.core.json_config_holder import JsonConfigHolder
+from constants import Directory
 from savegem.common.db.manager import db
-from savegem.common.util.file import read_file, resolve_config, resolve_resource, save_file, resolve_temp_resource
+from savegem.common.db.table import DatabaseTable
+from savegem.common.util.file import read_file, resolve_resource, save_file, resolve_temp_resource
 from savegem.common.util.logger import get_logger
 from savegem.common.util.ui import get_color_mode
 
 _logger = get_logger(__name__)
-_styles: Optional[JsonConfigHolder] = None
+_colors: Optional[DatabaseTable] = None
+_fonts: dict[str, str] = {}
 
 
-def _get_styles():
+def _get_colors():
     """
-    Internal method used to get styles configuration.
+    Used to load colors data from database.
     """
 
-    global _styles
+    global _colors
 
-    if _styles is None:
-        _styles = JsonConfigHolder(resolve_config(File.Style))
+    if _colors is None:
+        _colors = db().table("setup_color").retrieve()
 
-    return _styles
+    return _colors
+
+
+def _get_fonts():
+    """
+    Used to load fonts from database
+    and format them.
+    """
+
+    global _fonts
+
+    if len(_fonts) == 0:
+
+        for font_record in db().table("setup_font").retrieve():
+            font_id = font_record.get("font_id")
+            font_size = font_record.get("font_size")
+            font_family = font_record.get("font_family")
+
+            _fonts[font_id] = f"{font_size}px '{font_family}'"
+
+    return _fonts
 
 
 def rgba_color(color_key: str, alpha: str):
@@ -42,17 +63,22 @@ def rgba_color(color_key: str, alpha: str):
     return f"rgba({red}, {green}, {blue}, {alpha})"
 
 
-def color(property_name: str):
+def color(color_id: str):
     """
     Used to get color that corresponds
     provided property.
 
-    Will get property depending on system color scheme.
+    Will get property depending on system color scheme.s
     """
 
     color_mode = get_color_mode()
-    colors = _get_styles().get_value("colors").get(color_mode)
-    return colors.get(property_name)
+    colors = _get_colors()
+
+    for color_record in colors:
+        if color_id == color_record.get("color_id"):
+            return color_record.get(color_mode)
+
+    return ""
 
 
 def font(property_name: str):
@@ -60,7 +86,7 @@ def font(property_name: str):
     Used to get font that corresponds
     provided property.
     """
-    return _get_styles().get_value("fonts").get(property_name)
+    return _get_fonts().get(property_name)
 
 
 def resolve_style_properties(style_string: str):

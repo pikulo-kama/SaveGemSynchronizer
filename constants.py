@@ -58,9 +58,7 @@ class File:
     GDriveToken: Final = "token.json"
     GDriveCreds: Final = "credentials.json"
     GDriveConfig: Final = "config.json"
-
     AppConfig: Final = "app.json"
-    Style: Final = "style.json"
 
     GUIInitializedFlag: Final = "gui_init.flag"
 

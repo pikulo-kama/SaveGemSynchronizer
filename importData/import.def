@@ -5,6 +5,8 @@ setup_widget_type.json
 setup_resource.json
 setup_locale.json
 setup_text_resource.json
+setup_color.json
+setup_font.json
 
 # UI Related Metadata
 ui_sections.json

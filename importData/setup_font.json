@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "table_name": "setup_font",
+    "type": "Regular",
+    "extract_date": "2025-10-23T13:16:31.831907"
+  },
+  "data": [
+    {
+      "font_id": "hero",
+      "font_size": 33,
+      "font_family": "DB Sans"
+    },
+    {
+      "font_id": "section-title",
+      "font_size": 28,
+      "font_family": "DB Sans"
+    },
+    {
+      "font_id": "subtitle",
+      "font_size": 23,
+      "font_family": "DB Sans"
+    },
+    {
+      "font_id": "card-title",
+      "font_size": 19,
+      "font_family": "DB Sans"
+    },
+    {
+      "font_id": "body",
+      "font_size": 16,
+      "font_family": "Roboto"
+    },
+    {
+      "font_id": "label",
+      "font_size": 16,
+      "font_family": "DB Sans"
+    },
+    {
+      "font_id": "accent",
+      "font_size": 14,
+      "font_family": "Roboto"
+    },
+    {
+      "font_id": "small-text",
+      "font_size": 12,
+      "font_family": "Segoe UI"
+    },
+    {
+      "font_id": "caption",
+      "font_size": 10,
+      "font_family": "DB Sans"
+    }
+  ]
+}
