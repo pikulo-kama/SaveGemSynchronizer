@@ -1,8 +1,9 @@
 from typing import Union, Optional
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QObject
 from PyQt6.QtWidgets import QWidget
 
+from savegem.app.gui.component.layout import QCustomLayout
 from savegem.app.gui.widget.metadata import WidgetMetadata
 from savegem.app.gui.widget.resolver import resolve_content
 
@@ -86,6 +87,13 @@ class CustomComponentMixin:
             children = self.findChildren(CustomComponentMixin)  # noqa
             for child_widget in children:
                 child_widget.refresh()
+
+    def update_styles(self):
+
+        self.style().polish(self)  # noqa
+
+        for child in self.findChildren(CustomComponentMixin):  # noqa
+            child.update_styles()
 
 
 """

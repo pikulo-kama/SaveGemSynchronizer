@@ -6,38 +6,83 @@ QLabel {
     color: color("text-primary");
 }
 
-QCustomLabel#hero {
+QCustomLabel#heroText {
     font: font("hero");
 }
 
-QCustomLabel#sectionTitle {
+QCustomLabel#heroTextInverted {
+    font: font("hero");
+    color: color("text-inverted");
+}
+
+QCustomLabel#sectionTitleText {
     font: font("section-title");
 }
 
-QCustomLabel#subtitle {
+QCustomLabel#sectionTitleTextInverted {
+    font: font("section-title");
+    color: color("text-inverted");
+}
+
+QCustomLabel#subtitleText {
     font: font("subtitle");
 }
 
-QCustomLabel#cardTitle {
+QCustomLabel#subtitleTextInverted {
+    font: font("subtitle");
+    color: color("text-inverted");
+}
+
+QCustomLabel#cardTitleText {
     font: font("card-title");
 }
 
-QCustomLabel#accent {
+QCustomLabel#cardTitleTextInverted {
+    font: font("card-title");
+    color: color("text-inverted");
+}
+
+QCustomLabel#accentText {
     font: font("accent");
 }
 
-QCustomLabel#body {
+QCustomLabel#accentTextInverted {
+    font: font("accent");
+    color: color("text-inverted");
+}
+
+QCustomLabel#bodyText {
     font: font("body");
+}
+
+QCustomLabel#bodyTextInverted {
+    font: font("body");
+    color: color("text-inverted");
 }
 
 QCustomLabel#label {
     font: font("label");
 }
 
-QCustomLabel#smallText {
-    font: font("small-text");
+QCustomLabel#labelTextInverted {
+    font: font("label");
+    color: color("text-inverted");
 }
 
-QCustomLabel#caption {
+QCustomLabel#smallText {
+    font: font("small");
+}
+
+QCustomLabel#smallTextInverted {
+    font: font("small");
+    color: color("text-inverted");
+}
+
+QCustomLabel#captionText {
     font: font("caption");
+}
+
+QCustomLabel#captionTextInverted {
+    font: font("caption");
+    color: color("text-inverted");
 }

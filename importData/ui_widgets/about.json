@@ -40,7 +40,7 @@
                   "widget_id": "app_name",
                   "content": "prop{name}",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "hero",
+                  "style_object_name": "heroText",
                   "alignment": "vcenter"
                 }
               ]
@@ -49,7 +49,7 @@
               "widget_id": "app_description",
               "content": "tr{label_AppDescription}",
               "widget_type_id": "QLabel",
-              "style_object_name": "accent"
+              "style_object_name": "accentText"
             }
           ]
         },
@@ -62,7 +62,7 @@
               "widget_id": "app_details_title",
               "content": "tr{label_ApplicationDetails}",
               "widget_type_id": "QLabel",
-              "style_object_name": "body",
+              "style_object_name": "bodyText",
               "stylesheet": {
                 "color": "rgba('text-primary', 0.6)"
               }
@@ -78,7 +78,7 @@
                   "widget_id": "version_label",
                   "content": "tr{label_Version}:",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "accent",
+                  "style_object_name": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
@@ -87,7 +87,7 @@
                   "widget_id": "version_value",
                   "content": "prop{version}",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "accent"
+                  "style_object_name": "accentText"
                 }
               ]
             },
@@ -102,7 +102,7 @@
                   "widget_id": "author_label",
                   "content": "tr{label_Author}:",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "accent",
+                  "style_object_name": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
@@ -111,7 +111,7 @@
                   "widget_id": "author_value",
                   "content": "prop{author}",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "accent"
+                  "style_object_name": "accentText"
                 }
               ]
             }
@@ -126,7 +126,7 @@
               "widget_id": "contact_us_title",
               "content": "tr{label_ContactUs}",
               "widget_type_id": "QLabel",
-              "style_object_name": "body",
+              "style_object_name": "bodyText",
               "stylesheet": {
                 "color": "rgba('text-primary', 0.6)"
               }
@@ -142,7 +142,7 @@
                   "widget_id": "github_label",
                   "content": "GitHub:",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "accent",
+                  "style_object_name": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
@@ -151,7 +151,7 @@
                   "widget_id": "github_value",
                   "content": "<a href='https://github.com/pikulo-kama/SaveGemSynchronizer'>https://github.com/pikulo-kama/SaveGemSynchronizer</a>",
                   "widget_type_id": "QRichLabel",
-                  "style_object_name": "accent"
+                  "style_object_name": "accentText"
                 }
               ]
             },
@@ -166,7 +166,7 @@
                   "widget_id": "email_label",
                   "content": "tr{label_Email}:",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "accent",
+                  "style_object_name": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
@@ -175,7 +175,7 @@
                   "widget_id": "email_value",
                   "content": "<a href='mailto:jhorr2222@gmail.com'>jhorr2222@gmail.com</a>",
                   "widget_type_id": "QRichLabel",
-                  "style_object_name": "accent"
+                  "style_object_name": "accentText"
                 }
               ]
             }

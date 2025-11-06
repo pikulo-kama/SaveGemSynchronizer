@@ -13,48 +13,53 @@ def resolve_content(content: str):
     Example of token: pixmap{user{logo}, scaled: 123, radius: 20}
     """
 
-    match = re.compile(r"(\w+)\{(.*)}").search(content)
+    while True:
 
-    # If no token has been found then
-    # treat it as regular string.
-    if not match:
-        return content
+        if not isinstance(content, str):
+            return content
 
-    full_token = match.group(0)
-    token_name = match.group(1)
-    properties = match.group(2).split(",")
+        match = re.compile(r"(\w+)\{(.*)}").search(content)
 
-    # Recursively check for nested tokens.
-    parameter = resolve_content(properties.pop(0))
-    args = []
-    kw = {}
+        # If no token has been found then
+        # treat it as regular string.
+        if not match:
+            return content
 
-    # Collect token properties.
-    for prop in properties:
-        prop_parts = prop.split(":")
-        key = resolve_content(prop_parts[0].strip())
+        full_token = match.group(0)
+        token_name = match.group(1)
+        properties = match.group(2).split(",")
 
-        if len(prop_parts) == 1:
-            args.append(key)
+        # Recursively check for nested tokens.
+        parameter = resolve_content(properties.pop(0))
+        args = []
+        kw = {}
 
-        elif len(prop_parts) == 2:
-            value = resolve_content(prop_parts[1].strip())
+        # Collect token properties.
+        for prop in properties:
+            prop_parts = prop.split(":")
+            key = resolve_content(prop_parts[0].strip())
 
-            if value.isdigit():
-                value = int(value)
+            if len(prop_parts) == 1:
+                args.append(key)
 
-            kw[key] = value
+            elif len(prop_parts) == 2:
+                value = resolve_content(prop_parts[1].strip())
 
-    resolver_name = f"{token_name.lower()}resolver"
-    resolver: ContentResolver = get_resolver(resolver_name)
+                if value.isdigit():
+                    value = int(value)
 
-    resolved_content = resolver.resolve(parameter, *args, **kw) or ""
+                kw[key] = value
 
-    # This will allow to have tokenised values together with other text.
-    if isinstance(resolved_content, str):
-        resolved_content = content.replace(full_token, resolved_content)
+        resolver_name = f"{token_name.lower()}resolver"
+        resolver: ContentResolver = get_resolver(resolver_name)
 
-    return resolved_content
+        resolved_content = resolver.resolve(parameter, *args, **kw) or ""
+
+        # This will allow to have tokenised values together with other text.
+        if isinstance(resolved_content, str):
+            resolved_content = content.replace(full_token, resolved_content)
+
+        content = resolved_content
 
 
 def get_resolver(resolver_name: str):

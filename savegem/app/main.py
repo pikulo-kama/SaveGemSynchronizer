@@ -28,7 +28,10 @@ def main():
     app().user.initialize()
     app().state.initialize()
     app().games.download()
-    app().games.current.meta.drive.refresh()
+
+    for game in app().games.list:
+        game.meta.drive.refresh()
+
     app().activity.refresh()
 
     gui().application = QApplication(sys.argv)

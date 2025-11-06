@@ -42,7 +42,7 @@
                   "widget_id": "settings_title",
                   "content": "tr{label_Settings}",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "hero",
+                  "style_object_name": "heroText",
                   "alignment": "left-vcenter",
                   "refresh_events": [
                     "language_change"
@@ -70,7 +70,7 @@
                   "widget_id": "general_settings_section_label",
                   "content": "tr{label_GeneralSettings}",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "subtitle",
+                  "style_object_name": "subtitleText",
                   "alignment": "top",
                   "height": 30,
                   "refresh_events": [
@@ -101,7 +101,7 @@
                               "widget_id": "language_setting_label",
                               "content": "tr{label_Language}",
                               "widget_type_id": "QLabel",
-                              "style_object_name": "body",
+                              "style_object_name": "bodyText",
                               "stylesheet": {
                                 "font-weight": "bold"
                               },
@@ -153,7 +153,7 @@
                               "widget_id": "time_format_setting_label",
                               "content": "tr{label_TimeFormat}",
                               "widget_type_id": "QLabel",
-                              "style_object_name": "body",
+                              "style_object_name": "bodyText",
                               "stylesheet": {
                                 "font-weight": "bold"
                               },
@@ -208,7 +208,7 @@
                               "widget_id": "theme_setting_label",
                               "content": "tr{label_Theme}",
                               "widget_type_id": "QLabel",
-                              "style_object_name": "body",
+                              "style_object_name": "bodyText",
                               "stylesheet": {
                                 "font-weight": "bold"
                               },
@@ -249,7 +249,7 @@
                   "widget_id": "account_settings_section_label",
                   "content": "tr{label_AccountSettings}",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "subtitle",
+                  "style_object_name": "subtitleText",
                   "alignment": "vcenter",
                   "height": 50,
                   "refresh_events": [
@@ -280,7 +280,7 @@
                               "widget_id": "logout_section_label",
                               "content": "tr{label_Logout}",
                               "widget_type_id": "QLabel",
-                              "style_object_name": "body",
+                              "style_object_name": "bodyText",
                               "stylesheet": {
                                 "font-weight": "bold"
                               },

@@ -73,8 +73,9 @@ def _get_fonts():
             font_id = font_record.get("font_id")
             font_size = font_record.get("font_size")
             font_family = font_record.get("font_family")
+            font_weight = font_record.get("font_weight") or 400
 
-            _fonts[font_id] = f"{font_size}px '{font_family}'"
+            _fonts[font_id] = f"{font_size}px '{font_family}'; font-weight: {font_weight}"
 
     return _fonts
 

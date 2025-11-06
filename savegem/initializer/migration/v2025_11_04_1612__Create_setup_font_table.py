@@ -11,6 +11,7 @@ class v2025_11_04_1612__Create_setup_font_table(Migration):  # noqa
             CREATE TABLE IF NOT EXISTS setup_font (
                 font_id     VARCHAR PRIMARY KEY,
                 font_size   INTEGER,
-                font_family VARCHAR
+                font_family VARCHAR,
+                font_weight INTEGER DEFAULT 400
             )
         """)

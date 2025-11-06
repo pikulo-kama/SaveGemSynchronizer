@@ -1,10 +1,10 @@
 
 QCustomWidget#settingCard {
-    border: 1px solid color("surface-a30");
+    border: 1px solid color("surface-a20");
     border-radius: 5px;
 }
 
 QCustomWidget#settingGroup {
-    background-color: color("surface-a20");
+    background-color: color("surface-a10");
     border-radius: 5px;
 }

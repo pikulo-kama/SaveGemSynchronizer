@@ -1,17 +1,34 @@
 
-QCustomWidget#saveDetailsCard {
-    background-color: rgba("surface-a20", 0.7);
-    border: 1px solid color("surface-a40");
+QCustomWidget#detailsCard {
+    background-color: rgba("surface-a10", 0.7);
     border-radius: 5px;
     text-align: left;
 }
 
-QCustomWidget#saveDetailsCard QCustomLabel#cardTitle {
+QCustomLabel#detailsCardTitle {
     color: rgba("text-primary", 0.4);
-    font: font("small-text");
+    font: font("small");
     font-weight: bold;
 }
 
-QCustomWidget#saveDetailsCard QCustomLabel#cardContent {
-    font: font("body");
+QCustomLabel#detailsCardContent {
+    font: font("card-title");
+}
+
+QCustomWidget#syncStatusBadge {
+    background-color: transparent;
+    border-radius: 5px;
+}
+
+QCustomWidget#syncStatusBadge QCustomWidget {
+    background-color: transparent;
+    border-radius: 5px;
+}
+
+QCustomWidget#syncStatusBadge[hidden="false"] {
+    background-color: color("warning-a20");
+}
+
+QCustomWidget#syncStatusBadge[hidden="false"] QCustomWidget {
+    background-color: color("warning-a0");
 }

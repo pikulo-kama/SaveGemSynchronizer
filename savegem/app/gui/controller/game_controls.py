@@ -42,7 +42,7 @@ def _error_subscriber(event: ErrorEvent):
         notification(tr("notification_ErrorSaveDirectoryMissing", app().games.current.local_path))
 
     elif event.kind == EventKind.DriveMetadataMissing:
-        notification(tr("label_StorageIsEmpty"))
+        notification(tr("label_StorageIsEmptyDesc"))
 
     elif event.kind == EventKind.ErrorUploadingToDrive:
         notification(tr("notification_ErrorUploadingToDrive"))

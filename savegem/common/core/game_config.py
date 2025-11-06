@@ -328,10 +328,9 @@ class Game:
     def __download_logo(self, logo_url: str):
         """
         Used to download game logo and store it locally.
-        Or just resolve path to it if logo is application resource.
+        Will use default SaveGem logo as fallback value.
         """
 
-        # Use SaveGem logo as fallback game logo.
         if logo_url is None:
             return resolve_resource("gem.svg")
 

@@ -15,14 +15,14 @@
       "alignment": "top",
       "spacing": 10,
       "margin_left": 10,
-      "margin_top": 20,
+      "margin_top": 30,
       "margin_right": 10,
       "children": [
         {
           "widget_id": "last_cloud_save_label",
           "content": "tr{label_LastCloudSave}",
           "widget_type_id": "QLabel",
-          "style_object_name": "cardTitle"
+          "style_object_name": "sectionTitleText"
         },
         {
           "widget_id": "save_details_container",
@@ -35,7 +35,7 @@
               "widget_id": "save_date_card",
               "widget_type_id": "QWidget",
               "layout_type_id": "QVBoxLayout",
-              "style_object_name": "saveDetailsCard",
+              "style_object_name": "detailsCard",
               "children": [
                 {
                   "widget_id": "save_date_card_vl",
@@ -57,7 +57,7 @@
                       "widget_id": "save_date_card_label",
                       "content": "tr{label_Date}",
                       "widget_type_id": "QLabel",
-                      "style_object_name": "cardTitle",
+                      "style_object_name": "detailsCardTitle",
                       "alignment": "vcenter",
                       "height": 35
                     },
@@ -65,7 +65,7 @@
                       "widget_id": "save_date_card_date",
                       "content": "saveInfo{uploadDate}",
                       "widget_type_id": "QLabel",
-                      "style_object_name": "cardContent",
+                      "style_object_name": "detailsCardContent",
                       "height": 25,
                       "refresh_events": [
                         "game_config_change",
@@ -76,7 +76,7 @@
                       "widget_id": "save_date_card_time",
                       "content": "saveInfo{uploadTime}",
                       "widget_type_id": "QLabel",
-                      "style_object_name": "cardContent",
+                      "style_object_name": "detailsCardContent",
                       "height": 30,
                       "refresh_events": [
                         "game_config_change",
@@ -91,7 +91,7 @@
               "widget_id": "save_owner_card",
               "widget_type_id": "QWidget",
               "layout_type_id": "QVBoxLayout",
-              "style_object_name": "saveDetailsCard",
+              "style_object_name": "detailsCard",
               "children": [
                 {
                   "widget_id": "save_owner_card_vl",
@@ -113,7 +113,7 @@
                       "widget_id": "save_owner_card_label",
                       "content": "tr{label_Author}",
                       "widget_type_id": "QLabel",
-                      "style_object_name": "cardTitle",
+                      "style_object_name": "detailsCardTitle",
                       "alignment": "vcenter",
                       "height": 35
                     },
@@ -133,7 +133,7 @@
                       "children": [
                         {
                           "widget_id": "save_owner_card_user_photo",
-                          "content": "pixmap{saveInfo{ownerPhoto}, scale: 20, circle}",
+                          "content": "pixmap{saveInfo{ownerPhoto}, scale: 25, circle}",
                           "widget_type_id": "QLabel",
                           "height": 30
                         },
@@ -141,7 +141,7 @@
                           "widget_id": "save_owner_card_user_name",
                           "content": "saveInfo{ownerName}",
                           "widget_type_id": "QLabel",
-                          "style_object_name": "cardContent",
+                          "style_object_name": "detailsCardContent",
                           "height": 30
                         }
                       ]
@@ -154,7 +154,7 @@
               "widget_id": "save_size_card",
               "widget_type_id": "QWidget",
               "layout_type_id": "QVBoxLayout",
-              "style_object_name": "saveDetailsCard",
+              "style_object_name": "detailsCard",
               "children": [
                 {
                   "widget_id": "save_size_card_vl",
@@ -176,7 +176,7 @@
                       "widget_id": "save_size_card_label",
                       "content": "tr{label_Size}",
                       "widget_type_id": "QLabel",
-                      "style_object_name": "cardTitle",
+                      "style_object_name": "detailsCardTitle",
                       "alignment": "vcenter",
                       "height": 30
                     },
@@ -184,7 +184,7 @@
                       "widget_id": "save_size_card_value",
                       "content": "saveInfo{size}",
                       "widget_type_id": "QLabel",
-                      "style_object_name": "cardContent",
+                      "style_object_name": "detailsCardContent",
                       "height": 30,
                       "refresh_events": [
                         "cloud_files_change",
@@ -200,13 +200,13 @@
         {
           "widget_id": "details_players_spacer",
           "widget_type_id": "QWidget",
-          "height": 10
+          "height": 30
         },
         {
           "widget_id": "players_label",
           "content": "tr{label_Players}",
           "widget_type_id": "QLabel",
-          "style_object_name": "cardTitle"
+          "style_object_name": "sectionTitleText"
         },
         {
           "widget_id": "players_container",

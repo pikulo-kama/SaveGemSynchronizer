@@ -3,18 +3,23 @@
     font: font("accent");
     background-color: transparent;
     text-align: left;
+    icon: none;
 }
 
 #gameListOption:hover {
-    background-color: rgba("surface-a20", 0.3);
+    background-color: rgba("surface-a10", 0.3);
+}
+
+#gameListOption[warning="true"] {
+    icon: image("exclamation_mark_danger.svg");
 }
 
 #gameListOption[selected="true"] {
     /* Add vertical line to indicate that game is selected. */
     background: qlineargradient(
         x1:0.02, y1:0, x2:1, y2:0,
-        stop:0    color("success-a10"),
-        stop:0.01 color("success-a10"),
+        stop:0    color("success-a0"),
+        stop:0.01 color("success-a0"),
         stop:0.01 transparent,
         stop:1    transparent
     );
@@ -23,9 +28,9 @@
 #gameListOption[selected="true"]:hover {
     background: qlineargradient(
         x1:0.02, y1:0, x2:1, y2:0,
-        stop:0    color("success-a10"),
-        stop:0.01 color("success-a10"),
-        stop:0.01 rgba("surface-a20", 0.3),
-        stop:1    rgba("surface-a20", 0.3)
+        stop:0    color("success-a0"),
+        stop:0.01 color("success-a0"),
+        stop:0.01 rgba("surface-a10", 0.3),
+        stop:1    rgba("surface-a10", 0.3)
     );
 }

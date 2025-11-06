@@ -83,25 +83,32 @@
       "uk_UA": "Нічого нового... Твій сейв свіженький як ніколи."
     },
     "info_SaveNeedsToBeDownloaded": {
-      "de_DE": "Download erforderlich",
-      "en_US": "Download needed",
-      "es_ES": "Descarga necesaria",
-      "fr_FR": "Téléchargement requis",
-      "uk_UA": "Здалося б оновитись"
+      "de_DE": "Download Erforderlich",
+      "en_US": "Download Needed",
+      "es_ES": "Descarga Necesaria",
+      "fr_FR": "Téléchargement Requis",
+      "uk_UA": "Потрібне Завантаження"
     },
     "info_SaveNeedsToBeDownloadedDesc": {
-      "de_DE": "Nun, nun, nun, was haben wir denn hier...",
-      "en_US": "Well, well, well, what do we got here...",
-      "es_ES": "Vaya, vaya, vaya, ¿qué tenemos aquí...",
-      "fr_FR": "Eh bien, eh bien, eh bien, qu'avons-nous ici...",
-      "uk_UA": "Так, так, так, що це тут у нас..."
+      "de_DE": "Eine aktuellere Speicherdatei ist auf dem Remote-Server verfügbar\nund muss heruntergeladen werden, um die lokalen Spieldaten zu aktualisieren.",
+      "en_US": "A more recent save file is available on the remote server\nand must be downloaded to update the local game data.",
+      "es_ES": "Hay un archivo de guardado más reciente disponible en el servidor remoto\ny debe descargarse para actualizar los datos del juego local.",
+      "fr_FR": "Un fichier de sauvegarde plus récent est disponible sur le serveur distant\net doit être téléchargé pour mettre à jour les données de jeu locales.",
+      "uk_UA": "На віддаленому сервері доступний більш новий файл збереження,\nякий необхідно завантажити для оновлення локальних даних гри."
     },
     "info_SaveNeedsToBeUploaded": {
-      "de_DE": "Na, verschicken wir?",
-      "en_US": "So, shall we send it?",
-      "es_ES": "Bueno, ¿lo enviamos?",
-      "fr_FR": "Alors, on envoie?",
-      "uk_UA": "Ну що? Відвантажимо?"
+      "de_DE": "Upload Erforderlich",
+      "en_US": "Upload Needed",
+      "es_ES": "Subida Necesaria",
+      "fr_FR": "Téléversement Requis",
+      "uk_UA": "Потрібне Відвантаження"
+    },
+    "info_SaveNeedsToBeUploadedDesc": {
+      "de_DE": "Die Speicherdatei auf Ihrem lokalen Gerät wurde kürzlich aktualisiert\nund muss auf den Remote-Server hochgeladen werden, um Ihren Fortschritt zu synchronisieren.",
+      "en_US": "The save file on your local machine has been recently updated\nand needs to be uploaded to the remote server to synchronize your progress.",
+      "es_ES": "El archivo de guardado de su máquina local se ha actualizado recientemente\ny debe subirse al servidor remoto para sincronizar su progreso.",
+      "fr_FR": "Le fichier de sauvegarde sur votre machine locale a été récemment mis à jour\net doit être téléversé sur le serveur distant pour synchroniser votre progression.",
+      "uk_UA": "Файл збереження на вашому локальному пристрої було нещодавно оновлено\nі його потрібно відвантажити на віддалений сервер, щоб синхронізувати ваш прогрес."
     },
     "label_About": {
       "de_DE": "Über uns",
@@ -243,12 +250,19 @@
       "fr_FR": "N/A",
       "uk_UA": "Н/Д"
     },
-    "label_NoInformationAboutCurrentSaveVersion": {
-      "de_DE": "Wir sind uns nicht sicher, welcher Spielstand neuer ist, aber...",
-      "en_US": "We're not sure which save is newer, but..",
-      "es_ES": "No estamos seguros de cuál guardado es más reciente, pero...",
-      "fr_FR": "Nous ne savons pas quelle sauvegarde est la plus récente, mais...",
-      "uk_UA": "Ми не знаємо де новіший сейв, але.."
+    "label_NoInformationStatus": {
+      "de_DE": "Keine Informationen",
+      "en_US": "No Information",
+      "es_ES": "Sin Información",
+      "fr_FR": "Aucune Information",
+      "uk_UA": "Немає Інформації"
+    },
+    "label_NoInformationStatusDesc": {
+      "de_DE": "Die Anwendung konnte keine Versionsinformationen zur aktuellen Speicherdatei finden.",
+      "en_US": "The application could not find any version information associated with the current save file.",
+      "es_ES": "La aplicación no pudo encontrar información de versión asociada con el archivo de guardado actual.",
+      "fr_FR": "L'application n'a trouvé aucune information de version associée au fichier de sauvegarde actuel.",
+      "uk_UA": "Програма не змогла знайти жодної інформації про версію, пов'язаної з поточним файлом збереження."
     },
     "label_Offline": {
       "de_DE": "Offline",
@@ -293,6 +307,13 @@
       "uk_UA": "{0} МБ"
     },
     "label_StorageIsEmpty": {
+      "de_DE": "Der Speicher ist leer",
+      "en_US": "Storage is empty",
+      "es_ES": "El almacenamiento está vacío",
+      "fr_FR": "Le stockage est vide",
+      "uk_UA": "Cховище порожнє"
+    },
+    "label_StorageIsEmptyDesc": {
       "de_DE": "Der Speicher ist leer. Ein Hochladen ist erforderlich, um fortzufahren.",
       "en_US": "Storage is empty. Upload is required to proceed.",
       "es_ES": "El almacenamiento está vacío. Suba un archivo para continuar.",

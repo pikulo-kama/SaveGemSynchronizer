@@ -36,7 +36,7 @@
                   "widget_id": "auto_mode_setting_title",
                   "content": "tr{label_AutoModeGameSetting}",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "body",
+                  "style_object_name": "bodyText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }

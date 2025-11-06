@@ -1,7 +1,7 @@
 
 QWidget#sidebar,
 QWidget#sidebarMenu {
-    background-color: color("surface-a20");
+    background-color: color("surface-a10");
 }
 
 QCustomWidget#sidebarMenu QCustomPushButton {
@@ -15,5 +15,5 @@ QCustomWidget#sidebarMenu QCustomPushButton:hover {
 }
 
 QCustomWidget#sidebarMenu QCustomPushButton[active="true"]:hover {
-    background-color: rgba("primary-a30", 0.33);
+    background-color: rgba("primary-a20", 0.33);
 }

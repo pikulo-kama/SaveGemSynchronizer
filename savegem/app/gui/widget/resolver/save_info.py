@@ -6,28 +6,25 @@ from savegem.common.core.save_meta import SyncStatus
 from savegem.common.core.text_resource import tr
 from savegem.common.util.date import string_to_date, get_verbose_time, get_verbose_date
 
-_status_desc_map = {
-    SyncStatus.LocalOnly: "label_StorageIsEmptyDesc",
-    SyncStatus.NoInformation: "label_NoInformationAboutCurrentSaveVersionDesc",
-    SyncStatus.UpToDate: "info_SaveIsUpToDateDesc",
-    SyncStatus.NeedsDownload: "info_SaveNeedsToBeDownloadedDesc",
-    SyncStatus.NeedsUpload: "info_SaveNeedsToBeUploadedDesc"
-}
-
 _status_label_map = {
     SyncStatus.LocalOnly: "label_StorageIsEmpty",
-    SyncStatus.NoInformation: "label_NoInformationAboutCurrentSaveVersion",
-    SyncStatus.UpToDate: "info_SaveIsUpToDate",
+    SyncStatus.NoInformation: "label_NoInformationStatus",
     SyncStatus.NeedsDownload: "info_SaveNeedsToBeDownloaded",
     SyncStatus.NeedsUpload: "info_SaveNeedsToBeUploaded"
 }
 
+_status_desc_map = {
+    SyncStatus.LocalOnly: "label_StorageIsEmptyDesc",
+    SyncStatus.NoInformation: "label_NoInformationStatusDesc",
+    SyncStatus.NeedsDownload: "info_SaveNeedsToBeDownloadedDesc",
+    SyncStatus.NeedsUpload: "info_SaveNeedsToBeUploadedDesc"
+}
+
 _status_icon_map = {
-    SyncStatus.LocalOnly: "warning.svg",
-    SyncStatus.NoInformation: "warning.svg",
-    SyncStatus.UpToDate: "checkmark.svg",
-    SyncStatus.NeedsDownload: "warning.svg",
-    SyncStatus.NeedsUpload: "warning.svg"
+    SyncStatus.LocalOnly: "upload_warning.svg",
+    SyncStatus.NoInformation: "exclamation_mark.svg",
+    SyncStatus.NeedsDownload: "download_warning.svg",
+    SyncStatus.NeedsUpload: "upload_warning.svg"
 }
 
 
@@ -39,20 +36,22 @@ class SaveInfoResolver(ContentResolver):
 
     def resolve(self, key: str, *args, **kw):
 
+        na_label = tr("label_NA")
+
         if key == "size":
-            return self.__get_save_size()
+            return self.__get_save_size() or na_label
 
         elif key == "uploadDate":
-            return self.__get_creation_date_info()[0]
+            return self.__get_creation_date_info()[0] or na_label
 
         elif key == "uploadTime":
             return self.__get_creation_date_info()[1]
 
         elif key == "ownerName":
-            return self.__get_owner_property(lambda user: user.short_name)
+            return self.__get_owner_property(lambda user: user.short_name) or na_label
 
         elif key == "ownerPhoto":
-            return self.__get_owner_property(lambda user: user.photo)
+            return self.__get_owner_property(lambda user: user.photo) or "person.svg"
 
         sync_status = app().games.current.meta.sync_status
 
@@ -75,12 +74,12 @@ class SaveInfoResolver(ContentResolver):
         metadata = app().games.current.meta.drive
 
         if not metadata.is_present:
-            return ""
+            return None
 
         user = app().user.by_email(metadata.owner)
 
         if user is None:
-            return ""
+            return None
 
         return function(user)
 
@@ -94,7 +93,7 @@ class SaveInfoResolver(ContentResolver):
         metadata = app().games.current.meta.drive
 
         if not metadata.is_present:
-            return "", ""
+            return None, None
 
         creation_datetime = string_to_date(metadata.created_time)
 
@@ -110,7 +109,7 @@ class SaveInfoResolver(ContentResolver):
         metadata = app().games.current.meta.drive
 
         if not metadata.is_present or metadata.size < 0:
-            return tr("label_NA")
+            return None
 
         size = metadata.size
 

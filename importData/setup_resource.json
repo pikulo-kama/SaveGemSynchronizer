@@ -23,37 +23,37 @@
     {
       "resource_name": "active_about.svg",
       "resource_path": "about.svg",
-      "color": "primary-a30"
+      "color": "primary-a20"
     },
     {
       "resource_name": "active_gear.svg",
       "resource_path": "gear.svg",
-      "color": "primary-a30"
+      "color": "primary-a20"
     },
     {
       "resource_name": "active_home.svg",
       "resource_path": "home.svg",
-      "color": "primary-a30"
+      "color": "primary-a20"
     },
     {
       "resource_name": "calendar.svg",
       "resource_path": "calendar.svg",
-      "color": "primary-a40"
+      "color": "primary-a30"
     },
     {
       "resource_name": "person.svg",
       "resource_path": "person.svg",
-      "color": "primary-a40"
+      "color": "primary-a30"
     },
     {
       "resource_name": "drive.svg",
       "resource_path": "drive.svg",
-      "color": "primary-a40"
+      "color": "primary-a30"
     },
     {
       "resource_name": "tooltip.svg",
       "resource_path": "tooltip.svg",
-      "color": "surface-a50"
+      "color": "surface-a40"
     },
     {
       "resource_name": "chevron.svg",
@@ -63,7 +63,12 @@
     {
       "resource_name": "download.svg",
       "resource_path": "download.svg",
-      "color": "surface-a10"
+      "color": "text-inverted"
+    },
+    {
+      "resource_name": "download_warning.svg",
+      "resource_path": "download.svg",
+      "color": "warning-a20"
     },
     {
       "resource_name": "upload.svg",
@@ -71,14 +76,24 @@
       "color": "text-primary"
     },
     {
-      "resource_name": "checkmark.svg",
-      "resource_path": "checkmark.svg",
-      "color": "success-a10"
+      "resource_name": "upload_warning.svg",
+      "resource_path": "upload.svg",
+      "color": "warning-a20"
     },
     {
-      "resource_name": "warning.svg",
-      "resource_path": "warning.svg",
-      "color": "warning-a10"
+      "resource_name": "checkmark.svg",
+      "resource_path": "checkmark.svg",
+      "color": "text-inverted"
+    },
+    {
+      "resource_name": "exclamation_mark.svg",
+      "resource_path": "exclamation_mark.svg",
+      "color": "text-inverted"
+    },
+    {
+      "resource_name": "exclamation_mark_danger.svg",
+      "resource_path": "exclamation_mark.svg",
+      "color": "danger-a0"
     }
   ]
 }

@@ -8,47 +8,48 @@
     {
       "font_id": "hero",
       "font_size": 33,
-      "font_family": "DB Sans"
+      "font_family": "DM Sans"
     },
     {
       "font_id": "section-title",
-      "font_size": 28,
-      "font_family": "DB Sans"
+      "font_size": 18,
+      "font_family": "Plus Jakarta Sans",
+      "font_weight": 800
     },
     {
       "font_id": "subtitle",
       "font_size": 23,
-      "font_family": "DB Sans"
+      "font_family": "Plus Jakarta Sans"
     },
     {
       "font_id": "card-title",
       "font_size": 19,
-      "font_family": "DB Sans"
+      "font_family": "DM Sans"
     },
     {
       "font_id": "body",
       "font_size": 16,
-      "font_family": "Roboto"
+      "font_family": "DM Sans"
     },
     {
       "font_id": "label",
       "font_size": 16,
-      "font_family": "DB Sans"
+      "font_family": "DM Sans"
     },
     {
       "font_id": "accent",
       "font_size": 14,
-      "font_family": "Roboto"
+      "font_family": "DM Sans"
     },
     {
-      "font_id": "small-text",
+      "font_id": "small",
       "font_size": 12,
-      "font_family": "Segoe UI"
+      "font_family": "DM Sans"
     },
     {
       "font_id": "caption",
       "font_size": 10,
-      "font_family": "DB Sans"
+      "font_family": "DM Sans"
     }
   ]
 }

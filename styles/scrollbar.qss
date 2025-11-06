@@ -1,6 +1,6 @@
 
 QScrollBar {
-    background-color: color("surface-a10");
+    background-color: color("surface-a0");
     margin: 0px;
     border: none;
 }
@@ -14,7 +14,7 @@ QScrollBar:horizontal {
 }
 
 QScrollBar::handle {
-    background: color("surface-a40");
+    background: color("surface-a30");
     border: none;
     border-radius: 3px;
 }

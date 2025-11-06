@@ -1,7 +1,7 @@
 
 QCustomPushButton {
-    background-color: rgba("surface-a20", 0.3);
-    border: 1px solid color("surface-a50");
+    background-color: rgba("surface-a10", 0.3);
+    border: 1px solid color("surface-a40");
     color: color("text-primary");
     outline: 1px solid transparent;
     border-radius: 5px;
@@ -10,5 +10,5 @@ QCustomPushButton {
 }
 
 QCustomPushButton:hover {
-    background-color: color("surface-a30");
+    background-color: color("surface-a20");
 }

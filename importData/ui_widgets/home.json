@@ -38,7 +38,7 @@
                   "widget_id": "logo_text",
                   "content": "prop{name}",
                   "widget_type_id": "QLabel",
-                  "style_object_name": "hero",
+                  "style_object_name": "heroText",
                   "alignment": "left-center"
                 },
                 {
@@ -101,8 +101,9 @@
                           "widget_id": "hl_game_header",
                           "widget_type_id": "QWidget",
                           "layout_type_id": "QHBoxLayout",
-                          "alignment": "bottom-left",
+                          "alignment": "left-vcenter",
                           "margin_left": 10,
+                          "margin_right": 10,
                           "margin_bottom": 10,
                           "children": [
                             {
@@ -110,14 +111,62 @@
                               "content": "pixmap{game{logo}, scale: 40, radius: 3}",
                               "widget_type_id": "QLabel",
                               "alignment": "left-vcenter",
-                              "width": 50
+                              "width": 45
                             },
                             {
                               "widget_id": "game_name",
                               "content": "game{name}",
                               "widget_type_id": "QLabel",
-                              "style_object_name": "sectionTitle",
+                              "style_object_name": "subtitleText",
                               "alignment": "left-center"
+                            },
+                            {
+                              "widget_id": "game_logo_badge_spacer",
+                              "widget_type_id": "QSpacer"
+                            },
+                            {
+                              "widget_id": "sync_status_badge",
+                              "widget_type_id": "QWidget",
+                              "layout_type_id": "QHBoxLayout",
+                              "tooltip": "saveInfo{statusDescription}",
+                              "controller": "SyncStatusController",
+                              "height": 25,
+                              "margin_left": 5,
+                              "margin_right": 5,
+                              "alignment": "left-vcenter",
+                              "style_object_name": "syncStatusBadge",
+                              "refresh_events": [
+                                "game_selection_change"
+                              ],
+                              "children": [
+                                {
+                                  "widget_id": "sync_status_icon_container",
+                                  "widget_type_id": "QWidget",
+                                  "layout_type_id": "QVBoxLayout",
+                                  "alignment": "vcenter",
+                                  "width": 18,
+                                  "height": 18,
+                                  "children": [
+                                    {
+                                      "widget_id": "sync_status_icon",
+                                      "content": "pixmap{saveInfo{statusIcon}, scale: 12}",
+                                      "widget_type_id": "QLabel",
+                                      "alignment": "center"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "widget_id": "sync_status",
+                                  "widget_type_id": "QLabel",
+                                  "alignment": "left-center",
+                                  "content": "saveInfo{status}",
+                                  "style_object_name": "smallTextInverted",
+                                  "stylesheet": {
+                                    "font-weight": "bold",
+                                    "color": "color('dark-a0')"
+                                  }
+                                }
+                              ]
                             }
                           ]
                         },

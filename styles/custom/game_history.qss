@@ -1,13 +1,13 @@
 
 QCustomWidget#saveListRecord {
-    background-color: rgba("surface-a20", 0.3);
-    border: 1px solid color("surface-a30");
+    background-color: rgba("surface-a10", 0.3);
+    border: 1px solid color("surface-a20");
     border-radius: 5px;
 }
 
 QCustomWidget#saveListRecord[active="true"] {
-    border-color: color("success-a20");
-    background-color: color("surface-a10");
+    border-color: color("success-a10");
+    background-color: color("surface-a0");
 }
 
 QCustomLabel#saveListRecordVersion {
@@ -16,6 +16,6 @@ QCustomLabel#saveListRecordVersion {
 }
 
 QCustomLabel#saveListRecordOwner {
-    font: font("small-text");
+    font: font("small");
     color: rgba('text-primary', 0.7);
 }
