@@ -24,16 +24,7 @@ def main():
     _logger.info("Starting SaveGem application.")
     _logger.info("version %s", prop("version"))
 
-    # Startup initialization.
-    app().user.initialize()
-    app().state.initialize()
-    app().games.download()
-
-    for game in app().games.list:
-        game.meta.drive.refresh()
-
-    app().activity.refresh()
-
+    app().initialize()
     gui().application = QApplication(sys.argv)
 
     # app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))

@@ -37,6 +37,20 @@ class ApplicationContext:
         self.__link(self.__user_state)
         self.__link(self.__activity)
 
+    def initialize(self):
+        """
+        Used to initialize application context.
+        """
+
+        self.user.initialize()
+        self.state.initialize()
+        self.games.download()
+
+        for game in self.games.list:
+            game.meta.local.calculate_checksum()
+
+        self.activity.refresh()
+
     @property
     def state(self) -> AppState:
         """

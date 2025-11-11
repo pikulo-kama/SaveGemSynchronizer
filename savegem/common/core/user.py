@@ -167,7 +167,8 @@ class UserState(AppData):
             user_email = current_user_data.get("emailAddress")
             user_name = current_user_data.get("displayName")
 
-            user_data[user_email] = user_name
-            GDrive.update_file(self.app.config.users_config_file_id, json.dumps(user_data, indent=2))
+            if user_email not in user_data.keys():
+                user_data[user_email] = user_name
+                GDrive.update_file(self.app.config.users_config_file_id, json.dumps(user_data, indent=2))
 
             return user_data

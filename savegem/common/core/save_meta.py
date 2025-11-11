@@ -48,6 +48,7 @@ class MetadataWrapper:
     def __init__(self, local: "LocalMetadata", drive: "DriveMetadata"):
         self.__local = local
         self.__drive = drive
+        self.__sync_status: SyncStatus = SyncStatus.NoInformation
 
     @property
     def local(self) -> "LocalMetadata":
@@ -79,7 +80,7 @@ class MetadataWrapper:
         if self.__local.checksum is None:
             return SyncStatus.NoInformation
 
-        current_checksum = self.__local.calculate_checksum()
+        current_checksum = self.__local.current_checksum
         drive_save_checksum = self.__drive.checksum
 
         if local_save_checksum == current_checksum == drive_save_checksum:
@@ -141,6 +142,7 @@ class LocalMetadata(Metadata):
     def __init__(self, game: "Game"):
         super().__init__(game)
         self.__metadata = EditableJsonConfigHolder(self._game.metadata_file_path)
+        self.__current_checksum = None
 
     @property
     def owner(self):
@@ -166,6 +168,15 @@ class LocalMetadata(Metadata):
     def checksum(self, checksum: str):
         self.__metadata.set_value(SaveMetaProp.Checksum, checksum)
 
+    @property
+    def current_checksum(self):
+        """
+        Used to get current checksum of save files.
+        This doesn't use checksum of save metadata in case it
+        was downloaded.
+        """
+        return self.__current_checksum
+
     def calculate_checksum(self):
         """
         Used to calculate checksum of save files.
@@ -180,7 +191,8 @@ class LocalMetadata(Metadata):
 
             checksum.update(file_checksum(file_path).encode())
 
-        return checksum.hexdigest()
+        self.__current_checksum = checksum.hexdigest()
+        return self.__current_checksum
 
     def refresh(self):
         self.__metadata = EditableJsonConfigHolder(self._game.metadata_file_path)
@@ -249,6 +261,8 @@ class DriveMetadata(Metadata):
     def __init__(self, game: "Game"):
         super().__init__(game)
         self.__files_metadata: list[DriveFileMetadata] = []
+
+        self.refresh()
 
     @property
     def is_present(self):
