@@ -77,7 +77,7 @@ def test_work_initial_dependencies(app_context, gdrive_mock, _get_run_processes_
     watcher._work()
 
     # 1. Initialize user with GDrive info
-    app_context.user.initialize.assert_called_once_with(
+    app_context.users.initialize.assert_called_once_with(
         gdrive_mock.get_current_user
     )
     # 2. Download games configuration

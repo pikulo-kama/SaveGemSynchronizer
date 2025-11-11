@@ -39,12 +39,12 @@ class AppState(AppData):
         """
 
         state = db().table("app_state") \
-            .where("user_id = ?", self.app.user.current.id) \
+            .where("user_id = ?", self.app.users.current.id) \
             .retrieve()
 
         if len(state.rows) == 0:
             row = state.add_row()
-            state.set(row, "user_id", self.app.user.current.id)
+            state.set(row, "user_id", self.app.users.current.id)
             state.save()
 
         self.__state_table = state

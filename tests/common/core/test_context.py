@@ -66,7 +66,7 @@ def test_property_accessors(_activity, _app_state, _app_config, _game_config, _u
     assert context.config is _app_config.return_value
     assert context.state is _app_state.return_value
     assert context.games is _game_config.return_value
-    assert context.user is _user_state.return_value
+    assert context.users is _user_state.return_value
 
 
 def test_refresh_calls_all_linked_entities(_activity, _app_state, _app_config, _game_config, _user_state):

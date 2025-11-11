@@ -39,12 +39,12 @@ class Activity(AppData):
             _logger.debug("Log Before: %s", activity_log)
 
             if len(game_names) > 0:
-                activity_log[self.app.user.current.email] = game_names
+                activity_log[self.app.users.current.email] = game_names
 
             # If there are no games running then remove
             # user entry from activity log.
-            elif self.app.user.current.email in activity_log:
-                del activity_log[self.app.user.current.email]
+            elif self.app.users.current.email in activity_log:
+                del activity_log[self.app.users.current.email]
 
             _logger.debug("Log After: %s", activity_log)
             GDrive.update_file(self.app.config.activity_log_file_id, json.dumps(activity_log, indent=2))
@@ -62,4 +62,4 @@ class Activity(AppData):
 
             for user_email, games in activity_log.items():
                 if self.app.games.current.name in games:
-                    self.__players.append(self.app.user.by_email(user_email))
+                    self.__players.append(self.app.users.by_email(user_email))

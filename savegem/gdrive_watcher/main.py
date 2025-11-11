@@ -29,7 +29,7 @@ class GDriveWatcher(Daemon):
         if not os.path.exists(resolve_temp_file(File.GUIInitializedFlag)):
             return
 
-        app().user.initialize()
+        app().users.initialize()
         app().games.download()
 
         files, directories = self.__get_changes()

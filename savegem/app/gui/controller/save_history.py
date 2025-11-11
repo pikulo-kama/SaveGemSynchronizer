@@ -34,7 +34,7 @@ class SaveHistoryListController(WidgetController):
                 lambda: self.__restore_version(file_id, button)
             )
 
-        for metadata in app().games.current.meta.drive.list:
+        for metadata in app().games.current.meta.drive:
 
             is_current_save = metadata.checksum == app().games.current.meta.local.checksum
 
@@ -117,7 +117,7 @@ class SaveHistoryListController(WidgetController):
         Used to get owner of provided save.
         """
 
-        owner = app().user.by_email(metadata.owner)
+        owner = app().users.by_email(metadata.owner)
 
         if owner is None:
             return metadata.owner

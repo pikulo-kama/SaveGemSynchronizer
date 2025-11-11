@@ -34,7 +34,7 @@ def test_main_application_startup(module_patch, app_context, gdrive_mock, logger
     ], any_order=False)
 
     # 1a. Core Service Calls
-    app_context.user.initialize.assert_called_once_with(gdrive_mock.get_current_user)
+    app_context.users.initialize.assert_called_once_with(gdrive_mock.get_current_user)
     app_context.games.download.assert_called_once()
     app_context.games.current.meta.drive.refresh.assert_called_once()
     app_context.activity.refresh.assert_called_once()

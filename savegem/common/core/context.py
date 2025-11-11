@@ -42,11 +42,11 @@ class ApplicationContext:
         Used to initialize application context.
         """
 
-        self.user.initialize()
+        self.users.initialize()
         self.state.initialize()
         self.games.download()
 
-        for game in self.games.list:
+        for game in self.games:
             game.meta.local.calculate_checksum()
 
         self.activity.refresh()
@@ -66,7 +66,7 @@ class ApplicationContext:
         return self.__game_config
 
     @property
-    def user(self) -> UserState:
+    def users(self) -> UserState:
         """
         Information about authenticated user.
         """

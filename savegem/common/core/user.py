@@ -1,6 +1,7 @@
 import hashlib
 import json
 import urllib.request
+from typing import Iterator
 
 from constants import JPG_EXTENSION, UTF_8
 from savegem.common.core.app_data import AppData
@@ -101,6 +102,9 @@ class UserState(AppData):
         self.__users: list[User] = []
         self.__initialized = False
 
+    def __iter__(self) -> Iterator[User]:
+        return iter(self.__users)
+
     def initialize(self):
         """
         Used to initialize user state.
@@ -141,13 +145,6 @@ class UserState(AppData):
         Used to get current user.
         """
         return next(user for user in self.__users if user.is_current_user)
-
-    @property
-    def list(self) -> list[User]:
-        """
-        Used to get list of all users that have access to application.
-        """
-        return self.__users
 
     def by_email(self, email: str) -> User:
         """

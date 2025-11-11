@@ -57,7 +57,7 @@ class Uploader(SubscriptableService):
 
         # Set checksum then copy metadata file to target directory.
         game.meta.local.checksum = game.meta.local.calculate_checksum()
-        game.meta.local.owner = app().user.current.name
+        game.meta.local.owner = app().users.current.name
         game.meta.local.created_time = now.isoformat()
 
         shutil.copy(game.metadata_file_path, target_archive_path)
@@ -69,7 +69,7 @@ class Uploader(SubscriptableService):
         self._complete_stage()
 
         archive_props = {
-            SaveMetaProp.Owner: app().user.current.email,
+            SaveMetaProp.Owner: app().users.current.email,
             SaveMetaProp.Checksum: game.meta.local.checksum,
             SaveMetaProp.Size: math.ceil(os.path.getsize(archive_path) / 1024)
             # No need to upload createdTime it would be populated by

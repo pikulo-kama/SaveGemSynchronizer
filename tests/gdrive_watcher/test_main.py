@@ -39,7 +39,7 @@ def test_work_returns_if_gui_not_initialized(path_exists_mock, app_context, gdri
     watcher._work()
 
     # Assert that GDrive and app logic were not executed
-    app_context.user.initialize.assert_not_called()
+    app_context.users.initialize.assert_not_called()
     gdrive_mock.get_changes.assert_not_called()
 
 
@@ -58,7 +58,7 @@ def test_work_initializes_and_downloads_before_checking_changes(gdrive_mock, app
     watcher._work()
 
     # Assert initialization flow
-    app_context.user.initialize.assert_called_once()
+    app_context.users.initialize.assert_called_once()
     app_context.games.download.assert_called_once()
     gdrive_mock.get_changes.assert_called_once()
 

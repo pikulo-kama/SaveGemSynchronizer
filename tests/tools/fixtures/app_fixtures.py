@@ -57,7 +57,7 @@ def user_config_mock(mocker: MockerFixture, app_context):
     user_mock.machine_id = PlayerTestData.FirstPlayerMachineId
     user_mock.name = PlayerTestData.FirstPlayerName
 
-    app_context.user = user_mock
+    app_context.users = user_mock
 
     return user_mock
 

@@ -41,7 +41,7 @@ def _get_active_games():
     and return list of games that are currently running.
     """
 
-    games_by_processes = {game.process_name: game.name for game in app().games.list}
+    games_by_processes = {game.process_name: game.name for game in app().games}
     running_processes = get_running_processes(list(games_by_processes.keys()))
 
     return [games_by_processes.get(proc.name()) for proc in running_processes]

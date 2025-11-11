@@ -2,7 +2,7 @@ import json
 import os
 import re
 import urllib.request
-from typing import Final
+from typing import Final, Iterator
 
 from constants import File, JPG_EXTENSION
 from savegem.common.core.app_data import AppData
@@ -34,6 +34,9 @@ class GameConfig(AppData):
     def __init__(self):
         super().__init__()
         self.__games_by_name: dict[str, Game] = dict()
+
+    def __iter__(self) -> Iterator["Game"]:
+        return iter(self.__games_by_name.values())
 
     def download(self):
         """
@@ -74,7 +77,7 @@ class GameConfig(AppData):
 
             # If players field is not configured it means that everyone
             # has access to the game.
-            if len(players) > 0 and self.app.user.current.email not in players:
+            if len(players) > 0 and self.app.users.current.email not in players:
                 continue
 
             self.__games_by_name[name] = Game(
@@ -97,14 +100,6 @@ class GameConfig(AppData):
         Used to get list of game configurations.
         """
         return len(self.__games_by_name) == 0
-
-    @property
-    def list(self):
-        """
-        Used to return list of all games currently
-        registered in application.
-        """
-        return list(self.__games_by_name.values())
 
     @property
     def current(self):
@@ -169,7 +164,7 @@ class GameSettings:
         entry would be created.
         """
 
-        user_id = game_config.app.user.current.id
+        user_id = game_config.app.users.current.id
 
         settings = db() \
             .table("game_settings") \

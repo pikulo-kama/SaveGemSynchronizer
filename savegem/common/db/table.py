@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Iterator
 
 if TYPE_CHECKING:
     from savegem.common.db.manager import DatabaseManager
@@ -109,7 +109,7 @@ class DatabaseTable:
         self.__deleted_records: list[DatabaseRow] = []
         self.__columns: list[str] = []
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[DatabaseRow]:
         return iter(self.__records)
 
     def where(self, where_clause: str, *args):

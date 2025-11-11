@@ -26,7 +26,7 @@ class ProcessWatcher(Daemon):
         self.__uploader = Uploader()
 
     def _work(self):
-        app().user.initialize()
+        app().users.initialize()
         app().games.download()
 
         active_processes = get_running_game_processes()

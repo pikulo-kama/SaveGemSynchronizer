@@ -1,7 +1,7 @@
 import abc
 import hashlib
 from enum import Enum, auto
-from typing import Final, TYPE_CHECKING
+from typing import Final, TYPE_CHECKING, Iterator
 
 from constants import ZIP_MIME_TYPE, SHA_256
 from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
@@ -264,6 +264,9 @@ class DriveMetadata(Metadata):
 
         self.refresh()
 
+    def __iter__(self) -> Iterator[DriveFileMetadata]:
+        return iter(self.__files_metadata)
+
     @property
     def is_present(self):
         """
@@ -277,13 +280,6 @@ class DriveMetadata(Metadata):
         Used to get metadata of latest upload save.
         """
         return self.__files_metadata[0]
-
-    @property
-    def list(self):
-        """
-        Used to get list of save metadata on drive.
-        """
-        return self.__files_metadata
 
     def by_id(self, file_id: str):
         """

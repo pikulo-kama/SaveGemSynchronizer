@@ -34,7 +34,7 @@ class GameListController(WidgetController):
 
         self.manager.remove_child_widgets(game_list)
 
-        for game in app().games.list:
+        for game in app().games:
             game_button = QCustomPushButton()
             game_button.setObjectName("gameListOption")
             game_button.setText(game.name)

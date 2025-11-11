@@ -76,7 +76,7 @@ class SaveInfoResolver(ContentResolver):
         if not metadata.is_present:
             return None
 
-        user = app().user.by_email(metadata.owner)
+        user = app().users.by_email(metadata.owner)
 
         if user is None:
             return None

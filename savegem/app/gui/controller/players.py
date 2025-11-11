@@ -18,7 +18,7 @@ class PlayersController(WidgetController):
         self.manager.remove_child_widgets(players_container)
 
         # Sort by name but make sure to show players that are online first.
-        user_list = sorted(app().user.list, key=lambda u: (u not in app().activity.players, u.name))
+        user_list = sorted(app().users, key=lambda u: (u not in app().activity.players, u.name))
         game_players = app().games.current.players
 
         for user in user_list:
