@@ -262,8 +262,6 @@ class DriveMetadata(Metadata):
         super().__init__(game)
         self.__files_metadata: list[DriveFileMetadata] = []
 
-        self.refresh()
-
     def __iter__(self) -> Iterator[DriveFileMetadata]:
         return iter(self.__files_metadata)
 

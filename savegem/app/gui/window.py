@@ -1,6 +1,6 @@
 from typing import Optional
 
-from PyQt6.QtCore import QMutex, pyqtSignal
+from PyQt6.QtCore import QMutex, pyqtSignal, QTimer
 from PyQt6.QtGui import QIcon, QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout
 
@@ -8,6 +8,7 @@ from constants import Resource
 from savegem.app.gui.style import create_dynamic_resources, load_stylesheet
 from savegem.app.gui.widget.manager import WidgetManager
 from savegem.app.gui.constants import UIRefreshEvent
+from savegem.app.gui.widget.metadata import UISection
 from savegem.common.core.context import app
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
@@ -57,6 +58,8 @@ class GUI(QMainWindow):
         self.__root_layout.setContentsMargins(0, 0, 0, 0)
 
         self.__is_ui_blocked = False
+        self.__is_wait_screen = False
+        self.__is_initialized = False
 
         self.__center_window()
         self.setWindowTitle(tr("window_Title", prop("name")))
@@ -89,18 +92,23 @@ class GUI(QMainWindow):
 
     def build(self):
         """
-        Used to build GUI.
-        Will use defined builders to build all elements.
+        Used to build window and all of its components.
         """
 
         _logger.info("Building UI.")
+        section = UISection.RootSection
+
+        if self.__is_wait_screen:
+            section = UISection.WaitSection
 
         self.reload_styles()
         self.__manager.remove_widgets(lambda _: True)
-        self.__manager.build()
+        self.__manager.build(section)
         self.is_blocked = False
 
-        self.after_init.emit()  # noqa
+        if not self.__is_initialized:
+            QTimer.singleShot(300, lambda: self.after_init.emit())  # noqa
+            self.__is_initialized = True
 
         _logger.info("Application loop has been started.")
         self.show()
@@ -114,6 +122,12 @@ class GUI(QMainWindow):
         self.__manager.refresh(event)
 
         self.setWindowTitle(tr("window_Title", prop("name")))
+
+    def show_wait_screen(self):
+        self.__is_wait_screen = True
+
+    def hide_wait_screen(self):
+        self.__is_wait_screen = False
 
     @property
     def is_blocked(self):

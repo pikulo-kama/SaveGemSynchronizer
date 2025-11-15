@@ -1,13 +1,9 @@
 from savegem.app.gui.component.button import QCustomPushButton
-from savegem.app.gui.component.label import QCustomLabel
-from savegem.app.gui.component.layout import QCustomHBoxLayout
 from savegem.app.gui.component.list import QScrollableWidget
 from savegem.app.gui.component.spacer import QSpacer
-from savegem.app.gui.component.widget import QCustomWidget
 from savegem.app.gui.constants import UIRefreshEvent, QBool
 from savegem.app.gui.controller import WidgetController
-from savegem.app.gui.widget.resolver import resolve_content
-from savegem.app.gui.worker.game_change_worker import GameChangeWorker
+from savegem.app.worker.game_change_worker import GameChangeWorker
 from savegem.common.core.context import app
 from savegem.common.core.save_meta import SyncStatus
 from savegem.common.util.logger import get_logger

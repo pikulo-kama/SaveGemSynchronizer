@@ -22,12 +22,23 @@ _alignment_map = {
 }
 
 
-"""
-Root section name.
-This is main section that is being built in the first
-place when application starts.
-"""
-RootSection: Final = "root"
+class UISection:
+    """
+    Represents UI sections that are build by widget manager.
+    """
+
+    """
+    Root section name.
+    This is main section that is being built in the first
+    place when application starts.
+    """
+    RootSection: Final = "root"
+
+    """
+    Section that should be displayed when data to present root
+    section is still not available.
+    """
+    WaitSection: Final = "wait"
 
 
 @dataclass
@@ -186,7 +197,7 @@ class WidgetMetadata:
 
         If section id is None then 'root' section would be returned.
         """
-        return self.__section_id or RootSection
+        return self.__section_id or UISection.RootSection
 
     @property
     def raw_section_id(self):

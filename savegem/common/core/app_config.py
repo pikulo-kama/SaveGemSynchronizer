@@ -20,8 +20,8 @@ class AppConfig(AppData):
     GameConfigFileProp: Final = "gameConfigFileId"
     UsersConfigFileProp: Final = "usersConfigFileId"
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, app):
+        super().__init__(app)
         self.__config = JsonConfigHolder(resolve_project_data(File.GDriveConfig))
 
         _logger.debug("Activity Log File ID - %s", self.activity_log_file_id)

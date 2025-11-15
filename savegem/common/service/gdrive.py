@@ -30,7 +30,7 @@ class GDrive:
     """
 
     ChunkSize = 10 * 1024 * 1024
-    __drive = None
+    __credentials = None
 
     @classmethod
     def get_current_user(cls):
@@ -203,10 +203,10 @@ class GDrive:
         Used to get raw Google Drive service.
         """
 
-        if cls.__drive is None:
-            cls.__drive = build("drive", "v3", credentials=cls.__get_credentials())
+        if cls.__credentials is None:
+            cls.__credentials = cls.__get_credentials()
 
-        return cls.__drive
+        return build("drive", "v3", credentials=cls.__credentials)
 
     @staticmethod
     def __get_credentials():

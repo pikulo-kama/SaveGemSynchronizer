@@ -20,19 +20,11 @@ class QWorker(QObject):
         Worker entry point.
         """
 
-        from savegem.app.gui.window import gui
-        gui().mutex.lock()
-        _logger.info("UI application has been locked.")
+        _logger.info("Starting worker.")
+        self._run()
 
-        try:
-            _logger.info("Starting worker.")
-            self._run()
-
-            self.finished.emit()  # noqa
-            _logger.info("Worker has finished its work.")
-        finally:
-            gui().mutex.unlock()
-            _logger.info("UI application has been unlocked.")
+        self.finished.emit()  # noqa
+        _logger.info("Worker has finished its work.")
 
     def _run(self):
         """
@@ -42,7 +34,23 @@ class QWorker(QObject):
         raise NotImplementedError()
 
 
-class QSubscriptableWorker(QWorker):
+class QGUIWorker(QWorker):
+
+    def start(self):
+
+        from savegem.app.gui.window import gui
+        gui().mutex.lock()
+        _logger.info("UI application has been locked.")
+
+        try:
+            super().start()
+
+        finally:
+            gui().mutex.unlock()
+            _logger.info("UI application has been unlocked.")
+
+
+class QSubscriptableWorker(QGUIWorker):
     """
     Represents worker that works with
     subscriptable services.

@@ -4,6 +4,7 @@ import urllib.request
 from typing import Iterator
 
 from constants import JPG_EXTENSION, UTF_8
+from savegem.app.data import holder
 from savegem.common.core.app_data import AppData
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import resolve_temp_resource
@@ -97,10 +98,11 @@ class UserState(AppData):
     that have access to the app.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, app):
+        super().__init__(app)
         self.__users: list[User] = []
-        self.__initialized = False
+
+        self.refresh()
 
     def __iter__(self) -> Iterator[User]:
         return iter(self.__users)
@@ -111,11 +113,8 @@ class UserState(AppData):
         Can be only done once in application lifetime.
         """
 
-        if self.__initialized:
-            return
-
-        users = GDrive.get_users_with_access(self.app.config.games_config_file_id)
-        current_user = GDrive.get_current_user()
+        users = holder().get("allUsers")
+        current_user = holder().get("currentUser")
         current_user_email = current_user.get("emailAddress")
         user_info = self.__upload_user_info(current_user)
 
@@ -137,14 +136,12 @@ class UserState(AppData):
 
             self.__users.append(user_obj)
 
-        self.__initialized = True
-
     @property
     def current(self) -> User:
         """
         Used to get current user.
         """
-        return next(user for user in self.__users if user.is_current_user)
+        return next((user for user in self.__users if user.is_current_user), None)
 
     def by_email(self, email: str) -> User:
         """
@@ -157,15 +154,13 @@ class UserState(AppData):
 
     def __upload_user_info(self, current_user_data: dict):
 
-        with GDrive.download_file(self.app.config.users_config_file_id) as log_bytes:
-            log_bytes.seek(0)
-            user_data: dict = json.load(log_bytes)
+        user_data = holder().get("userData")
 
-            user_email = current_user_data.get("emailAddress")
-            user_name = current_user_data.get("displayName")
+        user_email = current_user_data.get("emailAddress")
+        user_name = current_user_data.get("displayName")
 
-            if user_email not in user_data.keys():
-                user_data[user_email] = user_name
-                GDrive.update_file(self.app.config.users_config_file_id, json.dumps(user_data, indent=2))
+        if user_email not in user_data.keys():
+            user_data[user_email] = user_name
+            GDrive.update_file(self.app.config.users_config_file_id, json.dumps(user_data, indent=2))
 
-            return user_data
+        return user_data

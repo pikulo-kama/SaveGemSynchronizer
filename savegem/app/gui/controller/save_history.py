@@ -10,7 +10,7 @@ from savegem.app.gui.constants import UIRefreshEvent, QBool
 from savegem.app.gui.controller import WidgetController
 from savegem.app.gui.popup.confirmation import confirmation
 from savegem.app.gui.popup.notification import notification
-from savegem.app.gui.worker.download_worker import DownloadWorker
+from savegem.app.worker.download_worker import DownloadWorker
 from savegem.common.core.context import app
 from savegem.common.core.save_meta import DriveFileMetadata
 from savegem.common.core.text_resource import tr

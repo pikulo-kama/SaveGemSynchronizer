@@ -30,7 +30,7 @@ class LanguageDropdownController(WidgetController):
 
             gui().refresh(UIRefreshEvent.LanguageChange)
 
-        for language in db().table("setup_locale").retrieve():
+        for language in db().retrieve_table("setup_locale"):
             language_combobox.addItem(
                 language.get("locale_name"),
                 language.get("locale_id"),

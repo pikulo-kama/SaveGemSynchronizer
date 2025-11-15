@@ -11,8 +11,9 @@ class AppData(abc.ABC):  # pragma: no cover
     Has application context ap property.
     """
 
-    def __init__(self):
-        self.__app: "ApplicationContext|None" = None
+    def __init__(self, app: "ApplicationContext"):
+        self.__app: "ApplicationContext|None" = app
+        app.link(self)
 
     def link(self, app: "ApplicationContext"):
         """
@@ -27,6 +28,9 @@ class AppData(abc.ABC):  # pragma: no cover
         to app data instance.
         """
         return self.__app
+
+    def initialize(self):
+        pass
 
     @abc.abstractmethod
     def refresh(self):

@@ -1,5 +1,6 @@
 import json
 
+from savegem.app.data import holder
 from savegem.common.core.app_data import AppData
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.logger import get_logger
@@ -16,8 +17,8 @@ class Activity(AppData):
     NAME_PROP = "name"
     GAMES_PROP = "games"
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, app):
+        super().__init__(app)
         self.__players = []
 
     @property
@@ -55,11 +56,8 @@ class Activity(AppData):
         """
 
         self.__players.clear()
+        activity_log = holder().get("activity")
 
-        with GDrive.download_file(self.app.config.activity_log_file_id) as log_bytes:
-            log_bytes.seek(0)
-            activity_log: dict = json.load(log_bytes)
-
-            for user_email, games in activity_log.items():
-                if self.app.games.current.name in games:
-                    self.__players.append(self.app.users.by_email(user_email))
+        for user_email, games in activity_log.items():
+            if self.app.games.current.name in games:
+                self.__players.append(self.app.users.by_email(user_email))

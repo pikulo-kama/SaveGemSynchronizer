@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Callable
 from savegem.app.gui.component import QCustomComponent
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.controller import load_controllers, WidgetController
-from savegem.app.gui.widget.metadata import RootSection, WidgetMetadata
+from savegem.app.gui.widget.metadata import WidgetMetadata, UISection
 from savegem.app.gui.component.layout import QCustomLayout
 from savegem.app.gui.widget.resolver import resolve_content
 from savegem.common.db.manager import db
@@ -44,7 +44,7 @@ class WidgetManager:
         """
         self.__widgets[widget.metadata.name] = widget
 
-    def build(self, section_id: str = RootSection):
+    def build(self, section_id: str = UISection.RootSection):
         """
         Used to build all widgets that
         are part of provided section.
@@ -52,7 +52,7 @@ class WidgetManager:
 
         ui_widgets = db().table("ui_widgets")
 
-        if section_id == RootSection:
+        if section_id == UISection.RootSection:
             ui_widgets.where("section_id IS NULL")
 
         else:

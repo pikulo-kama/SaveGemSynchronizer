@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import Qt, QThread
 
 if TYPE_CHECKING:
-    from savegem.app.gui.worker import QWorker
+    from savegem.app.worker import QWorker
 
 
 def execute_in_blocking_thread(thread: QThread, worker: "QWorker"):
@@ -22,15 +22,20 @@ def execute_in_blocking_thread(thread: QThread, worker: "QWorker"):
         gui().setCursor(Qt.CursorShape.ArrowCursor)
         gui().is_blocked = False
 
+    thread.finished.connect(on_finish)  # noqa
+    execute_in_thread(thread, worker)
+
+    gui().setCursor(Qt.CursorShape.WaitCursor)
+    gui().is_blocked = True
+
+
+def execute_in_thread(thread: QThread, worker: "QWorker"):
+
     worker.moveToThread(thread)
 
     worker.finished.connect(thread.quit)  # noqa
     thread.finished.connect(worker.deleteLater)  # noqa
     thread.finished.connect(thread.deleteLater)  # noqa
-    thread.finished.connect(on_finish)  # noqa
 
     thread.started.connect(worker.start)  # noqa
     thread.start()
-
-    gui().setCursor(Qt.CursorShape.WaitCursor)
-    gui().is_blocked = True

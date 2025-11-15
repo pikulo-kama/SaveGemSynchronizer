@@ -64,6 +64,11 @@
       "widget_type_id": "QComboBox",
       "class_path": "savegem.app.gui.component.combobox.QCustomComboBox",
       "is_interactable": 1
+    },
+    {
+      "widget_type_id": "QWaitBar",
+      "class_path": "savegem.app.gui.component.wait_bar.QWaitBar",
+      "is_interactable": 1
     }
   ]
 }

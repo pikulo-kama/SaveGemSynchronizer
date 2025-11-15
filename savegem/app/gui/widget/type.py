@@ -10,7 +10,7 @@ def _get_widget_type_pool():
 
     if len(_widget_type_pool) == 0:
 
-        widget_types = db().table("setup_widget_type").retrieve()
+        widget_types = db().retrieve_table("setup_widget_type")
 
         for widget_type in widget_types:
             type_name = widget_type.get("widget_type_id")
@@ -45,7 +45,7 @@ def get_layout_type(layout_type_name: str):
 
     if len(_layout_type_pool) == 0:
 
-        layout_types = db().table("setup_layout_type").retrieve()
+        layout_types = db().retrieve_table("setup_layout_type")
 
         for layout_type in layout_types:
             type_name = layout_type.get("layout_type_id")

@@ -1,4 +1,4 @@
-from savegem.app.gui.worker import QSubscriptableWorker
+from savegem.app.worker import QSubscriptableWorker
 from savegem.common.core.context import app
 from savegem.common.service.uploader import Uploader
 

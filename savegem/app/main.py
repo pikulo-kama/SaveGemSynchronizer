@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import QApplication
 from constants import Directory
 from savegem.app.gui.window import gui
 from savegem.app.ipc_socket import ui_socket
+from savegem.app.startup import StartupJob
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import TextResource
 from savegem.common.util.file import cleanup_directory
@@ -24,12 +25,13 @@ def main():
     _logger.info("Starting SaveGem application.")
     _logger.info("version %s", prop("version"))
 
-    app().initialize()
     gui().application = QApplication(sys.argv)
 
     # app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     # gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
+    gui().after_init.connect(lambda: StartupJob().start())
     gui().before_destroy.connect(teardown)
+    gui().show_wait_screen()
     gui().build()
 
     sys.exit(gui().application.exec())

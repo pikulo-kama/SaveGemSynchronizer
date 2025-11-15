@@ -26,7 +26,7 @@ def locales():
     global _locales
 
     if _locales is None:
-        locale_list = db().table("setup_locale").retrieve()
+        locale_list = db().retrieve_table("setup_locale")
         _locales = [locale.get("locale_id") for locale in locale_list]
 
     return _locales

@@ -8,7 +8,7 @@ def _subscriptable_worker(_error_callback, _progress_callback, _completed_callba
     Provides an instance of QSubscriptableWorker.
     """
 
-    from savegem.app.gui.worker import QSubscriptableWorker
+    from savegem.app.worker import QSubscriptableWorker
 
     worker = QSubscriptableWorker()
     # Mock _run to prevent NotImplementedError if start() were called
@@ -41,7 +41,7 @@ def test_qworker_abstract_method(gui_mock):
     Test that calling _run() on the base QWorker raises NotImplementedError.
     """
 
-    from savegem.app.gui.worker import QWorker
+    from savegem.app.worker import QWorker
 
     with pytest.raises(NotImplementedError):
         QWorker()._run()
@@ -52,7 +52,7 @@ def test_qworker_start_success(mocker: MockerFixture, gui_mock):
     Test start() correctly calls _run, emits finished, and handles mutex locks.
     """
 
-    from savegem.app.gui.worker import QWorker
+    from savegem.app.worker import QWorker
 
     class ConcreteWorker(QWorker):
         def _run(self):
@@ -85,7 +85,7 @@ def test_qworker_start_failure_mutex_release(mocker: MockerFixture, gui_mock):
     and finished is NOT emitted.
     """
 
-    from savegem.app.gui.worker import QWorker
+    from savegem.app.worker import QWorker
 
     # Arrange: Worker that always fails
     class FailingWorker(QWorker):

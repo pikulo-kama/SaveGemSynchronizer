@@ -6,7 +6,7 @@ def test_game_change_worker_run_logic(app_context, app_state_mock, games_config,
     and refreshes activity.
     """
 
-    from savegem.app.gui.worker.game_change_worker import GameChangeWorker
+    from savegem.app.worker import GameChangeWorker
 
     test_game_name = "Test"
     worker = GameChangeWorker(test_game_name)

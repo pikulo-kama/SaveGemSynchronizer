@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2025-11-02T21:21:53.662522",
+    "filter": "section_id = 'wait'"
+  },
+  "data": [
+    {
+      "widget_id": "wait_bar_root",
+      "section_id": "wait",
+      "widget_type_id": "QWidget",
+      "layout_type_id": "QVBoxLayout",
+      "spacing": 30,
+      "width": 400,
+      "margin_bottom": 50,
+      "children": [
+        {
+          "widget_id": "app_logo",
+          "content": "pixmap{gem_outline.svg, scale: 80}",
+          "widget_type_id": "QLabel",
+          "alignment": "center"
+        },
+        {
+          "widget_id": "wait_bar",
+          "widget_type_id": "QWaitBar",
+          "alignment": "bottom",
+          "height": 10
+        }
+      ]
+    }
+  ]
+}

@@ -54,7 +54,7 @@ def _get_colors():
     global _colors
 
     if _colors is None:
-        _colors = db().table("setup_color").retrieve()
+        _colors = db().retrieve_table("setup_color")
 
     return _colors
 
@@ -69,7 +69,7 @@ def _get_fonts():
 
     if len(_fonts) == 0:
 
-        for font_record in db().table("setup_font").retrieve():
+        for font_record in db().retrieve_table("setup_font"):
             font_id = font_record.get("font_id")
             font_size = font_record.get("font_size")
             font_family = font_record.get("font_family")
@@ -197,9 +197,7 @@ def create_dynamic_resources():
     difference is color.
     """
 
-    resources = db().table("setup_resource")
-
-    for resource in resources.retrieve():
+    for resource in db().retrieve_table("setup_resource"):
         name = resource.get("resource_name")
         file_name = resource.get("resource_path")
         current_color = resource.get("color")

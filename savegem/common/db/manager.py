@@ -29,6 +29,15 @@ class DatabaseManager:
 
     DatabaseName: Final = "savegem.db"
 
+    def retrieve_table(self, table_name: str) -> DatabaseTable:
+        """
+        Used to create table object to perform
+        CRUD operations on table data.
+
+        Will automatically retrieve all table data.
+        """
+        return self.table(table_name).retrieve()
+
     def table(self, table_name: str) -> DatabaseTable:
         """
         Used to create table object to perform

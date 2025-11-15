@@ -25,31 +25,11 @@ class ApplicationContext:
 
         self.__linked_entities: list[AppData] = []
 
-        self.__state = AppState()
-        self.__app_config = AppConfig()
-        self.__game_config = GameConfig()
-        self.__user_state = UserState()
-        self.__activity = Activity()
-
-        self.__link(self.__state)
-        self.__link(self.__app_config)
-        self.__link(self.__game_config)
-        self.__link(self.__user_state)
-        self.__link(self.__activity)
-
-    def initialize(self):
-        """
-        Used to initialize application context.
-        """
-
-        self.users.initialize()
-        self.state.initialize()
-        self.games.download()
-
-        for game in self.games:
-            game.meta.local.calculate_checksum()
-
-        self.activity.refresh()
+        self.__user_state = UserState(self)
+        self.__state = AppState(self)
+        self.__app_config = AppConfig(self)
+        self.__game_config = GameConfig(self)
+        self.__activity = Activity(self)
 
     @property
     def state(self) -> AppState:
@@ -86,13 +66,12 @@ class ApplicationContext:
         """
         return self.__activity
 
-    def __link(self, entity: AppData):
+    def link(self, entity: AppData):
         """
         Used to link app data instance to
         main application context.
         """
 
-        entity.link(self)
         self.__linked_entities.append(entity)
 
     def refresh(self):

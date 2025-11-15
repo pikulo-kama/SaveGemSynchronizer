@@ -162,6 +162,10 @@ class DatabaseTable:
         return self
 
     @property
+    def is_empty(self) -> bool:
+        return len(self.rows) == 0
+
+    @property
     def rows(self) -> list[DatabaseRow]:
         """
         Used to get list of table rows.

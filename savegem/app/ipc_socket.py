@@ -49,7 +49,8 @@ class UISocket(IPCSocket, QObject):
                 # then we need to reload it in
                 # main application.
                 if app().state.is_auto_mode:
-                    app().games.refresh()
+                    for game in app().games:
+                        game.meta.local.refresh()
 
                 if event == UIRefreshEvent.GameConfigChange:
                     app().games.download()

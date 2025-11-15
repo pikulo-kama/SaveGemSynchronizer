@@ -1,14 +1,13 @@
-import json
 import os
 import re
 import urllib.request
 from typing import Final, Iterator
 
 from constants import File, JPG_EXTENSION
+from savegem.app.data import holder
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
 from savegem.common.db.manager import db
-from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import delete_file, resolve_resource, resolve_temp_resource, resolve_app_data
 from savegem.common.util.logger import get_logger
 
@@ -31,20 +30,20 @@ class GameConfig(AppData):
     __HIDDEN: Final = "hidden"
     __AUTO_MODE_ALLOWED: Final = "allowAutoMode"
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, app):
+        super().__init__(app)
         self.__games_by_name: dict[str, Game] = dict()
 
     def __iter__(self) -> Iterator["Game"]:
         return iter(self.__games_by_name.values())
 
-    def download(self):
+    def initialize(self):
         """
         Used to download game configuration from Google Drive.
         """
 
         _logger.debug("Downloading game configuration from drive.")
-        game_config = GDrive.download_file(self.app.config.games_config_file_id)
+        game_config = holder().get("gamesConfig")
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
@@ -56,10 +55,9 @@ class GameConfig(AppData):
             _logger.error(message)
             raise RuntimeError(message)
 
-        game_config.seek(0)
         self.__games_by_name.clear()
 
-        for game in json.load(game_config):
+        for game in game_config:
             name = game.get(self.__GAME_NAME)
             process_name = game.get(self.__PROCES_NAME)
             logo = game.get(self.__GAME_LOGO)
@@ -127,7 +125,7 @@ class GameConfig(AppData):
         Used to reload metadata for all
         registered games.
         """
-        for game in self.list:
+        for game in self:
             game.meta.local.refresh()
 
 

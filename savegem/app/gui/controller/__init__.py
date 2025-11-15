@@ -4,7 +4,7 @@ from PyQt6.QtCore import QThread
 from PyQt6.QtWidgets import QWidget
 
 from savegem.app.gui.thread import execute_in_blocking_thread
-from savegem.app.gui.worker import QWorker
+from savegem.app.worker import QWorker
 from savegem.common.db.manager import db
 from savegem.common.util.logger import get_logger
 from savegem.common.util.reflection import get_members
