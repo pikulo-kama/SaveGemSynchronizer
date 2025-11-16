@@ -11,6 +11,7 @@
 
 #define ProcessWatcherExeName GetProperty("config\process_watcher.json", "processName")
 #define GDriveWatcherExeName GetProperty("config\gdrive_watcher.json", "processName")
+#define DatabaseInitializerExeName GetProperty("config\initializer.json", "processName")
 
 [Setup]
 ; --- App Info ---
@@ -43,6 +44,9 @@ Name: "{userappdata}\{#AppName}"
 
 ; Output dir
 Name: "{userappdata}\{#AppName}\Output"
+
+; Dynamic Resources dir
+Name: "{userappdata}\{#AppName}\Output\Resources"
 
 ; Logs dir
 Name: "{userappdata}\{#AppName}\Logs"
@@ -180,6 +184,10 @@ begin
   if CurStep = ssPostInstall then
     // Immediately start watchdog process.
     Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
+    
+    // Migrate database and reimport non-user related data.
+    Exec(ExpandConstant('{app}\{#DatabaseInitializerExeName}'), 'migrate', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    Exec(ExpandConstant('{app}\{#DatabaseInitializerExeName}'), 'import --definition_file=import.def', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

@@ -5,8 +5,7 @@ from datetime import date
 
 from PyInstaller.building.api import PYZ, EXE, COLLECT
 from PyInstaller.building.build_main import Analysis
-from PyInstaller.building.datastruct import Tree
-# For some reason these are not being picked by IDE, even though they're available at runtime/
+# For some reason these are not being picked up by IDE, even though they're available at runtime
 # noinspection PyUnresolvedReferences
 from PyInstaller.utils.win32.versioninfo import VSVersionInfo, VarFileInfo, VarStruct, StringFileInfo, StringTable, \
     StringStruct, FixedFileInfo
@@ -72,16 +71,23 @@ def build_exe_info(service_name: str):
     }
 
 
-def build_exe(service_name: str, datas: [str] = None, hooks: [str] = None, icon='NONE'):
+def build_exe(service_name: str, datas: [str] = None, hooks: [str] = None, icon='NONE', console: bool = False):
     """
     Used to build EXE file.
     Will return both EXE and Analysis.
     """
 
+    datas = datas or []
+
+    for index, entry in enumerate(datas):
+        # All datas should be tuples.
+        if isinstance(entry, str):
+            datas[index] = (entry, entry)
+
     analysis = Analysis(
         [f"savegem/{service_name}/main.py"],
         binaries=[],
-        datas=datas or [],
+        datas=datas,
         hookspath=hooks or [],
         hooksconfig={},
         excludes=[],
@@ -97,7 +103,7 @@ def build_exe(service_name: str, datas: [str] = None, hooks: [str] = None, icon=
         analysis.binaries,
         exclude_binaries=True,
         name=exe_info.get("name"),
-        console=False,
+        console=console,
         icon=icon,
         version=exe_info.get("version_info")
     )
@@ -105,42 +111,71 @@ def build_exe(service_name: str, datas: [str] = None, hooks: [str] = None, icon=
     return exe, analysis
 
 
-common_data = [
-    ('credentials.json', '.'),
-    ('config.json', '.')
-]
+credentials_data = ('credentials.json', '.')
+drive_config_data = ('config.json', '.')
 
 gui, gui_a = build_exe(
     service_name="app",
     hooks=["hooks"],
-    datas=common_data,
+    datas=[
+        credentials_data,
+        drive_config_data,
+        "resources",
+        "config",
+        "styles"
+    ],
     icon='resources/application.ico'
 )
 
-process_watcher, process_watcher_a = build_exe(service_name="process_watcher", datas=common_data)
-gdrive_watcher, gdrive_watcher_a = build_exe(service_name="gdrive_watcher", datas=common_data)
-watchdog, watchdog_a = build_exe(service_name="watchdog")
+process_watcher, process_watcher_a = build_exe(
+    service_name="process_watcher",
+    datas=[
+        credentials_data,
+        drive_config_data,
+        "config"
+    ]
+)
+
+gdrive_watcher, gdrive_watcher_a = build_exe(
+    service_name="gdrive_watcher",
+    datas=[
+        credentials_data,
+        drive_config_data,
+        "resources",
+        "config"
+    ]
+)
+
+initializer, initializer_a = build_exe(
+    service_name="initializer",
+    hooks=["hooks"],
+    datas=["importData"],
+    console=True
+)
+
+watchdog, watchdog_a = build_exe(
+    service_name="watchdog",
+    datas=["config"]
+)
 
 # Collect everything into one folder
 COLLECT(
     gui,
     process_watcher,
     gdrive_watcher,
+    initializer,
     watchdog,
 
     gui_a.binaries +
     process_watcher_a.binaries +
     gdrive_watcher_a.binaries +
+    initializer_a.binaries,
     watchdog_a.binaries,
 
     gui_a.datas +
     process_watcher_a.datas +
     gdrive_watcher_a.datas,
-
-    Tree('..\\SaveGemSynchronizer\\resources', prefix='resources\\'),
-    Tree('..\\SaveGemSynchronizer\\config', prefix='config\\'),
-    Tree('..\\SaveGemSynchronizer\\locale', prefix='locale\\'),
-    Tree('..\\SaveGemSynchronizer\\styles', prefix='styles\\'),
+    initializer_a.datas,
 
     upx=True,
     name=build_exe_info("app").get("name")

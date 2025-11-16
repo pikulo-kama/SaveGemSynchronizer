@@ -1,0 +1,5 @@
+{
+  "name" : "SaveGem Initializer",
+  "description" : "SaveGem Database Initializer and Data Importer",
+  "processName" : "SaveGemInitializer.exe"
+}
