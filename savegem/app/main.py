@@ -27,10 +27,10 @@ def main():
     _logger.info("version %s", prop("version"))
 
     gui().application = QApplication(sys.argv)
-    StartupJob().start()
 
     app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
+    gui().after_init.connect(lambda: StartupJob().start())
     gui().before_destroy.connect(teardown)
 
     gui().show_wait_screen()

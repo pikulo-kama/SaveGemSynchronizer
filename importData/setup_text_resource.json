@@ -19,6 +19,13 @@
       "fr_FR": "Êtes-vous sûr ? Cela écrasera la sauvegarde existante.",
       "uk_UA": "Впевнений? Це знищить твій існуючий сейв."
     },
+    "label_SettingIsDisabled": {
+      "de_DE": "Dieses Spiel unterstützt diese Funktion nicht.",
+      "en_US": "This game doesn't support this feature",
+      "es_ES": "Este juego no es compatible con esta función.",
+      "fr_FR": "Ce jeu ne prend pas en charge cette fonctionnalité.",
+      "uk_UA": "Ця гра не підтримує дану функцію."
+    },
     "label_Theme": {
       "de_DE": "Design",
       "en_US": "Theme",
