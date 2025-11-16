@@ -1,6 +1,6 @@
 from typing import Union, Optional
 
-from PyQt6.QtCore import Qt, QObject
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget
 
 from savegem.app.gui.component.layout import QCustomLayout

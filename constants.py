@@ -60,8 +60,6 @@ class File:
     GDriveConfig: Final = "config.json"
     AppConfig: Final = "app.json"
 
-    GUIInitializedFlag: Final = "gui_init.flag"
-
 
 class Resource:
     """

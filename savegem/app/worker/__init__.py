@@ -34,23 +34,7 @@ class QWorker(QObject):
         raise NotImplementedError()
 
 
-class QGUIWorker(QWorker):
-
-    def start(self):
-
-        from savegem.app.gui.window import gui
-        # gui().mutex.lock()
-        _logger.info("UI application has been locked.")
-
-        try:
-            super().start()
-
-        finally:
-            # gui().mutex.unlock()
-            _logger.info("UI application has been unlocked.")
-
-
-class QSubscriptableWorker(QGUIWorker):
+class QSubscriptableWorker(QWorker):
     """
     Represents worker that works with
     subscriptable services.

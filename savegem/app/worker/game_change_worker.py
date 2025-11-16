@@ -1,8 +1,8 @@
-from savegem.app.worker import QWorker, QGUIWorker
+from savegem.app.worker import QWorker
 from savegem.common.core.context import app
 
 
-class GameChangeWorker(QGUIWorker):
+class GameChangeWorker(QWorker):
     """
     Worker used to change currently selected.
     """

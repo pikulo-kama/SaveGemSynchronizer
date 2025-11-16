@@ -20,7 +20,6 @@ class IPCCommand:
 
     RebuildWindow: Final = "rebuild_window"
     RefreshUI: Final = "refresh_ui"
-    GUIInitialized: Final = "gui_initialized"
     StateChanged: Final = "state_changed"
 
 

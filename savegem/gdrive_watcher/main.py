@@ -1,14 +1,12 @@
+import threading
+
 from savegem.app.data import holder, HolderObject
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.context import app
-from constants import File
-import threading
-import os.path
-
+from savegem.common.core.flag import flags
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.gdrive import GDrive
-from savegem.common.util.file import resolve_temp_file
 from savegem.gdrive_watcher.ipc_socket import google_drive_watcher_socket
 
 
@@ -38,7 +36,7 @@ class GDriveWatcher(Daemon):
         # Google Drive watcher service should only work when GUI is running
         # since otherwise it would be doing extra work by polling Google Drive
         # API as well as will constantly send data to non-existing socket.
-        if not os.path.exists(resolve_temp_file(File.GUIInitializedFlag)):
+        if not flags().gui_initialized.enabled:
             return
 
         files, directories = self.__get_changes()

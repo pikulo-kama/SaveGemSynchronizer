@@ -1,6 +1,3 @@
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget
-
 from savegem.app.gui.component.toggle import QCustomToggle
 from savegem.app.gui.controller import WidgetController
 from savegem.common.core.context import app
