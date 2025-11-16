@@ -1,6 +1,6 @@
 import json
 
-from savegem.app.data import holder
+from savegem.app.data import holder, HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.logger import get_logger
@@ -56,7 +56,7 @@ class Activity(AppData):
         """
 
         self.__players.clear()
-        activity_log = holder().get("activity")
+        activity_log = holder().get(HolderObject.Activity)
 
         for user_email, games in activity_log.items():
             if self.app.games.current.name in games:

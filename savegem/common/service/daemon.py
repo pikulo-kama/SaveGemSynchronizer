@@ -51,6 +51,8 @@ class Daemon(abc.ABC):
         self._logger.info("Starting service '%s' version %s.", self.__service_name, prop("version"))
         self._logger.info("Polling rate '%s' seconds.", self.__interval)
 
+        run_once_executed = False
+
         while True:
             try:
 
@@ -65,6 +67,10 @@ class Daemon(abc.ABC):
                     )
                     time.sleep(self.__interval)
                     continue
+
+                if not run_once_executed:
+                    self._run_once()
+                    run_once_executed = True
 
                 self._work()
             except ExitTestLoop as error:
@@ -96,6 +102,14 @@ class Daemon(abc.ABC):
         """
         Should have main logic of daemon.
         This method will run in between intervals.
+        """
+        pass
+
+    @abc.abstractmethod  # pragma: no cover
+    def _run_once(self):
+        """
+        Allows to run one-time operations
+        once daemon is operational.
         """
         pass
 

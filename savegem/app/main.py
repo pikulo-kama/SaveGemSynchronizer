@@ -9,6 +9,7 @@ from savegem.app.gui.window import gui
 from savegem.app.ipc_socket import ui_socket
 from savegem.app.startup import StartupJob
 from savegem.common.core.holders import prop
+from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.core.text_resource import TextResource
 from savegem.common.util.file import cleanup_directory
 from savegem.common.util.logger import get_logger
@@ -26,11 +27,12 @@ def main():
     _logger.info("version %s", prop("version"))
 
     gui().application = QApplication(sys.argv)
+    StartupJob().start()
 
-    # app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
-    # gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
-    gui().after_init.connect(lambda: StartupJob().start())
+    app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
+    gui().after_init.connect(lambda: ui_socket.notify_children(IPCCommand.GUIInitialized))
     gui().before_destroy.connect(teardown)
+
     gui().show_wait_screen()
     gui().build()
 

@@ -1,4 +1,4 @@
-from savegem.app.data import holder
+from savegem.app.data import holder, HolderObject
 from savegem.app.startup.worker import QStartupWorker
 from savegem.common.core.context import app
 from savegem.common.service.gdrive import GDrive
@@ -10,7 +10,7 @@ class CurrentUserDownloadWorker(QStartupWorker):
     """
 
     def _run(self):
-        holder().add("currentUser", GDrive.get_current_user())
+        holder().add(HolderObject.CurrentUser, GDrive.get_current_user())
 
 
 class AllUsersDownloadWorker(QStartupWorker):
@@ -19,16 +19,16 @@ class AllUsersDownloadWorker(QStartupWorker):
     """
 
     def _run(self):
-        holder().add("allUsers", GDrive.get_users_with_access(app().config.games_config_file_id))
+        holder().add(HolderObject.AllUsers, GDrive.get_users_with_access(app().config.games_config_file_id))
 
 
-class UserConfigDownloadWorker(QStartupWorker):
+class UserDataDownloadWorker(QStartupWorker):
     """
     Used to download configuration file containing additional user data.
     """
 
     def _run(self):
-        holder().download_json("userData", app().config.users_config_file_id)
+        holder().download_json(HolderObject.UserData, app().config.users_config_file_id)
 
 
 class ActivityWorker(QStartupWorker):
@@ -37,7 +37,7 @@ class ActivityWorker(QStartupWorker):
     """
 
     def _run(self):
-        holder().download_json("activity", app().config.activity_log_file_id)
+        holder().download_json(HolderObject.Activity, app().config.activity_log_file_id)
 
 
 class GameConfigDownloadWorker(QStartupWorker):
@@ -46,4 +46,4 @@ class GameConfigDownloadWorker(QStartupWorker):
     """
 
     def _run(self):
-        holder().download_json("gamesConfig", app().config.games_config_file_id)
+        holder().download_json(HolderObject.GamesConfig, app().config.games_config_file_id)

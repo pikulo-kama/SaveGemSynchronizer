@@ -1,6 +1,6 @@
 from typing import Optional
 
-from PyQt6.QtCore import QMutex, pyqtSignal, QTimer
+from PyQt6.QtCore import pyqtSignal, QSettings
 from PyQt6.QtGui import QIcon, QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout
 
@@ -9,7 +9,6 @@ from savegem.app.gui.style import create_dynamic_resources, load_stylesheet
 from savegem.app.gui.widget.manager import WidgetManager
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.widget.metadata import UISection
-from savegem.common.core.context import app
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
 from savegem.common.util.file import resolve_resource
@@ -36,12 +35,6 @@ class GUI(QMainWindow):
     Main class to operate with application window.
     """
 
-    # Allows to lock/unlock UI.
-    # Used to avoid race conditions
-    # when UI is being updated from
-    # several threads simultaneously.
-    mutex = QMutex()
-
     before_destroy = pyqtSignal()
     after_init = pyqtSignal()
 
@@ -49,6 +42,7 @@ class GUI(QMainWindow):
         super().__init__()
 
         self.__application: Optional[QApplication] = None
+        self.__settings = QSettings(prop("author"), prop("name"))
         self.__manager = WidgetManager(self)
 
         self.__root = QWidget()
@@ -62,7 +56,6 @@ class GUI(QMainWindow):
         self.__is_initialized = False
 
         self.__center_window()
-        self.setWindowTitle(tr("window_Title", prop("name")))
         self.setWindowIcon(QIcon(resolve_resource(Resource.ApplicationIco)))
 
     @property
@@ -74,10 +67,17 @@ class GUI(QMainWindow):
 
     @property
     def application(self):
+        """
+        QT Application instance.
+        """
         return self.__application
 
     @application.setter
     def application(self, application: QApplication):
+        """
+        Used to attach QT Application instance
+        to the window instance.
+        """
         self.__application = application
 
     def reload_styles(self):
@@ -95,11 +95,13 @@ class GUI(QMainWindow):
         Used to build window and all of its components.
         """
 
-        _logger.info("Building UI.")
+        self.setWindowTitle(tr("window_Title", prop("name")))
         section = UISection.RootSection
 
         if self.__is_wait_screen:
             section = UISection.WaitSection
+
+        _logger.info("Building UI using section '%s'.", section)
 
         self.reload_styles()
         self.__manager.remove_widgets(lambda _: True)
@@ -107,7 +109,7 @@ class GUI(QMainWindow):
         self.is_blocked = False
 
         if not self.__is_initialized:
-            QTimer.singleShot(300, lambda: self.after_init.emit())  # noqa
+            self.after_init.emit()  # noqa
             self.__is_initialized = True
 
         _logger.info("Application loop has been started.")
@@ -118,15 +120,27 @@ class GUI(QMainWindow):
         Used to refresh dynamic UI elements.
         """
 
-        _logger.info("Refreshing UI.")
+        _logger.info("Refreshing UI with event '%s'.", event)
         self.__manager.refresh(event)
 
         self.setWindowTitle(tr("window_Title", prop("name")))
 
     def show_wait_screen(self):
+        """
+        Used to enable wait screen.
+
+        When enabled 'wait' UI section would be used
+        when starting build without arguments.
+        """
         self.__is_wait_screen = True
 
     def hide_wait_screen(self):
+        """
+        Used to disable wait screen.
+
+        When enabled 'root' UI section would be used
+        when starting build without arguments.
+        """
         self.__is_wait_screen = False
 
     @property
@@ -155,8 +169,8 @@ class GUI(QMainWindow):
         destroyed.
         """
 
-        app().state.width = self.width()
-        app().state.height = self.height()
+        self.__settings.setValue("windowWidth", self.width())
+        self.__settings.setValue("windowHeight", self.height())
 
         self.before_destroy.emit()  # noqa
         _logger.info("Application shut down.")
@@ -170,9 +184,12 @@ class GUI(QMainWindow):
         screen_width = QApplication.primaryScreen().size().width()
         screen_height = QApplication.primaryScreen().size().height()
 
-        x = int((screen_width - app().state.width) / 2)
-        y = int((screen_height - app().state.height) / 2)
+        user_screen_width = self.__settings.value("windowWidth", prop("windowWidth"))
+        user_screen_height = self.__settings.value("windowHeight", prop("windowHeight"))
+
+        x = int((screen_width - user_screen_width) / 2)
+        y = int((screen_height - user_screen_height) / 2)
 
         self.setMinimumSize(prop("minWindowWidth"), prop("minWindowHeight"))
-        self.resize(app().state.width, app().state.height)
+        self.resize(user_screen_width, user_screen_height)
         self.move(x, y)

@@ -23,8 +23,6 @@ class AppState(AppData):
     SelectedLocale: Final = "language"
     TimeFormatId: Final = "time_format_id"
     ColorTheme: Final = "color_theme"
-    WindowWidth: Final = "window_width"
-    WindowHeight: Final = "window_height"
 
     TemporaryUser: Final = "<temporary>"
 
@@ -122,34 +120,6 @@ class AppState(AppData):
         """
         self.__set_state_value(self.TimeFormatId, time_format_id)
 
-    @property
-    def width(self):
-        """
-        Used to get window width.
-        """
-        return self.__state_table.get_first(self.WindowWidth) or prop("windowWidth")
-
-    @width.setter
-    def width(self, width: int):
-        """
-        Used to set window width.
-        """
-        self.__set_state_value(self.WindowWidth, width)
-
-    @property
-    def height(self):
-        """
-        Used to get window height.
-        """
-        return self.__state_table.get_first(self.WindowHeight) or prop("windowHeight")
-
-    @height.setter
-    def height(self, height: int):
-        """
-        Used to set window height.
-        """
-        self.__set_state_value(self.WindowHeight, height)
-
     def refresh(self):
         """
         Used to load user configuration from database.
@@ -159,41 +129,26 @@ class AppState(AppData):
 
         user_id = self.TemporaryUser
 
-        # This might happen during initial login since
-        # app state is being accessed every time window is built
-        # and this might happen before any user information is available.
-        # Because of that we create a temporary user record that will
-        # contain temporary data which would later be transferred to main record.
         if self.app.users.current is not None:
             user_id = self.app.users.current.id
 
-        state = db().table("app_state") \
+        # Remove temporary user record
+        # in case it's already in database.
+        db().table(self.AppStateTable) \
+            .where("user_id = ?", self.TemporaryUser) \
+            .retrieve() \
+            .remove_all() \
+            .save()
+
+        state = db().table(self.AppStateTable) \
             .where("user_id = ?", user_id) \
             .retrieve()
 
-        temporary_state = db().table("app_state") \
-            .where("user_id = ?", self.TemporaryUser) \
-            .retrieve()
-
-        # Add row if not entry for the user.
+        # Add row if no entry is
+        # present for the user.
         if state.is_empty:
             state.add_row()
-
-        # If there is temporary user data then copy
-        # it to the actual record if value is not null
-        # and after that remove temporary record.
-        if not temporary_state.is_empty:
-            for column in temporary_state.columns:
-                value = temporary_state.get_first(column)
-
-                if value is not None:
-                    state.set_first(column, value)
-
-            temporary_state.remove_all()
-            temporary_state.save()
-
-        state.set_first("user_id", user_id)
-        state.save()
+            state.set_first("user_id", user_id)
 
         self.__state_table = state
 

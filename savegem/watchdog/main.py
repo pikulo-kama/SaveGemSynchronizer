@@ -27,6 +27,9 @@ class Watchdog(Daemon):
 
             thread.start()
 
+    def _run_once(self):  # pragma: no cover
+        pass
+
     def _work(self):  # pragma: no cover
         # All processes would be watched
         # in separate threads, we just need to make

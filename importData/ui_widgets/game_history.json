@@ -12,8 +12,8 @@
       "controller": "GameBarTabController",
       "widget_type_id": "QWidget",
       "layout_type_id": "QVBoxLayout",
-      "margin_top": 20,
       "margin_left": 10,
+      "margin_top": 20,
       "margin_right": 10,
       "margin_bottom": 20,
       "children": [
@@ -26,7 +26,8 @@
           "refresh_events": [
             "game_config_change",
             "game_selection_change",
-            "save_downloaded"
+            "save_downloaded",
+            "cloud_files_change"
           ]
         }
       ]

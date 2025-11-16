@@ -4,7 +4,7 @@ import urllib.request
 from typing import Final, Iterator
 
 from constants import File, JPG_EXTENSION
-from savegem.app.data import holder
+from savegem.app.data import holder, HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
 from savegem.common.db.manager import db
@@ -43,7 +43,7 @@ class GameConfig(AppData):
         """
 
         _logger.debug("Downloading game configuration from drive.")
-        game_config = holder().get("gamesConfig")
+        game_config = holder().get(HolderObject.GamesConfig)
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."

@@ -13,5 +13,4 @@ class GameChangeWorker(QGUIWorker):
 
     def _run(self):
         app().state.game_name = self.__new_game
-        app().games.current.meta.drive.refresh()
         app().activity.refresh()

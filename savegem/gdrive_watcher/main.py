@@ -1,3 +1,4 @@
+from savegem.app.data import holder, HolderObject
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.context import app
@@ -17,6 +18,17 @@ class GDriveWatcher(Daemon):
         self.__start_page_token = None
         Daemon.__init__(self, "gdrive_watcher", True)
 
+    def _run_once(self):
+        holder().add(HolderObject.CurrentUser, GDrive.get_current_user())
+        # No need to get all users that have access since GDrive watcher
+        # only needs current user information.
+        holder().add(HolderObject.AllUsers, [holder().get(HolderObject.CurrentUser)])
+        holder().download_json(HolderObject.UserData, app().config.users_config_file_id)
+        holder().download_json(HolderObject.GamesConfig, app().config.games_config_file_id)
+
+        app().users.initialize()
+        app().games.initialize()
+
     def _work(self):
         """
         Used to poll from Google Drive Changes API
@@ -28,9 +40,6 @@ class GDriveWatcher(Daemon):
         # API as well as will constantly send data to non-existing socket.
         if not os.path.exists(resolve_temp_file(File.GUIInitializedFlag)):
             return
-
-        app().users.initialize()
-        app().games.download()
 
         files, directories = self.__get_changes()
         save_files_modified = app().games.current.drive_directory in directories

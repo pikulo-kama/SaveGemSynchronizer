@@ -245,12 +245,14 @@ class DatabaseTable:
         provided row number.
         """
         self.__remove_internal(lambda record: record.row_number == row_number)
+        return self
 
     def remove_all(self):
         """
         Used to remove all records from the table.
         """
         self.__remove_internal(lambda record: True)
+        return self
 
     def __delete_records(self):
         """

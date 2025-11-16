@@ -25,5 +25,5 @@ class InitializationWorker(QStartupWorker):
             "GameConfigDownloadWorker",
             "CurrentUserDownloadWorker",
             "AllUsersDownloadWorker",
-            "UserConfigDownloadWorker"
+            "UserDataDownloadWorker"
         ]

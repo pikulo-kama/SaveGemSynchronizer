@@ -4,7 +4,7 @@ import urllib.request
 from typing import Iterator
 
 from constants import JPG_EXTENSION, UTF_8
-from savegem.app.data import holder
+from savegem.app.data import holder, HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import resolve_temp_resource
@@ -113,8 +113,9 @@ class UserState(AppData):
         Can be only done once in application lifetime.
         """
 
-        users = holder().get("allUsers")
-        current_user = holder().get("currentUser")
+        users = holder().get(HolderObject.AllUsers)
+        current_user = holder().get(HolderObject.CurrentUser)
+
         current_user_email = current_user.get("emailAddress")
         user_info = self.__upload_user_info(current_user)
 
@@ -154,7 +155,7 @@ class UserState(AppData):
 
     def __upload_user_info(self, current_user_data: dict):
 
-        user_data = holder().get("userData")
+        user_data = holder().get(HolderObject.UserData)
 
         user_email = current_user_data.get("emailAddress")
         user_name = current_user_data.get("displayName")

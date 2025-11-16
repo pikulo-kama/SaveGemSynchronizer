@@ -1,8 +1,22 @@
 import json
-from typing import Optional
+from typing import Optional, Final
 from savegem.common.service.gdrive import GDrive
 
 _data_holder: Optional["DataHolder"] = None
+
+
+class HolderObject:
+    """
+    Object names that are being stored
+    in data holder.
+    """
+
+    CurrentUser: Final = "currentUser"
+    AllUsers: Final = "allUsers"
+    UserData: Final = "userData"
+
+    Activity: Final = "activity"
+    GamesConfig: Final = "gamesConfig"
 
 
 class DataHolder:

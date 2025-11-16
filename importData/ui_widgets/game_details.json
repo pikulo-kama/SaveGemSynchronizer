@@ -69,7 +69,8 @@
                       "height": 25,
                       "refresh_events": [
                         "game_config_change",
-                        "game_selection_change"
+                        "game_selection_change",
+                        "cloud_files_change"
                       ]
                     },
                     {
@@ -80,7 +81,8 @@
                       "height": 30,
                       "refresh_events": [
                         "game_config_change",
-                        "game_selection_change"
+                        "game_selection_change",
+                        "cloud_files_change"
                       ]
                     }
                   ]
@@ -124,11 +126,13 @@
                       "alignment": "vcenter",
                       "refresh_events": [
                         "game_config_change",
-                        "game_selection_change"
+                        "game_selection_change",
+                        "cloud_files_change"
                       ],
                       "recursive_refresh_events": [
                         "game_config_change",
-                        "game_selection_change"
+                        "game_selection_change",
+                        "cloud_files_change"
                       ],
                       "children": [
                         {
@@ -216,7 +220,8 @@
           "grid_columns": 3,
           "style_object_name": "playersContainer",
           "refresh_events": [
-            "game_selection_change"
+            "game_selection_change",
+            "activity_log_update"
           ]
         }
       ]

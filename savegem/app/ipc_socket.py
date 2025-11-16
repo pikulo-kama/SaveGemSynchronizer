@@ -1,7 +1,7 @@
 from PyQt6.QtCore import pyqtSignal, QObject
 
+from savegem.app.data import holder, HolderObject
 from savegem.app.gui.constants import UIRefreshEvent
-from savegem.app.gui.window import gui
 from savegem.common.core.context import app
 from savegem.common.core.holders import prop
 from savegem.common.core.ipc_socket import IPCSocket, IPCCommand, IPCProp
@@ -41,29 +41,12 @@ class UISocket(IPCSocket, QObject):
 
         elif command == IPCCommand.RefreshUI:
             event = message.get(IPCProp.Event)
-            gui().mutex.lock()
 
-            try:
-                # When auto mode is enabled, and save was
-                # downloaded/uploaded from another service
-                # then we need to reload it in
-                # main application.
-                if app().state.is_auto_mode:
-                    for game in app().games:
-                        game.meta.local.refresh()
+            if event == UIRefreshEvent.ActivityLogUpdate:
+                self.__update_activity()
 
-                if event == UIRefreshEvent.GameConfigChange:
-                    app().games.download()
-                    app().games.current.meta.drive.refresh()
-
-                elif event == UIRefreshEvent.ActivityLogUpdate:
-                    app().activity.refresh()
-
-                elif event == UIRefreshEvent.CloudSaveFilesChange:
-                    app().games.current.meta.drive.refresh()
-
-            finally:
-                gui().mutex.unlock()
+            elif event in [UIRefreshEvent.GameConfigChange, UIRefreshEvent.CloudSaveFilesChange]:
+                self.__update_games_configuration(event)
 
             _logger.debug("Refreshing UI with %s event.", event)
             self.refresh_ui.emit(event)  # noqa
@@ -79,6 +62,31 @@ class UISocket(IPCSocket, QObject):
         for process in self.__child_processes:
             process.send(message)
             _logger.debug("Sent message to socket on port %d", process.port)
+
+    @staticmethod
+    def __update_activity():
+        holder().download_json(HolderObject.Activity, app().config.activity_log_file_id)
+        app().activity.refresh()
+
+    @staticmethod
+    def __update_games_configuration(event: str):
+
+        # If game config changed on drive then download it again
+        # and reinitialize game state.
+        if event == UIRefreshEvent.GameConfigChange:
+            holder().download_json(HolderObject.GamesConfig, app().config.games_config_file_id)
+            app().games.initialize()
+
+        for game in app().games:
+            game.meta.local.calculate_checksum()
+            game.meta.drive.refresh()
+
+            # When auto mode is enabled, and save was
+            # downloaded/uploaded from another service
+            # then we need to reload it in
+            # main application.
+            if game.settings.auto_mode:
+                game.meta.local.refresh()
 
 
 ui_socket = UISocket()
