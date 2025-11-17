@@ -5,6 +5,7 @@ import threading
 from PyQt6.QtWidgets import QApplication
 
 from constants import Directory
+from savegem.app.gui.widget.metadata import UISection
 from savegem.app.gui.window import gui
 from savegem.app.ipc_socket import ui_socket
 from savegem.app.startup import StartupJob
@@ -12,6 +13,7 @@ from savegem.common.core.flag import flags
 from savegem.common.core.holders import prop
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.core.text_resource import TextResource
+from savegem.common.service.gdrive import GoogleAuth
 from savegem.common.util.file import cleanup_directory
 from savegem.common.util.logger import get_logger
 from savegem.common.core.context import app
@@ -31,11 +33,10 @@ def main():
 
     app().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     gui().after_init.connect(lambda: flags().gui_initialized.enable())
-    gui().after_init.connect(lambda: StartupJob().start())
     gui().before_destroy.connect(teardown)
 
-    gui().show_wait_screen()
-    gui().build()
+    GoogleAuth.authenticate()
+    StartupJob().start()
 
     sys.exit(gui().application.exec())
 

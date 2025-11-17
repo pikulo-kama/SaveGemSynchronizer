@@ -11,14 +11,19 @@ from PyInstaller.utils.win32.versioninfo import VSVersionInfo, VarFileInfo, VarS
     StringStruct, FixedFileInfo
 
 
+def read_config(service_name: str) -> dict:
+    """
+    Used to read and return service configuration file.
+    """
+
+    with open(f"config/{service_name}.json") as file:
+        return json.load(file)
+
+
 def build_exe_info(service_name: str):
     """
     Used to build version info for EXE.
     """
-
-    def read_config(file_name: str) -> dict:
-        with open(f"config/{file_name}.json") as file:
-            return json.load(file)
 
     app_config = read_config("app")
     service_config = read_config(service_name)
@@ -71,7 +76,13 @@ def build_exe_info(service_name: str):
     }
 
 
-def build_exe(service_name: str, datas: [str] = None, hooks: [str] = None, icon='NONE', console: bool = False):
+def build_exe(
+        service_name: str,
+        icon: str = "NONE",
+        console: bool = False,
+        datas: [str] = None,
+        hooks: [str] = None
+):
     """
     Used to build EXE file.
     Will return both EXE and Analysis.
@@ -178,5 +189,5 @@ COLLECT(
     initializer_a.datas,
 
     upx=True,
-    name=build_exe_info("app").get("name")
+    name=read_config("app").get("name")
 )

@@ -90,17 +90,21 @@ class GUI(QMainWindow):
         create_dynamic_resources()
         self.application.setStyleSheet(load_stylesheet())
 
-    def build(self):
+    def show(self):
+
+        if not self.__is_initialized:
+            self.after_init.emit()  # noqa
+            self.__is_initialized = True
+
+        super().show()
+        _logger.info("Application loop has been started.")
+
+    def build(self, section: str = UISection.RootSection):
         """
         Used to build window and all of its components.
         """
 
         self.setWindowTitle(tr("window_Title", prop("name")))
-        section = UISection.RootSection
-
-        if self.__is_wait_screen:
-            section = UISection.WaitSection
-
         _logger.info("Building UI using section '%s'.", section)
 
         self.reload_styles()
@@ -108,11 +112,6 @@ class GUI(QMainWindow):
         self.__manager.build(section)
         self.is_blocked = False
 
-        if not self.__is_initialized:
-            self.after_init.emit()  # noqa
-            self.__is_initialized = True
-
-        _logger.info("Application loop has been started.")
         self.show()
 
     def refresh(self, event: str = UIRefreshEvent.All):
@@ -124,24 +123,6 @@ class GUI(QMainWindow):
         self.__manager.refresh(event)
 
         self.setWindowTitle(tr("window_Title", prop("name")))
-
-    def show_wait_screen(self):
-        """
-        Used to enable wait screen.
-
-        When enabled 'wait' UI section would be used
-        when starting build without arguments.
-        """
-        self.__is_wait_screen = True
-
-    def hide_wait_screen(self):
-        """
-        Used to disable wait screen.
-
-        When enabled 'root' UI section would be used
-        when starting build without arguments.
-        """
-        self.__is_wait_screen = False
 
     @property
     def is_blocked(self):

@@ -2,10 +2,11 @@ import io
 import json
 import logging
 import os.path
+from typing import Callable
 
 from google.auth.exceptions import RefreshError
-from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -215,16 +216,13 @@ class GDrive:
         """
 
         token_file_name = resolve_app_data(File.GDriveToken)
-        credentials_file_name = resolve_project_data(File.GDriveCreds)
-        creds = None
 
         # Get credentials from file (possible if authentication was done previously)
-        if os.path.exists(token_file_name):
-            _logger.info("Token was found. Application will use credentials from token.")
-            creds = Credentials.from_authorized_user_file(token_file_name, GDRIVE_SCOPES)
+        _logger.info("Token was found. Application will use credentials from token.")
+        creds = Credentials.from_authorized_user_file(token_file_name, GDRIVE_SCOPES)
 
-            if creds and creds.valid:
-                return creds
+        if creds and creds.valid:
+            return creds
 
         # If they're just expired then try to refresh them
         if creds and creds.expired and creds.refresh_token:
@@ -236,19 +234,46 @@ class GDrive:
             except RefreshError:
                 _logger.error("Refresh token expired. Starting authentication process.")
 
+        return creds
+
+
+class GoogleAuth:
+    """
+    Authentication helper.
+    Used to authenticate user using Google OAUTH API.
+    """
+
+    @staticmethod
+    def is_authenticated():
+        """
+        Used to check if user is authenticated
+        and file with auth token exists.
+        """
+        return os.path.exists(resolve_app_data(File.GDriveToken))
+
+    @staticmethod
+    def authenticate():
+        """
+        Used to initiate Google authentication process.
+        """
+
+        token_file_name = resolve_app_data(File.GDriveToken)
+        credentials_file_name = resolve_project_data(File.GDriveCreds)
+
+        # User is already authenticated.
+        if os.path.exists(token_file_name):
+            return
+
         # Authenticate with credentials and then store them for future use
-        if os.path.exists(credentials_file_name):
-            _logger.info("Attempting authentication using credentials.")
-
-            flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, GDRIVE_SCOPES)
-            creds = flow.run_local_server(port=0)
-
-            _logger.info("Authentication completed.")
-            _logger.info("Saving Google Cloud access token for later use.")
-            save_file(token_file_name, json.loads(creds.to_json()), as_json=True)
-
-        else:
+        if not os.path.exists(credentials_file_name):
             _logger.critical(f"{File.GDriveCreds} is missing.")
             raise RuntimeError(f"Google Cloud credentials are missing in root of the project. Add {File.GDriveCreds}.")
 
-        return creds
+        _logger.info("Attempting authentication using credentials.")
+
+        flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, GDRIVE_SCOPES)
+        creds = flow.run_local_server(port=0)
+
+        _logger.info("Authentication completed.")
+        _logger.info("Saving Google Cloud access token for later use.")
+        save_file(token_file_name, json.loads(creds.to_json()), as_json=True)

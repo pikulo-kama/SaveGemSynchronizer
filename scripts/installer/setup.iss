@@ -187,7 +187,7 @@ begin
     
     // Migrate database and reimport non-user related data.
     Exec(ExpandConstant('{app}\{#DatabaseInitializerExeName}'), 'migrate', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    Exec(ExpandConstant('{app}\{#DatabaseInitializerExeName}'), 'import --definition_file=import.def', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    Exec(ExpandConstant('{app}\{#DatabaseInitializerExeName}'), 'import --definition_file=import.def', '', SW_HIDE, ewNoWait, ResultCode);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

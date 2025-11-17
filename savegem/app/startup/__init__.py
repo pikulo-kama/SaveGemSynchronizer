@@ -1,6 +1,7 @@
 from PyQt6.QtCore import QThread
 
 from savegem.app.gui.thread import execute_in_thread
+from savegem.app.gui.widget.metadata import UISection
 from savegem.app.gui.window import gui
 from savegem.app.startup.worker import get_startup_workers, QStartupWorker
 
@@ -23,6 +24,8 @@ class StartupJob:
         Used to start all available startup workers.
         All workers would be executed in separate threads.
         """
+
+        gui().build(UISection.WaitSection)
 
         for task in self.__tasks:
             thread = QThread()
@@ -55,7 +58,6 @@ class StartupJob:
             # If all tasks have been finished then initiate
             # main screen build.
             if len(self.__finished_tasks) == len(self.__tasks):
-                gui().hide_wait_screen()
                 gui().build()
 
         return update_execution_info

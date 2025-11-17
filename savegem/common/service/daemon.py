@@ -7,6 +7,7 @@ from typing import Final
 from constants import JSON_EXTENSION, File
 from savegem.common.core.holders import prop
 from savegem.common.core.json_config_holder import JsonConfigHolder
+from savegem.common.service.gdrive import GoogleAuth
 from savegem.common.util.file import resolve_config, resolve_app_data
 from savegem.common.util.logger import get_logger
 from savegem.common.util.process import is_process_already_running
@@ -55,12 +56,11 @@ class Daemon(abc.ABC):
 
         while True:
             try:
-
                 # There are scenarios where we don't want to trigger authentication flow once user installs
                 # application and background processes start.
                 # Once user authenticates thorough UI it will create
                 # token file, only then service can start doing their job.
-                if self.__requires_auth and not os.path.exists(resolve_app_data(File.GDriveToken)):
+                if self.__requires_auth and not GoogleAuth.is_authenticated():
                     self._logger.debug(
                         "Authentication has not been completed. Sleeping for %d second(s).",
                         self.interval
