@@ -5,6 +5,7 @@ from PyQt6.QtGui import QIcon, QCloseEvent
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout
 
 from constants import Resource
+from savegem.app.data import holder
 from savegem.app.gui.style import create_dynamic_resources, load_stylesheet
 from savegem.app.gui.widget.manager import WidgetManager
 from savegem.app.gui.constants import UIRefreshEvent
@@ -123,6 +124,15 @@ class GUI(QMainWindow):
         self.__manager.refresh(event)
 
         self.setWindowTitle(tr("window_Title", prop("name")))
+
+    def notification(self, message: str):
+        """
+        Used to present notification dialog
+        using provided message.
+        """
+
+        holder().add("dialogMessage", message)
+        self.__manager.build("notification")
 
     @property
     def is_blocked(self):

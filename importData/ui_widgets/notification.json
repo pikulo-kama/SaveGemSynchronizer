@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2025-11-02T21:36:52.127976",
+    "filter": "section_id = 'notification'"
+  },
+  "data": [
+    {
+      "widget_id": "notification_dialog",
+      "section_id": "notification",
+      "controller": "DialogController",
+      "widget_type_id": "QDialog",
+      "layout_type_id": "QHBoxLayout",
+      "alignment": "left",
+      "width": 400,
+      "margin_left": 10,
+      "margin_right": 10,
+      "children": [
+        {
+          "widget_id": "checkmark_icon",
+          "content": "pixmap{checkmark.svg, scale: 30}",
+          "widget_type_id": "QLabel",
+          "alignment": "vcenter"
+        },
+        {
+          "widget_id": "notification_message",
+          "content": "data{dialogMessage}",
+          "widget_type_id": "QWordWrapLabel",
+          "style_object_name": "bodyText",
+          "alignment": "vcenter"
+        }
+      ]
+    }
+  ]
+}

@@ -49,7 +49,7 @@ class DataHolder:
         """
         return self.__data.get(object_name)
 
-    def add(self, object_name: str, data: any):
+    def add(self, object_name: str, data):
         """
         Used to add data to holder.
         """

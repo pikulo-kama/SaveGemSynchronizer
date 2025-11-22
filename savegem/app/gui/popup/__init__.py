@@ -1,10 +1,7 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel
 
-from savegem.common.core.text_resource import tr
 from savegem.common.core.holders import prop
-from savegem.common.util.file import resolve_resource
 from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
@@ -21,8 +18,7 @@ class Popup(QDialog):
         _logger.info("Initializing popup.")
         _logger.debug("popupTitle = %s", title_text_resource)
 
-        self.setWindowTitle(tr(title_text_resource))
-        self.setWindowIcon(QIcon(resolve_resource(icon)))
+        self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
         self.setFixedSize(prop("popupWidth"), prop("popupHeight"))
         self.setModal(True)
 

@@ -9,7 +9,7 @@ from savegem.app.gui.component.widget import QCustomWidget
 from savegem.app.gui.constants import UIRefreshEvent, QBool
 from savegem.app.gui.controller import WidgetController
 from savegem.app.gui.popup.confirmation import confirmation
-from savegem.app.gui.popup.notification import notification
+from savegem.app.gui.window import gui
 from savegem.app.worker.download_worker import DownloadWorker
 from savegem.common.core.context import app
 from savegem.common.core.save_meta import DriveFileMetadata
@@ -90,7 +90,7 @@ class SaveHistoryListController(WidgetController):
                 app().games.current.meta.drive.refresh()
                 self.manager.gui.refresh(UIRefreshEvent.SaveDownloaded)
 
-                notification(tr("notification_NewSaveHasBeenDownloaded"))
+                gui().notification(tr("notification_NewSaveHasBeenDownloaded"))
 
         worker = DownloadWorker(file_id)
 

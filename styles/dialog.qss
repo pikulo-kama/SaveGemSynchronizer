@@ -1,0 +1,18 @@
+
+QCustomDialog {
+    qproperty-top_offset: 10;
+    qproperty-show_duration: 6000;
+
+    border-radius: 5px;
+    background: qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop:0    color("success-a0"),
+        stop:0.5  color("success-a10"),
+        stop:1    color("success-a20")
+    );
+}
+
+QCustomDialog QWordWrapLabel {
+    color: color("text-inverted");
+    min-height: 50px;
+}

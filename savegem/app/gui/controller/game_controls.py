@@ -2,7 +2,7 @@ from savegem.app.gui.component.progress_button import QProgressPushButton
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.controller import WidgetController
 from savegem.app.gui.popup.confirmation import confirmation
-from savegem.app.gui.popup.notification import notification
+from savegem.app.gui.window import gui
 from savegem.app.worker.download_worker import DownloadWorker
 from savegem.app.worker.upload_worker import UploadWorker
 from savegem.common.core.context import app
@@ -18,8 +18,9 @@ def _done_subscriber(message: str):
 
     def callback(event: DoneEvent):
         # Only show notification if there was no error.
+        print(2)
         if event.success:
-            notification(tr(message))
+            gui().notification(tr(message))
 
     return callback
 
@@ -39,13 +40,13 @@ def _error_subscriber(event: ErrorEvent):
     """
 
     if event.kind == EventKind.SavesDirectoryMissing:
-        notification(tr("notification_ErrorSaveDirectoryMissing", app().games.current.local_path))
+        gui().notification(tr("notification_ErrorSaveDirectoryMissing", app().games.current.local_path))
 
     elif event.kind == EventKind.DriveMetadataMissing:
-        notification(tr("label_StorageIsEmptyDesc"))
+        gui().notification(tr("label_StorageIsEmptyDesc"))
 
     elif event.kind == EventKind.ErrorUploadingToDrive:
-        notification(tr("notification_ErrorUploadingToDrive"))
+        gui().notification(tr("notification_ErrorUploadingToDrive"))
 
 
 class DownloadButtonController(WidgetController):
@@ -64,9 +65,9 @@ class DownloadButtonController(WidgetController):
 
             worker.error.connect(_error_subscriber)
             worker.progress.connect(_progress_subscriber(download_button))
-            worker.completed.connect(_done_subscriber("notification_NewSaveHasBeenDownloaded"))
-            worker.completed.connect(lambda: self.manager.gui.refresh(UIRefreshEvent.SaveDownloaded))
             worker.completed.connect(download_button.refresh)
+            worker.completed.connect(lambda: self.manager.gui.refresh(UIRefreshEvent.SaveDownloaded))
+            worker.completed.connect(_done_subscriber("notification_NewSaveHasBeenDownloaded"))
 
             self._do_work(worker)
 
@@ -94,9 +95,9 @@ class UploadButtonController(WidgetController):
 
             worker.error.connect(_error_subscriber)
             worker.progress.connect(_progress_subscriber(upload_button))
-            worker.completed.connect(_done_subscriber("notification_SaveHasBeenUploaded"))
             worker.completed.connect(upload_button.refresh)
             worker.completed.connect(lambda: app().games.current.meta.drive.refresh())
+            worker.completed.connect(_done_subscriber("notification_SaveHasBeenUploaded"))
 
             self._do_work(worker)
 

@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QLabel
+from PyQt6.QtWidgets import QLabel, QSizePolicy
 
 from savegem.app.gui.component import CustomComponentMixin
 
@@ -24,6 +24,23 @@ class QCustomLabel(QLabel, CustomComponentMixin):
 
     def apply_alignment(self):
         self.setAlignment(self.metadata.alignment)
+
+
+class QWordWrapLabel(QCustomLabel):
+    """
+    Custom Qt QLabel widget.
+    Word wraps if content length exceeds geometry
+    of parent widget.
+    """
+
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+        self.setWordWrap(True)
+
+        self.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Preferred
+        )
 
 
 class QRichLabel(QCustomLabel):

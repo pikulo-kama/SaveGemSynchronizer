@@ -16,6 +16,11 @@
       "is_interactable": 0
     },
     {
+      "widget_type_id": "QWordWrapLabel",
+      "class_path": "savegem.app.gui.component.label.QWordWrapLabel",
+      "is_interactable": 0
+    },
+    {
       "widget_type_id": "QRichLabel",
       "class_path": "savegem.app.gui.component.label.QRichLabel",
       "is_interactable": 0
@@ -68,7 +73,12 @@
     {
       "widget_type_id": "QWaitBar",
       "class_path": "savegem.app.gui.component.wait_bar.QWaitBar",
-      "is_interactable": 1
+      "is_interactable": 0
+    },
+    {
+      "widget_type_id": "QDialog",
+      "class_path": "savegem.app.gui.component.dialog.QCustomDialog",
+      "is_interactable": 0
     }
   ]
 }
