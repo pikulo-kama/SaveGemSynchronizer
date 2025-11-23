@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T21:34:58.993810",
+    "extract_date": "2025-11-23T02:57:08.907569",
     "filter": "section_id = 'game_settings'"
   },
   "data": [

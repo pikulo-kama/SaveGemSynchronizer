@@ -28,16 +28,18 @@ class WidgetsExtractor(RegularExtractor):
             widget_unique_id = f"{section_id}.{widget_id}"
             widget_unique_parent_id = f"{section_id}.{widget_parent_id}"
 
-            events = db() \
-                .table("ui_widget_events") \
-                .where("section_id = ? and widget_id = ?", section_id, widget_id) \
-                .retrieve()
+            events = db().table("ui_widget_events") \
+
+            if section_id is None:
+                events.where("section_id IS NULL and widget_id = ?", widget_id)
+            else:
+                events.where("section_id = ? and widget_id = ?", section_id, widget_id)
 
             refresh_events = []
             refresh_events_with_children = []
 
             # Collect widget events.
-            for event in events:
+            for event in events.retrieve():
                 event_id = event.get("refresh_event_id")
                 should_refresh_children = event.get("refresh_children") == 1
 

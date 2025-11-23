@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-03T02:39:24.254058",
+    "extract_date": "2025-11-23T02:54:56.150952",
     "filter": "section_id = 'settings'"
   },
   "data": [

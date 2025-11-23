@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T21:35:41.590456",
+    "extract_date": "2025-11-23T02:57:23.394677",
     "filter": "section_id = 'game_details'"
   },
   "data": [
@@ -68,9 +68,9 @@
                       "style_object_name": "detailsCardContent",
                       "height": 25,
                       "refresh_events": [
+                        "cloud_files_change",
                         "game_config_change",
-                        "game_selection_change",
-                        "cloud_files_change"
+                        "game_selection_change"
                       ]
                     },
                     {
@@ -80,9 +80,9 @@
                       "style_object_name": "detailsCardContent",
                       "height": 30,
                       "refresh_events": [
+                        "cloud_files_change",
                         "game_config_change",
-                        "game_selection_change",
-                        "cloud_files_change"
+                        "game_selection_change"
                       ]
                     }
                   ]
@@ -125,14 +125,14 @@
                       "layout_type_id": "QHBoxLayout",
                       "alignment": "vcenter",
                       "refresh_events": [
+                        "cloud_files_change",
                         "game_config_change",
-                        "game_selection_change",
-                        "cloud_files_change"
+                        "game_selection_change"
                       ],
                       "recursive_refresh_events": [
+                        "cloud_files_change",
                         "game_config_change",
-                        "game_selection_change",
-                        "cloud_files_change"
+                        "game_selection_change"
                       ],
                       "children": [
                         {
@@ -220,8 +220,8 @@
           "grid_columns": 3,
           "style_object_name": "playersContainer",
           "refresh_events": [
-            "game_selection_change",
-            "activity_log_update"
+            "activity_log_update",
+            "game_selection_change"
           ]
         }
       ]

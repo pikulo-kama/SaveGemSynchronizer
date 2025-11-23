@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T21:21:53.662522",
+    "extract_date": "2025-11-23T03:19:56.331932",
     "filter": "section_id IS NULL"
   },
   "data": [

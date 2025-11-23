@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T21:36:52.127976",
+    "extract_date": "2025-11-23T02:55:46.577901",
     "filter": "section_id = 'home'"
   },
   "data": [
@@ -126,15 +126,15 @@
                             },
                             {
                               "widget_id": "sync_status_badge",
-                              "widget_type_id": "QWidget",
-                              "layout_type_id": "QHBoxLayout",
                               "tooltip": "saveInfo{statusDescription}",
                               "controller": "SyncStatusController",
+                              "widget_type_id": "QWidget",
+                              "layout_type_id": "QHBoxLayout",
+                              "style_object_name": "syncStatusBadge",
+                              "alignment": "left-vcenter",
                               "height": 25,
                               "margin_left": 5,
                               "margin_right": 5,
-                              "alignment": "left-vcenter",
-                              "style_object_name": "syncStatusBadge",
                               "refresh_events": [
                                 "game_selection_change"
                               ],
@@ -157,10 +157,10 @@
                                 },
                                 {
                                   "widget_id": "sync_status",
-                                  "widget_type_id": "QLabel",
-                                  "alignment": "left-center",
                                   "content": "saveInfo{status}",
+                                  "widget_type_id": "QLabel",
                                   "style_object_name": "smallTextInverted",
+                                  "alignment": "left-center",
                                   "stylesheet": {
                                     "font-weight": "bold",
                                     "color": "color('dark-a0')"
@@ -231,8 +231,8 @@
                       "widget_id": "download_button",
                       "controller": "DownloadButtonController",
                       "widget_type_id": "QProgressPushButton",
-                      "height": 40,
                       "style_object_name": "[id=downloadButton, kind=primary]",
+                      "height": 40,
                       "refresh_events": [
                         "language_change"
                       ]

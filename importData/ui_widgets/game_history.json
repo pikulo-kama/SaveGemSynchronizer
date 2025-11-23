@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T21:36:21.771710",
+    "extract_date": "2025-11-23T02:58:13.315910",
     "filter": "section_id = 'game_history'"
   },
   "data": [
@@ -24,10 +24,10 @@
           "layout_type_id": "QVBoxLayout",
           "margin_right": 10,
           "refresh_events": [
+            "cloud_files_change",
             "game_config_change",
             "game_selection_change",
-            "save_downloaded",
-            "cloud_files_change"
+            "save_downloaded"
           ]
         }
       ]

@@ -261,7 +261,6 @@ class DatabaseTable:
         """
 
         pk_columns = self.__get_pk_columns()
-        pk_filter_single = " AND ".join([f"{column} = ?" for column in pk_columns])
         pk_filter_sql = []
         pk_filter_values = []
 
@@ -269,10 +268,19 @@ class DatabaseTable:
             return
 
         for record in self.__deleted_records:
-            for pk_column in pk_columns:
-                pk_filter_values.append(record.get(pk_column))
+            pk_filter_single = []
 
-            pk_filter_sql.append(f"({pk_filter_single})")
+            for pk_column in pk_columns:
+                pk_value = record.get(pk_column)
+
+                if pk_value is None:
+                    pk_filter_single.append(f"{pk_column} IS NULL")
+
+                else:
+                    pk_filter_single.append(f"{pk_column} = ?")
+                    pk_filter_values.append(pk_value)
+
+            pk_filter_sql.append(f"({" AND ".join(pk_filter_single)})")
 
         self.__db.execute(f"""
             DELETE FROM {self.__table_name}

@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T21:36:52.127976",
+    "extract_date": "2025-11-23T03:00:22.190704",
     "filter": "section_id = 'notification'"
   },
   "data": [

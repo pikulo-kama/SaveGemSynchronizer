@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-02T21:36:52.127976",
+    "extract_date": "2025-11-23T02:59:16.241143",
     "filter": "section_id = 'confirmation'"
   },
   "data": [
@@ -14,20 +14,20 @@
       "layout_type_id": "QVBoxLayout",
       "style_object_name": "confirmationDialog",
       "alignment": "left",
+      "spacing": 15,
       "width": 400,
       "margin_bottom": 20,
-      "spacing": 15,
       "children": [
         {
           "widget_id": "confirmation_title_container",
           "widget_type_id": "QWidget",
           "layout_type_id": "QHBoxLayout",
           "style_object_name": "confirmationDialogContainer",
-          "margin_top": 10,
-          "margin_bottom": 10,
-          "margin_left": 20,
-          "margin_right": 20,
           "alignment": "left",
+          "margin_left": 20,
+          "margin_top": 10,
+          "margin_right": 20,
+          "margin_bottom": 10,
           "children": [
             {
               "widget_id": "confirmation_icon",
