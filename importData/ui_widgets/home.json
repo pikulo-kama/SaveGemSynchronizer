@@ -55,8 +55,10 @@
               "style_object_name": "gameList",
               "margin_right": 10,
               "refresh_events": [
+                "cloud_files_change",
                 "game_config_change",
-                "game_selection_change"
+                "game_selection_change",
+                "save_downloaded"
               ]
             }
           ]
@@ -131,8 +133,10 @@
                               "height": 25,
                               "margin_left": 5,
                               "margin_right": 5,
-                              "refresh_events": [
-                                "game_selection_change"
+                              "recursive_refresh_events": [
+                                "cloud_files_change",
+                                "game_selection_change",
+                                "save_downloaded"
                               ],
                               "children": [
                                 {
