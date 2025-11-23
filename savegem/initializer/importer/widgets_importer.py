@@ -41,9 +41,10 @@ class WidgetsImporter(RegularImporter):
         children = parent.get("children", [])
         refresh_events = parent.get("refresh_events", [])
         recursive_refresh_events = parent.get("recursive_refresh_events", [])
+        all_events = refresh_events + recursive_refresh_events
 
         # Save refresh events.
-        for event in refresh_events:
+        for event in all_events:
             refresh_children = 1 if event in recursive_refresh_events else 0
             row = events_table.add_row()
 

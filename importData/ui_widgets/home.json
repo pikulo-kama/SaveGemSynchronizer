@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T02:55:46.577901",
+    "extract_date": "2025-11-23T03:26:26.064967",
     "filter": "section_id = 'home'"
   },
   "data": [
@@ -88,10 +88,6 @@
                       "widget_type_id": "QWidget",
                       "layout_type_id": "QVBoxLayout",
                       "height": 130,
-                      "refresh_events": [
-                        "game_config_change",
-                        "game_selection_change"
-                      ],
                       "recursive_refresh_events": [
                         "game_config_change",
                         "game_selection_change"

@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T02:57:23.394677",
+    "extract_date": "2025-11-23T03:24:19.847092",
     "filter": "section_id = 'game_details'"
   },
   "data": [
@@ -124,11 +124,6 @@
                       "widget_type_id": "QWidget",
                       "layout_type_id": "QHBoxLayout",
                       "alignment": "vcenter",
-                      "refresh_events": [
-                        "cloud_files_change",
-                        "game_config_change",
-                        "game_selection_change"
-                      ],
                       "recursive_refresh_events": [
                         "cloud_files_change",
                         "game_config_change",

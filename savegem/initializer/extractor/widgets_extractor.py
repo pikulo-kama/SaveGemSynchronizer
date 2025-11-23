@@ -36,23 +36,24 @@ class WidgetsExtractor(RegularExtractor):
                 events.where("section_id = ? and widget_id = ?", section_id, widget_id)
 
             refresh_events = []
-            refresh_events_with_children = []
+            recursive_refresh_events = []
 
             # Collect widget events.
             for event in events.retrieve():
                 event_id = event.get("refresh_event_id")
-                should_refresh_children = event.get("refresh_children") == 1
+                is_recursive = event.get("refresh_children") == 1
 
-                refresh_events.append(event_id)
+                if is_recursive:
+                    recursive_refresh_events.append(event_id)
 
-                if should_refresh_children:
-                    refresh_events_with_children.append(event_id)
+                else:
+                    refresh_events.append(event_id)
 
             if len(refresh_events) > 0:
                 widget["refresh_events"] = refresh_events
 
-            if len(refresh_events_with_children) > 0:
-                widget["recursive_refresh_events"] = refresh_events_with_children
+            if len(recursive_refresh_events) > 0:
+                widget["recursive_refresh_events"] = recursive_refresh_events
 
             if widget_unique_parent_id == parent_id or (parent_id is None and widget_parent_id is None):
                 children = self.__build_tree(widget_data, parent_id=widget_unique_id)

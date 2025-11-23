@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T03:19:56.331932",
+    "extract_date": "2025-11-23T03:21:40.252711",
     "filter": "section_id IS NULL"
   },
   "data": [
@@ -28,9 +28,6 @@
               "style_object_name": "sidebarMenu",
               "margin_left": 5,
               "margin_right": 5,
-              "refresh_events": [
-                "language_change"
-              ],
               "recursive_refresh_events": [
                 "language_change"
               ]

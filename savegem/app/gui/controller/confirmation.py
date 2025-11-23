@@ -6,6 +6,11 @@ from savegem.app.gui.widget.metadata import UISection
 
 
 class ConfirmationDialogController(DialogController):
+    """
+    Used to control confirmation dialog.
+    Will bind configured callback to confirm button
+    and will bind dialog closing to cancel button.
+    """
 
     def setup(self, dialog: QCustomDialog):
 
