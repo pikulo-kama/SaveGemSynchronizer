@@ -35,3 +35,6 @@ class QScrollableWidget(QScrollArea, CustomComponentMixin):
     @metadata.setter
     def metadata(self, metadata: WidgetMetadata):
         self.__content.metadata = metadata
+
+    def setStyleSheet(self, style_sheet: str):
+        self.__content.setStyleSheet(style_sheet)
