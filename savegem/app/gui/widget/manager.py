@@ -32,10 +32,12 @@ class WidgetManager:
         """
         return self.__gui
 
-    def get_widget(self, widget_name: str):
+    def get_widget(self, section_id: str, widget_id: str):
         """
         Used to get widget by its unique ID.
         """
+
+        widget_name = f"{section_id}.{widget_id}"
         return self.__widgets.get(widget_name)
 
     def add_widget(self, widget: QCustomComponent):

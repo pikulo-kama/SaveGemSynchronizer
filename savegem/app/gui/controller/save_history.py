@@ -8,7 +8,6 @@ from savegem.app.gui.component.spacer import QSpacer
 from savegem.app.gui.component.widget import QCustomWidget
 from savegem.app.gui.constants import UIRefreshEvent, QBool
 from savegem.app.gui.controller import WidgetController
-from savegem.app.gui.popup.confirmation import confirmation
 from savegem.app.gui.window import gui
 from savegem.app.worker.download_worker import DownloadWorker
 from savegem.common.core.context import app
@@ -29,7 +28,7 @@ class SaveHistoryListController(WidgetController):
         self.manager.remove_child_widgets(save_list)
 
         def restore_version(file_id: str, button: QProgressPushButton):
-            return lambda: confirmation(
+            return lambda: gui().confirmation(
                 tr("confirmation_ConfirmToDownloadSave"),
                 lambda: self.__restore_version(file_id, button)
             )

@@ -23,7 +23,6 @@ class QProgressPushButton(QCustomPushButton):
         self.__progress_bar.setValue(0)
 
     def refresh(self, refresh_children: bool = False):
-        print(1)
         super().refresh(refresh_children)
         self.set_progress(0)
 

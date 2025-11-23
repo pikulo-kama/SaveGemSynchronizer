@@ -3,7 +3,6 @@ from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.component.combobox import QCustomComboBox
 from savegem.app.gui.constants import UIRefreshEvent
 from savegem.app.gui.controller import WidgetController
-from savegem.app.gui.popup.confirmation import confirmation
 from savegem.app.gui.style import ColorMode
 from savegem.app.gui.window import gui
 from savegem.common.core.context import app
@@ -115,7 +114,7 @@ class LogoutController(WidgetController):
             exit(0)
 
         logout_button.clicked.connect(  # noqa
-            lambda: confirmation(
+            lambda: gui().confirmation(
                 tr("confirmation_ConfirmLogout"),
                 logout
             )

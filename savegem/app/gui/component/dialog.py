@@ -17,7 +17,7 @@ class QCustomDialog(QDialog, CustomComponentMixin):
 
         self.__top_offset = 0
         self.__slide_duration = 250
-        self.__show_duration = 3000
+        self.__show_duration = 0
 
         self.setWindowFlags(
             Qt.WindowType.Window |
@@ -33,7 +33,7 @@ class QCustomDialog(QDialog, CustomComponentMixin):
 
         self.__hide_timer = QTimer(self)
         self.__hide_timer.setSingleShot(True)
-        self.__hide_timer.timeout.connect(self.__animate_hide)  # noqa
+        self.__hide_timer.timeout.connect(self.hide)  # noqa
 
     @pyqtProperty(int)
     def top_offset(self):
@@ -75,6 +75,9 @@ class QCustomDialog(QDialog, CustomComponentMixin):
         Show duration.
         Represents amount of time popup will
         be visible until it would disappear (ms).
+
+        If value is 0 or less dialog will not
+        be dismissed automatically.
         """
         return self.__show_duration
 
@@ -94,11 +97,11 @@ class QCustomDialog(QDialog, CustomComponentMixin):
         """
 
         self.adjustSize()
-        self.__animate_show()
+        self.show()
 
         super().exec()
 
-    def __animate_show(self):
+    def show(self):
         """
         Used to animate dialog sliding in.
         """
@@ -125,13 +128,15 @@ class QCustomDialog(QDialog, CustomComponentMixin):
         self.__animation.setEndValue(rect)
 
         # Show the widget before starting the animation
-        self.show()
+        super().show()
         self.__animation.start()
 
-        # Start the timer to hide the dialog after the display time
-        self.__hide_timer.start(self.__slide_duration + self.__show_duration)
+        # Start the timer to hide the dialog after the display time.
+        # Only do this if show duration is positive value.
+        if self.__show_duration > 0:
+            self.__hide_timer.start(self.__slide_duration + self.__show_duration)
 
-    def __animate_hide(self):
+    def hide(self):
         """
         Used to animate dialog sliding out.
         """

@@ -420,24 +420,24 @@
     },
     "popup_ConfirmationButtonConfirm": {
       "de_DE": "Bestätigen",
-      "en_US": "Agree",
-      "es_ES": "Aceptar",
+      "en_US": "Confirm",
+      "es_ES": "Confirmar",
       "fr_FR": "Confirmer",
-      "uk_UA": "Підтверджую"
+      "uk_UA": "Підтвердити"
     },
     "popup_ConfirmationTitle": {
-      "de_DE": "Achtung",
-      "en_US": "Be Aware",
-      "es_ES": "Atención",
-      "fr_FR": "Attention",
-      "uk_UA": "Застереження"
+      "de_DE": "Aktion Bestätigen",
+      "en_US": "Confirm Action",
+      "es_ES": "Confirmar Acción",
+      "fr_FR": "Confirmer l'Action",
+      "uk_UA": "Підтвердіть Дію"
     },
-    "popup_NotificationButtonClose": {
-      "de_DE": "OK",
-      "en_US": "OK",
-      "es_ES": "OK",
-      "fr_FR": "OK",
-      "uk_UA": "OK"
+    "popup_NotificationButtonCancel": {
+      "de_DE": "Abbrechen",
+      "en_US": "Cancel",
+      "es_ES": "Cancelar",
+      "fr_FR": "Annuler",
+      "uk_UA": "Скасувати"
     },
     "popup_NotificationTitle": {
       "de_DE": "Information",

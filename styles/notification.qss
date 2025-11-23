@@ -1,5 +1,5 @@
 
-QCustomDialog {
+QCustomDialog#notificationDialog {
     qproperty-top_offset: 10;
     qproperty-show_duration: 6000;
 
@@ -12,7 +12,7 @@ QCustomDialog {
     );
 }
 
-QCustomDialog QWordWrapLabel {
+QCustomDialog#notificationDialog QWordWrapLabel {
     color: color("text-inverted");
     min-height: 50px;
 }

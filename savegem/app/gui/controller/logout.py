@@ -1,7 +1,7 @@
 from constants import File
 from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.controller import WidgetController
-from savegem.app.gui.popup.confirmation import confirmation
+from savegem.app.gui.window import gui
 from savegem.common.core.text_resource import tr
 from savegem.common.util.file import delete_file, resolve_app_data
 
@@ -13,7 +13,7 @@ class LogoutController(WidgetController):
 
     def setup(self, logout_button: QCustomPushButton):
         logout_button.clicked.connect(  # noqa
-            lambda: confirmation(
+            lambda: gui().confirmation(
                 tr("confirmation_ConfirmLogout"),
                 self.__logout
             )

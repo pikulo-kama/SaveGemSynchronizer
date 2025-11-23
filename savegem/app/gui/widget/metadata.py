@@ -40,6 +40,10 @@ class UISection:
     """
     WaitSection: Final = "wait"
 
+    HomeSection: Final = "home"
+
+    ConfirmSection: Final = "confirmation"
+
 
 @dataclass
 class RefreshEventMetadata:

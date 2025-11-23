@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget
 
 from savegem.app.gui.controller import WidgetController
+from savegem.app.gui.widget.metadata import UISection
 
 
 class MenuItemController(WidgetController):
@@ -10,4 +11,4 @@ class MenuItemController(WidgetController):
     """
 
     def setup(self, section_root_widget: QWidget):
-        self._change_widget_parent(section_root_widget, "root.content")
+        self._change_widget_parent(section_root_widget, UISection.RootSection, "content")

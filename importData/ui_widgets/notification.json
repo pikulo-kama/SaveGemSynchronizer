@@ -12,6 +12,7 @@
       "controller": "DialogController",
       "widget_type_id": "QDialog",
       "layout_type_id": "QHBoxLayout",
+      "style_object_name": "notificationDialog",
       "alignment": "left",
       "width": 400,
       "margin_left": 10,

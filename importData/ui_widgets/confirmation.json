@@ -1,0 +1,89 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2025-11-02T21:36:52.127976",
+    "filter": "section_id = 'confirmation'"
+  },
+  "data": [
+    {
+      "widget_id": "confirmation_dialog",
+      "section_id": "confirmation",
+      "controller": "ConfirmationDialogController",
+      "widget_type_id": "QDialog",
+      "layout_type_id": "QVBoxLayout",
+      "style_object_name": "confirmationDialog",
+      "alignment": "left",
+      "width": 400,
+      "margin_bottom": 20,
+      "spacing": 15,
+      "children": [
+        {
+          "widget_id": "confirmation_title_container",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QHBoxLayout",
+          "style_object_name": "confirmationDialogContainer",
+          "margin_top": 10,
+          "margin_bottom": 10,
+          "margin_left": 20,
+          "margin_right": 20,
+          "alignment": "left",
+          "children": [
+            {
+              "widget_id": "confirmation_icon",
+              "content": "pixmap{exclamation_mark.svg, scale: 20}",
+              "widget_type_id": "QLabel",
+              "alignment": "vcenter"
+            },
+            {
+              "widget_id": "confirmation_title",
+              "content": "tr{popup_ConfirmationTitle}",
+              "widget_type_id": "QLabel",
+              "style_object_name": "sectionTitleTextInverted",
+              "alignment": "vcenter"
+            }
+          ]
+        },
+        {
+          "widget_id": "confirmation_message_container",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QVBoxLayout",
+          "alignment": "vcenter",
+          "margin_left": 20,
+          "margin_right": 20,
+          "children": [
+            {
+              "widget_id": "confirmation_message",
+              "content": "data{dialogMessage}",
+              "widget_type_id": "QWordWrapLabel",
+              "style_object_name": "bodyText",
+              "alignment": "vcenter",
+              "margin_left": 20,
+              "margin_right": 20
+            }
+          ]
+        },
+        {
+          "widget_id": "confirmation_controls",
+          "widget_type_id": "QWidget",
+          "layout_type_id": "QHBoxLayout",
+          "spacing": 10,
+          "margin_left": 20,
+          "margin_right": 20,
+          "children": [
+            {
+              "widget_id": "confirm_button",
+              "content": "tr{popup_ConfirmationButtonConfirm}",
+              "widget_type_id": "QPushButton"
+            },
+            {
+              "widget_id": "cancel_button",
+              "content": "tr{popup_NotificationButtonCancel}",
+              "widget_type_id": "QPushButton"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

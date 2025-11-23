@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Callable
 
 from PyQt6.QtCore import pyqtSignal, QSettings
 from PyQt6.QtGui import QIcon, QCloseEvent
@@ -121,8 +121,8 @@ class GUI(QMainWindow):
         """
 
         _logger.info("Refreshing UI with event '%s'.", event)
-        self.__manager.refresh(event)
 
+        self.__manager.refresh(event)
         self.setWindowTitle(tr("window_Title", prop("name")))
 
     def notification(self, message: str):
@@ -133,6 +133,17 @@ class GUI(QMainWindow):
 
         holder().add("dialogMessage", message)
         self.__manager.build("notification")
+
+    def confirmation(self, message: str, callback: Callable):
+        """
+        Used to present confirmation dialog
+        using provided message and confirmation
+        callback.
+        """
+
+        holder().add("dialogMessage", message)
+        holder().add("confirmationCallback", callback)
+        self.__manager.build("confirmation")
 
     @property
     def is_blocked(self):

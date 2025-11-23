@@ -108,19 +108,20 @@ class WidgetController:
         """
         return self.__state.get(key)
 
-    def _set_state(self, key: str, value: any):
+    def _set_state(self, key: str, value):
         """
         Used to set dynamic state value.
         """
         self.__state[key] = value
 
-    def _change_widget_parent(self, widget: QWidget, new_parent_widget_id: str):
+    def _change_widget_parent(self, widget: QWidget, target_section_id: str, target_widget_id: str):
         """
         Helper method that allows to move provided image
         to another widget.
         """
 
-        target_layout = self.manager.get_widget(new_parent_widget_id).layout()
+        target_widget = self.manager.get_widget(target_section_id, target_widget_id)
+        target_layout = target_widget.layout()
         original_layout = widget.layout()
 
         original_layout.removeWidget(widget)
