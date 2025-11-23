@@ -12,3 +12,12 @@ QCustomPushButton {
 QCustomPushButton:hover {
     background-color: color("surface-a20");
 }
+
+QCustomPushButton[kind="primary"] {
+    background-color: color("primary-a20");
+    color: color("text-inverted");
+}
+
+QCustomPushButton[kind="primary"]:hover {
+    background-color: color("primary-a10");
+}

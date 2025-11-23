@@ -66,4 +66,3 @@ QProgressBar[kind="QProgressPushButton-primary"]::chunk:hover {
     background-color: color("primary-a10");
     color: color("text-inverted");
 }
-

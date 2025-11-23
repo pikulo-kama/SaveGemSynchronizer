@@ -74,7 +74,8 @@
             {
               "widget_id": "confirm_button",
               "content": "tr{popup_ConfirmationButtonConfirm}",
-              "widget_type_id": "QPushButton"
+              "widget_type_id": "QPushButton",
+              "style_object_name": "[kind=primary]"
             },
             {
               "widget_id": "cancel_button",
