@@ -2,7 +2,7 @@ from savegem.app.data import holder
 from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.component.dialog import QCustomDialog
 from savegem.app.gui.controller.dialog import DialogController
-from savegem.app.gui.widget.metadata import UISection
+from savegem.app.gui.constants import UISection
 
 
 class ConfirmationDialogController(DialogController):
@@ -20,8 +20,8 @@ class ConfirmationDialogController(DialogController):
             dialog.hide()
             confirm_callback()
 
-        confirm_button: QCustomPushButton = self.manager.get_widget(UISection.ConfirmSection, "confirm_button")
-        cancel_button: QCustomPushButton = self.manager.get_widget(UISection.ConfirmSection, "cancel_button")
+        confirm_button: QCustomPushButton = self.manager.get_widget(UISection.ConfirmationSection, "confirm_button")
+        cancel_button: QCustomPushButton = self.manager.get_widget(UISection.ConfirmationSection, "cancel_button")
 
         confirm_button.enable()
         cancel_button.enable()

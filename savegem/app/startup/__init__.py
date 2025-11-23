@@ -1,7 +1,7 @@
 from PyQt6.QtCore import QThread
 
 from savegem.app.gui.thread import execute_in_thread
-from savegem.app.gui.widget.metadata import UISection
+from savegem.app.gui.constants import UISection
 from savegem.app.gui.window import gui
 from savegem.app.startup.worker import get_startup_workers, QStartupWorker
 

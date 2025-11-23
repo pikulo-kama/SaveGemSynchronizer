@@ -1,6 +1,41 @@
 from typing import Final
 
 
+class UISection:
+    """
+    Represents UI sections that are
+    being built by widget manager.
+    """
+
+    """
+    Root section name.
+    This is main section that is being built in the first
+    place when application starts.
+    """
+    RootSection: Final = "root"
+
+    """
+    Section that should be displayed when data to present root
+    section is still not available.
+    """
+    WaitSection: Final = "wait"
+
+    """
+    Section containing main application screen.
+    """
+    HomeSection: Final = "home"
+
+    """
+    Notification dialog section
+    """
+    NotificationSection: Final = "notification"
+
+    """
+    Confirmation dialog section
+    """
+    ConfirmationSection: Final = "confirmation"
+
+
 class UIRefreshEvent:
     """
     Represents UI refresh event.
@@ -31,27 +66,4 @@ class QAttr:
 
     Id: Final = "id"
     Kind: Final = "kind"
-    SizeVariant: Final = "variant"
     Disabled: Final = "is-disabled"
-
-
-class QObjectName:
-    """
-    Contains names of QSS objects.
-    """
-
-    Button: Final = "button"
-    Chip: Final = "chip"
-    ComboBox: Final = "comboBox"
-    Sidebar: Final = "sidebar"
-    SidebarItem: Final = "sidebarItem"
-
-
-class QKind:
-    """
-    Contains names of element kinds.
-    """
-
-    Primary: Final = "primary"
-    Secondary: Final = "secondary"
-    Disabled: Final = "disabled"

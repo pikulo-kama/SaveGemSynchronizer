@@ -8,8 +8,7 @@ from constants import Resource
 from savegem.app.data import holder
 from savegem.app.gui.style import create_dynamic_resources, load_stylesheet
 from savegem.app.gui.widget.manager import WidgetManager
-from savegem.app.gui.constants import UIRefreshEvent
-from savegem.app.gui.widget.metadata import UISection
+from savegem.app.gui.constants import UIRefreshEvent, UISection
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
 from savegem.common.util.file import resolve_resource

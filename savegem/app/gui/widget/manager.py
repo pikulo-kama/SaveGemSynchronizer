@@ -2,9 +2,9 @@ import copy
 from typing import TYPE_CHECKING, Callable
 
 from savegem.app.gui.component import QCustomComponent
-from savegem.app.gui.constants import UIRefreshEvent
+from savegem.app.gui.constants import UIRefreshEvent, UISection
 from savegem.app.gui.controller import load_controllers, WidgetController
-from savegem.app.gui.widget.metadata import WidgetMetadata, UISection
+from savegem.app.gui.widget.metadata import WidgetMetadata
 from savegem.app.gui.component.layout import QCustomLayout
 from savegem.app.gui.widget.resolver import resolve_content
 from savegem.common.db.manager import db

@@ -92,6 +92,8 @@ class MetadataWrapper:
         elif current_checksum != drive_save_checksum:
             return SyncStatus.NeedsUpload
 
+        return SyncStatus.NoInformation
+
 
 class Metadata(abc.ABC):  # pragma: no cover
     """

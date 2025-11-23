@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QWidget
 
 from savegem.app.gui.controller import WidgetController
-from savegem.app.gui.widget.metadata import UISection
+from savegem.app.gui.constants import UISection
 
 
 class GameBarTabController(WidgetController):

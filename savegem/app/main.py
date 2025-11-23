@@ -5,7 +5,6 @@ import threading
 from PyQt6.QtWidgets import QApplication
 
 from constants import Directory
-from savegem.app.gui.widget.metadata import UISection
 from savegem.app.gui.window import gui
 from savegem.app.ipc_socket import ui_socket
 from savegem.app.startup import StartupJob

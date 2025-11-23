@@ -1,11 +1,9 @@
 import json
 import re
 from dataclasses import dataclass
-from typing import Final
-
 from PyQt6.QtCore import Qt
 
-from savegem.app.gui.constants import UIRefreshEvent
+from savegem.app.gui.constants import UIRefreshEvent, UISection
 from savegem.app.gui.style import resolve_style_properties
 from savegem.app.gui.widget.type import WidgetType, UIObjectType, get_widget_type, get_layout_type
 from savegem.common.db.manager import db
@@ -21,29 +19,6 @@ _alignment_map = {
     "right": Qt.AlignmentFlag.AlignRight,
     "bottom": Qt.AlignmentFlag.AlignBottom
 }
-
-
-class UISection:
-    """
-    Represents UI sections that are build by widget manager.
-    """
-
-    """
-    Root section name.
-    This is main section that is being built in the first
-    place when application starts.
-    """
-    RootSection: Final = "root"
-
-    """
-    Section that should be displayed when data to present root
-    section is still not available.
-    """
-    WaitSection: Final = "wait"
-
-    HomeSection: Final = "home"
-
-    ConfirmSection: Final = "confirmation"
 
 
 @dataclass
