@@ -64,6 +64,8 @@ class SaveInfoResolver(ContentResolver):
         elif key == "statusIcon":
             return _status_icon_map.get(sync_status)
 
+        return na_label
+
     @staticmethod
     def __get_owner_property(function):
         """
