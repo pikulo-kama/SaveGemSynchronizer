@@ -1,9 +1,10 @@
 import os
+from typing import Any
 
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.db.manager import db
-from savegem.common.util.file import read_file, resolve_import_data
+from savegem.common.util.file import read_file, resolve_import_data, file_checksum
 from savegem.common.util.reflection import get_members
 
 
@@ -38,8 +39,24 @@ def invoke_importer(args):
         if line.startswith("#") or len(line) == 0:
             continue
 
-        files_to_import.append(line)
+        checksum = file_checksum(resolve_import_data(line))
+        metadata = db().table("import_data_version") \
+            .where("file_name = ?", line) \
+            .retrieve()
 
+        # Create entry if it doesn't exist.
+        if metadata.is_empty:
+            metadata.add_row()
+            metadata.set_first("file_name", line)
+
+        # Only import data if checksum has changed.
+        if metadata.get_first("checksum") != checksum:
+            metadata.set_first("checksum", checksum)
+            files_to_import.append(line)
+
+        metadata.save()
+
+    # Import files separately.
     for file_name in files_to_import:
         invoke_importer_for_file(file_name, custom_importers, args)
 
@@ -112,7 +129,7 @@ class RegularImporter:
 
         import_table.save()
 
-    def _format_data(self, data: any, metadata: dict):
+    def _format_data(self, data: Any, metadata: dict):
         """
         Allows to format JSON data before
         persisting it in database.
