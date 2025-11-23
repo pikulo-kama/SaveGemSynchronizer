@@ -215,11 +215,9 @@
                       "content": "tr{label_UploadSaveToDrive}",
                       "controller": "UploadButtonController",
                       "widget_type_id": "QProgressPushButton",
+                      "style_object_name": "[id=uploadButton]",
                       "width": 200,
                       "height": 40,
-                      "properties": {
-                        "id": "uploadButton"
-                      },
                       "refresh_events": [
                         "language_change"
                       ]
@@ -234,10 +232,7 @@
                       "controller": "DownloadButtonController",
                       "widget_type_id": "QProgressPushButton",
                       "height": 40,
-                      "properties": {
-                        "id": "downloadButton",
-                        "kind": "primary"
-                      },
+                      "style_object_name": "[id=downloadButton, kind=primary]",
                       "refresh_events": [
                         "language_change"
                       ]

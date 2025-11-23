@@ -1,4 +1,5 @@
 import json
+import re
 from dataclasses import dataclass
 from typing import Final
 
@@ -76,12 +77,12 @@ class WidgetMetadata:
                  margin_top: int = None,
                  margin_right: int = None,
                  margin_bottom: int = None,
-                 object_name: str = None,
+                 style_object_name: str = None,
                  alignment: Qt.AlignmentFlag = Qt.AlignmentFlag(0),
                  content: str = None,
                  tooltip: str = None,
                  stylesheet: str = "",
-                 properties: dict = None,
+                 properties: dict[str, str] = None,
                  refresh_events: list[str] = None,
                  refresh_events_meta: dict[str, RefreshEventMetadata] = None):
 
@@ -102,7 +103,6 @@ class WidgetMetadata:
         self.__margin_top = margin_top or 0
         self.__margin_right = margin_right or 0
         self.__margin_bottom = margin_bottom or 0
-        self.__object_name = object_name
         self.__alignment = alignment
         self.__content = content
         self.__tooltip = tooltip
@@ -110,6 +110,9 @@ class WidgetMetadata:
         self.__properties = properties or {}
         self.__refresh_events = refresh_events or []
         self.__refresh_event_meta = refresh_events_meta or {}
+
+        self.__object_name = None
+        self.__parse_style_object_name(style_object_name)
 
         # ALL refresh event should always be in list of refresh events.
         self.__refresh_event_meta[UIRefreshEvent.All] = RefreshEventMetadata(False)
@@ -127,21 +130,18 @@ class WidgetMetadata:
         section_id = metadata_row.get("section_id")
         refresh_events = []
         refresh_events_meta = {}
-        properties: dict = {}
         stylesheet: dict = {}
-
-        if metadata_row.get("properties"):
-            properties = json.loads(metadata_row.get("properties"))
 
         if metadata_row.get("stylesheet"):
             stylesheet = json.loads(metadata_row.get("stylesheet"))
 
         events = db().table("ui_widget_events")
 
-        if section_id is not None:
-            events.where("widget_id = ? AND section_id = ?", widget_id, section_id)
-        else:
+        if section_id is None:
             events.where("widget_id = ? AND section_id IS NULL", widget_id)
+
+        else:
+            events.where("widget_id = ? AND section_id = ?", widget_id, section_id)
 
         for event in events.retrieve():
             refresh_event = event.get("refresh_event_id")
@@ -166,12 +166,11 @@ class WidgetMetadata:
             margin_top=metadata_row.get("margin_top"),
             margin_right=metadata_row.get("margin_right"),
             margin_bottom=metadata_row.get("margin_bottom"),
-            object_name=metadata_row.get("style_object_name"),
+            style_object_name=metadata_row.get("style_object_name"),
             content=metadata_row.get("content"),
             tooltip=metadata_row.get("tooltip"),
             alignment=cls.__parse_alignment(metadata_row.get("alignment")),
             stylesheet=cls.__parse_stylesheet(stylesheet),
-            properties=properties,
             refresh_events=refresh_events,
             refresh_events_meta=refresh_events_meta
         )
@@ -282,9 +281,9 @@ class WidgetMetadata:
         return self.__stylesheet
 
     @property
-    def properties(self) -> dict[str, any]:
+    def properties(self) -> dict[str, str]:
         """
-        Used to get widget's QT properties.
+        Used to get widget's QSS properties.
         """
         return self.__properties
 
@@ -382,6 +381,34 @@ class WidgetMetadata:
 
         event_meta = self.__refresh_event_meta[event]
         return event_meta.refresh_children
+
+    def __parse_style_object_name(self, object_name: str):
+        """
+        Used to parse composed QSS object name and extract
+        object name and properties.
+
+        Example: objectName[origin=first, kind=second] ->
+                 styleObjectName = objectName
+                 properties = {'origin': 'first', 'kind': 'second'}
+        """
+
+        if object_name is None:
+            return
+
+        match = re.compile(r"(\w+)?(\[.*?])?").match(object_name)
+        style_object_name = match.group(1)
+        properties_string = match.group(2)
+
+        if style_object_name is not None:
+            self.__object_name = style_object_name
+
+        if properties_string is not None:
+            properties_string = properties_string[1:-1]
+            properties = properties_string.split(",")
+
+            for prop in properties:
+                name, value = prop.split("=")
+                self.__properties[name.strip()] = value.strip()
 
     @staticmethod
     def __parse_alignment(alignment: str) -> Qt.AlignmentFlag:

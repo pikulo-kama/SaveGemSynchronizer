@@ -54,9 +54,6 @@ class WidgetsImporter(RegularImporter):
 
         events_table.save()
 
-        if "properties" in parent:
-            parent["properties"] = json.dumps(parent.get("properties"), indent=4)
-
         if "stylesheet" in parent:
             parent["stylesheet"] = json.dumps(parent.get("stylesheet"), indent=4)
 

@@ -72,7 +72,6 @@ class WidgetsExtractor(RegularExtractor):
 
             section_id = widget.get("section_id")
             parent_widget_id = widget.get("parent_widget_id")
-            properties = widget.get("properties")
             stylesheet = widget.get("stylesheet")
 
             # Only show section ID on root widgets.
@@ -86,9 +85,6 @@ class WidgetsExtractor(RegularExtractor):
             # Remove order id.
             if "order_id" in widget:
                 del widget["order_id"]
-
-            if properties is not None:
-                widget["properties"] = json.loads(properties)
 
             if stylesheet is not None:
                 widget["stylesheet"] = json.loads(stylesheet)

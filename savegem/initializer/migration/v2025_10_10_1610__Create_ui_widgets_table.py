@@ -27,7 +27,6 @@ class v2025_10_10_1610__Create_ui_widgets_table(Migration):  # noqa
                 margin_right INTEGER,
                 margin_bottom INTEGER,
                 order_id INTEGER,
-                properties TEXT,
                 stylesheet TEXT,
                 
                 PRIMARY KEY (widget_id, section_id),
