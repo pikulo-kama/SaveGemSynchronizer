@@ -40,6 +40,7 @@ class PlayersController(WidgetController):
             user_name_label.setText(user.short_name)
             user_name_label.setAlignment(Qt.AlignmentFlag.AlignTop)
             user_name_label.setContentsMargins(5, 5, 0, 0)
+            user_name_label.setObjectName("bodyText")
 
             players_layout.add_dynamic_widget(player_card)
 

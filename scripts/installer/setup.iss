@@ -61,6 +61,22 @@ Source: "{#RootPath}output\dist\{#AppName}\*"; \
 Source: "{#RootPath}logback\*"; \
     DestDir: "{userappdata}\{#AppName}\Logback"; \
     Flags: ignoreversion
+
+; Install Fonts
+Source: "{#RootPath}fonts\PT_Sans_Caption\PTSansCaption-Regular.ttf"; \
+    DestDir: "{autofonts}"; \
+    FontInstall: "PT Sans Caption"; \
+    Flags: onlyifdoesntexist uninsneveruninstall
+
+Source: "{#RootPath}fonts\Plus_Jakarta_Sans\PlusJakartaSans-Regular.ttf"; \
+    DestDir: "{autofonts}"; \
+    FontInstall: "Plus Jakarta Sans"; \
+    Flags: onlyifdoesntexist uninsneveruninstall
+
+Source: "{#RootPath}fonts\Plus_Jakarta_Sans\PlusJakartaSans-ExtraBold.ttf"; \
+    DestDir: "{autofonts}"; \
+    FontInstall: "Plus Jakarta Sans ExtraBold"; \
+    Flags: onlyifdoesntexist uninsneveruninstall
     
 [Tasks]
 Name: "desktopicon"; \

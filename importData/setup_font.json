@@ -8,7 +8,7 @@
     {
       "font_id": "hero",
       "font_size": 33,
-      "font_family": "DM Sans"
+      "font_family": "PT Sans Caption"
     },
     {
       "font_id": "section-title",
@@ -24,32 +24,32 @@
     {
       "font_id": "card-title",
       "font_size": 19,
-      "font_family": "DM Sans"
+      "font_family": "PT Sans Caption"
     },
     {
       "font_id": "body",
       "font_size": 16,
-      "font_family": "DM Sans"
+      "font_family": "PT Sans Caption"
     },
     {
       "font_id": "label",
       "font_size": 16,
-      "font_family": "DM Sans"
+      "font_family": "PT Sans Caption"
     },
     {
       "font_id": "accent",
       "font_size": 14,
-      "font_family": "DM Sans"
+      "font_family": "PT Sans Caption"
     },
     {
       "font_id": "small",
       "font_size": 12,
-      "font_family": "DM Sans"
+      "font_family": "PT Sans Caption"
     },
     {
       "font_id": "caption",
       "font_size": 10,
-      "font_family": "DM Sans"
+      "font_family": "PT Sans Caption"
     }
   ]
 }
