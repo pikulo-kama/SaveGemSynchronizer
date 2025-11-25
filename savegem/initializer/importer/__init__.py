@@ -5,7 +5,11 @@ from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.db.manager import db
 from savegem.common.util.file import read_file, resolve_import_data, file_checksum
+from savegem.common.util.logger import get_logger
 from savegem.common.util.reflection import get_members
+
+
+_logger = get_logger(__name__)
 
 
 def invoke_importer(args):
@@ -31,6 +35,8 @@ def invoke_importer(args):
     definition_file: str = read_file(resolve_import_data(args.definition_file))
     files_to_import = []
 
+    _logger.info("Importing definition file: %s", args.definition_file)
+
     # Handle definition_file argument.
     for line in definition_file.split("\n"):
         line = line.strip().replace("/", os.path.sep)
@@ -39,7 +45,7 @@ def invoke_importer(args):
         if line.startswith("#") or len(line) == 0:
             continue
 
-        checksum = file_checksum(resolve_import_data(line))
+        actual_checksum = file_checksum(resolve_import_data(line))
         metadata = db().table("import_data_version") \
             .where("file_name = ?", line) \
             .retrieve()
@@ -49,10 +55,16 @@ def invoke_importer(args):
             metadata.add_row()
             metadata.set_first("file_name", line)
 
+        current_checksum = metadata.get_first("checksum")
+        _logger.info("%s: current: %s, actual: %s", line, current_checksum, actual_checksum)
+
         # Only import data if checksum has changed.
-        if metadata.get_first("checksum") != checksum:
-            metadata.set_first("checksum", checksum)
+        if current_checksum != actual_checksum:
+            metadata.set_first("checksum", actual_checksum)
             files_to_import.append(line)
+
+        else:
+            _logger.info("Import file hasn't been changed. Skipping.")
 
         metadata.save()
 
@@ -100,6 +112,7 @@ class RegularImporter:
         """
 
         if args.file_name is None:
+            _logger.error("Argument '--file_name' is required for import.")
             print("Argument '--file_name' is required for import.")
             exit(1)
 
@@ -110,10 +123,17 @@ class RegularImporter:
         data: list[dict] = import_file.get("data", [])
         data = self._format_data(data, metadata)
 
+        _logger.info("Importing %s.", args.file_name)
+        _logger.info("Importer: %s", metadata.get("type"))
+        _logger.info("Table: %s", table_name)
+
         import_table = db().table(table_name)
 
         if filter_string:
+            _logger.info("Filter: %s", filter_string)
             import_table.where(filter_string)
+
+        _logger.info("-----------------")
 
         import_table.retrieve()
 

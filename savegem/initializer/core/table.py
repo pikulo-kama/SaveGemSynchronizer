@@ -1,4 +1,8 @@
 from sqlite3 import Connection
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 class TableDDL:
@@ -11,7 +15,7 @@ class TableDDL:
 
     def __init__(self, connection: Connection, table_name: str):
         self.__connection = connection
-        self.__original_table_name = table_name
+        self.__table_name = table_name
         self.__columns_ddl = []
         self.__foreign_key_ddl = []
         self.__primary_key_ddl = None
@@ -26,6 +30,11 @@ class TableDDL:
 
         ddl_list = []
 
+        _logger.debug("Building table DDL for %s", self.__table_name)
+        _logger.debug("columns=%s", self.__columns_ddl)
+        _logger.debug("pk=%s", self.__primary_key_ddl)
+        _logger.debug("fk=%s", self.__foreign_key_ddl)
+
         for column_ddl in self.__columns_ddl:
             ddl_list.append(column_ddl)
 
@@ -36,7 +45,7 @@ class TableDDL:
             ddl_list.append(fk_ddl)
 
         return f"""
-            CREATE TABLE {self.__original_table_name} (
+            CREATE TABLE {self.__table_name} (
                {",\n".join(ddl_list)}
             )
         """
@@ -59,7 +68,7 @@ class TableDDL:
         """
 
         cursor = self.__connection.cursor()
-        table_info = cursor.execute(f"PRAGMA table_info({self.__original_table_name})").fetchall()
+        table_info = cursor.execute(f"PRAGMA table_info({self.__table_name})").fetchall()
         pk_columns = []
 
         # Collect and format table DDL.
@@ -86,7 +95,7 @@ class TableDDL:
         """
 
         cursor = self.__connection.cursor()
-        foreign_key_info = cursor.execute(f"PRAGMA foreign_key_list({self.__original_table_name})").fetchall()
+        foreign_key_info = cursor.execute(f"PRAGMA foreign_key_list({self.__table_name})").fetchall()
 
         fk_table_map = {}
         from_col_map = {}

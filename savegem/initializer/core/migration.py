@@ -1,7 +1,11 @@
 from sqlite3 import Connection
 
 from savegem.common.db.manager import DatabaseManager
+from savegem.common.util.logger import get_logger
 from savegem.initializer.core.table import TableDDL
+
+
+_logger = get_logger(__name__)
 
 
 class Migration:
@@ -25,6 +29,7 @@ class Migration:
             connection.commit()
 
         except Exception as error:  # noqa
+            _logger.error("Error running migration %s: %s", self.__class__.__name__, error)
             connection.rollback()
             raise error
 

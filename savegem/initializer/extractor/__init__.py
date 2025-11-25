@@ -2,14 +2,17 @@ import copy
 import os
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from constants import Directory, JSON_EXTENSION
 from savegem.common.db.manager import db
 from savegem.common.util.file import save_file
+from savegem.common.util.logger import get_logger
 from savegem.common.util.reflection import get_members
 
 
 RegularExtractorName = "Regular"
+_logger = get_logger(__name__)
 
 
 def invoke_extractor(args):
@@ -50,10 +53,16 @@ class RegularExtractor:
         Used to extract data from table.
         """
 
+        _logger.info("Starting data extraction.")
+        _logger.info("Extractor: %s", args.type)
+        _logger.info("Table: %s", args.table_name)
+        _logger.info("Output Directory: %s", args.output)
+
         table_name = args.table_name
         table = db().table(table_name)
 
         if args.filter:
+            _logger.info("Filter: %s", args.filter)
             table.where(args.filter)
 
         table_json = [row.to_json() for row in table.retrieve()]
@@ -83,7 +92,7 @@ class RegularExtractor:
 
         save_file(str(extract_file_path), content, as_json=True)
 
-    def _post_extract(self, data: any):
+    def _post_extract(self, data: Any):
         """
         Allows to process retrieved table
         data and change data structure if

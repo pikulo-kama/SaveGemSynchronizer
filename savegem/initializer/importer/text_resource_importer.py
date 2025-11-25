@@ -6,7 +6,7 @@ class TextResourceImporter(RegularImporter):
     Importer for text_resources table.
     """
 
-    def _format_data(self, data: dict[dict], metadata: dict):
+    def _format_data(self, data: dict[str, dict], metadata: dict):
 
         resources = []
 

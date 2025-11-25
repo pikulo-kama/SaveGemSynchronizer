@@ -1,8 +1,12 @@
 import datetime
 
 from savegem.common.db.manager import db, DatabaseManager
+from savegem.common.util.logger import get_logger
 from savegem.initializer.core.migration import Migration
 from savegem.initializer.migration import get_migrations
+
+
+_logger = get_logger(__name__)
 
 
 class DatabaseInitializer:
@@ -12,6 +16,7 @@ class DatabaseInitializer:
 
     @classmethod
     def run(cls, _):
+        _logger.info("Starting database upgrade.")
         cls.__initialize()
         cls.__migrate()
 
@@ -49,18 +54,24 @@ class DatabaseInitializer:
         migrations = list(get_migrations())
         last_migration_name, _ = migrations[-1]
 
+        _logger.info("Latest observed migration: %s.", last_migration_name)
         if cls.__migration_exists(manager, last_migration_name):
+            _logger.info("No migrations to perform. Exiting.")
             return
 
         for member_name, member in migrations:
 
             if cls.__migration_exists(manager, member_name):
+                _logger.info("Migration %s has already been executed. Skipping.", member_name)
                 continue
 
+            _logger.info("Applying migration %s.", member_name)
             migration: Migration = member()
             migration.migrate(manager)
 
             cls.__update_schema_version(manager, member_name)
+
+        _logger.info("All migrations have been executed.")
 
     @classmethod
     def __migration_exists(cls, manager: DatabaseManager, migration_name: str):

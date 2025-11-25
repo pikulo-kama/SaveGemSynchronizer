@@ -1,0 +1,8 @@
+{
+  "savegem.initializer.db_initializer": "INFO",
+  "savegem.initializer.core.migration": "INFO",
+  "savegem.initializer.core.table": "INFO",
+
+  "savegem.initializer.extractor": "INFO",
+  "savegem.initializer.importer": "INFO"
+}
