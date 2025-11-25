@@ -1,5 +1,9 @@
 import importlib
 from savegem.common.db.manager import db
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 _widget_type_pool: list["WidgetType"] = []
 _layout_type_pool: list["UIObjectType"] = []
@@ -17,6 +21,7 @@ def _get_widget_type_pool():
             class_path = get_class_from_path(widget_type.get("class_path"))
             is_interactable = widget_type.get("is_interactable") == 1
 
+            _logger.debug("Adding %s to widget type pool.", class_path)
             _widget_type_pool.append(WidgetType(type_name, class_path, is_interactable))
 
     return _widget_type_pool
@@ -51,6 +56,7 @@ def get_layout_type(layout_type_name: str):
             type_name = layout_type.get("layout_type_id")
             class_path = get_class_from_path(layout_type.get("class_path"))
 
+            _logger.debug("Adding %s to layout type pool.", class_path)
             _layout_type_pool.append(UIObjectType(type_name, class_path))
 
     return next((layout_type for layout_type in _layout_type_pool if layout_type.name == layout_type_name), None)

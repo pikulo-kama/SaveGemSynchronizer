@@ -4,6 +4,10 @@ from savegem.app.gui.thread import execute_in_thread
 from savegem.app.gui.constants import UISection
 from savegem.app.gui.window import gui
 from savegem.app.startup.worker import get_startup_workers, QStartupWorker
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 class StartupJob:
@@ -53,11 +57,14 @@ class StartupJob:
         """
 
         def update_execution_info():
-            self.__finished_tasks.append(type(startup_worker).__name__)
+            task_name = type(startup_worker).__name__
+            self.__finished_tasks.append(task_name)
+            _logger.debug("Startup task %s has been completed.", task_name)
 
             # If all tasks have been finished then initiate
             # main screen build.
             if len(self.__finished_tasks) == len(self.__tasks):
+                _logger.debug("All startup tasks finished its work.")
                 gui().build()
 
         return update_execution_info

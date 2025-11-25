@@ -2,10 +2,14 @@ import time
 from typing import Optional, TYPE_CHECKING
 
 from savegem.app.worker import QWorker
+from savegem.common.util.logger import get_logger
 from savegem.common.util.reflection import get_members
 
 if TYPE_CHECKING:
     from savegem.app.startup import StartupJob
+
+
+_logger = get_logger(__name__)
 
 
 def get_startup_workers() -> list["QStartupWorker"]:
@@ -39,8 +43,11 @@ class QStartupWorker(QWorker):
         then current worker will wait until they're finished.
         """
 
+        _logger.debug("Launching startup task %s", self.__class__.__name__)
+        _logger.debug("dependencies=%s", self.dependencies)
+
         while self.__has_unfinished_dependencies():
-            # Wait 50ms before retrying.
+            _logger.debug("Task has unfinished dependencies. Sleeping...")
             time.sleep(0.05)
 
         super().start()

@@ -6,7 +6,10 @@ from PyQt6.QtWidgets import QWidget
 from savegem.app.gui.component.layout import QCustomLayout
 from savegem.app.gui.widget.metadata import WidgetMetadata
 from savegem.app.gui.widget.resolver import resolve_content
+from savegem.common.util.logger import get_logger
 
+
+_logger = get_logger(__name__)
 
 class CustomComponentMixin:
     """
@@ -55,6 +58,8 @@ class CustomComponentMixin:
         Used to enable widget.
         """
 
+        _logger.debug("Enabling widget '%s'", self.metadata.name)
+
         if self.metadata.widget_type.is_interactable:
             self.setEnabled(True)  # noqa
             self.setCursor(Qt.CursorShape.PointingHandCursor)  # noqa
@@ -63,6 +68,8 @@ class CustomComponentMixin:
         """
         Used to disable widget.
         """
+
+        _logger.debug("Disabling widget '%s'", self.metadata.name)
 
         if self.metadata.widget_type.is_interactable:
             self.setEnabled(False)  # noqa
@@ -74,21 +81,34 @@ class CustomComponentMixin:
         Will also refresh child widgets if requested.
         """
 
+        _logger.debug("Refreshing widget '%s'", self.metadata.name)
+
         if self.metadata is None:
             return
 
         if self.metadata.content is not None:
-            self.set_content(resolve_content(self.metadata.content))
+            content = resolve_content(self.metadata.content)
+            self.set_content(content)
+
+            _logger.debug("Content=%s", content)
 
         if self.metadata.tooltip is not None:
-            self.setToolTip(resolve_content(self.metadata.tooltip))  # noqa
+            tooltip = resolve_content(self.metadata.tooltip)
+            self.setToolTip(tooltip)  # noqa
+
+            _logger.debug("Tooltip=%s", tooltip)
 
         if refresh_children:
+            _logger.debug("Refreshing child widgets")
             children = self.findChildren(CustomComponentMixin)  # noqa
             for child_widget in children:
                 child_widget.refresh()
 
     def update_styles(self):
+        """
+        Used to reload components and reapply styles to them.
+        Recursively updates child components.
+        """
 
         self.style().polish(self)  # noqa
 

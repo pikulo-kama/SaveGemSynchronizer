@@ -1,7 +1,6 @@
-from PyQt6.QtWidgets import QWidget
-
-from savegem.app.gui.controller import WidgetController
+from savegem.app.gui.component.widget import QCustomWidget
 from savegem.app.gui.constants import UISection
+from savegem.app.gui.controller import WidgetController
 
 
 class MenuItemController(WidgetController):
@@ -10,5 +9,5 @@ class MenuItemController(WidgetController):
     Controller should be assigned only to section root nodes.
     """
 
-    def setup(self, section_root_widget: QWidget):
+    def setup(self, section_root_widget: QCustomWidget):
         self._change_widget_parent(section_root_widget, UISection.RootSection, "content")

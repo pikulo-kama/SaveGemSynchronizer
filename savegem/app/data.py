@@ -1,7 +1,10 @@
 import json
 from typing import Optional, Final
 from savegem.common.service.gdrive import GDrive
+from savegem.common.util.logger import get_logger
 
+
+_logger = get_logger(__name__)
 _data_holder: Optional["DataHolder"] = None
 
 
@@ -34,6 +37,7 @@ class DataHolder:
         and store it in holder.
         """
 
+        _logger.debug("Downloading file %s and storing it in data holder.", file_id)
         with GDrive.download_file(file_id) as file_bytes:
 
             if file_bytes is None:
@@ -53,6 +57,7 @@ class DataHolder:
         """
         Used to add data to holder.
         """
+        _logger.debug("Adding object with name %s to data holder.", object_name)
         self.__data[object_name] = data
 
 

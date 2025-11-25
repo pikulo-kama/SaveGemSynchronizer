@@ -92,7 +92,10 @@ def rgba_color(color_key: str, alpha: str):
     green = int(color_hex[3:5], 16)
     blue = int(color_hex[5:7], 16)
 
-    return f"rgba({red}, {green}, {blue}, {alpha})"
+    color_rgba = f"rgba({red}, {green}, {blue}, {alpha})"
+    _logger.debug("Transformed color key '%s' with alpha %s into RGBA = '%s'", color_key, alpha, color_rgba)
+
+    return color_rgba
 
 
 def color(color_id: str):
@@ -104,15 +107,18 @@ def color(color_id: str):
     """
 
     color_mode = app().state.color_theme
+    color_hex = ""
 
     if color_mode is None:
         color_mode = get_system_color_mode()
 
     for color_record in _get_colors():
         if color_id == color_record.get("color_id"):
-            return color_record.get(color_mode)
+            color_hex = color_record.get(color_mode)
+            break
 
-    return ""
+    _logger.debug("Resolved color with ID %s to %s", color_id, color_hex)
+    return color_hex
 
 
 def font(property_name: str):
@@ -157,6 +163,7 @@ def resolve_style_properties(style_string: str):
         style_string
     )
 
+    _logger.debug("Resolved stylesheet: %s", style_string)
     return style_string
 
 
@@ -197,6 +204,7 @@ def create_dynamic_resources():
     difference is color.
     """
 
+    _logger.debug("Creating dynamic resources.")
     for resource in db().retrieve_table("setup_resource"):
         name = resource.get("resource_name")
         file_name = resource.get("resource_path")
@@ -211,4 +219,5 @@ def create_dynamic_resources():
         if current_color is not None:
             resource_content = resource_content.replace("currentColor", current_color)
 
+        _logger.debug("Creating resource %s using color %s", name, current_color)
         save_file(resolve_temp_resource(name), resource_content)

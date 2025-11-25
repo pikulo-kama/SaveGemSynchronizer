@@ -2,6 +2,9 @@ from savegem.app.gui.component.toggle import QCustomToggle
 from savegem.app.gui.controller import WidgetController
 from savegem.common.core.context import app
 from savegem.common.core.text_resource import tr
+from savegem.common.util.logger import get_logger
+
+_logger = get_logger(__name__)
 
 
 class AutoModeController(WidgetController):
@@ -13,10 +16,14 @@ class AutoModeController(WidgetController):
         game = app().games.current
 
         def toggle_auto_mode():
+            _logger.info("Setting 'Auto Mode' for %s to %s", game.name, not game.settings.auto_mode)
             game.settings.auto_mode = not game.settings.auto_mode
 
         if game.auto_mode_allowed:
             auto_mode_toggle.clicked.connect(toggle_auto_mode)  # noqa
+
+        else:
+            _logger.warning("'Auto Mode' is not allowed for %s. Click bind won't be applied.", game.name)
 
     def refresh(self, auto_mode_toggle: QCustomToggle):
         game = app().games.current
@@ -24,6 +31,8 @@ class AutoModeController(WidgetController):
         tooltip = ""
 
         if not game.auto_mode_allowed:
+            _logger.warning("'Auto Mode' is not allowed for %s. Disabling setting.", game.name)
+
             is_checked = False
             tooltip = tr("label_SettingIsDisabled")
 

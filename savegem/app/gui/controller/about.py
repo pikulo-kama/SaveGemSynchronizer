@@ -4,7 +4,10 @@ from savegem.app.gui.component.label import QCustomLabel
 from savegem.app.gui.controller import WidgetController
 from savegem.common.core.holders import prop
 from savegem.common.core.text_resource import tr
+from savegem.common.util.logger import get_logger
 
+
+_logger = get_logger(__name__)
 
 class CopyrightController(WidgetController):
     """
@@ -18,4 +21,7 @@ class CopyrightController(WidgetController):
         if now.year > 2023:
             year += f"-{now.year}"
 
-        copyright_label.setText(tr("window_Copyright", year, prop("name")))
+        copy = tr("window_Copyright", year, prop("name"))
+        copyright_label.setText(copy)
+
+        _logger.debug("copyright=%s", copy)

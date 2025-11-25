@@ -9,9 +9,10 @@ from savegem.app.gui.constants import QBool
 from savegem.app.gui.controller import WidgetController
 from savegem.app.gui.widget.resolver import resolve_content
 from savegem.common.util.file import resolve_resource
+from savegem.common.util.logger import get_logger
 
 
-CurrentSection = "current_section"
+_logger = get_logger(__name__)
 
 
 class MenuController(WidgetController):
@@ -19,6 +20,8 @@ class MenuController(WidgetController):
     Controller which is used to control
     sidebar navigation menu widget.
     """
+
+    CurrentSection = "current_section"
 
     def setup(self, menu: QWidget):
 
@@ -44,7 +47,7 @@ class MenuController(WidgetController):
 
     def refresh(self, menu: QWidget):
 
-        selected_section_id = self._get_state(CurrentSection)
+        selected_section_id = self._get_state(self.CurrentSection)
 
         for section in self.sections:
             section_id = section.get("section_id")
@@ -65,14 +68,15 @@ class MenuController(WidgetController):
         Used to change current menu tab.
         """
 
-        if section_id == self._get_state(CurrentSection):
+        if section_id == self._get_state(self.CurrentSection):
             return
 
         self.manager.remove_widgets(
             lambda metadata: not metadata.is_root_section
         )
 
-        self._set_state(CurrentSection, section_id)
+        _logger.info("Changing current menu item to %s", section_id)
+        self._set_state(self.CurrentSection, section_id)
 
         self.manager.build(section_id)
         self.manager.refresh()

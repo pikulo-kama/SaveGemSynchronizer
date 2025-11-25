@@ -9,9 +9,13 @@ from savegem.app.gui.component.layout import QCustomLayout
 from savegem.app.gui.widget.resolver import resolve_content
 from savegem.common.db.manager import db
 from savegem.common.db.table import DatabaseRow
+from savegem.common.util.logger import get_logger
 
 if TYPE_CHECKING:
     from savegem.app.gui.window import GUI
+
+
+_logger = get_logger(__name__)
 
 
 class WidgetManager:
@@ -45,6 +49,7 @@ class WidgetManager:
         Used to add register widget in manager.
         """
         self.__widgets[widget.metadata.name] = widget
+        _logger.debug("Widget %s has been added to the manager.", widget.metadata.name)
 
     def build(self, section_id: str = UISection.RootSection):
         """
@@ -84,8 +89,11 @@ class WidgetManager:
             else:
                 parent = self.__widgets.get(meta.parent_widget_name)
                 parent_layout: QCustomLayout = parent.layout()
+
+                _logger.debug("Adding %s as child of %s", widget.metadata.name, parent.metadata.name)
                 parent_layout.add_widget(widget)
 
+        _logger.debug("Invoking 'setup' controllers.")
         self.__invoke_controllers(
             lambda controller, window_widget: controller.setup(window_widget),
             section_id
@@ -103,8 +111,14 @@ class WidgetManager:
 
         for widget in self.__widgets.values():
             if event in widget.metadata.refresh_events:
-                widget.refresh(refresh_children=widget.metadata.should_refresh_children(event))
+                refresh_children = widget.metadata.should_refresh_children(event)
 
+                if refresh_children:
+                    _logger.debug("Refreshing %s recursively.", widget.metadata.name)
+
+                widget.refresh(refresh_children=refresh_children)
+
+        _logger.debug("Invoking 'refresh' controllers.")
         self.__invoke_controllers(refresh_invoker)
 
     def enable(self):
@@ -115,6 +129,7 @@ class WidgetManager:
         for widget in self.__widgets.values():
             widget.enable()
 
+        _logger.debug("Invoking 'enable' controllers.")
         self.__invoke_controllers(lambda controller, window_widget: controller.enable(window_widget))
 
     def disable(self):
@@ -125,6 +140,7 @@ class WidgetManager:
         for widget in self.__widgets.values():
             widget.disable()
 
+        _logger.debug("Invoking 'disable' controllers.")
         self.__invoke_controllers(lambda controller, window_widget: controller.disable(window_widget))
 
     def remove_child_widgets(self, widget: QCustomComponent):
@@ -134,6 +150,8 @@ class WidgetManager:
 
         Will not remove provided widget itself.
         """
+
+        _logger.debug("Removing child widgets for %s", widget.metadata.name)
         self.remove_widgets(lambda meta: meta.parent_widget_name == widget.metadata.name)
 
     def remove_widgets(self, clear_condition_function):
@@ -151,6 +169,7 @@ class WidgetManager:
 
                 # Reset controllers' state.
                 if controller is not None:
+                    _logger.debug("Resetting state of %s", meta.controller)
                     controller.reset_state()
 
                 widget = self.__widgets.get(meta.name)
@@ -162,6 +181,7 @@ class WidgetManager:
                 del self.__widgets[meta.name]
                 self.remove_widgets(lambda m: m.parent_widget_name == meta.name)
 
+                _logger.debug("Removing %s from manager.", widget.metadata.name)
                 widget.setParent(None)
                 widget.deleteLater()
 
@@ -203,8 +223,9 @@ class WidgetManager:
             # Invoke controllers.
             for window_widget in widgets_to_process:
                 controller = self.__controllers.get(window_widget.metadata.controller)
-                invoker(controller, window_widget)
 
+                _logger.debug("Invoking %s for %s", window_widget.metadata.controller, window_widget.metadata.name)
+                invoker(controller, window_widget)
                 processed_widgets.add(window_widget)
 
     @staticmethod
@@ -217,7 +238,12 @@ class WidgetManager:
         widget: QCustomComponent = meta.widget_type.type()
         widget.metadata = meta
 
+        _logger.debug("Building widget %s", widget.metadata.name)
+        _logger.debug("type=%s", widget.metadata.widget_type.name)
+
         if meta.layout_type is not None:
+            _logger.debug("layout=%s", meta.layout_type.name)
+
             widget.setLayout(meta.layout_type.type())
             widget.layout().setContentsMargins(
                 meta.margin_left,
@@ -232,24 +258,32 @@ class WidgetManager:
         widget.apply_alignment()
 
         if meta.content is not None:
+            _logger.debug("content=%s", meta.content)
             widget.set_content(resolve_content(meta.content))
 
         if meta.tooltip is not None:
+            _logger.debug("tooltip=%s", meta.tooltip)
             widget.setToolTip(resolve_content(meta.tooltip))
 
         if meta.object_name is not None:
+            _logger.debug("object_name=%s", meta.object_name)
             widget.setObjectName(meta.object_name)
 
+        _logger.debug("Setting properties")
         for key, value in meta.properties.items():
+            _logger.debug("%s=%s", key, value)
             widget.setProperty(key, value)
 
         if len(meta.stylesheet) > 0:
+            _logger.debug("stylesheet=%s", meta.stylesheet)
             widget.setStyleSheet(meta.stylesheet)
 
         if meta.width:
+            _logger.debug("width=%d", meta.width)
             widget.setFixedWidth(meta.width)
 
         if meta.height:
+            _logger.debug("height=%d", meta.height)
             widget.setFixedHeight(meta.height)
 
         return widget

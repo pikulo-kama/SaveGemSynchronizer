@@ -1,7 +1,10 @@
 import re
+
+from savegem.common.util.logger import get_logger
 from savegem.common.util.reflection import get_members
 
 
+_logger = get_logger(__name__)
 __resolvers: dict[str, "ContentResolver"] = {}
 
 
@@ -23,11 +26,12 @@ def resolve_content(content: str):
         # If no token has been found then
         # treat it as regular string.
         if not match:
+            _logger.debug("No token found in string '%s'. Content is resolved.", content)
             return content
 
         full_token = match.group(0)
         token_name = match.group(1)
-        properties = match.group(2).split(",")
+        properties: list = match.group(2).split(",")
 
         # Recursively check for nested tokens.
         parameter = resolve_content(properties.pop(0))
@@ -53,6 +57,8 @@ def resolve_content(content: str):
         resolver_name = f"{token_name.lower()}resolver"
         resolver: ContentResolver = get_resolver(resolver_name)
 
+        _logger.debug("Resolving content using %s.", resolver.__class__.__name__)
+        _logger.debug("param=%s, args=%s, kw=%s", parameter, args, kw)
         resolved_content = resolver.resolve(parameter, *args, **kw) or ""
 
         # This will allow to have tokenised values together with other text.
@@ -71,6 +77,7 @@ def get_resolver(resolver_name: str):
 
     if len(__resolvers) == 0:
         for member_name, member in get_members(__package__, ContentResolver):
+            _logger.debug("Loading content resolver with name %s", member_name)
             __resolvers[member_name.lower()] = member()
 
     return __resolvers.get(resolver_name)
@@ -82,7 +89,7 @@ class ContentResolver:
     Used to resolve specific tokens.
     """
 
-    def resolve(self, value: any, *args, **kw):
+    def resolve(self, value: str, *args, **kw):
         """
         Used to resolve token
         considering its value and properties.

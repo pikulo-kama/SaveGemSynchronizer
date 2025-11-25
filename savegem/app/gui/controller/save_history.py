@@ -15,6 +15,10 @@ from savegem.common.core.save_meta import DriveFileMetadata
 from savegem.common.core.text_resource import tr
 from savegem.common.service.subscriptable import DoneEvent
 from savegem.common.util.date import string_to_date, get_verbose_date, get_verbose_time
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 class SaveHistoryListController(WidgetController):
@@ -33,9 +37,16 @@ class SaveHistoryListController(WidgetController):
                 lambda: self.__restore_version(file_id, button)
             )
 
+        _logger.debug("Rendering save history for %s", app().games.current.name)
+
         for metadata in app().games.current.meta.drive:
 
             is_current_save = metadata.checksum == app().games.current.meta.local.checksum
+
+            _logger.debug(
+                "drive_metadata=%s, date=%s, checksum=%s, current=%s",
+                metadata.id, metadata.created_time, metadata.checksum, is_current_save
+            )
 
             # Contains save file entry.
             record_container = QCustomWidget()
@@ -96,6 +107,7 @@ class SaveHistoryListController(WidgetController):
         worker.progress.connect(lambda event: button.set_progress(event.progress))
         worker.completed.connect(on_completed)
 
+        _logger.debug("Restoring save with ID = %s for game %s", file_id, app().games.current.name)
         self._do_work(worker)
 
     @staticmethod

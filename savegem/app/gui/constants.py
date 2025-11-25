@@ -67,3 +67,4 @@ class QAttr:
     Id: Final = "id"
     Kind: Final = "kind"
     Disabled: Final = "is-disabled"
+    Hidden: Final = "hidden"

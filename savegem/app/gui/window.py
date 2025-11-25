@@ -52,7 +52,6 @@ class GUI(QMainWindow):
         self.__root_layout.setContentsMargins(0, 0, 0, 0)
 
         self.__is_ui_blocked = False
-        self.__is_wait_screen = False
         self.__is_initialized = False
 
         self.__center_window()
@@ -87,12 +86,14 @@ class GUI(QMainWindow):
         as recreation of dynamic resources.
         """
 
+        _logger.info("Reloading application styles.")
         create_dynamic_resources()
         self.application.setStyleSheet(load_stylesheet())
 
     def show(self):
 
         if not self.__is_initialized:
+            _logger.info("GUI has been initialized.")
             self.after_init.emit()  # noqa
             self.__is_initialized = True
 
@@ -130,6 +131,7 @@ class GUI(QMainWindow):
         using provided message.
         """
 
+        _logger.debug("Presenting notification dialog with message %s", message)
         holder().add("dialogMessage", message)
         self.__manager.build("notification")
 
@@ -140,6 +142,7 @@ class GUI(QMainWindow):
         callback.
         """
 
+        _logger.debug("Presenting confirmation dialog with message %s", message)
         holder().add("dialogMessage", message)
         holder().add("confirmationCallback", callback)
         self.__manager.build("confirmation")
@@ -160,8 +163,10 @@ class GUI(QMainWindow):
         self.__is_ui_blocked = is_blocked
 
         if is_blocked:
+            _logger.debug("UI has been blocked.")
             self.__manager.disable()
         else:
+            _logger.debug("UI has been unblocked.")
             self.__manager.enable()
 
     def closeEvent(self, event: QCloseEvent):
@@ -169,6 +174,9 @@ class GUI(QMainWindow):
         Used to call before application window
         destroyed.
         """
+
+        _logger.debug("Persisting window geometry in registry.")
+        _logger.debug("width=%s, height=%s", self.width(), self.height())
 
         self.__settings.setValue("windowWidth", self.width())
         self.__settings.setValue("windowHeight", self.height())

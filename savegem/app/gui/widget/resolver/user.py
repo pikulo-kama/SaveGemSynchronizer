@@ -1,5 +1,9 @@
 from savegem.app.gui.widget.resolver import ContentResolver
 from savegem.common.core.context import app
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 class UserResolver(ContentResolver):
@@ -7,9 +11,14 @@ class UserResolver(ContentResolver):
     Used to resolve user related properties.
     """
 
-    def resolve(self, value: str, *args, **kw):
-        if value == "name":
-            return app().users.current.name
+    def resolve(self, key: str, *args, **kw):
+        value = ""
 
-        elif value == "photo":
-            return app().users.current.photo
+        if key == "name":
+            value = app().users.current.name
+
+        elif key == "photo":
+            value = app().users.current.photo
+
+        _logger.debug("Resolved '%s' to %s", key, value)
+        return value

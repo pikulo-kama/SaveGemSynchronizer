@@ -1,8 +1,10 @@
+import logging
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import QThread
 from PyQt6.QtWidgets import QWidget
 
+from savegem.app.gui.component.widget import QCustomWidget
 from savegem.app.gui.thread import execute_in_blocking_thread
 from savegem.app.worker import QWorker
 from savegem.common.db.manager import db
@@ -24,6 +26,9 @@ def load_controllers(manager: "WidgetManager"):
 
     for member_name, member in get_members(__package__, WidgetController):
         controller_map[member_name] = member(manager)
+
+    if _logger.isEnabledFor(logging.DEBUG):
+        _logger.debug("Controllers have been loaded: %s", ", ".join(controller_map.keys()))
 
     return controller_map
 
@@ -54,6 +59,9 @@ class WidgetController:
             .where("controller = ?", self.__class__.__name__) \
             .order_by("order_id") \
             .retrieve()
+
+        if not self.__sections.is_empty:
+            _logger.info("Loaded %d section(s) for controller '%s'", len(self.__sections.rows), self.__class__.__name__)
 
     def setup(self, widget: QWidget):
         """
@@ -114,7 +122,7 @@ class WidgetController:
         """
         self.__state[key] = value
 
-    def _change_widget_parent(self, widget: QWidget, target_section_id: str, target_widget_id: str):
+    def _change_widget_parent(self, widget: QCustomWidget, target_section_id: str, target_widget_id: str):
         """
         Helper method that allows to move provided image
         to another widget.
@@ -123,6 +131,8 @@ class WidgetController:
         target_widget = self.manager.get_widget(target_section_id, target_widget_id)
         target_layout = target_widget.layout()
         original_layout = widget.layout()
+
+        _logger.debug("Rebinding '%s' to '%s'", widget.metadata.name, target_widget.metadata.name)
 
         original_layout.removeWidget(widget)
         target_layout.addWidget(widget)
@@ -136,4 +146,5 @@ class WidgetController:
         self.__thread = QThread()
         self.__worker = worker
 
+        _logger.debug("Starting %s worker from controller %s", self.__worker.__name__, self.__name__)
         execute_in_blocking_thread(self.__thread, self.__worker)

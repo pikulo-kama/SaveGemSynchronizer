@@ -5,6 +5,10 @@ from savegem.common.core.context import app
 from savegem.common.core.save_meta import SyncStatus
 from savegem.common.core.text_resource import tr
 from savegem.common.util.date import string_to_date, get_verbose_time, get_verbose_date
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 _status_label_map = {
     SyncStatus.LocalOnly: "label_StorageIsEmpty",
@@ -64,6 +68,7 @@ class SaveInfoResolver(ContentResolver):
         elif key == "statusIcon":
             return _status_icon_map.get(sync_status)
 
+        _logger.debug("Unknown key was provided = %s", key)
         return na_label
 
     @staticmethod

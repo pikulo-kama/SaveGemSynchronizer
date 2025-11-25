@@ -30,11 +30,15 @@ class GameListController(WidgetController):
 
         self.manager.remove_child_widgets(game_list)
 
+        _logger.debug("Rendering game list widget")
+
         for game in app().games:
             game_button = QCustomPushButton()
             game_button.setObjectName("gameListOption")
             game_button.setText(game.name)
             game_button.clicked.connect(change_name(game.name))  # noqa
+
+            _logger.debug("name=%s, status=%s", game.name, game.meta.sync_status.name)
 
             if game == app().games.current:
                 game_button.setProperty("selected", QBool(True))
@@ -55,7 +59,7 @@ class GameListController(WidgetController):
             return
 
         _logger.info("Game selection changed.")
-        _logger.info("Selected game - %s", new_game)
+        _logger.info("Old = %s, New = %s", app().state.game_name, new_game)
 
         worker = GameChangeWorker(new_game)
         worker.finished.connect(lambda: self.manager.gui.refresh(UIRefreshEvent.GameSelectionChange))

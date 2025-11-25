@@ -8,6 +8,10 @@ from savegem.app.gui.style import resolve_style_properties
 from savegem.app.gui.widget.type import WidgetType, UIObjectType, get_widget_type, get_layout_type
 from savegem.common.db.manager import db
 from savegem.common.db.table import DatabaseRow
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 _alignment_map = {
@@ -370,11 +374,14 @@ class WidgetMetadata:
         if object_name is None:
             return
 
+        _logger.debug("Parsing composed style object name.")
+        _logger.debug("raw=%s", object_name)
         match = re.compile(r"(\w+)?(\[.*?])?").match(object_name)
         style_object_name = match.group(1)
         properties_string = match.group(2)
 
         if style_object_name is not None:
+            _logger.debug("style_object_name=%s", style_object_name)
             self.__object_name = style_object_name
 
         if properties_string is not None:
@@ -383,7 +390,11 @@ class WidgetMetadata:
 
             for prop in properties:
                 name, value = prop.split("=")
-                self.__properties[name.strip()] = value.strip()
+                name = name.strip()
+                value = value.strip()
+
+                _logger.debug("%s=%s", name, value)
+                self.__properties[name] = value
 
     @staticmethod
     def __parse_alignment(alignment: str) -> Qt.AlignmentFlag:
@@ -413,7 +424,9 @@ class WidgetMetadata:
         """
         stylesheet_string = ""
 
+        _logger.debug("Parsing stylesheet.")
         for key, value in stylesheet.items():
             stylesheet_string += f"{key}: {value};\n"
 
+        _logger.debug("raw=%s, formatted=%s", stylesheet, stylesheet_string)
         return stylesheet_string

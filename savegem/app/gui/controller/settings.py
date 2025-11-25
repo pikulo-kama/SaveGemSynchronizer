@@ -9,6 +9,10 @@ from savegem.common.core.context import app
 from savegem.common.core.text_resource import tr
 from savegem.common.db.manager import db
 from savegem.common.util.file import delete_file, resolve_app_data
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 class LanguageDropdownController(WidgetController):
@@ -25,15 +29,17 @@ class LanguageDropdownController(WidgetController):
             """
 
             new_locale = language_combobox.itemData(index)
-            app().state.locale = new_locale
 
+            _logger.debug("Changing language to %s", new_locale)
+            app().state.locale = new_locale
             gui().refresh(UIRefreshEvent.LanguageChange)
 
         for language in db().retrieve_table("setup_locale"):
-            language_combobox.addItem(
-                language.get("locale_name"),
-                language.get("locale_id"),
-            )
+            locale_id = language.get("locale_id")
+            locale_name = language.get("locale_name")
+
+            _logger.info("Adding language with code %s to language dropdown.", locale_id)
+            language_combobox.addItem(locale_name, locale_id)
 
         target_language_id = language_combobox.findData(app().state.locale)
         language_combobox.setCurrentIndex(target_language_id)
@@ -54,6 +60,8 @@ class TimeFormatDropdownController(WidgetController):
             """
 
             time_format_id = time_format_dropdown.itemData(index)
+
+            _logger.debug("Changing time format to %s", time_format_id)
             app().state.time_format = time_format_id
 
         time_format_dropdown.addItem(tr("label_TimeFormat12"), TimeFormat.Regular)
@@ -76,8 +84,9 @@ class ColorThemeDropdownController(WidgetController):
 
         def on_theme_change(index: int):
             color_theme = theme_dropdown.itemData(index)
-            app().state.color_theme = color_theme
 
+            _logger.debug("Changing color theme to %s", color_theme)
+            app().state.color_theme = color_theme
             gui().reload_styles()
             self.manager.refresh()
 
@@ -107,6 +116,8 @@ class LogoutController(WidgetController):
             Callback function that is being called
             when logout button is clicked.
             """
+
+            _logger.debug("Logging out from application.")
 
             # Delete auth token.
             delete_file(resolve_app_data(File.GDriveToken))
