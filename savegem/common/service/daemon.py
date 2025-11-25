@@ -69,6 +69,7 @@ class Daemon(abc.ABC):
                     continue
 
                 if not run_once_executed:
+                    self._logger.debug("First loop iteration reached. Executing 'run once' setup.")
                     self._run_once()
                     run_once_executed = True
 

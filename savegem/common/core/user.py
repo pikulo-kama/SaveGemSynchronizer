@@ -1,19 +1,25 @@
 import hashlib
 import json
 import urllib.request
-from typing import Iterator
+from typing import Iterator, Final
 
 from constants import JPG_EXTENSION, UTF_8
 from savegem.app.data import holder, HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.service.gdrive import GDrive
 from savegem.common.util.file import resolve_temp_resource
+from savegem.common.util.logger import get_logger
+
+
+_logger = get_logger(__name__)
 
 
 class User:
     """
     Represents user entity.
     """
+
+    UserNameLimit: Final = 18
 
     def __init__(self, name: str, email: str, photo_link: str):
         self.__name = name
@@ -42,10 +48,10 @@ class User:
         Shortened user name.
         """
 
-        if len(self.name) <= 18:
+        if len(self.name) <= self.UserNameLimit:
             return self.name
 
-        return f"{self.name[:18]}.."
+        return f"{self.name[:self.UserNameLimit]}.."
 
     @property
     def email(self) -> str:
@@ -135,6 +141,8 @@ class UserState(AppData):
             if email == current_user_email:
                 user_obj.is_current_user = True
 
+            _logger.debug("Adding user '%s' to the user state.", user_obj.name)
+            _logger.debug("isCurrentUser=%s", user_obj.is_current_user)
             self.__users.append(user_obj)
 
     @property
@@ -161,6 +169,7 @@ class UserState(AppData):
         user_name = current_user_data.get("displayName")
 
         if user_email not in user_data.keys():
+            _logger.debug("Updating user data in drive for user %s", user_name)
             user_data[user_email] = user_name
             GDrive.update_file(self.app.config.users_config_file_id, json.dumps(user_data, indent=2))
 

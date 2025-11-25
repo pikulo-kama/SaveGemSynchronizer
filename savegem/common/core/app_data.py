@@ -13,13 +13,6 @@ class AppData(abc.ABC):  # pragma: no cover
 
     def __init__(self, app: "ApplicationContext"):
         self.__app: "ApplicationContext|None" = app
-        app.link(self)
-
-    def link(self, app: "ApplicationContext"):
-        """
-        Used to link application context to app data.
-        """
-        self.__app = app
 
     @property
     def app(self) -> "ApplicationContext":
@@ -30,6 +23,10 @@ class AppData(abc.ABC):  # pragma: no cover
         return self.__app
 
     def initialize(self):
+        """
+        Should be used for
+        initial app data initialization.
+        """
         pass
 
     @abc.abstractmethod

@@ -13,12 +13,12 @@ _app: Optional["ApplicationContext"] = None
 
 class ApplicationContext:
     """
-    Contains all runtime information. Provides:
-    - Control over state (locale, selected game)
+    Contains all runtime app information. Provides:
+    - Control over user app state (locale, selected game, etc.)
     - List of loaded games and their properties
     - Possibility to get and update save versioning
     - Possibility to work with activity data
-    - Possibility to access current user data
+    - Possibility to access game players data
     """
 
     def __init__(self):

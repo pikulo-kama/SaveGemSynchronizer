@@ -20,15 +20,15 @@ class GameConfig(AppData):
     which is stored on Google Drive.
     """
 
-    __PARENT_DIR: Final = "gdriveParentDirectoryId"
-    __FILES_FILTER: Final = "filesFilter"
-    __LOCAL_PATH: Final = "localPath"
-    __PLAYERS: Final = "players"
-    __GAME_NAME: Final = "name"
-    __GAME_LOGO: Final = "logo"
-    __PROCES_NAME: Final = "process"
-    __HIDDEN: Final = "hidden"
-    __AUTO_MODE_ALLOWED: Final = "allowAutoMode"
+    ParentDir: Final = "gdriveParentDirectoryId"
+    FilesFilter: Final = "filesFilter"
+    LocalPath: Final = "localPath"
+    Players: Final = "players"
+    GameName: Final = "name"
+    GameLogo: Final = "logo"
+    ProcessName: Final = "process"
+    Hidden: Final = "hidden"
+    AutoModeAllowed: Final = "allowAutoMode"
 
     def __init__(self, app):
         super().__init__(app)
@@ -58,16 +58,16 @@ class GameConfig(AppData):
         self.__games_by_name.clear()
 
         for game in game_config:
-            name = game.get(self.__GAME_NAME)
-            process_name = game.get(self.__PROCES_NAME)
-            logo = game.get(self.__GAME_LOGO)
-            local_path = game.get(self.__LOCAL_PATH)
-            drive_directory = game.get(self.__PARENT_DIR)
-            allow_auto_mode = game.get(self.__AUTO_MODE_ALLOWED, True)
-            files_filter = game.get(self.__FILES_FILTER, [])
+            name = game.get(self.GameName)
+            process_name = game.get(self.ProcessName)
+            logo = game.get(self.GameLogo)
+            local_path = game.get(self.LocalPath)
+            drive_directory = game.get(self.ParentDir)
+            allow_auto_mode = game.get(self.AutoModeAllowed, True)
+            files_filter = game.get(self.FilesFilter, [])
 
-            hidden = game.get(self.__HIDDEN, False)
-            players = game.get(self.__PLAYERS, [])
+            hidden = game.get(self.Hidden, False)
+            players = game.get(self.Players, [])
 
             if hidden:
                 _logger.debug("Skipping game '%s' since it's marked as hidden.", name)

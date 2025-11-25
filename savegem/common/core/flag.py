@@ -2,7 +2,10 @@ from typing import Final, Optional
 
 from savegem.common.db.manager import db
 from savegem.common.db.table import DatabaseTable
+from savegem.common.util.logger import get_logger
 
+
+_logger = get_logger(__name__)
 _flags: Optional["FlagCollection"] = None
 
 
@@ -48,6 +51,7 @@ class Flag:
         Used to enable flag.
         """
 
+        _logger.debug("Flag '%s' has been enabled.", self.id)
         self.__flag_table.set_first(self.FlagState, 1)
         self.__flag_table.save()
 
@@ -56,6 +60,7 @@ class Flag:
         Used to disabled flag.
         """
 
+        _logger.debug("Flag '%s' has been disabled.", self.id)
         self.__flag_table.set_first(self.FlagState, 0)
         self.__flag_table.save()
 
@@ -66,12 +71,13 @@ class Flag:
         """
 
         flags_table = db().table(self.FlagsTable) \
-            .where(f"{self.FlagId} = ?", self.__flag_id) \
+            .where(f"{self.FlagId} = ?", self.id) \
             .retrieve()
 
         if flags_table.is_empty:
+            _logger.debug("'%s' flag entry is missing. Creating new one.", self.id)
             flags_table.add_row()
-            flags_table.set_first(self.FlagId, self.__flag_id)
+            flags_table.set_first(self.FlagId, self.id)
             flags_table.set_first(self.FlagState, 1 if self.__default_value else 0)
 
             flags_table.save()
@@ -107,6 +113,7 @@ class FlagCollection:
         """
         Used to register flag in flag collection.
         """
+        _logger.debug("Registering '%s' flag.", flag.id)
         self.__flags.append(flag)
 
 

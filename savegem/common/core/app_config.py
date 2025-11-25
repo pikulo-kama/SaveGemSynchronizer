@@ -26,6 +26,7 @@ class AppConfig(AppData):
 
         _logger.debug("Activity Log File ID - %s", self.activity_log_file_id)
         _logger.debug("Game Config File ID - %s", self.games_config_file_id)
+        _logger.debug("Users Config File ID - %s", self.users_config_file_id)
 
     @property
     def games_config_file_id(self):

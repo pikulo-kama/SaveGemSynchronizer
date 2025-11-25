@@ -109,6 +109,7 @@ class AppState(AppData):
         time_format = self.__state_table.get_first(self.TimeFormatId)
 
         if time_format is None:
+            _logger.debug("Time format is not defined. Using 'Military' as default.")
             time_format = TimeFormat.Military
 
         return time_format
@@ -131,6 +132,8 @@ class AppState(AppData):
 
         if self.app.users.current is not None:
             user_id = self.app.users.current.id
+        else:
+            _logger.debug("No current user info. Will create temporary app state entry.")
 
         # Remove temporary user record
         # in case it's already in database.
@@ -147,6 +150,7 @@ class AppState(AppData):
         # Add row if no entry is
         # present for the user.
         if state.is_empty:
+            _logger.info("Creating new app state entry for user %s", user_id)
             state.add_row()
             state.set_first("user_id", user_id)
 
@@ -168,4 +172,5 @@ class AppState(AppData):
         self.__state_table.save()
 
         if execute_callback and self.__on_state_change is not None:
+            _logger.debug("Notifying state change listeners.")
             self.__on_state_change()

@@ -262,6 +262,7 @@ class GoogleAuth:
 
         # User is already authenticated.
         if os.path.exists(token_file_name):
+            _logger.info("Skipping authentication. User is already authenticated.")
             return
 
         # Authenticate with credentials and then store them for future use

@@ -1,7 +1,12 @@
 from typing import TYPE_CHECKING, Callable, Iterator
 
+from savegem.common.util.logger import get_logger
+
 if TYPE_CHECKING:
     from savegem.common.db.manager import DatabaseManager
+
+
+_logger = get_logger(__name__)
 
 
 class DatabaseRow:
@@ -80,8 +85,13 @@ class DatabaseRow:
         Used to apply edits to table row.
         """
 
+        _logger.debug("Applying edits to row data.")
+        _logger.debug("Before: %s", self.__data)
+
         self.__data = {**self.__data, **self.__edits}
         self.__edits.clear()
+
+        _logger.debug("After: %s", self.__data)
 
     def to_json(self):
         """
@@ -159,6 +169,10 @@ class DatabaseTable:
             self.__record_counter += 1
             self.__records.append(DatabaseRow(self.__record_counter, row_data, self.__columns))
 
+        _logger.debug("Data for table %s have been retrieved.", self.__table_name)
+        _logger.debug("Table columns: %s", self.__columns)
+        _logger.debug("Record count: %d", self.__record_counter)
+
         return self
 
     @property
@@ -191,6 +205,7 @@ class DatabaseTable:
         row.is_new = True
 
         self.__records.append(row)
+        _logger.debug("New row has been added to %s. Row number = %d", self.__table_name, row.row_number)
         return row.row_number
 
     def get_first(self, column_name: str):
@@ -235,6 +250,7 @@ class DatabaseTable:
         to table data in database.
         """
 
+        _logger.debug("Saving table data for %s.", self.__table_name)
         self.__delete_records()
         self.__update_records()
         self.__insert_records()
@@ -357,6 +373,7 @@ class DatabaseTable:
                 self.__deleted_records.append(record)
 
         for record in self.__deleted_records:
+            _logger.debug("Removing row with number %s", record.row_number)
             self.__records.remove(record)
 
     def __get_pk_columns(self):

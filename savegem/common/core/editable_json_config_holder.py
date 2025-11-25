@@ -1,4 +1,5 @@
 import os.path
+from typing import Any
 
 from savegem.common.core.json_config_holder import JsonConfigHolder
 from savegem.common.util.file import save_file
@@ -10,14 +11,14 @@ class EditableJsonConfigHolder(JsonConfigHolder):
     Allows both read and write operations.
     """
 
-    def set_value(self, property_name: str, value: any):
+    def set_value(self, property_name: str, value: Any):
         """
         Used to set json property in configuration.
         """
         self._data[property_name] = value
         save_file(self._config_path, self._data, as_json=True)
 
-    def set(self, value: any):
+    def set(self, value: Any):
         """
         Used to set configuration.
         This will fully replace existing configuration.

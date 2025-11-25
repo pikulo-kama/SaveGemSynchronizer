@@ -57,6 +57,7 @@ class Activity(AppData):
 
         self.__players.clear()
         activity_log = holder().get(HolderObject.Activity)
+        _logger.debug("Activity log: %s", activity_log)
 
         for user_email, games in activity_log.items():
             if self.app.games.current.name in games:

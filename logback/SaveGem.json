@@ -41,10 +41,15 @@
   "savegem.common.core.activity" : "ERROR",
   "savegem.common.core.app_config" : "ERROR",
   "savegem.common.core.app_state" : "ERROR",
+  "savegem.common.core.flag" : "ERROR",
   "savegem.common.core.game_config" : "ERROR",
   "savegem.common.core.ipc_socket" : "ERROR",
   "savegem.common.core.save_meta" : "ERROR",
   "savegem.common.core.text_resource" : "ERROR",
+  "savegem.common.core.user" : "ERROR",
+
+  "savegem.common.db.manager" : "INFO",
+  "savegem.common.db.table" : "INFO",
 
   "savegem.common.service.downloader" : "INFO",
   "savegem.common.service.uploader" : "INFO",
