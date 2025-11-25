@@ -12,7 +12,7 @@ def test_should_resolve_config(path_join_mock):
 
     from constants import Directory
     from savegem.common.util.file import resolve_config, resolve_resource, resolve_temp_file, \
-        resolve_app_data, resolve_log, resolve_project_data
+        resolve_app_data, resolve_log, resolve_project_data, resolve_temp_resource, resolve_import_data
 
     file_name = "Test"
 
@@ -31,6 +31,11 @@ def test_should_resolve_config(path_join_mock):
         call(Directory().Output, file_name)
     ])
 
+    resolve_temp_resource(file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().TempResources, file_name)
+    ])
+
     resolve_app_data(file_name)
     path_join_mock.assert_has_calls([
         call(Directory().AppDataRoot, file_name)
@@ -46,6 +51,29 @@ def test_should_resolve_config(path_join_mock):
         call(Directory().ProjectRoot, file_name)
     ])
 
+    resolve_import_data(file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().ImportData, file_name)
+    ])
+
+def test_should_resolve_temporary_resources(path_join_mock, path_exists_mock):
+
+    from constants import Directory
+    from savegem.common.util.file import resolve_resource
+
+    file_name = "Test"
+    path_exists_mock.return_value = True
+    resolve_resource(file_name, include_temporary=True)
+
+    path_join_mock.assert_has_calls([
+        call(Directory().TempResources, file_name)
+    ])
+
+    resolve_resource(file_name, include_temporary=False)
+
+    path_join_mock.assert_has_calls([
+        call(Directory().Resources, file_name)
+    ])
 
 def test_should_not_cleanup_non_existing_dir(listdir_mock):
 

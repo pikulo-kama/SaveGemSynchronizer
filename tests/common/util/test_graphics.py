@@ -4,7 +4,7 @@ from PyQt6.QtGui import QPixmap, QPainter, QColor
 from PyQt6.QtWidgets import QApplication
 
 
-def create_solid_pixmap(width: int, height: int, color=Qt.GlobalColor.red) -> QPixmap:
+def create_solid_pixmap(width: int, height: int, color: QColor) -> QPixmap:
     """
     Creates a test QPixmap filled with a single color.
     """
@@ -22,6 +22,7 @@ def _qt_app():
     """
 
     app = QApplication.instance()
+
     if app is None:
         app = QApplication([])
 
@@ -36,12 +37,27 @@ def test_square_input_size_and_alpha(_qt_app):
     from savegem.common.util.graphics import round_image
 
     size = 100
-    original = create_solid_pixmap(size, size, Qt.GlobalColor.blue)
+    original = create_solid_pixmap(size, size, QColor(Qt.GlobalColor.blue))
     circular = round_image(original)
 
     assert circular.size() == QSize(size, size)
     assert circular.hasAlphaChannel() is True
     assert circular.isNull() is False
+
+
+def test_should_round_image_with_radius(_qt_app, module_patch):
+
+    from savegem.common.util.graphics import round_image
+
+    size, radius = 100, 10
+    original = create_solid_pixmap(size, size, QColor(Qt.GlobalColor.blue))
+
+    module_patch("QPainter")
+    painter_path_mock = module_patch("QPainterPath")
+    round_image(original, radius)
+
+    effective_radius = painter_path_mock.return_value.addRoundedRect.call_args[0][1]
+    assert effective_radius == radius
 
 
 def test_rectangular_input_size(_qt_app):
@@ -52,7 +68,7 @@ def test_rectangular_input_size(_qt_app):
     from savegem.common.util.graphics import round_image
 
     width, height = 150, 80
-    original = create_solid_pixmap(width, height, Qt.GlobalColor.green)
+    original = create_solid_pixmap(width, height, QColor(Qt.GlobalColor.green))
     circular = round_image(original)
 
     assert circular.size() == QSize(width, height)
@@ -81,7 +97,7 @@ def test_transparency_at_corners(_qt_app):
     from savegem.common.util.graphics import round_image
 
     size = 100
-    original = create_solid_pixmap(size, size, Qt.GlobalColor.white)
+    original = create_solid_pixmap(size, size, QColor(Qt.GlobalColor.white))
     circular = round_image(original)
 
     # Convert to QImage to check pixel data
@@ -131,3 +147,34 @@ def test_input_with_alpha_channel(_qt_app):
     # The corner should still be fully transparent (0)
     corner_color = image.pixelColor(1, 1)
     assert corner_color.alpha() == 0
+
+
+def test_should_scale_image(_qt_app):
+
+    from savegem.common.util.graphics import scale_image
+
+    size = 100
+    target_width = 20
+    target_height = 30
+
+    original = create_solid_pixmap(size, size, QColor(Qt.GlobalColor.white))
+
+    scaled = scale_image(original, target_width, target_height)
+
+    # Should scale to the lower value.
+    assert scaled.width() == target_width
+    assert scaled.height() == target_width
+
+
+def test_should_scale_image_width_only(_qt_app):
+
+    from savegem.common.util.graphics import scale_image
+
+    size, target_size = 100, 50
+    original = create_solid_pixmap(size, size, QColor(Qt.GlobalColor.white))
+
+    scaled = scale_image(original, target_size)
+
+    assert scaled.width() == target_size
+    assert scaled.height() == target_size
+

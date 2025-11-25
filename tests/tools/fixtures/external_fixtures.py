@@ -79,6 +79,10 @@ def http_error_mock(mocker: MockerFixture):
     )
 
 
+#
+# Date/Time Fixtures
+#
+
 @pytest.fixture
 def time_sleep_mock(module_patch):
     return module_patch("time.sleep")
@@ -102,3 +106,7 @@ def datetime_mock(module_patch):
 @pytest.fixture
 def format_datetime_mock(module_patch):
     return module_patch("format_datetime")
+
+@pytest.fixture
+def get_localzone_mock(module_patch):
+    return module_patch("get_localzone")

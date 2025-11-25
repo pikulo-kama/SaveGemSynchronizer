@@ -1,3 +1,4 @@
+babel-cli
 google-api-python-client==2.187.0
 google-auth-httplib2==0.2.1
 google_auth_oauthlib==1.2.3

@@ -2,6 +2,8 @@ import hashlib
 import json
 import os.path
 import shutil
+from typing import Any
+
 from constants import Directory, UTF_8, SHA_256
 
 
@@ -109,7 +111,7 @@ def read_file(file_path: str, as_json: bool = False):
         return json.load(file) if as_json else file.read()
 
 
-def save_file(file_path: str, data: any, as_json: bool = False, binary: bool = False):
+def save_file(file_path: str, data: Any, as_json: bool = False, binary: bool = False):
     """
     Used to save contents of the file.
     """
@@ -118,7 +120,11 @@ def save_file(file_path: str, data: any, as_json: bool = False, binary: bool = F
     encoding = None if binary else UTF_8
 
     with open(file_path, mode, encoding=encoding) as file:
-        json.dump(data, file, indent=2, ensure_ascii=False) if as_json else file.write(data)
+
+        if as_json:
+            json.dump(data, file, indent=2, ensure_ascii=False)  # noqa
+        else:
+            file.write(data)
 
 
 def delete_file(file_path: str):

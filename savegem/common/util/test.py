@@ -1,6 +1,6 @@
 
 
-class ExitTestLoop(Exception):
+class ExitTestLoop(Exception):  # pragma: no cover
     """
     Exception class for
     testing purposes.

@@ -27,7 +27,6 @@ def round_image(pixmap: QPixmap, radius: int = None) -> QPixmap:
     path = QPainterPath()
     rectangle = QRect(0, 0, width, height)
     path.addRoundedRect(QRectF(rectangle), effective_radius, effective_radius)
-    # path.addEllipse(0, 0, pixmap.width(), pixmap.height())
 
     # Clip the painter to the circular path
     painter.setClipPath(path)
