@@ -9,11 +9,16 @@ QCustomComboBox {
     padding: 5px 10px;
 }
 
-QCustomComboBox QAbstractItemView {
-    color: color("text-primary");
-    background-color: color("surface-a10");
+QCustomComboBox:on {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+QCustomComboBox QListView {
     border: 1px solid color("surface-a40");
-    border-radius: 5px;
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 QCustomComboBox::drop-down {
@@ -25,6 +30,12 @@ QCustomComboBox::down-arrow {
     image: image("chevron.svg");
 }
 
-QCustomComboBox QAbstractItemView::item {
+QCustomComboBox QListView::item {
+    color: color("text-primary");
+    background-color: color("surface-a10");
     padding: 5px;
+}
+
+QCustomComboBox QListView::item:hover {
+    background-color: color("surface-a20");
 }
