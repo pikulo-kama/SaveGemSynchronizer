@@ -111,6 +111,7 @@ class LogoutController(WidgetController):
             # Delete auth token.
             delete_file(resolve_app_data(File.GDriveToken))
             gui().destroy()
+
             exit(0)
 
         logout_button.clicked.connect(  # noqa

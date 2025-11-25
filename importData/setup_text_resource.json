@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "setup_text_resource",
     "type": "TextResource",
-    "extract_date": "2025-11-03T02:41:13.928129"
+    "extract_date": "2025-11-25T02:27:37.935289"
   },
   "data": {
     "confirmation_ConfirmLogout": {
@@ -18,76 +18,6 @@
       "es_ES": "¿Seguro? Esto borrará el guardado existente.",
       "fr_FR": "Êtes-vous sûr ? Cela écrasera la sauvegarde existante.",
       "uk_UA": "Впевнений? Це знищить твій існуючий сейв."
-    },
-    "label_SettingIsDisabled": {
-      "de_DE": "Dieses Spiel unterstützt diese Funktion nicht.",
-      "en_US": "This game doesn't support this feature",
-      "es_ES": "Este juego no es compatible con esta función.",
-      "fr_FR": "Ce jeu ne prend pas en charge cette fonctionnalité.",
-      "uk_UA": "Ця гра не підтримує дану функцію."
-    },
-    "label_Theme": {
-      "de_DE": "Design",
-      "en_US": "Theme",
-      "es_ES": "Tema",
-      "fr_FR": "Thème",
-      "uk_UA": "Тема Оформлення"
-    },
-    "label_ThemeDesc": {
-      "de_DE": "Ändert das gesamte Erscheinungsbild der Anwendung, einschließlich Farbpalette und Hintergrundtöne.",
-      "en_US": "Changes the overall visual appearance of the application, including color palette and background tones.",
-      "es_ES": "Cambia la apariencia visual general de la aplicación, incluida la paleta de colores y los tonos de fondo.",
-      "fr_FR": "Modifie l'apparence visuelle globale de l'application, y compris la palette de couleurs et les tons d'arrière-plan.",
-      "uk_UA": "Змінює загальний візуальний вигляд програми, включаючи колірну палітру та фонові тони."
-    },
-    "label_ColorModeLight": {
-      "de_DE": "Hell",
-      "en_US": "Light",
-      "es_ES": "Claro",
-      "fr_FR": "Clair",
-      "uk_UA": "Світла"
-    },
-    "label_ColorModeDark": {
-      "de_DE": "Dunkel",
-      "en_US": "Dark",
-      "es_ES": "Oscuro",
-      "fr_FR": "Foncé",
-      "uk_UA": "Темна"
-    },
-    "label_ColorModeSystem": {
-      "de_DE": "System",
-      "en_US": "System",
-      "es_ES": "Sistema",
-      "fr_FR": "Système",
-      "uk_UA": "Системна"
-    },
-    "info_NewestSaveOnDriveInformation": {
-      "de_DE": "der letzte Spielstand wurde am {0} um {1} von {2} hochgeladen",
-      "en_US": "last save was uploaded on {0} at {1} by {2}",
-      "es_ES": "el último guardado fue subido el {0} a las {1} por {2}",
-      "fr_FR": "la dernière sauvegarde a été envoyée le {0} à {1} par {2}",
-      "uk_UA": "останній сейв відвантажено {0} o {1} від {2}"
-    },
-    "label_Restore": {
-      "de_DE": "Wiederherstellen",
-      "en_US": "Restore",
-      "es_ES": "Restaurar",
-      "fr_FR": "Restaurer",
-      "uk_UA": "Відновити"
-    },
-    "info_SaveIsUpToDate": {
-      "de_DE": "Aktuell",
-      "en_US": "Up to date",
-      "es_ES": "Actualizado",
-      "fr_FR": "À jour",
-      "uk_UA": "Актуально"
-    },
-    "info_SaveIsUpToDateDesc": {
-      "de_DE": "Nichts Neues... Dein Spielstand ist so aktuell wie möglich.",
-      "en_US": "Nothing new... Your save is as fresh as it could be.",
-      "es_ES": "Nada nuevo... Tu guardado está lo más actualizado posible.",
-      "fr_FR": "Rien de nouveau... Votre sauvegarde est déjà à jour.",
-      "uk_UA": "Нічого нового... Твій сейв свіженький як ніколи."
     },
     "info_SaveNeedsToBeDownloaded": {
       "de_DE": "Download Erforderlich",
@@ -165,6 +95,27 @@
       "es_ES": "Sincroniza automáticamente los archivos de guardado al iniciar o cerrar el juego.",
       "fr_FR": "Synchronise automatiquement les fichiers de sauvegarde à l'ouverture ou à la fermeture du jeu.",
       "uk_UA": "Автоматично синхронізує файли збережень, коли гра запускається або закривається."
+    },
+    "label_ColorModeDark": {
+      "de_DE": "Dunkel",
+      "en_US": "Dark",
+      "es_ES": "Oscuro",
+      "fr_FR": "Foncé",
+      "uk_UA": "Темна"
+    },
+    "label_ColorModeLight": {
+      "de_DE": "Hell",
+      "en_US": "Light",
+      "es_ES": "Claro",
+      "fr_FR": "Clair",
+      "uk_UA": "Світла"
+    },
+    "label_ColorModeSystem": {
+      "de_DE": "System",
+      "en_US": "System",
+      "es_ES": "Sistema",
+      "fr_FR": "Système",
+      "uk_UA": "Системна"
     },
     "label_ContactUs": {
       "de_DE": "Kontakt",
@@ -271,19 +222,26 @@
       "fr_FR": "L'application n'a trouvé aucune information de version associée au fichier de sauvegarde actuel.",
       "uk_UA": "Програма не змогла знайти жодної інформації про версію, пов'язаної з поточним файлом збереження."
     },
-    "label_Offline": {
-      "de_DE": "Offline",
-      "en_US": "Offline",
-      "es_ES": "Desconectado",
-      "fr_FR": "Hors ligne",
-      "uk_UA": "Офлайн"
-    },
     "label_Players": {
       "de_DE": "Spieler",
       "en_US": "Players",
       "es_ES": "Jugadores",
       "fr_FR": "Joueurs",
       "uk_UA": "Гравці"
+    },
+    "label_Restore": {
+      "de_DE": "Wiederherstellen",
+      "en_US": "Restore",
+      "es_ES": "Restaurar",
+      "fr_FR": "Restaurer",
+      "uk_UA": "Відновити"
+    },
+    "label_SettingIsDisabled": {
+      "de_DE": "Dieses Spiel unterstützt diese Funktion nicht.",
+      "en_US": "This game doesn't support this feature",
+      "es_ES": "Este juego no es compatible con esta función.",
+      "fr_FR": "Ce jeu ne prend pas en charge cette fonctionnalité.",
+      "uk_UA": "Ця гра не підтримує дану функцію."
     },
     "label_Settings": {
       "de_DE": "Einstellungen",
@@ -327,6 +285,20 @@
       "fr_FR": "Le stockage est vide. Un envoi est nécessaire pour continuer.",
       "uk_UA": "Cховище порожнє. Потрібно виконати відвантаження."
     },
+    "label_Theme": {
+      "de_DE": "Design",
+      "en_US": "Theme",
+      "es_ES": "Tema",
+      "fr_FR": "Thème",
+      "uk_UA": "Тема Оформлення"
+    },
+    "label_ThemeDesc": {
+      "de_DE": "Ändert das gesamte Erscheinungsbild der Anwendung, einschließlich Farbpalette und Hintergrundtöne.",
+      "en_US": "Changes the overall visual appearance of the application, including color palette and background tones.",
+      "es_ES": "Cambia la apariencia visual general de la aplicación, incluida la paleta de colores y los tonos de fondo.",
+      "fr_FR": "Modifie l'apparence visuelle globale de l'application, y compris la palette de couleurs et les tons d'arrière-plan.",
+      "uk_UA": "Змінює загальний візуальний вигляд програми, включаючи колірну палітру та фонові тони."
+    },
     "label_TimeFormat": {
       "de_DE": "Zeitformat",
       "en_US": "Time Format",
@@ -369,20 +341,6 @@
       "fr_FR": "Version",
       "uk_UA": "Версія"
     },
-    "notification_AutoModeOff": {
-      "de_DE": "Automatischer Modus deaktiviert.",
-      "en_US": "Automatic mode disabled.",
-      "es_ES": "Modo automático desactivado.",
-      "fr_FR": "Mode automatique désactivé.",
-      "uk_UA": "Автоматичний режим вимкнено."
-    },
-    "notification_AutoModeOn": {
-      "de_DE": "Automatischer Modus aktiviert.",
-      "en_US": "Automatic mode enabled.",
-      "es_ES": "Modo automático activado.",
-      "fr_FR": "Mode automatique activé.",
-      "uk_UA": "Автоматичний режим ввімкнено."
-    },
     "notification_ErrorSaveDirectoryMissing": {
       "de_DE": "Speicherordner nicht gefunden. \n{0}",
       "en_US": "Save directory not found. \n{0}",
@@ -411,12 +369,12 @@
       "fr_FR": "Sauvegarde envoyée avec succès.",
       "uk_UA": "Сейв успішно відвантажено."
     },
-    "popup_ConfirmationButtonClose": {
+    "popup_ConfirmationButtonCancel": {
       "de_DE": "Abbrechen",
       "en_US": "Cancel",
       "es_ES": "Cancelar",
       "fr_FR": "Annuler",
-      "uk_UA": "Передумав"
+      "uk_UA": "Скасувати"
     },
     "popup_ConfirmationButtonConfirm": {
       "de_DE": "Bestätigen",
@@ -432,19 +390,12 @@
       "fr_FR": "Confirmer l'Action",
       "uk_UA": "Підтвердіть Дію"
     },
-    "popup_NotificationButtonCancel": {
-      "de_DE": "Abbrechen",
-      "en_US": "Cancel",
-      "es_ES": "Cancelar",
-      "fr_FR": "Annuler",
-      "uk_UA": "Скасувати"
-    },
     "popup_NotificationTitle": {
-      "de_DE": "Information",
-      "en_US": "Information",
-      "es_ES": "Información",
-      "fr_FR": "Information",
-      "uk_UA": "Інформасьйон"
+      "de_DE": "Benachrichtigung",
+      "en_US": "Notification",
+      "es_ES": "Notificación",
+      "fr_FR": "Notification",
+      "uk_UA": "Сповіщення"
     },
     "window_Copyright": {
       "de_DE": "© {0} {1}™. Lizenziert unter GPLv3.",

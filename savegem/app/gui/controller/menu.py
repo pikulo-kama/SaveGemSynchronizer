@@ -2,6 +2,7 @@ from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QWidget
 
+from savegem.app.gui.component import QCustomLayout
 from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.component.spacer import QSpacer
 from savegem.app.gui.constants import QBool
@@ -24,6 +25,8 @@ class MenuController(WidgetController):
         def change_tab(new_tab_id: str):
             return lambda: self.__change_tab(new_tab_id)
 
+        menu_layout: QCustomLayout = menu.layout()
+
         for section in self.sections:
             section_id = section.get("section_id")
 
@@ -32,7 +35,7 @@ class MenuController(WidgetController):
             menu_item.setIconSize(QSize(25, 25))
             menu_item.clicked.connect(change_tab(section_id))  # noqa
 
-            menu.layout().add_dynamic_widget(menu_item)
+            menu_layout.add_dynamic_widget(menu_item)
 
         menu.layout().addWidget(QSpacer())
 
@@ -52,7 +55,7 @@ class MenuController(WidgetController):
             if is_selected:
                 section_icon = f"active_{section_icon}"
 
-            menu_item = menu.findChild(QCustomPushButton, section_id)
+            menu_item: QCustomPushButton = menu.findChild(QCustomPushButton, section_id)
             menu_item.setIcon(QIcon(resolve_resource(section_icon)))
             menu_item.setToolTip(section_label)
             menu_item.setProperty("active", QBool(is_selected))

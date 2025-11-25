@@ -79,7 +79,7 @@
             },
             {
               "widget_id": "cancel_button",
-              "content": "tr{popup_NotificationButtonCancel}",
+              "content": "tr{popup_ConfirmationButtonCancel}",
               "widget_type_id": "QPushButton"
             }
           ]
