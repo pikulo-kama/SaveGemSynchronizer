@@ -4,7 +4,7 @@
   "processName" : "SaveGemWatchdog.exe",
   "iterationIntervalSeconds" : 15,
   "childProcesses" : [
-    "_SaveGemProcessWatcher.exe",
-    "_SaveGemGDriveWatcher.exe"
+    "SaveGemProcessWatcher.exe",
+    "SaveGemGDriveWatcher.exe"
   ]
 }
