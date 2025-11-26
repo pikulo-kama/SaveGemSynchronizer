@@ -88,3 +88,8 @@ def json_config_holder_mock(module_patch):
 @pytest.fixture
 def editable_json_config_holder_mock(module_patch):
     return module_patch("EditableJsonConfigHolder")
+
+
+@pytest.fixture
+def db_mock(module_patch):
+    return module_patch("db").return_value

@@ -125,5 +125,5 @@ def add_extract_command(subparsers):
     extract_parser.set_defaults(func=invoke_extractor)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

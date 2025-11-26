@@ -93,7 +93,7 @@ class DatabaseInitializer:
         parts = migration_name.split("__")
 
         if len(parts) != 2:
-            raise RuntimeError(f"Migration %s is invalid.", migration_name)
+            raise RuntimeError(f"Migration {migration_name} is invalid.")
 
         version, description = parts
         version = version.replace("v", "").replace("_", ".")
