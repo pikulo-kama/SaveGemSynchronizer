@@ -1,13 +1,11 @@
 from unittest.mock import MagicMock, call
-
 import pytest
 
 
 @pytest.fixture(autouse=True)
-def _setup(module_patch, resolve_temp_file_mock, path_exists_mock, games_config):
+def _setup(module_patch, flags_mock, games_config):
     # By default, assume GUI is initialized (flag file exists)
-    resolve_temp_file_mock.return_value = "/mock/temp/gui_flag.txt"
-    path_exists_mock.return_value = True
+    flags_mock.gui_initialized.enabled = True
     games_config.current.drive_directory = "MOCKED_DRIVE_DIR_ID"
 
     def mock_daemon_init(self, service_name, requires_auth):
@@ -26,42 +24,33 @@ def create_mock_changes_response(changes_list, new_token="NEXT_PAGE_TOKEN"):
     }
 
 
-def test_work_returns_if_gui_not_initialized(path_exists_mock, app_context, gdrive_mock):
-    """
-    Test _work exits early if the GUI flag file does not exist.
-    """
+def test_run_once_initializes_user_and_downloads_config(gdrive_mock, app_context, app_config, holder_mock):
 
     from savegem.gdrive_watcher.main import GDriveWatcher
+    from savegem.app.data import HolderObject
 
     watcher = GDriveWatcher()
-    path_exists_mock.return_value = False
+    watcher._run_once()
 
-    watcher._work()
+    holder_mock.download_json.assert_has_calls([
+        call(HolderObject.UserData, app_config.users_config_file_id),
+        call(HolderObject.GamesConfig, app_config.games_config_file_id)
+    ])
 
-    # Assert that GDrive and app logic were not executed
-    app_context.users.initialize.assert_not_called()
-    gdrive_mock.get_changes.assert_not_called()
-
-
-def test_work_initializes_and_downloads_before_checking_changes(gdrive_mock, app_context):
-    """
-    Test that app initialization and download are run regardless of changes.
-    """
-
-    from savegem.gdrive_watcher.main import GDriveWatcher
-
-    watcher = GDriveWatcher()
-
-    # Set get_changes to return empty list so the main logic runs fully
-    gdrive_mock.get_changes.return_value = create_mock_changes_response([])
-
-    watcher._work()
-
-    # Assert initialization flow
+    app_context.games.initialize.assert_called_once()
     app_context.users.initialize.assert_called_once()
-    app_context.games.download.assert_called_once()
-    gdrive_mock.get_changes.assert_called_once()
 
+
+def test_should_not_work_if_gui_not_initialized(gdrive_mock, flags_mock):
+
+    from savegem.gdrive_watcher.main import GDriveWatcher
+
+    flags_mock.gui_initialized.enabled = False
+
+    watcher = GDriveWatcher()
+    watcher._work()
+
+    gdrive_mock.get_changes.assert_not_called()
 
 def test_get_changes_updates_token_and_extracts_ids(gdrive_mock):
     """

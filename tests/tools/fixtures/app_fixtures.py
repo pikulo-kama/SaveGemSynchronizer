@@ -68,3 +68,13 @@ def activity_mock(mocker: MockerFixture, app_context):
     app_context.activity = mock
 
     return mock
+
+
+@pytest.fixture
+def flags_mock(module_patch):
+    return module_patch("flags").return_value
+
+
+@pytest.fixture
+def holder_mock(module_patch):
+    return module_patch("holder").return_value
