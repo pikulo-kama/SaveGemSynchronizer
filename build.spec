@@ -80,8 +80,8 @@ def build_exe(
         service_name: str,
         icon: str = "NONE",
         console: bool = False,
-        datas: [str] = None,
-        hooks: [str] = None
+        datas: list = None,
+        hooks: list = None
 ):
     """
     Used to build EXE file.
@@ -160,7 +160,7 @@ gdrive_watcher, gdrive_watcher_a = build_exe(
 initializer, initializer_a = build_exe(
     service_name="initializer",
     hooks=["hooks"],
-    datas=["importData"],
+    datas=["importData", "migration"],
     console=True
 )
 

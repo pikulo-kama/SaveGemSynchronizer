@@ -76,6 +76,13 @@ def resolve_import_data(file_name: str):
     return os.path.join(Directory().ImportData, file_name)
 
 
+def resolve_migration(file_name: str):
+    """
+    Used to resolve migration script.
+    """
+    return os.path.join(Directory().Migrations, file_name)
+
+
 def cleanup_directory(directory: str):
     """
     Used to delete all contents of directory.

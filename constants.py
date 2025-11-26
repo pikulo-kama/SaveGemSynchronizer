@@ -28,6 +28,10 @@ class Directory:
         return os.path.join(self.ProjectRoot, "importData")
 
     @property
+    def Migrations(self):  # noqa
+        return os.path.join(self.ProjectRoot, "migration")
+
+    @property
     def AppDataRoot(self):  # noqa
         # We need to have fallback value for APPDATA token, since
         # when tests are executed on Linux environment it would fail.

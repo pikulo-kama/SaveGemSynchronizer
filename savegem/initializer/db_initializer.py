@@ -1,9 +1,10 @@
 import datetime
+import os
 
+from constants import Directory
 from savegem.common.db.manager import db, DatabaseManager
+from savegem.common.util.file import read_file, resolve_migration, remove_extension_from_path
 from savegem.common.util.logger import get_logger
-from savegem.initializer.core.migration import Migration
-from savegem.initializer.migration import get_migrations
 
 
 _logger = get_logger(__name__)
@@ -51,25 +52,25 @@ class DatabaseInitializer:
 
         manager = db()
 
-        migrations = list(get_migrations())
-        last_migration_name, _ = migrations[-1]
+        migrations = os.listdir(Directory().Migrations)
+        last_migration_name = migrations[-1]
 
         _logger.info("Latest observed migration: %s.", last_migration_name)
         if cls.__migration_exists(manager, last_migration_name):
             _logger.info("No migrations to perform. Exiting.")
             return
 
-        for member_name, member in migrations:
+        for file_name in migrations:
 
-            if cls.__migration_exists(manager, member_name):
-                _logger.info("Migration %s has already been executed. Skipping.", member_name)
+            if cls.__migration_exists(manager, file_name):
+                _logger.info("Migration %s has already been executed. Skipping.", file_name)
                 continue
 
-            _logger.info("Applying migration %s.", member_name)
-            migration: Migration = member()
-            migration.migrate(manager)
+            _logger.info("Applying migration %s.", file_name)
+            script = read_file(resolve_migration(file_name))
+            db().connection().executescript(script)
 
-            cls.__update_schema_version(manager, member_name)
+            cls.__update_schema_version(manager, file_name)
 
         _logger.info("All migrations have been executed.")
 
@@ -88,6 +89,7 @@ class DatabaseInitializer:
         Used to add migration to schema_version table.
         """
 
+        migration_name = remove_extension_from_path(migration_name)
         parts = migration_name.split("__")
 
         if len(parts) != 2:
