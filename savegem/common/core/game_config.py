@@ -208,7 +208,7 @@ class Game:
         self.__players = players
 
         self._metadata = MetadataWrapper(LocalMetadata(self), DriveMetadata(self))
-        self.__settings = GameSettings(self, game_config)
+        self._settings = GameSettings(self, game_config)
 
     @property
     def name(self):
@@ -261,7 +261,7 @@ class Game:
         """
         Used to get game settings.
         """
-        return self.__settings
+        return self._settings
 
     @property
     def auto_mode_allowed(self):

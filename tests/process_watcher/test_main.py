@@ -1,7 +1,6 @@
 from dataclasses import dataclass
-from typing import Callable
-from unittest.mock import MagicMock, PropertyMock
-
+from typing import Callable, Any
+from unittest.mock import MagicMock, PropertyMock, call
 import pytest
 
 
@@ -13,7 +12,7 @@ class MockGameMeta:
 
     local: MagicMock
     drive: MagicMock
-    sync_status: any
+    sync_status: Any
 
 
 @pytest.fixture
@@ -24,10 +23,10 @@ def _create_game_process():
 
     from savegem.common.core.save_meta import SyncStatus
     from savegem.process_watcher.game_process import GameProcess, ProcessStatus
-    from tests.tools.mocks.mock_game import MockGame
+    from tests.tools.mocks.mock_game import MockGame, MockGameSettings
 
-    def _factory(name: str, has_started: bool = False, has_closed: bool = False,
-                 auto_mode: bool = True, sync_status: SyncStatus = SyncStatus.UpToDate) -> GameProcess:
+    def _factory(name: str, has_started: bool = False, has_closed: bool = False, auto_mode_enabled: bool = False,
+                 auto_mode_allowed: bool = True, sync_status: SyncStatus = SyncStatus.UpToDate) -> GameProcess:
 
         # Create the full hierarchy
         metadata = MockGameMeta(
@@ -39,7 +38,8 @@ def _create_game_process():
         game = MockGame(
             name=name,
             process_name="",
-            auto_mode_allowed=auto_mode,
+            auto_mode_allowed=auto_mode_allowed,
+            settings=MockGameSettings(auto_mode_enabled),
             metadata=metadata
         )
 
@@ -64,26 +64,21 @@ def _get_run_processes_mock(module_patch, _create_game_process: Callable) -> Mag
     return module_patch('get_running_game_processes')
 
 
-def test_work_initial_dependencies(app_context, gdrive_mock, _get_run_processes_mock):
-    """
-    Test that required initialization steps are called before process checking.
-    """
+def test_run_once_initializes_user_and_downloads_config(gdrive_mock, app_context, app_config, holder_mock):
 
     from savegem.process_watcher.main import ProcessWatcher
-
-    _get_run_processes_mock.return_value = []
+    from savegem.app.data import HolderObject
 
     watcher = ProcessWatcher()
-    watcher._work()
+    watcher._run_once()
 
-    # 1. Initialize user with GDrive info
-    app_context.users.initialize.assert_called_once_with(
-        gdrive_mock.get_current_user
-    )
-    # 2. Download games configuration
-    app_context.games.download.assert_called_once()
-    # 3. Get active processes
-    _get_run_processes_mock.assert_called_once()
+    holder_mock.download_json.assert_has_calls([
+        call(HolderObject.UserData, app_config.users_config_file_id),
+        call(HolderObject.GamesConfig, app_config.games_config_file_id)
+    ])
+
+    app_context.games.initialize.assert_called_once()
+    app_context.users.initialize.assert_called_once()
 
 
 def test_work_returns_early_if_no_state_change(app_context, downloader_mock, _get_run_processes_mock,
@@ -126,7 +121,7 @@ def test_work_updates_activity_log_for_running_games(app_context, _get_run_proce
     _get_run_processes_mock.return_value = [proc_started, proc_closed, proc_running]
 
     # Set auto mode to False to ensure we don't accidentally call __perform_automatic_actions
-    type(app_context.state).is_auto_mode = PropertyMock(return_value=False)
+    type(app_context.game.settings).auto_mode = PropertyMock(return_value=False)
 
     watcher = ProcessWatcher()
     watcher._work()
@@ -175,13 +170,10 @@ def test_auto_action_skip_if_game_auto_mode_disabled(app_context, downloader_moc
     proc_started = _create_game_process(
         "Manual Game",
         has_started=True,
-        auto_mode=False,
+        auto_mode_allowed=False,
         sync_status=SyncStatus.NoInformation
     )
     _get_run_processes_mock.return_value = [proc_started]
-
-    # Mock auto mode to be True
-    type(app_context.state).is_auto_mode = PropertyMock(return_value=True)
 
     watcher = ProcessWatcher()
     watcher._work()
@@ -190,6 +182,30 @@ def test_auto_action_skip_if_game_auto_mode_disabled(app_context, downloader_moc
     proc_started.game.meta.drive.refresh.assert_not_called()
     downloader_mock.download.assert_not_called()
 
+
+def test_should_skip_auto_actions_if_game_has_auto_mode_disabled(app_context, downloader_mock, _get_run_processes_mock,
+                                                     _create_game_process):
+
+    from savegem.common.core.save_meta import SyncStatus
+    from savegem.process_watcher.main import ProcessWatcher
+
+    proc_started = _create_game_process(
+        "Manual Game",
+        has_started=True,
+        auto_mode_allowed=False,
+        auto_mode_enabled=True,
+        sync_status=SyncStatus.NoInformation
+    )
+    _get_run_processes_mock.return_value = [proc_started]
+
+    # Mock auto mode to be True
+
+    watcher = ProcessWatcher()
+    watcher._work()
+
+    # No refresh or download/upload
+    proc_started.game.meta.drive.refresh.assert_not_called()
+    downloader_mock.download.assert_not_called()
 
 def test_auto_action_skip_if_uptodate(app_context, downloader_mock, _get_run_processes_mock, _create_game_process):
     """
@@ -202,12 +218,11 @@ def test_auto_action_skip_if_uptodate(app_context, downloader_mock, _get_run_pro
     proc_started = _create_game_process(
         "UpToDate Game",
         has_started=True,
-        sync_status=SyncStatus.UpToDate
+        sync_status=SyncStatus.UpToDate,
+        auto_mode_allowed=True,
+        auto_mode_enabled=True
     )
     _get_run_processes_mock.return_value = [proc_started]
-
-    # Mock auto mode to be True
-    type(app_context.state).is_auto_mode = PropertyMock(return_value=True)
 
     watcher = ProcessWatcher()
     watcher._work()
@@ -230,15 +245,23 @@ def test_auto_skip_if_running(module_patch, app_context, downloader_mock, push_n
     from savegem.process_watcher.main import ProcessWatcher
     from savegem.app.gui.constants import UIRefreshEvent
 
-    proc_started = _create_game_process("Started Game", has_started=True, sync_status=SyncStatus.NoInformation)
+    proc_started = _create_game_process(
+        "Started Game",
+        has_started=True,
+        sync_status=SyncStatus.NoInformation,
+        auto_mode_allowed=True,
+        auto_mode_enabled=True
+    )
 
-    # 2. Target process: Running, but neither started nor closed (should be skipped by 'continue')
-    proc_running_target = _create_game_process("Running Target", has_started=False, has_closed=False)
+    proc_running_target = _create_game_process(
+        "Running Target",
+        has_started=False,
+        has_closed=False,
+        auto_mode_allowed=True,
+        auto_mode_enabled=True
+    )
 
     _get_run_processes_mock.return_value = [proc_started, proc_running_target]
-
-    # Mock app auto mode to be True
-    type(app_context.state).is_auto_mode = PropertyMock(return_value=True)
 
     watcher = ProcessWatcher()
     watcher._work()
@@ -266,10 +289,11 @@ def test_auto_action_download_on_started(app_context, downloader_mock, push_noti
     proc_started = _create_game_process(
         game_name,
         has_started=True,
-        sync_status=SyncStatus.NoInformation
+        sync_status=SyncStatus.NoInformation,
+        auto_mode_allowed = True,
+        auto_mode_enabled = True
     )
     _get_run_processes_mock.return_value = [proc_started]
-    type(app_context.state).is_auto_mode = PropertyMock(return_value=True)
 
     watcher = ProcessWatcher()
     watcher._work()
@@ -297,10 +321,11 @@ def test_auto_action_upload_on_closed(app_context, uploader_mock, push_notificat
     proc_closed = _create_game_process(
         game_name,
         has_closed=True,
-        sync_status=SyncStatus.NoInformation
+        sync_status=SyncStatus.NoInformation,
+        auto_mode_allowed = True,
+        auto_mode_enabled = True
     )
     _get_run_processes_mock.return_value = [proc_closed]
-    type(app_context.state).is_auto_mode = PropertyMock(return_value=True)
 
     watcher = ProcessWatcher()
     watcher._work()

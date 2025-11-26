@@ -39,7 +39,7 @@ def _second_process(_second_game):
 
 @pytest.fixture(autouse=True)
 def _setup(app_context, games_config, _first_game, _second_game):
-    type(games_config).list = [_first_game, _second_game]
+    type(games_config).__iter__.return_value = [_first_game, _second_game]
 
     games_config.by_name.side_effect = lambda name: {
         _first_game.name: _first_game,
