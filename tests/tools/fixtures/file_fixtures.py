@@ -64,3 +64,8 @@ def delete_file_mock(module_patch):
 @pytest.fixture
 def file_name_from_path_mock(module_patch):
     return module_patch("file_name_from_path")
+
+
+@pytest.fixture
+def file_checksum_mock(module_patch):
+    return module_patch("file_checksum")

@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import Any
 
 from savegem.app.ipc_socket import ui_socket
@@ -7,7 +8,6 @@ from savegem.common.db.manager import db
 from savegem.common.util.file import read_file, resolve_import_data, file_checksum
 from savegem.common.util.logger import get_logger
 from savegem.common.util.reflection import get_members
-
 
 _logger = get_logger(__name__)
 
@@ -114,7 +114,7 @@ class RegularImporter:
         if args.file_name is None:
             _logger.error("Argument '--file_name' is required for import.")
             print("Argument '--file_name' is required for import.")
-            exit(1)
+            sys.exit(1)
 
         import_file = read_file(resolve_import_data(args.file_name), as_json=True)
         metadata = import_file.get("metadata", {})

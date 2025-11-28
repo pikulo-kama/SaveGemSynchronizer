@@ -93,3 +93,21 @@ def editable_json_config_holder_mock(module_patch):
 @pytest.fixture
 def db_mock(module_patch):
     return module_patch("db").return_value
+
+
+@pytest.fixture
+def db_table_mock(mocker: MockerFixture, db_mock):
+    db_table_mock = mocker.MagicMock()
+
+    db_table_mock.where.return_value = db_table_mock
+    db_table_mock.retrieve.return_value = db_table_mock
+
+    db_mock.table.return_value = db_table_mock
+    db_mock.retrieve_table.return_value = db_table_mock
+
+    return db_table_mock
+
+
+@pytest.fixture
+def get_members_mock(module_patch):
+    return module_patch("get_members")

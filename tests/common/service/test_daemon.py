@@ -50,14 +50,6 @@ def _setup(mocker: MockerFixture, json_config_holder_mock):
     json_config_holder_mock.return_value = mock_holder
 
 
-@pytest.fixture
-def mock_sys_exit(mocker: MockerFixture):
-    """
-    Mock 'sys.exit' to prevent the process from exiting.
-    """
-    return mocker.patch("sys.exit")
-
-
 def test_daemon_init_with_config(module_patch, path_exists_mock, json_config_holder_mock, _mock_daemon):
     """
     Test successful initialization when config file is present.
@@ -94,7 +86,7 @@ def test_daemon_init_without_config(module_patch, path_exists_mock, _mock_daemon
     mock_config_constructor.assert_not_called()
 
 
-def test_daemon_init_process_already_running(module_patch, path_exists_mock, mock_sys_exit, _mock_daemon):
+def test_daemon_init_process_already_running(module_patch, path_exists_mock, sys_exit_mock, _mock_daemon):
     """
     Test that the daemon exits if another instance is running.
     """
@@ -105,7 +97,7 @@ def test_daemon_init_process_already_running(module_patch, path_exists_mock, moc
     _mock_daemon("TestService", requires_auth=False)
 
     is_process_running.assert_called_once()
-    mock_sys_exit.assert_called_once_with(0)
+    sys_exit_mock.assert_called_once_with(0)
 
 
 def test_daemon_start_work_loop_no_auth(mocker: MockerFixture, path_exists_mock, time_sleep_mock, _mock_daemon):

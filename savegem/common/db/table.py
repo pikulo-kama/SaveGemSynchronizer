@@ -117,7 +117,7 @@ class DatabaseTable:
         self.__table_name = table_name
         self.__records: list[DatabaseRow] = []
         self.__deleted_records: list[DatabaseRow] = []
-        self.__columns: list[str] = []
+        self._columns: list[str] = []
 
     def __iter__(self) -> Iterator[DatabaseRow]:
         return iter(self.__records)
@@ -161,16 +161,16 @@ class DatabaseTable:
             sql += f" ORDER BY {self.__order_by_clause}"
 
         cursor = self.__db.select(sql, retrieve_args)
-        self.__columns = [str(description[0]).lower() for description in cursor.description]
+        self._columns = [str(description[0]).lower() for description in cursor.description]
         self.__records.clear()
         self.__record_counter = 0
 
         for row_data in cursor.fetchall():
             self.__record_counter += 1
-            self.__records.append(DatabaseRow(self.__record_counter, row_data, self.__columns))
+            self.__records.append(DatabaseRow(self.__record_counter, row_data, self._columns))
 
         _logger.debug("Data for table %s have been retrieved.", self.__table_name)
-        _logger.debug("Table columns: %s", self.__columns)
+        _logger.debug("Table columns: %s", self._columns)
         _logger.debug("Record count: %d", self.__record_counter)
 
         return self
@@ -191,7 +191,7 @@ class DatabaseTable:
         """
         Used to get list of table column names.
         """
-        return self.__columns
+        return self._columns
 
     def add_row(self):
         """
@@ -201,7 +201,7 @@ class DatabaseTable:
         """
 
         self.__record_counter += 1
-        row = DatabaseRow(self.__record_counter, tuple(), self.__columns)
+        row = DatabaseRow(self.__record_counter, tuple(), self._columns)
         row.is_new = True
 
         self.__records.append(row)
