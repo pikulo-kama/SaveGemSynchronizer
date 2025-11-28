@@ -1,7 +1,6 @@
-from unittest.mock import MagicMock
-
 import pytest
 from pytest_mock import MockerFixture
+from unittest.mock import MagicMock, call
 
 
 @pytest.fixture
@@ -33,11 +32,14 @@ def _mock_daemon():
             self.initialized = True
             self._logger.debug("MockDaemon initialized.")
 
+        def _run_once(self):
+            pass
+
     return MockDaemon
 
 
 @pytest.fixture(autouse=True)
-def _setup(mocker: MockerFixture, json_config_holder_mock):
+def _setup(mocker: MockerFixture, json_config_holder_mock, prop_mock):
 
     from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
 
@@ -123,7 +125,7 @@ def test_daemon_start_work_loop_no_auth(mocker: MockerFixture, path_exists_mock,
 
 
 def test_daemon_start_auth_required_delayed(mocker: MockerFixture, resolve_app_data_mock, path_exists_mock,
-                                            module_patch, time_sleep_mock, logger_mock, _mock_daemon):
+                                            module_patch, time_sleep_mock, logger_mock, _mock_daemon, google_auth_mock):
     """
     Test the loop when authentication is required and delayed.
     """
@@ -131,29 +133,38 @@ def test_daemon_start_auth_required_delayed(mocker: MockerFixture, resolve_app_d
     from savegem.common.service.daemon import ExitTestLoop
 
     resolve_app_data_mock.return_value = "/mock/appdata/gdrive_token.txt"
-    path_exists_mock.side_effect = [False, False, True, ExitTestLoop]
+    google_auth_mock.is_authenticated.side_effect = [False, False, True, ExitTestLoop]
 
     daemon = _mock_daemon("AuthService", requires_auth=True)
 
     # Mock _work to ensure it's not called until auth is complete
     daemon._work = mocker.Mock()
+    daemon._run_once = mocker.Mock()
 
     with pytest.raises(ExitTestLoop):
         daemon.start()
 
     # The side_effect of os.path.exists determines the flow:
-    # 1. Loop 1: os.path.exists -> False (Auth not done, calls time.sleep)
-    # 2. Loop 2: os.path.exists -> False (Auth not done, calls time.sleep)
-    # 3. Loop 3: os.path.exists -> True (Auth done, calls _work)
-    # 4. Loop 4: os.path.exists -> ExitTestLoop (Breaks the loop)
+    # 1. Loop 1: GoogleAuth.is_authenticated -> False (Auth not done, calls time.sleep)
+    # 2. Loop 2: GoogleAuth.is_authenticated -> False (Auth not done, calls time.sleep)
+    # 3. Loop 3: GoogleAuth.is_authenticated -> True (Auth done, calls _work)
+    # 4. Loop 4: GoogleAuth.is_authenticated -> ExitTestLoop (Breaks the loop)
 
-    assert logger_mock.debug.call_count == 1
-    logger_mock.debug.assert_any_call(
-        "Authentication has not been completed. Sleeping for %d second(s).", daemon.interval
-    )
+    # 1 - In Daemon constructor
+    # 2 - In initialization block of MockDaemon
+    # 3 and 4 - First two iterations where no authentication
+    # 5 - When running 'run_once' action
+    assert logger_mock.debug.call_count == 5
+    logger_mock.debug.assert_has_calls([
+        call("Authentication has not been completed. Sleeping for %d second(s).", daemon.interval),
+        call("First loop iteration reached. Executing 'run once' setup.")
+    ])
 
+    assert daemon._run_once.call_count == 1  # noqa
     assert daemon._work.call_count == 1  # noqa
-    assert time_sleep_mock.call_count == 2
+    # Two times when waiting for authentication,
+    # and once after first _work execution finished.
+    assert time_sleep_mock.call_count == 3
 
 
 def test_daemon_start_work_exception_handling(mocker: MockerFixture, resolve_app_data_mock, path_exists_mock,
@@ -185,3 +196,16 @@ def test_daemon_start_work_exception_handling(mocker: MockerFixture, resolve_app
 
     # time.sleep should be called after the exception is handled
     assert time_sleep_mock.call_count == 1
+
+
+def test_interval_change(_mock_daemon):
+
+    from savegem.common.service.daemon import Daemon
+
+    test_interval = 12345
+
+    daemon = _mock_daemon("TestService", requires_auth=False)
+    assert daemon.interval == Daemon.DefaultInterval
+
+    daemon.interval = test_interval
+    assert daemon.interval == test_interval
