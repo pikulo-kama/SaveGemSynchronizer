@@ -1,4 +1,5 @@
 import io
+import json
 from unittest.mock import Mock
 
 import pytest
@@ -44,6 +45,10 @@ def _drive_service_mock(mocker: MockerFixture):
     mock_service.changes.return_value \
         .list.return_value \
         .execute.return_value = {"changes": [], "newStartPageToken": "new_token"}
+
+    mock_service.permissions.return_value \
+        .list.return_value \
+        .execute.return_value = {"permissions": [{"user_id": "test"}, {"user_id": "best"}]}
 
     return mock_service
 
@@ -134,91 +139,6 @@ def test_get_credentials_from_token_file(resolve_project_data_mock, resolve_app_
     assert mock_creds_valid.valid is True
 
 
-def test_get_credentials_from_flow(_google_build_mock, resolve_project_data_mock, resolve_app_data_mock,
-                                   path_exists_mock, _installed_app_flow_mock, json_mock, save_file_mock,
-                                   mock_creds_valid):
-    """
-    Test successful authentication using client secrets file (new flow).
-    """
-
-    from savegem.common.service.gdrive import GDrive, GDRIVE_SCOPES
-
-    path_exists_mock.side_effect = [False, True]
-
-    resolve_app_data_mock.return_value = "token.json"
-    resolve_project_data_mock.return_value = "creds.json"
-
-    # Setup Flow
-    mock_flow = Mock()
-    mock_flow.run_local_server.return_value = mock_creds_valid
-    mock_creds_valid.to_json.return_value = '{"token": "new"}'
-    _installed_app_flow_mock.from_client_secrets_file.return_value = mock_flow
-
-    GDrive.get_current_user()
-
-    # Assert
-    _installed_app_flow_mock.from_client_secrets_file.assert_called_once_with("creds.json", GDRIVE_SCOPES)
-    mock_flow.run_local_server.assert_called_once()
-    save_file_mock.assert_called_once()
-
-
-def test_get_credentials_refresh_expired(path_exists_mock, _credentials_mock, _request_mock,
-                                         mock_creds_valid, _google_build_mock):
-    """
-    Test refreshing expired credentials.
-    """
-
-    from savegem.common.service.gdrive import GDrive
-
-    path_exists_mock.side_effect = [True, False]
-
-    mock_creds_valid.valid = False
-    mock_creds_valid.expired = True
-    mock_creds_valid.refresh_token = True
-
-    _credentials_mock.from_authorized_user_file.return_value = mock_creds_valid
-
-    GDrive.get_current_user()
-
-    mock_creds_valid.refresh.assert_called_once()
-
-
-def test_should_handle_refresh_error_silently(path_exists_mock, _credentials_mock, _request_mock,
-                                              mock_creds_valid, _google_build_mock, logger_mock):
-    """
-    Test refreshing expired credentials.
-    """
-
-    from savegem.common.service.gdrive import GDrive
-
-    path_exists_mock.side_effect = [True, False]
-
-    mock_creds_valid.valid = False
-    mock_creds_valid.expired = True
-    mock_creds_valid.refresh_token = True
-    mock_creds_valid.refresh.side_effect = RefreshError
-
-    _credentials_mock.from_authorized_user_file.return_value = mock_creds_valid
-
-    with pytest.raises(RuntimeError):
-        GDrive.get_current_user()
-
-    logger_mock.error.assert_called_once()
-
-
-def test_get_credentials_missing_all(path_exists_mock):
-    """
-    Test raises RuntimeError when both token and creds files are missing.
-    """
-
-    from savegem.common.service.gdrive import GDrive
-
-    path_exists_mock.side_effect = [False, False]
-
-    with pytest.raises(RuntimeError):
-        GDrive._GDrive__get_credentials()  # noqa
-
-
 def test_get_current_user(_google_build_mock, _drive_service_mock, _get_creds_mock):
     """
     Test get_current_user calls the correct Drive API endpoint.
@@ -233,41 +153,59 @@ def test_get_current_user(_google_build_mock, _drive_service_mock, _get_creds_mo
     assert user_info == {"displayName": "Test User"}
 
 
-def test_query_single_success(_google_build_mock, _drive_service_mock, _get_creds_mock):
+def test_get_users_with_access(_google_build_mock, _drive_service_mock, _get_creds_mock):
+
+    from savegem.common.service.gdrive import GDrive
+
+    file_id = "test"
+    result = GDrive.get_users_with_access(file_id)
+
+    _drive_service_mock.permissions.return_value.list.assert_called_once_with(
+        fileId=file_id,
+        fields="permissions(id, emailAddress, displayName, photoLink)"
+    )
+
+    assert result == [{"user_id": "test"}, {"user_id": "best"}]
+
+
+def test_query_metadata_success(_google_build_mock, _drive_service_mock, _get_creds_mock):
     """
-    Test query_single successful execution.
+    Test query_metadata successful execution.
     """
 
     from savegem.common.service.gdrive import GDrive
 
+    page_size = 123
     q_str = "name='test'"
     fields_str = "files(id, name)"
 
-    result = GDrive.query_single(q_str, fields_str)
+    result = GDrive.query_metadata(q_str, fields_str, page_size)
 
     # Assert
-    _drive_service_mock.files().list.assert_called_once_with(
+    _drive_service_mock.files.return_value.list.assert_called_once_with(
         q=q_str,
         spaces="drive",
         fields=fields_str,
         pageToken=None,
-        pageSize=1
+        pageSize=page_size
     )
     assert result == {"files": [{"id": "file_id", "name": "file_name"}]}
 
 
-def test_query_single_http_error(logger_mock, http_error_mock, _google_build_mock, _drive_service_mock,
+def test_query_metadata_http_error(logger_mock, http_error_mock, _google_build_mock, _drive_service_mock,
                                  _get_creds_mock):
     """
-    Test query_single handling of HttpError.
+    Test query_metadata handling of HttpError.
     """
 
     from savegem.common.service.gdrive import GDrive
 
     # Setup mock to raise HttpError
-    _drive_service_mock.files().list().execute.side_effect = http_error_mock
+    _drive_service_mock.files.return_value \
+        .list.return_value \
+        .execute.side_effect = http_error_mock
 
-    result = GDrive.query_single("q", "f")
+    result = GDrive.query_metadata("q", "f")
 
     assert result is None
 
@@ -544,3 +482,173 @@ def test_get_changes_with_start_token(_google_build_mock, _drive_service_mock, _
         fields="changes(file(id, name, parents), removed), newStartPageToken"
     )
     assert result == {"changes": [], "newStartPageToken": "new_token"}
+
+
+def test_valid_credentials_found(_credentials_mock, logger_mock, resolve_app_data_mock):
+    """
+    Tests the case where valid credentials are loaded from the file.
+    """
+
+    from constants import File
+    from savegem.common.service.gdrive import GDRIVE_SCOPES, GDrive
+
+    resolve_app_data_mock.return_value = File.GDriveToken
+    creds_mock = _credentials_mock.from_authorized_user_file.return_value
+    creds_mock.valid = True
+    creds_mock.expired = False
+
+    result = GDrive._GDrive__get_credentials()  # noqa
+
+    assert result == creds_mock
+    creds_mock.refresh.assert_not_called()
+
+    logger_mock.info.assert_called_with("Token was found. Application will use credentials from token.")
+    _credentials_mock.from_authorized_user_file.assert_called_once_with(
+        File.GDriveToken, GDRIVE_SCOPES
+    )
+
+
+def test_expired_credentials_refresh_successful(_credentials_mock, logger_mock, resolve_app_data_mock, _request_mock):
+    """
+    Tests the case where expired credentials are successfully refreshed.
+    """
+
+    from constants import File
+    from savegem.common.service.gdrive import GDrive
+
+    resolve_app_data_mock.return_value = File.GDriveToken
+    creds_mock = _credentials_mock.from_authorized_user_file.return_value
+    creds_mock.refresh_token = 'valid_refresh_token'
+    creds_mock.valid = False
+    creds_mock.expired = True
+
+    result = GDrive._GDrive__get_credentials()  # noqa
+
+    assert result == creds_mock
+    # Verify refresh was called exactly once with the mocked Request object
+    creds_mock.refresh.assert_called_once_with(_request_mock.return_value)
+
+    # Verify correct logging
+    logger_mock.info.assert_called_with("Credentials expired, performing refresh.")
+    assert logger_mock.info.call_count == 2  # Initial token found + refresh info
+
+
+def test_expired_credentials_refresh_failed(_credentials_mock, logger_mock, resolve_app_data_mock, _request_mock):
+    """
+    Tests the case where the refresh fails due to an expired refresh token.
+    """
+
+    from constants import File
+    from savegem.common.service.gdrive import GDrive
+
+    resolve_app_data_mock.return_value = File.GDriveToken
+    creds_mock = _credentials_mock.from_authorized_user_file.return_value
+    creds_mock.refresh_token = "expired_refresh_token"
+    creds_mock.valid = False
+    creds_mock.expired = True
+
+    # Set the side effect to simulate refresh failure
+    creds_mock.refresh.side_effect = RefreshError("Token revoked.")
+
+    result = GDrive._GDrive__get_credentials()  # noqa
+
+    assert result == creds_mock
+    creds_mock.refresh.assert_called_once()
+    logger_mock.error.assert_called_with("Refresh token expired. Starting authentication process.")
+
+
+def test_is_authenticated_true(path_exists_mock, resolve_app_data_mock):
+    """
+    Tests when the token file exists.
+    """
+
+    from savegem.common.service.gdrive import GoogleAuth
+
+    path_exists_mock.return_value = True
+    resolve_app_data_mock.return_value = "/fake/app/token.json"
+
+    assert GoogleAuth.is_authenticated() is True
+
+
+def test_is_authenticated_false(path_exists_mock, resolve_app_data_mock):
+    """
+    Tests when the token file does not exist.
+    """
+
+    from savegem.common.service.gdrive import GoogleAuth
+
+    path_exists_mock.return_value = False
+    resolve_app_data_mock.return_value = "/fake/app/token.json"
+
+    assert GoogleAuth.is_authenticated() is False
+
+
+def test_authenticate_skip_if_token_exists(logger_mock, path_exists_mock, _installed_app_flow_mock):
+    """
+    Tests that authentication is skipped if the token file already exists.
+    """
+
+    from savegem.common.service.gdrive import GoogleAuth
+
+    path_exists_mock.side_effect = [True, False]
+
+    GoogleAuth.authenticate()
+
+    logger_mock.info.assert_called_with("Skipping authentication. User is already authenticated.")
+    _installed_app_flow_mock.from_client_secrets_file.assert_not_called()
+
+
+def test_authenticate_raises_if_creds_missing(logger_mock, path_exists_mock):
+    """
+    Tests that a RuntimeError is raised if the credentials file is missing.
+    """
+
+    from constants import File
+    from savegem.common.service.gdrive import GoogleAuth
+
+    path_exists_mock.side_effect = [False, False]
+
+    with pytest.raises(RuntimeError) as error:
+        GoogleAuth.authenticate()
+
+    assert f"Google Cloud credentials are missing" in str(error.value)
+    logger_mock.critical.assert_called_with(f"{File.GDriveCreds} is missing.")
+
+
+def test_authenticate_success(logger_mock, save_file_mock, path_exists_mock, resolve_app_data_mock,
+                              resolve_project_data_mock, _installed_app_flow_mock):
+    """
+    Tests the full authentication flow, saving the new token.
+    """
+
+    from savegem.common.service.gdrive import GoogleAuth, GDRIVE_SCOPES
+
+    mock_creds_json = {"token": "mock_access_token", "refresh_token": "mock_refresh"}
+    token_path = '/fake/app/token.json'
+    creds_path = '/fake/project/creds.json'
+
+    resolve_app_data_mock.return_value = token_path
+    resolve_project_data_mock.return_value = creds_path
+    path_exists_mock.side_effect = [False, True]
+
+    mock_flow = _installed_app_flow_mock.from_client_secrets_file.return_value
+    mock_creds = mock_flow.run_local_server.return_value
+
+    mock_creds.to_json.return_value = json.dumps(mock_creds_json)
+
+    GoogleAuth.authenticate()
+
+    # Verify the flow was initiated correctly
+    _installed_app_flow_mock.from_client_secrets_file.assert_called_once_with(
+        creds_path, GDRIVE_SCOPES
+    )
+    mock_flow.run_local_server.assert_called_once()
+
+    logger_mock.info.assert_any_call("Attempting authentication using credentials.")
+    logger_mock.info.assert_called_with("Saving Google Cloud access token for later use.")
+
+    save_file_mock.assert_called_once_with(
+        token_path,
+        mock_creds_json,  # The result of json.loads(creds.to_json())
+        as_json=True
+    )

@@ -2,7 +2,6 @@ import io
 import json
 import logging
 import os.path
-from typing import Callable
 
 from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request

@@ -124,7 +124,7 @@ def test_daemon_start_work_loop_no_auth(mocker: MockerFixture, path_exists_mock,
     assert time_sleep_mock.call_count == 1
 
 
-def test_daemon_start_auth_required_delayed(mocker: MockerFixture, resolve_app_data_mock, path_exists_mock,
+def test_daemon_start_auth_required_delayed(mocker: MockerFixture, path_exists_mock,
                                             module_patch, time_sleep_mock, logger_mock, _mock_daemon, google_auth_mock):
     """
     Test the loop when authentication is required and delayed.
@@ -132,7 +132,6 @@ def test_daemon_start_auth_required_delayed(mocker: MockerFixture, resolve_app_d
 
     from savegem.common.service.daemon import ExitTestLoop
 
-    resolve_app_data_mock.return_value = "/mock/appdata/gdrive_token.txt"
     google_auth_mock.is_authenticated.side_effect = [False, False, True, ExitTestLoop]
 
     daemon = _mock_daemon("AuthService", requires_auth=True)
@@ -167,15 +166,14 @@ def test_daemon_start_auth_required_delayed(mocker: MockerFixture, resolve_app_d
     assert time_sleep_mock.call_count == 3
 
 
-def test_daemon_start_work_exception_handling(mocker: MockerFixture, resolve_app_data_mock, path_exists_mock,
-                                              time_sleep_mock, logger_mock, _mock_daemon):
+def test_daemon_start_work_exception_handling(mocker: MockerFixture, path_exists_mock, time_sleep_mock, logger_mock,
+                                              _mock_daemon):
     """
     Test that exceptions in _work are logged and the loop continues.
     """
 
     from savegem.common.service.daemon import ExitTestLoop
 
-    resolve_app_data_mock.return_value = "/mock/appdata/gdrive_token.txt"
     path_exists_mock.return_value = False
 
     daemon = _mock_daemon("ErrorService", requires_auth=False)
