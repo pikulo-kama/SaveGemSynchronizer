@@ -109,8 +109,9 @@ def test_upload_success(path_exists_mock, resolve_temp_file_mock, makedirs_mock,
 
     # 6. Stage 5: Upload to Drive
     expected_props = {
-        SaveMetaProp.Owner: PlayerTestData.FirstPlayerName,
-        SaveMetaProp.Checksum: "NEW_CHECKSUM"
+        SaveMetaProp.Owner: PlayerTestData.FirstPlayerEmail,
+        SaveMetaProp.Checksum: "NEW_CHECKSUM",
+        SaveMetaProp.Size: 0
     }
     gdrive_mock.upload_file.assert_called_once()
 

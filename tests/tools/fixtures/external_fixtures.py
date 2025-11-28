@@ -57,6 +57,11 @@ def make_archive_mock(module_patch):
 
 
 @pytest.fixture
+def unpack_archive_mock(module_patch):
+    return module_patch("shutil.unpack_archive")
+
+
+@pytest.fixture
 def copytree_mock(module_patch):
     return module_patch("shutil.copytree")
 
