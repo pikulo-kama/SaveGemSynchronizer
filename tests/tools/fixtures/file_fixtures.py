@@ -7,11 +7,6 @@ def resolve_app_data_mock(module_patch):
 
 
 @pytest.fixture
-def resolve_locale_mock(module_patch):
-    return module_patch("resolve_locale")
-
-
-@pytest.fixture
 def resolve_config_mock(module_patch):
     return module_patch("resolve_config")
 
@@ -29,6 +24,11 @@ def resolve_temp_file_mock(module_patch):
 @pytest.fixture
 def resolve_resource_mock(module_patch):
     return module_patch("resolve_resource")
+
+
+@pytest.fixture
+def resolve_temp_resource_mock(module_patch):
+    return module_patch("resolve_temp_resource")
 
 
 @pytest.fixture

@@ -37,6 +37,9 @@ class GameConfig(AppData):
     def __iter__(self) -> Iterator["Game"]:
         return iter(self.__games_by_name.values())
 
+    def __len__(self):
+        return len(self.__games_by_name)
+
     def initialize(self):
         """
         Used to download game configuration from Google Drive.

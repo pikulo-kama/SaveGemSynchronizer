@@ -43,6 +43,11 @@ def remove_mock(module_patch):
 
 
 @pytest.fixture
+def expandvars_mock(module_patch):
+    return module_patch("os.path.expandvars")
+
+
+@pytest.fixture
 def sys_exit_mock(module_patch):
     return module_patch("sys.exit")
 
@@ -120,3 +125,12 @@ def format_datetime_mock(module_patch):
 @pytest.fixture
 def get_localzone_mock(module_patch):
     return module_patch("get_localzone")
+
+
+#
+# HTTP Fixtures
+#
+
+@pytest.fixture
+def url_retrieve_mock(module_patch):
+    return module_patch("urllib.request.urlretrieve")

@@ -22,9 +22,6 @@ class ApplicationContext:
     """
 
     def __init__(self):
-
-        self.__linked_entities: list[AppData] = []
-
         self.__user_state = UserState(self)
         self.__state = AppState(self)
         self.__app_config = AppConfig(self)
@@ -65,22 +62,6 @@ class ApplicationContext:
         Selected game activity data.
         """
         return self.__activity
-
-    def link(self, entity: AppData):
-        """
-        Used to link app data instance to
-        main application context.
-        """
-
-        self.__linked_entities.append(entity)
-
-    def refresh(self):
-        """
-        Used to refresh all application data.
-        """
-
-        for entity in self.__linked_entities:
-            entity.refresh()
 
 
 def app():  # pragma: no cover

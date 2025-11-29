@@ -34,13 +34,15 @@ def test_should_read_nested_property(json_config_holder_mock):
     assert prop("nested.property") == SocketTestData.UIPort
 
 
-def test_should_load_locales(listdir_mock):
+def test_should_load_locales(db_mock, db_table_mock):
 
     from savegem.common.core.holders import locales
+    from savegem.common.db.table import DatabaseRow
 
-    listdir_mock.return_value = [
-        f"{LocaleTestData.SecondLocale}.yml",
-        f"{LocaleTestData.FirstLocale}.json"
+    db_table_mock.__iter__.return_value = [
+        DatabaseRow(1, (LocaleTestData.SecondLocale,), ["locale_id"]),
+        DatabaseRow(2, (LocaleTestData.FirstLocale,), ["locale_id"])
     ]
 
     assert locales() == [LocaleTestData.SecondLocale, LocaleTestData.FirstLocale]
+    db_mock.retrieve_table.assert_called_once()

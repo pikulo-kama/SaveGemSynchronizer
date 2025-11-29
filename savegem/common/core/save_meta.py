@@ -92,7 +92,9 @@ class MetadataWrapper:
         elif current_checksum != drive_save_checksum:
             return SyncStatus.NeedsUpload
 
-        return SyncStatus.NoInformation
+        # This statement is unreachable, added to
+        # avoid lint issues.
+        return SyncStatus.NoInformation  # pragma: no cover
 
 
 class Metadata(abc.ABC):  # pragma: no cover
@@ -249,7 +251,7 @@ class DriveFileMetadata(Metadata):
         """
         return self.__size
 
-    def refresh(self):
+    def refresh(self):  # pragma: no cover
         pass
 
 

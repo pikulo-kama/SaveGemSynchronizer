@@ -161,6 +161,7 @@ def test_local_metadata_calculate_checksum(mock_game, _config_holder, mock_check
 
     # Assert the final result
     assert checksum == "FINAL_CALCULATED_HASH"
+    assert local_meta.current_checksum == "FINAL_CALCULATED_HASH"
 
     # Verify file_checksum was called for all save files (excluding metadata)
     mock_checksum_utils["file_checksum"].assert_has_calls([
@@ -192,21 +193,28 @@ def test_local_metadata_refresh(mock_game, _config_holder):
     _config_holder.assert_called_with(mock_game.metadata_file_path)
 
 
-# --- DriveMetadata Tests ---
-
 def test_drive_metadata_refresh_success(mock_game, _gdrive):
 
     from savegem.common.core.save_meta import SaveMetaProp, DriveMetadata
 
     drive_meta = DriveMetadata(mock_game)
 
-    _gdrive.query_single.return_value = {
+    _gdrive.query_metadata.return_value = {
         "files": [{
             "id": "file_id_1",
             "createdTime": "2024-03-15T10:00:00Z",
             "appProperties": {
                 SaveMetaProp.Owner: "GDriveUser",
-                SaveMetaProp.Checksum: "drive_hash_123"
+                SaveMetaProp.Checksum: "drive_hash_123",
+                SaveMetaProp.Size: 123
+            }
+        }, {
+            "id": "file_id_2",
+            "createdTime": "2025-03-15T10:00:00Z",
+            "appProperties": {
+                SaveMetaProp.Owner: "GDriveUser",
+                SaveMetaProp.Checksum: "drive_hash_432",
+                SaveMetaProp.Size: 432
             }
         }]
     }
@@ -218,8 +226,19 @@ def test_drive_metadata_refresh_success(mock_game, _gdrive):
     assert drive_meta.owner == "GDriveUser"
     assert drive_meta.created_time == "2024-03-15T10:00:00Z"
     assert drive_meta.checksum == "drive_hash_123"
+    assert drive_meta.size == 123
 
-    _gdrive.query_single.assert_called_once()
+    assert drive_meta.id == drive_meta.latest.id
+    assert drive_meta.owner == drive_meta.latest.owner
+    assert drive_meta.created_time == drive_meta.latest.created_time
+    assert drive_meta.checksum == drive_meta.latest.checksum
+    assert drive_meta.size == drive_meta.latest.size
+
+    for meta in drive_meta:
+        meta_by_id = drive_meta.by_id(meta.id)
+        assert meta == meta_by_id
+
+    _gdrive.query_metadata.assert_called_once()
 
 
 def test_drive_metadata_refresh_no_saves(mock_game, _gdrive, _logger):
@@ -227,13 +246,11 @@ def test_drive_metadata_refresh_no_saves(mock_game, _gdrive, _logger):
     from savegem.common.core.save_meta import DriveMetadata
 
     drive_meta = DriveMetadata(mock_game)
-    _gdrive.query_single.return_value = {"files": []}
+    _gdrive.query_metadata.return_value = {"files": []}
 
     drive_meta.refresh()
 
     assert drive_meta.is_present is False
-    assert drive_meta.checksum is None
-
     _logger.warning.assert_called_once_with("There are no saves on Google Drive for %s.", "Test Game")
 
 
@@ -247,7 +264,7 @@ def test_drive_metadata_refresh_runtime_error(mock_game, _gdrive, _logger):
     drive_meta = DriveMetadata(mock_game)
 
     # Arrange: Mock the GDrive query result to be None
-    _gdrive.query_single.return_value = None
+    _gdrive.query_metadata.return_value = None
 
     # Act & Assert
     with pytest.raises(RuntimeError, match="Error downloading metadata"):
@@ -309,20 +326,16 @@ def test_metadata_wrapper_sync_status(
     elif expected_status == "NeedsUpload":
         expected_status = SyncStatus.NeedsUpload
 
-    elif expected_status == "NeedsUpload":
-        expected_status = SyncStatus.NeedsUpload
-
     # Arrange: Set up mock properties
-    type(_drive_meta).is_present = PropertyMock(return_value=drive_present)
-    type(_local_meta).checksum = PropertyMock(return_value=local_stored_checksum)
-    _local_meta.calculate_checksum.return_value = local_calculated_checksum
-    type(_drive_meta).checksum = PropertyMock(return_value=drive_stored_checksum)
+    _drive_meta.is_present = drive_present
+    _local_meta.checksum = local_stored_checksum
+    _local_meta.current_checksum = local_calculated_checksum
+    _drive_meta.checksum = drive_stored_checksum
 
     # The final assertion relies on the order of checks in the property,
     # so we must align the mocked values to trigger the expected branch.
 
     wrapper = MetadataWrapper(_local_meta, _drive_meta)
-
     status = wrapper.sync_status
 
     assert status == expected_status

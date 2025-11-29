@@ -14,9 +14,6 @@ class Activity(AppData):
     Contains list of active players for current game
     """
 
-    NAME_PROP = "name"
-    GAMES_PROP = "games"
-
     def __init__(self, app):
         super().__init__(app)
         self.__players = []

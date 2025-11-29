@@ -1,7 +1,7 @@
 import hashlib
 import json
 import urllib.request
-from typing import Iterator, Final
+from typing import Iterator, Final, Optional
 
 from constants import JPG_EXTENSION, UTF_8
 from savegem.app.data import holder, HolderObject
@@ -21,7 +21,7 @@ class User:
 
     UserNameLimit: Final = 18
 
-    def __init__(self, name: str, email: str, photo_link: str):
+    def __init__(self, name: str, email: str, photo_link: Optional[str]):
         self.__name = name
         self.__email: str = email
         self.__photo_path = self.__download_photo(photo_link)

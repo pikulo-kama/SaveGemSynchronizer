@@ -20,6 +20,7 @@ def app_state_mock(mocker: MockerFixture, app_context):
     type(app_state_mock).locale = LocaleTestData.FirstLocale
     type(app_state_mock).is_auto_mode = False
 
+    app_state_mock.app = app_context
     app_context.state = app_state_mock
 
     return app_state_mock
@@ -34,7 +35,9 @@ def app_config(mocker: MockerFixture, app_context):
     config_mock = mocker.MagicMock()
     type(config_mock).games_config_file_id = ConfigTestData.GameConfigFileId
     type(config_mock).activity_log_file_id = ConfigTestData.ActivityLogFileId
+    type(config_mock).users_config_file_id = ConfigTestData.UsersConfigFileId
 
+    config_mock.app = app_context
     app_context.config = config_mock
 
     return config_mock
@@ -46,6 +49,7 @@ def games_config(mocker: MockerFixture, app_context):
     games_mock.current.name = GameTestData.FirstGame
     games_mock.names = [GameTestData.FirstGame, GameTestData.SecondGame]
 
+    games_mock.app = app_context
     app_context.games = games_mock
 
     return games_mock
@@ -54,11 +58,12 @@ def games_config(mocker: MockerFixture, app_context):
 @pytest.fixture
 def user_config_mock(mocker: MockerFixture, app_context):
     user_mock = mocker.MagicMock()
-    user_mock.machine_id = PlayerTestData.FirstPlayerMachineId
-    user_mock.name = PlayerTestData.FirstPlayerName
-    user_mock.email = PlayerTestData.FirstPlayerEmail
+    user_mock.current.id = PlayerTestData.FirstPlayerId
+    user_mock.current.name = PlayerTestData.FirstPlayerName
+    user_mock.current.email = PlayerTestData.FirstPlayerEmail
 
-    app_context.users.current = user_mock
+    user_mock.app = app_context
+    app_context.users = user_mock
 
     return user_mock
 
@@ -66,6 +71,7 @@ def user_config_mock(mocker: MockerFixture, app_context):
 @pytest.fixture
 def activity_mock(mocker: MockerFixture, app_context):
     mock = mocker.MagicMock()
+    mock.app = app_context
     app_context.activity = mock
 
     return mock

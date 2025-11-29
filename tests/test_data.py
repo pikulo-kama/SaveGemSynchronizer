@@ -6,6 +6,7 @@ class ConfigTestData:
 
     GameConfigFileId = "gameConfigFileId123"
     ActivityLogFileId = "activityLogFileId123"
+    UsersConfigFileId = "usersConfigFileId123"
 
 
 class PlayerTestData:
@@ -21,8 +22,8 @@ class PlayerTestData:
     FirstPlayerEmail = "first_player@test.com"
     SecondPlayerEmail = "second_player@test.com"
 
-    FirstPlayerMachineId = "player-machine-1"
-    SecondPlayerMachineId = "player-machine-2"
+    FirstPlayerId = "player-1"
+    SecondPlayerId = "player-2"
 
     ProfilePictureUrl = "https://placehold.co/100x100/A0BFFF/000000/png?text=P"
 
