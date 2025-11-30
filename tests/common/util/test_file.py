@@ -12,7 +12,8 @@ def test_should_resolve_config(path_join_mock):
 
     from constants import Directory
     from savegem.common.util.file import resolve_config, resolve_resource, resolve_temp_file, \
-        resolve_app_data, resolve_log, resolve_project_data, resolve_temp_resource, resolve_import_data
+        resolve_app_data, resolve_log, resolve_project_data, resolve_temp_resource, resolve_import_data, \
+        resolve_migration
 
     file_name = "Test"
 
@@ -55,6 +56,12 @@ def test_should_resolve_config(path_join_mock):
     path_join_mock.assert_has_calls([
         call(Directory().ImportData, file_name)
     ])
+
+    resolve_migration(file_name)
+    path_join_mock.assert_has_calls([
+        call(Directory().Migrations, file_name)
+    ])
+
 
 def test_should_resolve_temporary_resources(path_join_mock, path_exists_mock):
 

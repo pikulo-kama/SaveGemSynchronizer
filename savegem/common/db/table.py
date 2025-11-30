@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING, Callable, Iterator
-
 from savegem.common.util.logger import get_logger
 
 if TYPE_CHECKING:
@@ -374,7 +373,9 @@ class DatabaseTable:
 
         for record in self.__deleted_records:
             _logger.debug("Removing row with number %s", record.row_number)
-            self.__records.remove(record)
+
+            if record in self.__records:
+                self.__records.remove(record)
 
     def __get_pk_columns(self):
         """

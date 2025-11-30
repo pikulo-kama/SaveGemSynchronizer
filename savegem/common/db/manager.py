@@ -68,7 +68,7 @@ class DatabaseManager:
 
         _logger.debug("Executing select statement.")
         _logger.debug("SQL: %s", sql)
-        _logger.debug("args=%s, kw=%s", args, kwargs)
+        _logger.debug("args=%s, kw=%s", *args, kwargs)
 
         connection = self.connection()
         cursor = connection.cursor()
