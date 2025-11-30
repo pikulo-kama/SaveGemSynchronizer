@@ -133,7 +133,7 @@ class GUI(QMainWindow):
 
         _logger.debug("Presenting notification dialog with message %s", message)
         holder().add("dialogMessage", message)
-        self.__manager.build("notification")
+        self.__manager.build(UISection.NotificationSection)
 
     def confirmation(self, message: str, callback: Callable):
         """
@@ -145,7 +145,7 @@ class GUI(QMainWindow):
         _logger.debug("Presenting confirmation dialog with message %s", message)
         holder().add("dialogMessage", message)
         holder().add("confirmationCallback", callback)
-        self.__manager.build("confirmation")
+        self.__manager.build(UISection.ConfirmationSection)
 
     @property
     def is_blocked(self):

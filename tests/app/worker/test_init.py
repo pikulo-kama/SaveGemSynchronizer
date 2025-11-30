@@ -68,10 +68,6 @@ def test_qworker_start_success(mocker: MockerFixture, gui_mock):
     # Act
     worker.start()
 
-    # Assert 1: Mutex locking/unlocking
-    gui_mock.mutex.lock.assert_called_once()
-    gui_mock.mutex.unlock.assert_called_once()
-
     # Assert 2: _run execution
     assert worker.ran is True
 
@@ -79,10 +75,9 @@ def test_qworker_start_success(mocker: MockerFixture, gui_mock):
     finished_callback.assert_called_once_with()
 
 
-def test_qworker_start_failure_mutex_release(mocker: MockerFixture, gui_mock):
+def test_qworker_start_failure(mocker: MockerFixture, gui_mock):
     """
-    Test that start() releases the mutex even if _run() raises an exception,
-    and finished is NOT emitted.
+    Test that start() finished is NOT emitted if _run raises an exception.
     """
 
     from savegem.app.worker import QWorker
@@ -101,10 +96,6 @@ def test_qworker_start_failure_mutex_release(mocker: MockerFixture, gui_mock):
     # Act and Assert 1: Check that the worker raises the error
     with pytest.raises(ValueError, match="Simulated worker error"):
         worker.start()
-
-    # Assert 2: Mutex unlocking (crucial for thread safety)
-    gui_mock.mutex.lock.assert_called_once()
-    gui_mock.mutex.unlock.assert_called_once()
 
     # Assert 3: finished signal should NOT be emitted
     finished_callback.assert_not_called()

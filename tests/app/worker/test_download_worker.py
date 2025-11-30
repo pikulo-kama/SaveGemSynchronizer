@@ -6,7 +6,7 @@ def test_download_worker_run_logic(downloader_mock, app_context_mock, games_conf
     and calls download with the current game.
     """
 
-    from savegem.app.worker import DownloadWorker
+    from savegem.app.worker.download_worker import DownloadWorker
 
     worker = DownloadWorker()
     expected_handler = worker._on_subscriptable_event
@@ -17,5 +17,5 @@ def test_download_worker_run_logic(downloader_mock, app_context_mock, games_conf
     downloader_mock.return_value.subscribe.assert_called_once_with(expected_handler)
 
     downloader_mock.return_value.download.assert_called_once_with(
-        games_config_mock.current
+        games_config_mock.current, file_id=None
     )
