@@ -7,7 +7,7 @@ from pytest_mock import MockerFixture
 
 @pytest.fixture(autouse=True)
 def _setup(module_patch, qtbot, _mutex_mock, prop_mock, tr_mock, resolve_resource_mock,  # noqa
-                        app_state_mock, _load_builders_mock, app_context, games_config):
+           app_state_mock, _load_builders_mock, app_context_mock, games_config_mock):
 
     prop_mock.side_effect = lambda key: {
         "name": "SaveGem App",

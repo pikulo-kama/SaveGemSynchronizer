@@ -3,10 +3,10 @@ import pytest
 
 
 @pytest.fixture(autouse=True)
-def _setup(module_patch, flags_mock, games_config):
+def _setup(module_patch, flags_mock, games_config_mock):
     # By default, assume GUI is initialized (flag file exists)
     flags_mock.gui_initialized.enabled = True
-    games_config.current.drive_directory = "MOCKED_DRIVE_DIR_ID"
+    games_config_mock.current.drive_directory = "MOCKED_DRIVE_DIR_ID"
 
     def mock_daemon_init(self, service_name, requires_auth):
         self.__service_name = service_name
@@ -24,7 +24,7 @@ def create_mock_changes_response(changes_list, new_token="NEXT_PAGE_TOKEN"):
     }
 
 
-def test_run_once_initializes_user_and_downloads_config(gdrive_mock, app_context, app_config, holder_mock):
+def test_run_once_initializes_user_and_downloads_config(gdrive_mock, app_context_mock, app_config, holder_mock):
 
     from savegem.gdrive_watcher.main import GDriveWatcher
     from savegem.app.data import HolderObject
@@ -37,8 +37,8 @@ def test_run_once_initializes_user_and_downloads_config(gdrive_mock, app_context
         call(HolderObject.GamesConfig, app_config.games_config_file_id)
     ])
 
-    app_context.games.initialize.assert_called_once()
-    app_context.users.initialize.assert_called_once()
+    app_context_mock.games.initialize.assert_called_once()
+    app_context_mock.users.initialize.assert_called_once()
 
 
 def test_should_not_work_if_gui_not_initialized(gdrive_mock, flags_mock):
@@ -89,7 +89,7 @@ def test_get_changes_updates_token_and_extracts_ids(gdrive_mock):
     assert affected_directories == ["PARENT_1", "PARENT_2"]
 
 
-def test_get_changes_handles_removed_files_hack(gdrive_mock, app_context):
+def test_get_changes_handles_removed_files_hack(gdrive_mock, app_context_mock):
     """
     Test that removed files are handled by assuming current game files were affected.
     """
@@ -97,7 +97,7 @@ def test_get_changes_handles_removed_files_hack(gdrive_mock, app_context):
     from savegem.gdrive_watcher.main import GDriveWatcher
 
     watcher = GDriveWatcher()
-    app_dir = app_context.games.current.drive_directory
+    app_dir = app_context_mock.games.current.drive_directory
 
     changes_response = create_mock_changes_response([
         {
@@ -120,7 +120,7 @@ def test_get_changes_handles_removed_files_hack(gdrive_mock, app_context):
     assert affected_directories == ["PARENT_X", app_dir]  # app_dir added due to removed=True
 
 
-def test_work_sends_refresh_for_all_relevant_changes(gdrive_mock, app_context, games_config, app_config,
+def test_work_sends_refresh_for_all_relevant_changes(gdrive_mock, app_context_mock, games_config_mock, app_config,
                                                      ui_socket_mock):
     """
     Test that all three relevant change types trigger the correct refresh events.
@@ -138,7 +138,7 @@ def test_work_sends_refresh_for_all_relevant_changes(gdrive_mock, app_context, g
         "some_other_file_id"  # (Ignored)
     ]
     affected_directories = [
-        games_config.current.drive_directory,  # CloudSaveFilesChange
+        games_config_mock.current.drive_directory,  # CloudSaveFilesChange
         "some_other_dir_id"  # (Ignored)
     ]
 
@@ -159,7 +159,7 @@ def test_work_sends_refresh_for_all_relevant_changes(gdrive_mock, app_context, g
     assert ui_socket_mock.send_ui_refresh_command.call_count == 3
 
 
-def test_work_sends_no_refresh_if_no_relevant_changes(ui_socket_mock, app_context, gdrive_mock):
+def test_work_sends_no_refresh_if_no_relevant_changes(ui_socket_mock, app_context_mock, gdrive_mock):
     """
     Test no refresh commands are sent if unrelated changes occur.
     """

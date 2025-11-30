@@ -64,7 +64,7 @@ def _get_run_processes_mock(module_patch, _create_game_process: Callable) -> Mag
     return module_patch('get_running_game_processes')
 
 
-def test_run_once_initializes_user_and_downloads_config(gdrive_mock, app_context, app_config, holder_mock):
+def test_run_once_initializes_user_and_downloads_config(gdrive_mock, app_context_mock, app_config, holder_mock):
 
     from savegem.process_watcher.main import ProcessWatcher
     from savegem.app.data import HolderObject
@@ -77,11 +77,11 @@ def test_run_once_initializes_user_and_downloads_config(gdrive_mock, app_context
         call(HolderObject.GamesConfig, app_config.games_config_file_id)
     ])
 
-    app_context.games.initialize.assert_called_once()
-    app_context.users.initialize.assert_called_once()
+    app_context_mock.games.initialize.assert_called_once()
+    app_context_mock.users.initialize.assert_called_once()
 
 
-def test_work_returns_early_if_no_state_change(app_context, downloader_mock, _get_run_processes_mock,
+def test_work_returns_early_if_no_state_change(app_context_mock, downloader_mock, _get_run_processes_mock,
                                                _create_game_process):
     """
     Test that _work returns immediately if no process has started or closed.
@@ -100,14 +100,14 @@ def test_work_returns_early_if_no_state_change(app_context, downloader_mock, _ge
     watcher._work()
 
     # Activity update and state check should NOT be called
-    app_context.activity.update.assert_not_called()
-    assert app_context.state.is_auto_mode.called is False
+    app_context_mock.activity.update.assert_not_called()
+    assert app_context_mock.state.is_auto_mode.called is False
 
     # Downloader/Uploader should not be called
     downloader_mock.download.assert_not_called()
 
 
-def test_work_updates_activity_log_for_running_games(app_context, _get_run_processes_mock, _create_game_process):
+def test_work_updates_activity_log_for_running_games(app_context_mock, _get_run_processes_mock, _create_game_process):
     """
     Test that the activity log is updated with currently running (non-closed) games.
     """
@@ -121,18 +121,18 @@ def test_work_updates_activity_log_for_running_games(app_context, _get_run_proce
     _get_run_processes_mock.return_value = [proc_started, proc_closed, proc_running]
 
     # Set auto mode to False to ensure we don't accidentally call __perform_automatic_actions
-    type(app_context.game.settings).auto_mode = PropertyMock(return_value=False)
+    type(app_context_mock.game.settings).auto_mode = PropertyMock(return_value=False)
 
     watcher = ProcessWatcher()
     watcher._work()
 
     # Activity should only include Started Game and Running Game (i.e., not the closed one)
-    app_context.activity.update.assert_called_once_with(
+    app_context_mock.activity.update.assert_called_once_with(
         ["Started Game", "Running Game"]
     )
 
 
-def test_work_skips_auto_actions_when_disabled(app_context, downloader_mock, _get_run_processes_mock,
+def test_work_skips_auto_actions_when_disabled(app_context_mock, downloader_mock, _get_run_processes_mock,
                                                _create_game_process):
     """
     Test that automatic actions are skipped if app.state.is_auto_mode is False.
@@ -145,20 +145,20 @@ def test_work_skips_auto_actions_when_disabled(app_context, downloader_mock, _ge
     _get_run_processes_mock.return_value = [proc_started]
 
     # Mock auto mode to be False
-    type(app_context.state).is_auto_mode = PropertyMock(return_value=False)
+    type(app_context_mock.state).is_auto_mode = PropertyMock(return_value=False)
 
     watcher = ProcessWatcher()
     watcher._work()
 
     # The activity update is called (since a game started)
-    app_context.activity.update.assert_called_once()
+    app_context_mock.activity.update.assert_called_once()
 
     # BUT, no download/upload should occur
     proc_started.game.meta.drive.refresh.assert_not_called()
     downloader_mock.mock_downloader.download.assert_not_called()
 
 
-def test_auto_action_skip_if_game_auto_mode_disabled(app_context, downloader_mock, _get_run_processes_mock,
+def test_auto_action_skip_if_game_auto_mode_disabled(app_context_mock, downloader_mock, _get_run_processes_mock,
                                                      _create_game_process):
     """
     Test that automatic actions are skipped if game.auto_mode_allowed is False.
@@ -183,8 +183,8 @@ def test_auto_action_skip_if_game_auto_mode_disabled(app_context, downloader_moc
     downloader_mock.download.assert_not_called()
 
 
-def test_should_skip_auto_actions_if_game_has_auto_mode_disabled(app_context, downloader_mock, _get_run_processes_mock,
-                                                     _create_game_process):
+def test_should_skip_auto_actions_if_game_has_auto_mode_disabled(app_context_mock, downloader_mock, _get_run_processes_mock,
+                                                                 _create_game_process):
 
     from savegem.common.core.save_meta import SyncStatus
     from savegem.process_watcher.main import ProcessWatcher
@@ -207,7 +207,7 @@ def test_should_skip_auto_actions_if_game_has_auto_mode_disabled(app_context, do
     proc_started.game.meta.drive.refresh.assert_not_called()
     downloader_mock.download.assert_not_called()
 
-def test_auto_action_skip_if_uptodate(app_context, downloader_mock, _get_run_processes_mock, _create_game_process):
+def test_auto_action_skip_if_uptodate(app_context_mock, downloader_mock, _get_run_processes_mock, _create_game_process):
     """
     Test that automatic actions are skipped if sync_status is UpToDate, even if the game started.
     """
@@ -234,7 +234,7 @@ def test_auto_action_skip_if_uptodate(app_context, downloader_mock, _get_run_pro
     downloader_mock.download.assert_not_called()
 
 
-def test_auto_skip_if_running(module_patch, app_context, downloader_mock, push_notification_mock,
+def test_auto_skip_if_running(module_patch, app_context_mock, downloader_mock, push_notification_mock,
                               _get_run_processes_mock, _create_game_process, app_config, tr_mock, ui_socket_mock):
     """
     Test that automatic actions skip processes that are running but have not just started or closed.
@@ -275,7 +275,7 @@ def test_auto_skip_if_running(module_patch, app_context, downloader_mock, push_n
     proc_running_target.game.meta.drive.refresh.assert_not_called()
 
 
-def test_auto_action_download_on_started(app_context, downloader_mock, push_notification_mock, ui_socket_mock,
+def test_auto_action_download_on_started(app_context_mock, downloader_mock, push_notification_mock, ui_socket_mock,
                                          _get_run_processes_mock, _create_game_process, tr_mock):
     """
     Test full download workflow when a game starts and the save is modified (needs download).
@@ -308,7 +308,7 @@ def test_auto_action_download_on_started(app_context, downloader_mock, push_noti
     )
 
 
-def test_auto_action_upload_on_closed(app_context, uploader_mock, push_notification_mock, ui_socket_mock,
+def test_auto_action_upload_on_closed(app_context_mock, uploader_mock, push_notification_mock, ui_socket_mock,
                                       _get_run_processes_mock, _create_game_process, tr_mock):
     """
     Test full upload workflow when a game closes and the save is modified (needs upload).

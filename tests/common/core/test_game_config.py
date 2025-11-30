@@ -50,10 +50,10 @@ def _setup(tmp_path: Path, holder_mock, db_table_mock, url_retrieve_mock, resolv
 
 
 @pytest.fixture
-def _games_config(app_context, app_config, user_config_mock, app_state_mock):
+def _games_config(app_context_mock, app_config, user_config_mock, app_state_mock):
     from savegem.common.core.game_config import GameConfig
 
-    return GameConfig(app_context)
+    return GameConfig(app_context_mock)
 
 
 @pytest.fixture
@@ -292,7 +292,7 @@ def test_game_file_list_filtering(_game, path_join_mock, listdir_mock, expandvar
     assert path_join_mock.call_count == 3
 
 
-def test_game_settings_on_init_loads_existing_data(games_config, user_config_mock, _game, db_mock, db_table_mock):
+def test_game_settings_on_init_loads_existing_data(games_config_mock, user_config_mock, _game, db_mock, db_table_mock):
 
     from savegem.common.core.game_config import GameSettings
 
@@ -301,7 +301,7 @@ def test_game_settings_on_init_loads_existing_data(games_config, user_config_moc
     # Simulate scenario where settings are already in database.
     db_table_mock.rows = [1]
 
-    GameSettings(_game, games_config)
+    GameSettings(_game, games_config_mock)
 
     db_table_mock.where.assert_called_with("user_id = ? AND game_name = ?", "test_user", _game.name)
     db_table_mock.retrieve.assert_called_once()
@@ -310,7 +310,7 @@ def test_game_settings_on_init_loads_existing_data(games_config, user_config_moc
     db_table_mock.save.assert_not_called()
 
 
-def test_game_settings_on_init_creates_if_no_data(games_config, user_config_mock, _game, db_mock, db_table_mock):
+def test_game_settings_on_init_creates_if_no_data(games_config_mock, user_config_mock, _game, db_mock, db_table_mock):
 
     from savegem.common.core.game_config import GameSettings
 
@@ -319,7 +319,7 @@ def test_game_settings_on_init_creates_if_no_data(games_config, user_config_mock
     # Simulate scenario where settings are already in database.
     db_table_mock.rows = []
 
-    GameSettings(_game, games_config)
+    GameSettings(_game, games_config_mock)
 
     db_table_mock.where.assert_called_with("user_id = ? AND game_name = ?", "test_user", _game.name)
     db_table_mock.retrieve.assert_called_once()
@@ -329,12 +329,12 @@ def test_game_settings_on_init_creates_if_no_data(games_config, user_config_mock
     assert db_table_mock.save.call_count == 1
 
 
-def test_auto_mode_setting(db_table_mock, games_config, _game):
+def test_auto_mode_setting(db_table_mock, games_config_mock, _game):
 
     from savegem.common.core.game_config import GameSettings
 
     db_table_mock.get_first.return_value = 1
-    settings = GameSettings(_game, games_config)
+    settings = GameSettings(_game, games_config_mock)
     db_table_mock.save.reset_mock()
 
     assert settings.auto_mode == 1

@@ -39,10 +39,10 @@ def _test_user():
 
 
 @pytest.fixture
-def _user_state(app_context, app_config, _mock_holder_data):
+def _user_state(app_context_mock, app_config, _mock_holder_data):
     from savegem.common.core.user import UserState
 
-    return UserState(app_context)
+    return UserState(app_context_mock)
 
 
 @pytest.fixture

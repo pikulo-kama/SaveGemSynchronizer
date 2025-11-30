@@ -23,6 +23,11 @@ def mock_path_separator(module_patch):
 
 
 @pytest.fixture
+def mkdir_mock(module_patch):
+    return module_patch("os.mkdir")
+
+
+@pytest.fixture
 def listdir_mock(module_patch):
     return module_patch("os.listdir")
 

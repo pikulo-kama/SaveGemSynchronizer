@@ -17,11 +17,11 @@ def _state_change_callback(mocker: MockerFixture):
 
 
 @pytest.fixture
-def _app_state(app_context, app_config, games_config, _state_change_callback):
+def _app_state(app_context_mock, app_config, games_config_mock, _state_change_callback):
 
     from savegem.common.core.app_state import AppState
 
-    state = AppState(app_context)
+    state = AppState(app_context_mock)
     state.on_change(_state_change_callback)
 
     return state
@@ -119,13 +119,13 @@ def test_should_get_default_locale_if_not_in_state(_app_state, db_table_mock, pr
     assert locale == LocaleTestData.FirstLocale
 
 
-def test_should_create_temporary_record_when_no_user_data(app_context, db_table_mock):
+def test_should_create_temporary_record_when_no_user_data(app_context_mock, db_table_mock):
 
     from savegem.common.core.app_state import AppState
 
-    app_context.users.current = None
+    app_context_mock.users.current = None
 
-    app_state = AppState(app_context)
+    app_state = AppState(app_context_mock)
     app_state.refresh()
 
     db_table_mock.where.assert_has_calls([

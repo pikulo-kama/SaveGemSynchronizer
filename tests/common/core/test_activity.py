@@ -14,10 +14,10 @@ SecondPlayerActivity = {
 
 
 @pytest.fixture
-def _activity(app_config, app_context, user_config_mock, games_config):
+def _activity(app_config, app_context_mock, user_config_mock, games_config_mock):
     from savegem.common.core.activity import Activity
 
-    return Activity(app_context)
+    return Activity(app_context_mock)
 
 
 def test_should_not_have_players_without_refresh(_activity):

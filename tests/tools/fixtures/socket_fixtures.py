@@ -18,16 +18,10 @@ def ui_socket_mock(module_patch):
 
 
 @pytest.fixture
-def gdrive_watcher_socket_mock(mocker: MockerFixture, module_patch):
-    socket_mock = mocker.MagicMock()
-    module_patch("google_drive_watcher_socket", socket_mock)
-
-    return socket_mock
+def gdrive_watcher_socket_mock(module_patch):
+    return module_patch("google_drive_watcher_socket")
 
 
 @pytest.fixture
-def process_watcher_socket_mock(mocker: MockerFixture, module_patch):
-    socket_mock = mocker.MagicMock()
-    module_patch("process_watcher_socket", socket_mock)
-
-    return socket_mock
+def process_watcher_socket_mock(module_patch):
+    return module_patch("process_watcher_socket")

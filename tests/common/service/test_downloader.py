@@ -250,7 +250,7 @@ def test_backup_directory_with_no_existing_backup(copytree_mock, cleanup_directo
     # 2. New backup should be created
     copytree_mock.assert_called_once_with(saves_dir, saves_dir + Downloader.BackupSuffix)
 
-def test_should_use_specific_save_file_id_to_download_if_provided(mocker: MockerFixture, _downloader, games_config,
+def test_should_use_specific_save_file_id_to_download_if_provided(mocker: MockerFixture, _downloader, games_config_mock,
                                                                   _mock_game, path_exists_mock, gdrive_mock,
                                                                   save_file_mock, unpack_archive_mock, listdir_mock,
                                                                   removedirs_mock, copytree_mock):

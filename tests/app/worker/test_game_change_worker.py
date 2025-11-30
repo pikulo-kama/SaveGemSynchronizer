@@ -1,6 +1,6 @@
 
 
-def test_game_change_worker_run_logic(app_context, app_state_mock, games_config, activity_mock):
+def test_game_change_worker_run_logic(app_context_mock, app_state_mock, games_config_mock, activity_mock):
     """
     Test that _run() correctly updates 'app.state', refreshes drive metadata,
     and refreshes activity.
@@ -14,5 +14,5 @@ def test_game_change_worker_run_logic(app_context, app_state_mock, games_config,
     worker._run()
 
     assert app_state_mock.game_name == test_game_name
-    games_config.current.meta.drive.refresh.assert_called_once()
+    games_config_mock.current.meta.drive.refresh.assert_called_once()
     activity_mock.refresh.assert_called_once()

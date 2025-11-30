@@ -1,6 +1,6 @@
 
 
-def test_download_worker_run_logic(uploader_mock, app_context, games_config):
+def test_download_worker_run_logic(uploader_mock, app_context_mock, games_config_mock):
     """
     Test that _run() instantiates Downloader, subscribes the handler,
     and calls download with the current game.
@@ -17,5 +17,5 @@ def test_download_worker_run_logic(uploader_mock, app_context, games_config):
     uploader_mock.return_value.subscribe.assert_called_once_with(expected_handler)
 
     uploader_mock.return_value.upload.assert_called_once_with(
-        games_config.current
+        games_config_mock.current
     )
