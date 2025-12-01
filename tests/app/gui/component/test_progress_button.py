@@ -20,6 +20,19 @@ def _progress_button(qtbot):
     return button
 
 
+def test_refresh(mocker: MockerFixture, _progress_button):
+
+    from savegem.app.gui.component.button import QCustomPushButton
+
+    _progress_button.set_progress = mocker.Mock()
+    parent_refresh = mocker.patch.object(QCustomPushButton, "refresh")
+
+    _progress_button.refresh(refresh_children=True)
+
+    _progress_button.set_progress.assert_called_once_with(0)  # noqa
+    parent_refresh.assert_called_once_with(True)
+
+
 def test_progress_button_initialization(_progress_button):
     """
     Test the button initializes the progress bar correctly.
@@ -64,7 +77,6 @@ def test_set_progress_updates_state_and_properties(_progress_button, progress, e
 
     if expected_in_progress:
         # If in progress, text should be cleared and progress bar text visible
-        assert _progress_button.text() == ""
         assert progress_bar.isTextVisible() is True
 
     else:

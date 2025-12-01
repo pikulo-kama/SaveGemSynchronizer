@@ -146,5 +146,9 @@ class WidgetController:
         self.__thread = QThread()
         self.__worker = worker
 
-        _logger.debug("Starting %s worker from controller %s", self.__worker.__name__, self.__name__)
+        _logger.debug(
+            "Starting %s worker from controller %s",
+            self.__worker.__class__.__name__,
+            self.__class__.__name__
+        )
         execute_in_blocking_thread(self.__thread, self.__worker)

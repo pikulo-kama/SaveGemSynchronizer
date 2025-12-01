@@ -53,6 +53,7 @@ QProgressPushButton[kind="primary"]:pressed,
 QProgressPushButton[kind="primary"][is-disabled="true"]:hover,
 QProgressBar[kind="QProgressPushButton-primary"]:pressed {
     background-color: color("primary-a20");
+    border-color: color("primary-a20");
     color: color("text-inverted");
 }
 
