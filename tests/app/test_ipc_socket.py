@@ -5,223 +5,225 @@ import pytest
 from tests.test_data import ConfigTestData
 
 
-@pytest.fixture
-def _refresh_ui_mock(module_patch):
-    return module_patch("UISocket.refresh_ui")
+class TestUISocket:
 
+    @pytest.fixture
+    def _refresh_ui_mock(self, module_patch):
+        return module_patch("UISocket.refresh_ui")
 
-@pytest.fixture
-def _rebuild_window_mock(module_patch):
-    return module_patch("UISocket.rebuild_window")
 
+    @pytest.fixture
+    def _rebuild_window_mock(self, module_patch):
+        return module_patch("UISocket.rebuild_window")
 
-def test_ui_socket_init_calls_parent_init(ipc_socket_base_init_mock, prop_mock):
-    """
-    Tests that __init__ calls IPCSocket and QObject constructors
-    and sets up the child process list.
-    """
 
-    from savegem.app.ipc_socket import UISocket
+    def test_ui_socket_init_calls_parent_init(self, ipc_socket_base_init_mock, prop_mock):
+        """
+        Tests that __init__ calls IPCSocket and QObject constructors
+        and sets up the child process list.
+        """
 
-    prop_mock.side_effect = lambda key: 12345 if key == "ipc.uiSocketPort" else None
+        from savegem.app.ipc_socket import UISocket
 
-    UISocket()
+        prop_mock.side_effect = lambda key: 12345 if key == "ipc.uiSocketPort" else None
 
-    assert ipc_socket_base_init_mock.call_args[0][1] == 12345
-    prop_mock.assert_called_once_with("ipc.uiSocketPort")
+        UISocket()
 
+        assert ipc_socket_base_init_mock.call_args[0][1] == 12345
+        prop_mock.assert_called_once_with("ipc.uiSocketPort")
 
-def test_send_ui_refresh_command_sends_correct_message(mocker: MockerFixture, ui_socket_mock):
-    """
-    Tests that send_ui_refresh_command formats and sends the correct message.
-    """
 
-    from savegem.app.ipc_socket import UISocket, IPCCommand
-    from savegem.common.core.ipc_socket import IPCProp
+    def test_send_ui_refresh_command_sends_correct_message(self, mocker: MockerFixture, ui_socket_mock):
+        """
+        Tests that send_ui_refresh_command formats and sends the correct message.
+        """
 
-    event = "TestEvent"
-    socket = UISocket()
-    socket.send = mocker.Mock()
+        from savegem.app.ipc_socket import UISocket, IPCCommand
+        from savegem.common.core.ipc_socket import IPCProp
 
-    socket.send_ui_refresh_command(event)
+        event = "TestEvent"
+        socket = UISocket()
+        socket.send = mocker.Mock()
 
-    # Check that the send method was called with
-    # the correct dictionary structure
-    expected_message = {
-        IPCProp.Command: IPCCommand.RefreshUI,
-        IPCProp.Event: event
-    }
+        socket.send_ui_refresh_command(event)
 
-    socket.send.assert_called_once_with(expected_message)  # noqa
+        # Check that the send method was called with
+        # the correct dictionary structure
+        expected_message = {
+            IPCProp.Command: IPCCommand.RefreshUI,
+            IPCProp.Event: event
+        }
 
+        socket.send.assert_called_once_with(expected_message)  # noqa
 
-def test_handle_rebuild_window_emits_signal(_refresh_ui_mock, _rebuild_window_mock):
-    """
-    Tests handling of IPCCommand.RebuildWindow.
-    """
 
-    from savegem.app.ipc_socket import UISocket
-    from savegem.common.core.ipc_socket import IPCCommand
+    def test_handle_rebuild_window_emits_signal(self, _refresh_ui_mock, _rebuild_window_mock):
+        """
+        Tests handling of IPCCommand.RebuildWindow.
+        """
 
-    socket = UISocket()
+        from savegem.app.ipc_socket import UISocket
+        from savegem.common.core.ipc_socket import IPCCommand
 
-    socket._handle(IPCCommand.RebuildWindow, {})
+        socket = UISocket()
 
-    _rebuild_window_mock.emit.assert_called_once()
-    _refresh_ui_mock.emit.assert_not_called()
+        socket._handle(IPCCommand.RebuildWindow, {})
 
+        _rebuild_window_mock.emit.assert_called_once()
+        _refresh_ui_mock.emit.assert_not_called()
 
-def test_handle_refresh_ui_activity_log(mocker: MockerFixture, _refresh_ui_mock):
-    """
-    Tests handling of IPCCommand.RefreshUI for ActivityLogUpdate.
-    """
 
-    from savegem.app.ipc_socket import UISocket
-    from savegem.app.gui.constants import UIRefreshEvent
-    from savegem.common.core.ipc_socket import IPCCommand, IPCProp
+    def test_handle_refresh_ui_activity_log(self, mocker: MockerFixture, _refresh_ui_mock):
+        """
+        Tests handling of IPCCommand.RefreshUI for ActivityLogUpdate.
+        """
 
-    mock_update_activity = mocker.patch.object(UISocket, '_UISocket__update_activity')
+        from savegem.app.ipc_socket import UISocket
+        from savegem.app.gui.constants import UIRefreshEvent
+        from savegem.common.core.ipc_socket import IPCCommand, IPCProp
 
-    socket = UISocket()
-    socket._handle(IPCCommand.RefreshUI, {
-        IPCProp.Event: UIRefreshEvent.ActivityLogUpdate
-    })
+        mock_update_activity = mocker.patch.object(UISocket, '_UISocket__update_activity')
 
-    # Check internal update logic
-    mock_update_activity.assert_called_once()
+        socket = UISocket()
+        socket._handle(IPCCommand.RefreshUI, {
+            IPCProp.Event: UIRefreshEvent.ActivityLogUpdate
+        })
 
-    # Check signal emission
-    _refresh_ui_mock.emit.assert_called_once_with(UIRefreshEvent.ActivityLogUpdate)
+        # Check internal update logic
+        mock_update_activity.assert_called_once()
 
+        # Check signal emission
+        _refresh_ui_mock.emit.assert_called_once_with(UIRefreshEvent.ActivityLogUpdate)
 
-def test_handle_refresh_ui_game_config_change(mocker: MockerFixture, _refresh_ui_mock):
-    """
-    Tests handling of IPCCommand.RefreshUI for GameConfigChange.
-    """
 
-    from savegem.app.ipc_socket import UISocket
-    from savegem.app.gui.constants import UIRefreshEvent
-    from savegem.common.core.ipc_socket import IPCCommand, IPCProp
+    def test_handle_refresh_ui_game_config_change(self, mocker: MockerFixture, _refresh_ui_mock):
+        """
+        Tests handling of IPCCommand.RefreshUI for GameConfigChange.
+        """
 
-    mock_update_games = mocker.patch.object(UISocket, '_UISocket__update_games_configuration')
+        from savegem.app.ipc_socket import UISocket
+        from savegem.app.gui.constants import UIRefreshEvent
+        from savegem.common.core.ipc_socket import IPCCommand, IPCProp
 
-    socket = UISocket()
-    socket._handle(IPCCommand.RefreshUI, {
-        IPCProp.Event: UIRefreshEvent.GameConfigChange
-    })
+        mock_update_games = mocker.patch.object(UISocket, '_UISocket__update_games_configuration')
 
-    # Check internal update logic
-    mock_update_games.assert_called_once_with(UIRefreshEvent.GameConfigChange)
+        socket = UISocket()
+        socket._handle(IPCCommand.RefreshUI, {
+            IPCProp.Event: UIRefreshEvent.GameConfigChange
+        })
 
-    # Check signal emission
-    _refresh_ui_mock.emit.assert_called_once_with(UIRefreshEvent.GameConfigChange)
+        # Check internal update logic
+        mock_update_games.assert_called_once_with(UIRefreshEvent.GameConfigChange)
 
+        # Check signal emission
+        _refresh_ui_mock.emit.assert_called_once_with(UIRefreshEvent.GameConfigChange)
 
-def test_handle_unknown_command(_refresh_ui_mock, _rebuild_window_mock):
-    """
-    Tests handling of an unknown IPC command.
-    """
 
-    from savegem.app.ipc_socket import UISocket
+    def test_handle_unknown_command(self, _refresh_ui_mock, _rebuild_window_mock):
+        """
+        Tests handling of an unknown IPC command.
+        """
 
-    socket = UISocket()
-    socket._handle("UnknownCommand", {})
+        from savegem.app.ipc_socket import UISocket
 
-    _rebuild_window_mock.emit.assert_not_called()
-    _refresh_ui_mock.emit.assert_not_called()
+        socket = UISocket()
+        socket._handle("UnknownCommand", {})
 
+        _rebuild_window_mock.emit.assert_not_called()
+        _refresh_ui_mock.emit.assert_not_called()
 
-def test_notify_children_sends_message_to_all_children(gdrive_watcher_socket_mock, process_watcher_socket_mock,
-                                                       logger_mock):
-    """
-    Tests that notify_children sends the message to all configured child sockets.
-    """
 
-    from savegem.app.ipc_socket import UISocket
+    def test_notify_children_sends_message_to_all_children(self, gdrive_watcher_socket_mock,
+                                                           process_watcher_socket_mock, logger_mock):
+        """
+        Tests that notify_children sends the message to all configured child sockets.
+        """
 
-    message = {"Command": "TestMessage"}
-    gdrive_watcher_socket_mock.port = 10001
-    process_watcher_socket_mock.port = 10002
+        from savegem.app.ipc_socket import UISocket
 
-    socket = UISocket()
-    socket.notify_children(message)
+        message = {"Command": "TestMessage"}
+        gdrive_watcher_socket_mock.port = 10001
+        process_watcher_socket_mock.port = 10002
 
-    # Check calls to the two child sockets
-    gdrive_watcher_socket_mock.send.assert_called_once_with(message)
-    process_watcher_socket_mock.send.assert_called_once_with(message)
+        socket = UISocket()
+        socket.notify_children(message)
 
-    # Check logging
-    logger_mock.debug.assert_has_calls([
-        call("Sending message to child processes."),
-        call("Sent message to socket on port %d", 10001),
-        call("Sent message to socket on port %d", 10002)
-    ], any_order=False)
+        # Check calls to the two child sockets
+        gdrive_watcher_socket_mock.send.assert_called_once_with(message)
+        process_watcher_socket_mock.send.assert_called_once_with(message)
 
+        # Check logging
+        logger_mock.debug.assert_has_calls([
+            call("Sending message to child processes."),
+            call("Sent message to socket on port %d", 10001),
+            call("Sent message to socket on port %d", 10002)
+        ], any_order=False)
 
-def test_internal_update_activity(holder_mock, activity_mock):
-    """
-    Tests __update_activity logic.
-    """
 
-    from savegem.app.ipc_socket import UISocket
-    from savegem.app.data import HolderObject
+    def test_internal_update_activity(self, holder_mock, activity_mock):
+        """
+        Tests __update_activity logic.
+        """
 
-    # Call the static method directly
-    UISocket._UISocket__update_activity()  # noqa
+        from savegem.app.ipc_socket import UISocket
+        from savegem.app.data import HolderObject
 
-    # Check data download
-    holder_mock.download_json.assert_called_once_with(
-        HolderObject.Activity, ConfigTestData.ActivityLogFileId
-    )
+        # Call the static method directly
+        UISocket._UISocket__update_activity()  # noqa
 
-    # Check app refresh
-    activity_mock.refresh.assert_called_once()
+        # Check data download
+        holder_mock.download_json.assert_called_once_with(
+            HolderObject.Activity, ConfigTestData.ActivityLogFileId
+        )
 
+        # Check app refresh
+        activity_mock.refresh.assert_called_once()
 
-def test_internal_update_games_config_change(holder_mock, games_config_mock):
-    """
-    Tests __update_games_configuration logic when GameConfigChange event occurs.
-    """
 
-    from savegem.app.ipc_socket import UISocket, UIRefreshEvent
-    from savegem.app.data import HolderObject
+    def test_internal_update_games_config_change(self, holder_mock, games_config_mock):
+        """
+        Tests __update_games_configuration logic when GameConfigChange event occurs.
+        """
 
-    UISocket._UISocket__update_games_configuration(UIRefreshEvent.GameConfigChange)  # noqa
+        from savegem.app.ipc_socket import UISocket, UIRefreshEvent
+        from savegem.app.data import HolderObject
 
-    # 1. Check config download and initialization (since event is GameConfigChange)
-    holder_mock.download_json.assert_called_once_with(
-        HolderObject.GamesConfig, ConfigTestData.GameConfigFileId
-    )
-    games_config_mock.initialize.assert_called_once()
+        UISocket._UISocket__update_games_configuration(UIRefreshEvent.GameConfigChange)  # noqa
 
-    # 2. Check per-game logic
-    for game_mock in games_config_mock:
-        game_mock.meta.local.calculate_checksum.assert_called_once()
-        game_mock.meta.drive.refresh.assert_called_once()
+        # 1. Check config download and initialization (since event is GameConfigChange)
+        holder_mock.download_json.assert_called_once_with(
+            HolderObject.GamesConfig, ConfigTestData.GameConfigFileId
+        )
+        games_config_mock.initialize.assert_called_once()
 
-    # 3. Check auto-mode reload (only for the first game, which is mocked with auto_mode=True)
-    games_config_mock.first.meta.local.refresh.assert_called_once()
-    games_config_mock.second.meta.local.refresh.assert_not_called()
+        # 2. Check per-game logic
+        for game_mock in games_config_mock:
+            game_mock.meta.local.calculate_checksum.assert_called_once()
+            game_mock.meta.drive.refresh.assert_called_once()
 
+        # 3. Check auto-mode reload (only for the first game, which is mocked with auto_mode=True)
+        games_config_mock.first.meta.local.refresh.assert_called_once()
+        games_config_mock.second.meta.local.refresh.assert_not_called()
 
-def test_internal_update_cloud_save_files_change(holder_mock, games_config_mock):
-    """
-    Tests __update_games_configuration logic when CloudSaveFilesChange event occurs.
-    """
 
-    from savegem.app.ipc_socket import UISocket
-    from savegem.app.gui.constants import UIRefreshEvent
+    def test_internal_update_cloud_save_files_change(self, holder_mock, games_config_mock):
+        """
+        Tests __update_games_configuration logic when CloudSaveFilesChange event occurs.
+        """
 
-    UISocket._UISocket__update_games_configuration(UIRefreshEvent.CloudSaveFilesChange)  # noqa
+        from savegem.app.ipc_socket import UISocket
+        from savegem.app.gui.constants import UIRefreshEvent
 
-    # 1. Check config download/init is skipped (since event is NOT GameConfigChange)
-    holder_mock.download_json.assert_not_called()
-    games_config_mock.initialize.assert_not_called()
+        UISocket._UISocket__update_games_configuration(UIRefreshEvent.CloudSaveFilesChange)  # noqa
 
-    # 2. Check per-game logic is still executed
-    for game_mock in games_config_mock:
-        game_mock.meta.local.calculate_checksum.assert_called_once()
-        game_mock.meta.drive.refresh.assert_called_once()
+        # 1. Check config download/init is skipped (since event is NOT GameConfigChange)
+        holder_mock.download_json.assert_not_called()
+        games_config_mock.initialize.assert_not_called()
 
-    games_config_mock.first.meta.local.refresh.assert_called_once()
-    games_config_mock.second.meta.local.refresh.assert_not_called()
+        # 2. Check per-game logic is still executed
+        for game_mock in games_config_mock:
+            game_mock.meta.local.calculate_checksum.assert_called_once()
+            game_mock.meta.drive.refresh.assert_called_once()
+
+        games_config_mock.first.meta.local.refresh.assert_called_once()
+        games_config_mock.second.meta.local.refresh.assert_not_called()
