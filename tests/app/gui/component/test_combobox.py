@@ -157,7 +157,7 @@ def test_paint_removes_focus_state(mocker: MockerFixture, painter_mock):
 
     # Set up a state that includes HasFocus AND some other flag (e.g., Enabled)
     # We want to ensure Focus is removed but Enabled stays.
-    initial_state = QStyle.StateFlag.State_HasFocus | QStyle.StateFlag.State_Enabled
+    initial_state = QStyle.StateFlag.State_HasFocus | QStyle.StateFlag.State_Enabled  # noqa
     option.state = initial_state
 
     # We patch the PARENT class's paint method.
