@@ -1,124 +1,127 @@
 import pytest
 
 
-@pytest.fixture
-def _first_game():
-    from tests.tools.mocks.mock_game import MockGame
+class TestGameProcess:
 
-    return MockGame(
-        name="First Game",
-        process_name="FirstGame.exe",
-        auto_mode_allowed=True
-    )
+    @pytest.fixture
+    def _first_game(self):
+        from tests.tools.mocks.mock_game import MockGame
 
-
-@pytest.fixture
-def _second_game():
-    from tests.tools.mocks.mock_game import MockGame
-
-    return MockGame(
-        name="Second Game",
-        process_name="SecondGame.exe",
-        auto_mode_allowed=False
-    )
+        return MockGame(
+            name="First Game",
+            process_name="FirstGame.exe",
+            auto_mode_allowed=True
+        )
 
 
-@pytest.fixture
-def _first_process(_first_game):
-    from tests.tools.mocks.mock_process import MockProcess
+    @pytest.fixture
+    def _second_game(self):
+        from tests.tools.mocks.mock_game import MockGame
 
-    return MockProcess(_first_game.process_name)
-
-
-@pytest.fixture
-def _second_process(_second_game):
-    from tests.tools.mocks.mock_process import MockProcess
-
-    return MockProcess(_second_game.process_name)
+        return MockGame(
+            name="Second Game",
+            process_name="SecondGame.exe",
+            auto_mode_allowed=False
+        )
 
 
-@pytest.fixture(autouse=True)
-def _setup(app_context_mock, games_config_mock, _first_game, _second_game):
-    type(games_config_mock).__iter__.return_value = [_first_game, _second_game]
+    @pytest.fixture
+    def _first_process(self, _first_game):
+        from tests.tools.mocks.mock_process import MockProcess
 
-    games_config_mock.by_name.side_effect = lambda name: {
-        _first_game.name: _first_game,
-        _second_game.name: _second_game,
-    }[name]
+        return MockProcess(_first_game.process_name)
 
 
-@pytest.fixture
-def _active_games_mock(module_patch):
-    return module_patch("_get_active_games")
+    @pytest.fixture
+    def _second_process(self, _second_game):
+        from tests.tools.mocks.mock_process import MockProcess
+
+        return MockProcess(_second_game.process_name)
 
 
-@pytest.fixture
-def _mock_previous_games(module_patch):
-    return lambda games: module_patch("_previous_game_names", new=games, create=True)
+    @pytest.fixture(autouse=True)
+    def _setup(self, app_context_mock, games_config_mock, _first_game, _second_game):
+        type(games_config_mock).__iter__.return_value = [_first_game, _second_game]
+
+        games_config_mock.by_name.side_effect = lambda name: {
+            _first_game.name: _first_game,
+            _second_game.name: _second_game,
+        }[name]
 
 
-def test_should_get_active_game_objects(module_patch, _first_game, _second_game, _first_process, _second_process):
-
-    from savegem.process_watcher.game_process import _get_active_games
-
-    get_run_processes_mock = module_patch("get_running_processes")
-    get_run_processes_mock.return_value = [_first_process, _second_process]
-
-    active_games = _get_active_games()
-
-    assert len(active_games) == 2
-    assert active_games[0] == _first_game.name
-    assert active_games[1] == _second_game.name
+    @pytest.fixture
+    def _active_games_mock(self, module_patch):
+        return module_patch("_get_active_games")
 
 
-def test_when_no_active_processes(_active_games_mock):
-
-    from savegem.process_watcher.game_process import get_running_game_processes
-
-    _active_games_mock.return_value = []
-    assert len(get_running_game_processes()) == 0
+    @pytest.fixture
+    def _mock_previous_games(self, module_patch):
+        return lambda games: module_patch("_previous_game_names", new=games, create=True)
 
 
-def test_when_process_has_started(_active_games_mock, _mock_previous_games, _first_game):
+    def test_should_get_active_game_objects(self, module_patch, _first_game, _second_game, _first_process,
+                                            _second_process):
 
-    from savegem.process_watcher.game_process import get_running_game_processes, GameProcess
+        from savegem.process_watcher.game_process import _get_active_games
 
-    _mock_previous_games([])
-    _active_games_mock.return_value = [_first_game.name]
+        get_run_processes_mock = module_patch("get_running_processes")
+        get_run_processes_mock.return_value = [_first_process, _second_process]
 
-    active_processes = get_running_game_processes()
+        active_games = _get_active_games()
 
-    assert len(active_processes) == 1
-    assert isinstance(active_processes[0], GameProcess)
-    assert active_processes[0].game == _first_game
-    assert active_processes[0].has_started
-
-
-def test_when_process_has_ended(_active_games_mock, _mock_previous_games, _first_game):
-
-    from savegem.process_watcher.game_process import get_running_game_processes
-
-    _mock_previous_games([_first_game.name])
-    _active_games_mock.return_value = []
-
-    active_processes = get_running_game_processes()
-
-    assert len(active_processes) == 1
-    assert active_processes[0].game == _first_game
-    assert active_processes[0].has_closed
+        assert len(active_games) == 2
+        assert active_games[0] == _first_game.name
+        assert active_games[1] == _second_game.name
 
 
-def test_when_process_is_idle(_active_games_mock, _mock_previous_games, _first_game):
+    def test_when_no_active_processes(self, _active_games_mock):
 
-    from savegem.process_watcher.game_process import get_running_game_processes
+        from savegem.process_watcher.game_process import get_running_game_processes
 
-    _mock_previous_games([_first_game.name])
-    _active_games_mock.return_value = [_first_game.name]
+        _active_games_mock.return_value = []
+        assert len(get_running_game_processes()) == 0
 
-    active_processes = get_running_game_processes()
 
-    assert len(active_processes) == 1
-    assert active_processes[0].game == _first_game
-    assert active_processes[0].is_running
-    assert not active_processes[0].has_started
-    assert not active_processes[0].has_closed
+    def test_when_process_has_started(self, _active_games_mock, _mock_previous_games, _first_game):
+
+        from savegem.process_watcher.game_process import get_running_game_processes, GameProcess
+
+        _mock_previous_games([])
+        _active_games_mock.return_value = [_first_game.name]
+
+        active_processes = get_running_game_processes()
+
+        assert len(active_processes) == 1
+        assert isinstance(active_processes[0], GameProcess)
+        assert active_processes[0].game == _first_game
+        assert active_processes[0].has_started
+
+
+    def test_when_process_has_ended(self, _active_games_mock, _mock_previous_games, _first_game):
+
+        from savegem.process_watcher.game_process import get_running_game_processes
+
+        _mock_previous_games([_first_game.name])
+        _active_games_mock.return_value = []
+
+        active_processes = get_running_game_processes()
+
+        assert len(active_processes) == 1
+        assert active_processes[0].game == _first_game
+        assert active_processes[0].has_closed
+
+
+    def test_when_process_is_idle(self, _active_games_mock, _mock_previous_games, _first_game):
+
+        from savegem.process_watcher.game_process import get_running_game_processes
+
+        _mock_previous_games([_first_game.name])
+        _active_games_mock.return_value = [_first_game.name]
+
+        active_processes = get_running_game_processes()
+
+        assert len(active_processes) == 1
+        assert active_processes[0].game == _first_game
+        assert active_processes[0].is_running
+        assert not active_processes[0].has_started
+        assert not active_processes[0].has_closed

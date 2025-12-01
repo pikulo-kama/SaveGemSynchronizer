@@ -5,490 +5,489 @@ from pytest_mock import MockerFixture
 SqliteColInfo = namedtuple('SqliteColInfo', ['cid', 'name', 'type', 'notnull', 'dflt_value', 'pk'])
 
 
-@pytest.fixture
-def db_row_data():
-    """
-    Sample data for DatabaseRow initialization.
-    """
-    return 1, "TestName", 42.5
+class TestDatabaseRow:
 
+    @pytest.fixture
+    def db_row_data(self):
+        """
+        Sample data for DatabaseRow initialization.
+        """
+        return 1, "TestName", 42.5
 
-@pytest.fixture
-def db_row_columns():
-    """
-    Sample columns for DatabaseRow initialization.
-    """
-    return ["ID", "Name", "Value"]
 
+    @pytest.fixture
+    def db_row_columns(self):
+        """
+        Sample columns for DatabaseRow initialization.
+        """
+        return ["ID", "Name", "Value"]
 
-@pytest.fixture
-def mock_table_info_cursor(_db_mock):
-    """
-    Mocks the select result for PRAGMA table_info (PK = ID).
-    """
 
-    pk_info = SqliteColInfo(1, 'id', 'INTEGER', 0, None, 1)  # Primary Key
-    non_pk_info = SqliteColInfo(2, 'name', 'TEXT', 0, None, 0)
+    @pytest.fixture
+    def database_row(self, db_row_data, db_row_columns):
+        """
+        A fully initialized DatabaseRow instance.
+        """
 
-    _db_mock.select.return_value.fetchall.return_value = [pk_info, non_pk_info]
-    # Reset select mock for actual select calls
-    _db_mock.select.reset_mock()
+        from savegem.common.db.table import DatabaseRow
 
+        return DatabaseRow(
+            row_number=5,
+            data=db_row_data,
+            columns=db_row_columns
+        )
 
-@pytest.fixture
-def mock_retrieve_cursor(_db_mock):
-    """
-    Mocks the select result for SELECT * FROM table.
-    """
+    def test_database_row_init_and_get(self, database_row):
+        """
+        Tests initialization and the case-insensitive get method.
+        """
 
-    # Mock cursor description (for column names)
-    MockCursorDescription = namedtuple('MockCursorDescription', ['name'])
-    description = [
-        MockCursorDescription('ID'),
-        MockCursorDescription('Name'),
-        MockCursorDescription('Value')
-    ]
-    _db_mock.select.return_value.description = description
+        assert database_row.row_number == 5
+        assert database_row.get("id") == 1
+        assert database_row.get("NAME") == "TestName"
+        assert database_row.get("value") == 42.5
+        assert database_row.get("nonexistent") is None
 
-    # Mock fetched data
-    _db_mock.select.return_value.fetchall.return_value = [
-        (1, "Alpha", 100),
-        (2, "Beta", 200)
-    ]
+    def test_database_row_init_handles_missing_data(self, db_row_columns):
+        """
+        Tests init when data tuple is shorter than columns list.
+        """
 
+        from savegem.common.db.table import DatabaseRow
 
-@pytest.fixture
-def _db_mock(mocker: MockerFixture):
-    return mocker.MagicMock()
+        row = DatabaseRow(1, (999,), db_row_columns)
 
+        # Only 'ID' should be set
+        assert row.get("id") == 999
+        assert row.get("name") is None
+        assert row.get("value") is None
 
-@pytest.fixture
-def _database_table(_db_mock):
-    """
-    An initialized DatabaseTable instance.
-    """
+    def test_database_row_set_and_edits(self, database_row):
+        """
+        Tests setting a value and accessing the 'edits' property.
+        """
 
-    from savegem.common.db.table import DatabaseTable
+        database_row.set("Name", "New Name")
+        database_row.set("Value", 100)
 
-    return DatabaseTable(_db_mock, "test_table")
+        assert database_row.edits == {"Name": "New Name", "Value": 100}
 
+    def test_database_row_has_edits(self, database_row):
+        """
+        Tests has_edits method.
+        """
 
-@pytest.fixture
-def database_row(db_row_data, db_row_columns):
-    """
-    A fully initialized DatabaseRow instance.
-    """
+        assert not database_row.has_edits()
 
-    from savegem.common.db.table import DatabaseRow
+        database_row.set("ID", 10)
+        assert database_row.has_edits()
 
-    return DatabaseRow(
-        row_number=5,
-        data=db_row_data,
-        columns=db_row_columns
-    )
+    def test_database_row_is_new_property(self, database_row):
+        """
+        Tests is_new getter and setter.
+        """
 
+        assert database_row.is_new is False
 
-def test_database_row_init_and_get(database_row):
-    """
-    Tests initialization and the case-insensitive get method.
-    """
+        database_row.is_new = True
+        assert database_row.is_new is True
 
-    assert database_row.row_number == 5
-    assert database_row.get("id") == 1
-    assert database_row.get("NAME") == "TestName"
-    assert database_row.get("value") == 42.5
-    assert database_row.get("nonexistent") is None
+    def test_database_row_apply_edits(self, database_row):
+        """
+        Tests _apply_edits method updates data and clears edits.
+        """
 
+        database_row.set("name", "UpdatedName")
+        database_row.set("new_col", "NewValue")  # Editing an existing key, adding a new key
 
-def test_database_row_init_handles_missing_data(db_row_columns):
-    """
-    Tests init when data tuple is shorter than columns list.
-    """
+        assert database_row.get("name") == "TestName"  # Original data
 
-    from savegem.common.db.table import DatabaseRow
+        database_row._apply_edits()
 
-    row = DatabaseRow(1, (999,), db_row_columns)
+        assert database_row.get("name") == "UpdatedName"  # Edits applied
+        assert database_row.get("new_col") == "NewValue"
+        assert not database_row.has_edits()  # Edits cleared
 
-    # Only 'ID' should be set
-    assert row.get("id") == 999
-    assert row.get("name") is None
-    assert row.get("value") is None
+    def test_database_row_to_json(self, database_row):
+        """
+        Tests to_json returns the underlying data dictionary.
+        """
 
+        database_row.set("Name", "Temporary Edit")
+        # Edits are NOT reflected until _apply_edits is called
 
-def test_database_row_set_and_edits(database_row):
-    """
-    Tests setting a value and accessing the 'edits' property.
-    """
+        data = database_row.to_json()
 
-    database_row.set("Name", "New Name")
-    database_row.set("Value", 100)
+        assert data == {"id": 1, "name": "TestName", "value": 42.5}
+        assert isinstance(data, dict)
 
-    assert database_row.edits == {"Name": "New Name", "Value": 100}
+    def test_database_row_to_json_after_apply_edits(self, database_row):
+        """
+        Tests to_json reflects changes after _apply_edits.
+        """
 
+        database_row.set("name", "Final Name")
+        database_row._apply_edits()
 
-def test_database_row_has_edits(database_row):
-    """
-    Tests has_edits method.
-    """
+        data = database_row.to_json()
+        assert data["name"] == "Final Name"
 
-    assert not database_row.has_edits()
 
-    database_row.set("ID", 10)
-    assert database_row.has_edits()
+class TestDatabaseTable:
 
 
-def test_database_row_is_new_property(database_row):
-    """
-    Tests is_new getter and setter.
-    """
+    @pytest.fixture
+    def mock_table_info_cursor(self, _db_mock):
+        """
+        Mocks the select result for PRAGMA table_info (PK = ID).
+        """
 
-    assert database_row.is_new is False
+        pk_info = SqliteColInfo(1, 'id', 'INTEGER', 0, None, 1)  # Primary Key
+        non_pk_info = SqliteColInfo(2, 'name', 'TEXT', 0, None, 0)
 
-    database_row.is_new = True
-    assert database_row.is_new is True
+        _db_mock.select.return_value.fetchall.return_value = [pk_info, non_pk_info]
+        # Reset select mock for actual select calls
+        _db_mock.select.reset_mock()
 
 
-def test_database_row_apply_edits(database_row):
-    """
-    Tests _apply_edits method updates data and clears edits.
-    """
+    @pytest.fixture
+    def mock_retrieve_cursor(self, _db_mock):
+        """
+        Mocks the select result for SELECT * FROM table.
+        """
 
-    database_row.set("name", "UpdatedName")
-    database_row.set("new_col", "NewValue")  # Editing an existing key, adding a new key
+        # Mock cursor description (for column names)
+        MockCursorDescription = namedtuple('MockCursorDescription', ['name'])
+        description = [
+            MockCursorDescription('ID'),
+            MockCursorDescription('Name'),
+            MockCursorDescription('Value')
+        ]
+        _db_mock.select.return_value.description = description
 
-    assert database_row.get("name") == "TestName"  # Original data
+        # Mock fetched data
+        _db_mock.select.return_value.fetchall.return_value = [
+            (1, "Alpha", 100),
+            (2, "Beta", 200)
+        ]
 
-    database_row._apply_edits()
 
-    assert database_row.get("name") == "UpdatedName"  # Edits applied
-    assert database_row.get("new_col") == "NewValue"
-    assert not database_row.has_edits()  # Edits cleared
+    @pytest.fixture
+    def _db_mock(self, mocker: MockerFixture):
+        # Can't use global "db_mock" fixture
+        # since db is not being imported directly into file but is
+        # ab argument of DatabaseTable constructor.
+        return mocker.MagicMock()
 
 
-def test_database_row_to_json(database_row):
-    """
-    Tests to_json returns the underlying data dictionary.
-    """
+    @pytest.fixture
+    def _database_table(self, _db_mock):
+        """
+        An initialized DatabaseTable instance.
+        """
 
-    database_row.set("Name", "Temporary Edit")
-    # Edits are NOT reflected until _apply_edits is called
+        from savegem.common.db.table import DatabaseTable
 
-    data = database_row.to_json()
+        return DatabaseTable(_db_mock, "test_table")
 
-    assert data == {"id": 1, "name": "TestName", "value": 42.5}
-    assert isinstance(data, dict)
+    def test_table_init(self, _database_table):
+        """
+        Tests basic initialization.
+        """
 
+        assert _database_table.rows == []
+        assert _database_table.columns == []
+        assert _database_table.is_empty is True
 
-def test_database_row_to_json_after_apply_edits(database_row):
-    """
-    Tests to_json reflects changes after _apply_edits.
-    """
 
-    database_row.set("name", "Final Name")
-    database_row._apply_edits()
+    def test_table_where_chaining(self, _database_table):
+        """
+        Tests the where method for chaining and state setting.
+        """
 
-    data = database_row.to_json()
-    assert data["name"] == "Final Name"
+        table = _database_table.where("id > ?", 5)
 
+        assert table is _database_table
+        assert _database_table._DatabaseTable__where_clause == "id > ?"  # noqa
+        assert _database_table._DatabaseTable__where_clause_args == (5,)  # noqa
 
-def test_table_init(_database_table):
-    """
-    Tests basic initialization.
-    """
 
-    assert _database_table.rows == []
-    assert _database_table.columns == []
-    assert _database_table.is_empty is True
+    def test_table_order_by_chaining(self, _database_table):
+        """
+        Tests the order_by method for chaining and state setting.
+        """
 
+        table = _database_table.order_by("name ASC")
 
-def test_table_where_chaining(_database_table):
-    """
-    Tests the where method for chaining and state setting.
-    """
+        assert table is _database_table
+        assert _database_table._DatabaseTable__order_by_clause == "name ASC"  # noqa
 
-    table = _database_table.where("id > ?", 5)
 
-    assert table is _database_table
-    assert _database_table._DatabaseTable__where_clause == "id > ?"  # noqa
-    assert _database_table._DatabaseTable__where_clause_args == (5,)  # noqa
+    def test_table_retrieve_no_clauses(self, _database_table, _db_mock, mock_retrieve_cursor):
+        """
+        Tests retrieve with no WHERE or ORDER BY clauses.
+        """
 
+        table = _database_table.retrieve()
 
-def test_table_order_by_chaining(_database_table):
-    """
-    Tests the order_by method for chaining and state setting.
-    """
+        # 1. Check SQL execution
+        _db_mock.select.assert_called_once_with(
+            "SELECT * FROM test_table",
+            tuple()
+        )
 
-    table = _database_table.order_by("name ASC")
+        # 2. Check internal state after retrieval
+        assert table.columns == ["id", "name", "value"]
+        assert len(table.rows) == 2
+        assert table.rows[0].get("name") == "Alpha"
+        assert table.is_empty is False
 
-    assert table is _database_table
-    assert _database_table._DatabaseTable__order_by_clause == "name ASC"  # noqa
 
+    def test_table_retrieve_with_clauses(self, _database_table, _db_mock, mock_retrieve_cursor):
+        """
+        Tests retrieve with WHERE and ORDER BY clauses.
+        """
 
-def test_table_retrieve_no_clauses(_database_table, _db_mock, mock_retrieve_cursor):
-    """
-    Tests retrieve with no WHERE or ORDER BY clauses.
-    """
+        where_clause = "value > ?"
+        order_by_clause = "name DESC"
 
-    table = _database_table.retrieve()
+        _database_table.where(where_clause, 150).order_by(order_by_clause).retrieve()
 
-    # 1. Check SQL execution
-    _db_mock.select.assert_called_once_with(
-        "SELECT * FROM test_table",
-        tuple()
-    )
+        # 1. Check SQL execution (should have all clauses)
+        _db_mock.select.assert_called_once_with(
+            f"SELECT * FROM test_table WHERE {where_clause} ORDER BY {order_by_clause}",
+            (150,)
+        )
+        # The where clause and order by clause should be reset after retrieve
+        assert _database_table._DatabaseTable__where_clause is where_clause  # noqa
+        assert _database_table._DatabaseTable__order_by_clause is order_by_clause  # noqa
 
-    # 2. Check internal state after retrieval
-    assert table.columns == ["id", "name", "value"]
-    assert len(table.rows) == 2
-    assert table.rows[0].get("name") == "Alpha"
-    assert table.is_empty is False
 
+    def test_table_add_row(self, _database_table, mock_retrieve_cursor):
+        """
+        Tests adding a new row.
+        """
 
-def test_table_retrieve_with_clauses(_database_table, _db_mock, mock_retrieve_cursor):
-    """
-    Tests retrieve with WHERE and ORDER BY clauses.
-    """
+        # Retrieve first to set up columns and counter
+        _database_table.retrieve()
 
-    where_clause = "value > ?"
-    order_by_clause = "name DESC"
+        row_number = _database_table.add_row()
 
-    _database_table.where(where_clause, 150).order_by(order_by_clause).retrieve()
+        assert row_number == 3
+        assert len(_database_table.rows) == 3
 
-    # 1. Check SQL execution (should have all clauses)
-    _db_mock.select.assert_called_once_with(
-        f"SELECT * FROM test_table WHERE {where_clause} ORDER BY {order_by_clause}",
-        (150,)
-    )
-    # The where clause and order by clause should be reset after retrieve
-    assert _database_table._DatabaseTable__where_clause is where_clause  # noqa
-    assert _database_table._DatabaseTable__order_by_clause is order_by_clause  # noqa
+        new_row = _database_table.rows[-1]
+        assert new_row.row_number == 3
+        assert new_row.is_new is True
+        assert new_row.get("id") is None
 
 
-def test_table_add_row(_database_table, mock_retrieve_cursor):
-    """
-    Tests adding a new row.
-    """
+    def test_table_get_set_specific_row(self, _database_table, mock_retrieve_cursor):
+        """
+        Tests get/set for a specific row number.
+        """
 
-    # Retrieve first to set up columns and counter
-    _database_table.retrieve()
+        _database_table.retrieve()  # Data: (1, "Alpha", 100), (2, "Beta", 200)
 
-    row_number = _database_table.add_row()
+        # Test get (row 2)
+        assert _database_table.get(2, "name") == "Beta"
+        assert _database_table.get(99, "name") is None  # Non-existent row
 
-    assert row_number == 3
-    assert len(_database_table.rows) == 3
+        # Test set (row 1)
+        _database_table.set(1, "Name", "Gamma")
 
-    new_row = _database_table.rows[-1]
-    assert new_row.row_number == 3
-    assert new_row.is_new is True
-    assert new_row.get("id") is None
+        # Check that the change is in the row's edits
+        row1 = _database_table.rows[0]
+        assert row1.has_edits()
+        assert row1.edits["Name"] == "Gamma"
 
 
-def test_table_get_set_specific_row(_database_table, mock_retrieve_cursor):
-    """
-    Tests get/set for a specific row number.
-    """
+    def test_table_get_set_first(self, _database_table, mock_retrieve_cursor):
+        """
+        Tests get_first/set_first methods.
+        """
 
-    _database_table.retrieve()  # Data: (1, "Alpha", 100), (2, "Beta", 200)
+        _database_table.retrieve()  # Data starts at row_number 1
 
-    # Test get (row 2)
-    assert _database_table.get(2, "name") == "Beta"
-    assert _database_table.get(99, "name") is None  # Non-existent row
+        # Test get_first
+        assert _database_table.get_first("name") == "Alpha"
 
-    # Test set (row 1)
-    _database_table.set(1, "Name", "Gamma")
+        # Test set_first
+        _database_table.set_first("Value", 999)
 
-    # Check that the change is in the row's edits
-    row1 = _database_table.rows[0]
-    assert row1.has_edits()
-    assert row1.edits["Name"] == "Gamma"
+        # Check row 1 edits
+        row1 = _database_table.rows[0]
+        assert row1.edits["Value"] == 999
 
 
-def test_table_get_set_first(_database_table, mock_retrieve_cursor):
-    """
-    Tests get_first/set_first methods.
-    """
+    def test_table_remove_single_record(self, _database_table, mock_retrieve_cursor):
+        """
+        Tests removing a single record.
+        """
 
-    _database_table.retrieve()  # Data starts at row_number 1
+        _database_table.retrieve()  # Data: (1, "Alpha", 100), (2, "Beta", 200)
 
-    # Test get_first
-    assert _database_table.get_first("name") == "Alpha"
+        table = _database_table.remove(1)  # Remove row 1
 
-    # Test set_first
-    _database_table.set_first("Value", 999)
+        assert table is _database_table
+        assert len(_database_table.rows) == 1
+        assert _database_table.rows[0].row_number == 2  # Remaining row is row 2
+        assert len(_database_table._DatabaseTable__deleted_records) == 1  # noqa
+        assert _database_table._DatabaseTable__deleted_records[0].row_number == 1  # noqa
 
-    # Check row 1 edits
-    row1 = _database_table.rows[0]
-    assert row1.edits["Value"] == 999
 
+    def test_table_remove_all(self, _database_table, mock_retrieve_cursor):
+        """
+        Tests removing all records.
+        """
 
-def test_table_remove_single_record(_database_table, mock_retrieve_cursor):
-    """
-    Tests removing a single record.
-    """
+        _database_table.retrieve()  # Data: (1, "Alpha", 100), (2, "Beta", 200)
 
-    _database_table.retrieve()  # Data: (1, "Alpha", 100), (2, "Beta", 200)
+        table = _database_table.remove_all()
 
-    table = _database_table.remove(1)  # Remove row 1
+        assert table is _database_table
+        assert len(_database_table.rows) == 0
+        assert len(_database_table._DatabaseTable__deleted_records) == 2  # noqa
+        assert _database_table.is_empty is True
 
-    assert table is _database_table
-    assert len(_database_table.rows) == 1
-    assert _database_table.rows[0].row_number == 2  # Remaining row is row 2
-    assert len(_database_table._DatabaseTable__deleted_records) == 1  # noqa
-    assert _database_table._DatabaseTable__deleted_records[0].row_number == 1  # noqa
 
+    def test_table_save_calls_delete_update_insert(self, mocker: MockerFixture, _database_table, mock_retrieve_cursor,
+                                                   mock_table_info_cursor):
+        """
+        Tests that save calls the internal methods in the correct order.
+        """
 
-def test_table_remove_all(_database_table, mock_retrieve_cursor):
-    """
-    Tests removing all records.
-    """
+        # Ensure table columns are set up for PK lookup and save logic
+        _database_table.retrieve()
 
-    _database_table.retrieve()  # Data: (1, "Alpha", 100), (2, "Beta", 200)
+        # Mock out the internal save components to spy on calls
+        mock_delete = mocker.patch.object(_database_table, '_DatabaseTable__delete_records')
+        mock_update = mocker.patch.object(_database_table, '_DatabaseTable__update_records')
+        mock_insert = mocker.patch.object(_database_table, '_DatabaseTable__insert_records')
 
-    table = _database_table.remove_all()
+        _database_table.save()
 
-    assert table is _database_table
-    assert len(_database_table.rows) == 0
-    assert len(_database_table._DatabaseTable__deleted_records) == 2  # noqa
-    assert _database_table.is_empty is True
+        # Check call order
+        mock_delete.assert_called_once()
+        mock_update.assert_called_once()
+        mock_insert.assert_called_once()
 
 
-def test_table_save_calls_delete_update_insert(mocker: MockerFixture, _database_table, mock_retrieve_cursor,
-                                               mock_table_info_cursor):
-    """
-    Tests that save calls the internal methods in the correct order.
-    """
+    def test_table_save_insert_records(self, mocker: MockerFixture, _database_table, _db_mock, mock_retrieve_cursor,
+                                       mock_table_info_cursor):
+        """
+        Tests the __insert_records logic.
+        """
 
-    # Ensure table columns are set up for PK lookup and save logic
-    _database_table.retrieve()
+        _database_table.retrieve()
+        _database_table.add_row()
+        _database_table.rows[-1].set("name", "NewUser")
+        _database_table.rows[-1].set("value", 500)
 
-    # Mock out the internal save components to spy on calls
-    mock_delete = mocker.patch.object(_database_table, '_DatabaseTable__delete_records')
-    mock_update = mocker.patch.object(_database_table, '_DatabaseTable__update_records')
-    mock_insert = mocker.patch.object(_database_table, '_DatabaseTable__insert_records')
+        mocker.patch.object(_database_table, "_DatabaseTable__delete_records")
+        mocker.patch.object(_database_table, "_DatabaseTable__update_records")
+        _database_table.save()
 
-    _database_table.save()
+        expected_args = ("NewUser", 500)
 
-    # Check call order
-    mock_delete.assert_called_once()
-    mock_update.assert_called_once()
-    mock_insert.assert_called_once()
+        # NOTE: We need to check if execute was called with the stripped SQL for reliability
+        sql_call = _db_mock.execute.call_args[0][0].strip()
 
+        assert "INSERT INTO test_table (name, value)" in sql_call
+        assert "VALUES (?, ?)" in sql_call
+        assert _db_mock.execute.call_args[0][1] == expected_args
 
-def test_table_save_insert_records(mocker: MockerFixture, _database_table, _db_mock, mock_retrieve_cursor,
-                                   mock_table_info_cursor):
-    """
-    Tests the __insert_records logic.
-    """
+        # Check post-insert state
+        assert _database_table.rows[-1].is_new is False
+        assert not _database_table.rows[-1].has_edits()
+        assert _database_table.rows[-1].get("name") == "NewUser"
 
-    _database_table.retrieve()
-    _database_table.add_row()
-    _database_table.rows[-1].set("name", "NewUser")
-    _database_table.rows[-1].set("value", 500)
 
-    mocker.patch.object(_database_table, "_DatabaseTable__delete_records")
-    mocker.patch.object(_database_table, "_DatabaseTable__update_records")
-    _database_table.save()
+    def test_table_save_update_records(self, mocker: MockerFixture, _database_table, _db_mock, mock_retrieve_cursor,
+                                       mock_table_info_cursor):
+        """
+        Tests the __update_records logic.
+        """
 
-    expected_args = ("NewUser", 500)
+        _database_table.retrieve()  # Sets up rows 1 and 2
+        _database_table.rows[0].set("name", "UpdatedAlpha")  # Row 1 (ID=1)
 
-    # NOTE: We need to check if execute was called with the stripped SQL for reliability
-    sql_call = _db_mock.execute.call_args[0][0].strip()
+        mocker.patch.object(_database_table, "_DatabaseTable__delete_records")
+        mocker.patch.object(_database_table, "_DatabaseTable__insert_records")
+        _database_table.save()
 
-    assert "INSERT INTO test_table (name, value)" in sql_call
-    assert "VALUES (?, ?)" in sql_call
-    assert _db_mock.execute.call_args[0][1] == expected_args
+        sql_call = _db_mock.execute.call_args[0][0].strip()
 
-    # Check post-insert state
-    assert _database_table.rows[-1].is_new is False
-    assert not _database_table.rows[-1].has_edits()
-    assert _database_table.rows[-1].get("name") == "NewUser"
+        assert "UPDATE test_table" in sql_call
+        assert "SET name = ?" in sql_call
+        assert "WHERE id = ?" in sql_call
 
+        # Check post-update state
+        assert not _database_table.rows[0].has_edits()
+        assert _database_table.rows[0].get("name") == "UpdatedAlpha"
 
-def test_table_save_update_records(mocker: MockerFixture, _database_table, _db_mock, mock_retrieve_cursor,
-                                   mock_table_info_cursor):
-    """
-    Tests the __update_records logic.
-    """
 
-    _database_table.retrieve()  # Sets up rows 1 and 2
-    _database_table.rows[0].set("name", "UpdatedAlpha")  # Row 1 (ID=1)
+    def test_table_save_delete_records(self, mocker: MockerFixture, _db_mock, _database_table, mock_retrieve_cursor,
+                                       mock_table_info_cursor):
+        """
+        Tests the __delete_records logic.
+        """
 
-    mocker.patch.object(_database_table, "_DatabaseTable__delete_records")
-    mocker.patch.object(_database_table, "_DatabaseTable__insert_records")
-    _database_table.save()
+        _database_table.retrieve()
 
-    sql_call = _db_mock.execute.call_args[0][0].strip()
+        # Test scenario when nothing was deleted,
+        # then DELETE statement should not be executed.
+        _database_table.save()
+        _db_mock.execute.assert_not_called()
 
-    assert "UPDATE test_table" in sql_call
-    assert "SET name = ?" in sql_call
-    assert "WHERE id = ?" in sql_call
+        _database_table.remove(1)  # Row 1 (ID=1) deleted
+        _database_table.remove(2)  # Row 2 (ID=2) deleted
 
-    # Check post-update state
-    assert not _database_table.rows[0].has_edits()
-    assert _database_table.rows[0].get("name") == "UpdatedAlpha"
+        # Mock out the other two steps for isolation
+        mocker.patch.object(_database_table, "_DatabaseTable__update_records")
+        mocker.patch.object(_database_table, "_DatabaseTable__insert_records")
 
+        _database_table.save()
 
-def test_table_save_delete_records(mocker: MockerFixture, _db_mock, _database_table, mock_retrieve_cursor,
-                                   mock_table_info_cursor):
-    """
-    Tests the __delete_records logic.
-    """
+        # Check that execute was called with the correct DELETE statement
+        # PK column is 'id' from mock_table_info_cursor
+        expected_values = (1, 2)
 
-    _database_table.retrieve()
+        sql_call = _db_mock.execute.call_args[0][0].strip()
 
-    # Test scenario when nothing was deleted,
-    # then DELETE statement should not be executed.
-    _database_table.save()
-    _db_mock.execute.assert_not_called()
+        # Check if the generated SQL contains the necessary clauses
+        assert "DELETE FROM test_table" in sql_call
+        assert "WHERE (id = ?) OR (id = ?)" in sql_call
+        assert _db_mock.execute.call_args[0][1] == expected_values
 
-    _database_table.remove(1)  # Row 1 (ID=1) deleted
-    _database_table.remove(2)  # Row 2 (ID=2) deleted
+        # Check post-delete state
+        assert len(_database_table._DatabaseTable__deleted_records) == 0  # noqa
 
-    # Mock out the other two steps for isolation
-    mocker.patch.object(_database_table, "_DatabaseTable__update_records")
-    mocker.patch.object(_database_table, "_DatabaseTable__insert_records")
 
-    _database_table.save()
+    def test_table_save_delete_when_no_pk_on_record(self, mocker: MockerFixture, _db_mock, _database_table,
+                                                    mock_retrieve_cursor, mock_table_info_cursor):
 
-    # Check that execute was called with the correct DELETE statement
-    # PK column is 'id' from mock_table_info_cursor
-    expected_values = (1, 2)
+        _database_table.retrieve()
 
-    sql_call = _db_mock.execute.call_args[0][0].strip()
+        _database_table.rows[0].set("id", None)
+        _database_table.rows[0]._apply_edits()
+        _database_table.remove(1)  # Row 1 (ID=1) deleted
 
-    # Check if the generated SQL contains the necessary clauses
-    assert "DELETE FROM test_table" in sql_call
-    assert "WHERE (id = ?) OR (id = ?)" in sql_call
-    assert _db_mock.execute.call_args[0][1] == expected_values
+        # Mock out the other two steps for isolation
+        mocker.patch.object(_database_table, "_DatabaseTable__update_records")
+        mocker.patch.object(_database_table, "_DatabaseTable__insert_records")
 
-    # Check post-delete state
-    assert len(_database_table._DatabaseTable__deleted_records) == 0  # noqa
+        _database_table.save()
 
+        sql_call = _db_mock.execute.call_args[0][0].strip()
 
-def test_table_save_delete_when_no_pk_on_record(mocker: MockerFixture, _db_mock, _database_table, mock_retrieve_cursor,
-                                   mock_table_info_cursor):
+        # Check if the generated SQL contains the necessary clauses
+        assert "DELETE FROM test_table" in sql_call
+        assert "WHERE (id IS NULL)" in sql_call
 
-    _database_table.retrieve()
 
-    _database_table.rows[0].set("id", None)
-    _database_table.rows[0]._apply_edits()
-    _database_table.remove(1)  # Row 1 (ID=1) deleted
+    def test_columns_iterator(self, _database_table, mock_retrieve_cursor, mock_table_info_cursor):
+        _database_table.retrieve()
 
-    # Mock out the other two steps for isolation
-    mocker.patch.object(_database_table, "_DatabaseTable__update_records")
-    mocker.patch.object(_database_table, "_DatabaseTable__insert_records")
-
-    _database_table.save()
-
-    sql_call = _db_mock.execute.call_args[0][0].strip()
-
-    # Check if the generated SQL contains the necessary clauses
-    assert "DELETE FROM test_table" in sql_call
-    assert "WHERE (id IS NULL)" in sql_call
-
-
-def test_columns_iterator(_database_table, mock_retrieve_cursor, mock_table_info_cursor):
-    _database_table.retrieve()
-
-    for idx, record in enumerate(_database_table):
-        assert record.get("id") == idx + 1
+        for idx, record in enumerate(_database_table):
+            assert record.get("id") == idx + 1
