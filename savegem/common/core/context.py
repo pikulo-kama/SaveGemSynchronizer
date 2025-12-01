@@ -2,7 +2,6 @@ from typing import Optional
 
 from savegem.common.core.activity import Activity
 from savegem.common.core.app_config import AppConfig
-from savegem.common.core.app_data import AppData
 from savegem.common.core.app_state import AppState
 from savegem.common.core.game_config import GameConfig
 from savegem.common.core.user import UserState

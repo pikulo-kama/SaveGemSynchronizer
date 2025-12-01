@@ -6,175 +6,177 @@ from pytest_mock import MockerFixture
 from tests.test_data import SocketTestData
 
 
-@pytest.fixture
-def _socket(mocker: MockerFixture):
-    return mocker.patch('savegem.common.core.ipc_socket.socket')
+class TestIPCSocket:
+
+    @pytest.fixture
+    def _socket(self, mocker: MockerFixture):
+        return mocker.patch('savegem.common.core.ipc_socket.socket')
 
 
-@pytest.fixture
-def _ipc_socket():
-    from savegem.common.core.ipc_socket import IPCSocket
-    return IPCSocket(port=SocketTestData.UIPort)
+    @pytest.fixture
+    def _ipc_socket(self):
+        from savegem.common.core.ipc_socket import IPCSocket
+        return IPCSocket(port=SocketTestData.UIPort)
 
 
-@pytest.fixture
-def _mock_is_socket_running(mocker: MockerFixture, _ipc_socket):
-    return lambda state: mocker.patch.object(_ipc_socket, '_IPCSocket__is_socket_running', return_value=state)
+    @pytest.fixture
+    def _mock_is_socket_running(self, mocker: MockerFixture, _ipc_socket):
+        return lambda state: mocker.patch.object(_ipc_socket, '_IPCSocket__is_socket_running', return_value=state)
 
 
-def test_port_property(_ipc_socket):
-    assert _ipc_socket.port == SocketTestData.UIPort
+    def test_port_property(self, _ipc_socket):
+        assert _ipc_socket.port == SocketTestData.UIPort
 
 
-def test_is_socket_running_true(_ipc_socket, _socket, logger_mock):
+    def test_is_socket_running_true(self, _ipc_socket, _socket, logger_mock):
 
-    from savegem.common.core.ipc_socket import IPCSocket
+        from savegem.common.core.ipc_socket import IPCSocket
 
-    mock_instance = _socket.return_value
+        mock_instance = _socket.return_value
 
-    # Configure connect_ex to simulate success (return code 0)
-    mock_instance.connect_ex.return_value = 0
+        # Configure connect_ex to simulate success (return code 0)
+        mock_instance.connect_ex.return_value = 0
 
-    with pytest.raises(SystemExit):
-        _ipc_socket.listen()
+        with pytest.raises(SystemExit):
+            _ipc_socket.listen()
 
-    mock_instance.connect_ex.assert_called_once_with((IPCSocket.Localhost, SocketTestData.UIPort))
-    mock_instance.close.assert_called_once()
-    logger_mock.error.assert_called_once()
-
-
-def test_is_socket_running_false(_ipc_socket, _socket):
-    mock_instance = _socket.return_value
-
-    # Configure connect_ex to simulate failure (non-zero code)
-    mock_instance.connect_ex.return_value = 1
-
-    assert _ipc_socket._IPCSocket__is_socket_running() is False  # noqa
-    mock_instance.connect_ex.assert_called_once()
-    mock_instance.close.assert_called_once()
+        mock_instance.connect_ex.assert_called_once_with((IPCSocket.Localhost, SocketTestData.UIPort))
+        mock_instance.close.assert_called_once()
+        logger_mock.error.assert_called_once()
 
 
-def test_listen_state_changed_command(mocker: MockerFixture, _ipc_socket, _socket, app_state_mock,
-                                      _mock_is_socket_running):
+    def test_is_socket_running_false(self, _ipc_socket, _socket):
+        mock_instance = _socket.return_value
 
-    from constants import UTF_8
-    from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
-    from savegem.common.util.test import ExitTestLoop
+        # Configure connect_ex to simulate failure (non-zero code)
+        mock_instance.connect_ex.return_value = 1
 
-    test_message = {IPCProp.Command: IPCCommand.StateChanged}
-    encoded_message = json.dumps(test_message).encode(UTF_8)
-
-    # Mock the internal private check to ensure it returns False and doesn't exit
-    _mock_is_socket_running(False)
-    mock_handle = mocker.patch.object(_ipc_socket, '_handle')
-
-    # Get mock instances of the socket objects
-    mock_server_sock = _socket.return_value
-    mock_connection = mocker.MagicMock()
-
-    # Configure recv to return the message, and then raise an exception
-    # to break the infinite loop after one successful message processing
-    mock_connection.recv.side_effect = [
-        encoded_message,
-        ExitTestLoop("Stop listening after one message")
-    ]
-
-    # Configure sock.accept() to return the connection mock
-    mock_server_sock.accept.return_value = (mock_connection, (IPCSocket.Localhost, SocketTestData.ProcessWatcherPort))
-
-    with pytest.raises(ExitTestLoop, match="Stop listening after one message"):
-        _ipc_socket.listen()
-
-    # Verify the IPC socket setup
-    mock_server_sock.bind.assert_called_once_with((IPCSocket.Localhost, SocketTestData.UIPort))
-    mock_server_sock.listen.assert_called_once()
-
-    # Verify the message was processed
-    mock_connection.recv.assert_called_with(IPCSocket.MessageSize)
-    mock_connection.close.call_count = 2
-    mock_server_sock.accept.call_count = 2
-
-    # Verify the core logic: app.state.refresh was called
-    app_state_mock.refresh.assert_called_once()
-
-    # Verify _handle was NOT called
-    mock_handle.assert_not_called()
+        assert _ipc_socket._IPCSocket__is_socket_running() is False  # noqa
+        mock_instance.connect_ex.assert_called_once()
+        mock_instance.close.assert_called_once()
 
 
-def test_listen_custom_command(mocker: MockerFixture, _ipc_socket, _socket, app_state_mock, _mock_is_socket_running,
-                               logger_mock):
+    def test_listen_state_changed_command(self, mocker: MockerFixture, _ipc_socket, _socket, app_state_mock,
+                                          _mock_is_socket_running):
 
-    from constants import UTF_8
-    from savegem.common.core.ipc_socket import IPCSocket, IPCProp
-    from savegem.common.util.test import ExitTestLoop
+        from constants import UTF_8
+        from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
+        from savegem.common.util.test import ExitTestLoop
 
-    _mock_is_socket_running(False)
+        test_message = {IPCProp.Command: IPCCommand.StateChanged}
+        encoded_message = json.dumps(test_message).encode(UTF_8)
 
-    error = Exception("Can't connect.")
-    test_command = "custom_action"
-    test_message = {IPCProp.Command: test_command, "payload": "data"}
-    encoded_message = json.dumps(test_message).encode(UTF_8)
+        # Mock the internal private check to ensure it returns False and doesn't exit
+        _mock_is_socket_running(False)
+        mock_handle = mocker.patch.object(_ipc_socket, '_handle')
 
-    # Mock the abstract _handle method
-    mock_handle = mocker.patch.object(_ipc_socket, '_handle')
+        # Get mock instances of the socket objects
+        mock_server_sock = _socket.return_value
+        mock_conn = mocker.MagicMock()
 
-    socket_mock = _socket.return_value
-    mock_connection = mocker.MagicMock()
+        # Configure recv to return the message, and then raise an exception
+        # to break the infinite loop after one successful message processing
+        mock_conn.recv.side_effect = [
+            encoded_message,
+            ExitTestLoop("Stop listening after one message")
+        ]
 
-    mock_connection.recv.side_effect = [
-        encoded_message,
-        error,
-        ExitTestLoop("Stop listening")
-    ]
-    socket_mock.accept.return_value = (mock_connection, (IPCSocket.Localhost, SocketTestData.ProcessWatcherPort))
+        # Configure sock.accept() to return the connection mock
+        mock_server_sock.accept.return_value = (mock_conn, (IPCSocket.Localhost, SocketTestData.ProcessWatcherPort))
 
-    with pytest.raises(ExitTestLoop, match="Stop listening"):
-        _ipc_socket.listen()
+        with pytest.raises(ExitTestLoop, match="Stop listening after one message"):
+            _ipc_socket.listen()
 
-    logger_mock.error.assert_called_with("Error handling received message: %s", error, exc_info=True)
-    mock_handle.assert_called_once_with(test_command, {"payload": "data"})
-    app_state_mock.refresh.assert_not_called()
+        # Verify the IPC socket setup
+        mock_server_sock.bind.assert_called_once_with((IPCSocket.Localhost, SocketTestData.UIPort))
+        mock_server_sock.listen.assert_called_once()
 
+        # Verify the message was processed
+        mock_conn.recv.assert_called_with(IPCSocket.MessageSize)
+        mock_conn.close.call_count = 2
+        mock_server_sock.accept.call_count = 2
 
-def test_send_string_command_success(_ipc_socket, _socket):
+        # Verify the core logic: app.state.refresh was called
+        app_state_mock.refresh.assert_called_once()
 
-    from constants import UTF_8
-    from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
-
-    socket_mock = _socket.return_value
-    socket_mock.__enter__.return_value = socket_mock
-
-    _ipc_socket.send(IPCCommand.RefreshUI)
-
-    expected_message = json.dumps({IPCProp.Command: IPCCommand.RefreshUI}).encode(UTF_8)
-    socket_mock.sendall.assert_called_once_with(expected_message)
-    socket_mock.connect.assert_called_once_with((IPCSocket.Localhost, SocketTestData.UIPort))
-    socket_mock.__exit__.assert_called_once()
+        # Verify _handle was NOT called
+        mock_handle.assert_not_called()
 
 
-def test_send_dict_message_success(_ipc_socket, _socket):
+    def test_listen_custom_command(self, mocker: MockerFixture, _ipc_socket, _socket, app_state_mock,
+                                   _mock_is_socket_running, logger_mock):
 
-    from constants import UTF_8
-    from savegem.common.core.ipc_socket import IPCProp
+        from constants import UTF_8
+        from savegem.common.core.ipc_socket import IPCSocket, IPCProp
+        from savegem.common.util.test import ExitTestLoop
 
-    test_message = {IPCProp.Command: "test", "data": [1, 2]}
+        _mock_is_socket_running(False)
 
-    mock_instance = _socket.return_value
-    mock_instance.__enter__.return_value = mock_instance
+        error = Exception("Can't connect.")
+        test_command = "custom_action"
+        test_message = {IPCProp.Command: test_command, "payload": "data"}
+        encoded_message = json.dumps(test_message).encode(UTF_8)
 
-    _ipc_socket.send(test_message)
+        # Mock the abstract _handle method
+        mock_handle = mocker.patch.object(_ipc_socket, '_handle')
 
-    expected_message = json.dumps(test_message).encode(UTF_8)
-    mock_instance.sendall.assert_called_once_with(expected_message)
+        socket_mock = _socket.return_value
+        mock_connection = mocker.MagicMock()
+
+        mock_connection.recv.side_effect = [
+            encoded_message,
+            error,
+            ExitTestLoop("Stop listening")
+        ]
+        socket_mock.accept.return_value = (mock_connection, (IPCSocket.Localhost, SocketTestData.ProcessWatcherPort))
+
+        with pytest.raises(ExitTestLoop, match="Stop listening"):
+            _ipc_socket.listen()
+
+        logger_mock.error.assert_called_with("Error handling received message: %s", error, exc_info=True)
+        mock_handle.assert_called_once_with(test_command, {"payload": "data"})
+        app_state_mock.refresh.assert_not_called()
 
 
-def test_send_connection_refused_error(_ipc_socket, _socket, logger_mock):
-    error = ConnectionRefusedError()
+    def test_send_string_command_success(self, _ipc_socket, _socket):
 
-    mock_instance = _socket.return_value
-    mock_instance.__enter__.return_value = mock_instance
-    mock_instance.connect.side_effect = error
+        from constants import UTF_8
+        from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
 
-    _ipc_socket.send("test_command")
+        socket_mock = _socket.return_value
+        socket_mock.__enter__.return_value = socket_mock
 
-    logger_mock.error.assert_called_once_with(error, exc_info=True)
+        _ipc_socket.send(IPCCommand.RefreshUI)
+
+        expected_message = json.dumps({IPCProp.Command: IPCCommand.RefreshUI}).encode(UTF_8)
+        socket_mock.sendall.assert_called_once_with(expected_message)
+        socket_mock.connect.assert_called_once_with((IPCSocket.Localhost, SocketTestData.UIPort))
+        socket_mock.__exit__.assert_called_once()
+
+
+    def test_send_dict_message_success(self, _ipc_socket, _socket):
+
+        from constants import UTF_8
+        from savegem.common.core.ipc_socket import IPCProp
+
+        test_message = {IPCProp.Command: "test", "data": [1, 2]}
+
+        mock_instance = _socket.return_value
+        mock_instance.__enter__.return_value = mock_instance
+
+        _ipc_socket.send(test_message)
+
+        expected_message = json.dumps(test_message).encode(UTF_8)
+        mock_instance.sendall.assert_called_once_with(expected_message)
+
+
+    def test_send_connection_refused_error(self, _ipc_socket, _socket, logger_mock):
+        error = ConnectionRefusedError()
+
+        mock_instance = _socket.return_value
+        mock_instance.__enter__.return_value = mock_instance
+        mock_instance.connect.side_effect = error
+
+        _ipc_socket.send("test_command")
+
+        logger_mock.error.assert_called_once_with(error, exc_info=True)

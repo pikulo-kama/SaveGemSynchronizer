@@ -13,72 +13,73 @@ SecondPlayerActivity = {
 }
 
 
-@pytest.fixture
-def _activity(app_config, app_context_mock, user_config_mock, games_config_mock):
-    from savegem.common.core.activity import Activity
-
-    return Activity(app_context_mock)
+class TestActivity:
 
 
-def test_should_not_have_players_without_refresh(_activity):
-    assert len(_activity.players) == 0
+    @pytest.fixture
+    def _activity(self, app_config_mock, app_context_mock, user_config_mock, games_config_mock):
+        from savegem.common.core.activity import Activity
+
+        return Activity(app_context_mock)
 
 
-def test_should_retrieve_data_from_holder(_activity, holder_mock):
-    from savegem.app.data import HolderObject
-
-    holder_mock.get.return_value = NoActivity
-    _activity.refresh()
-
-    holder_mock.get.assert_called_with(HolderObject.Activity)
-    assert len(_activity.players) == 0
+    def test_should_not_have_players_without_refresh(self, _activity):
+        assert len(_activity.players) == 0
 
 
-def test_refresh_when_only_current_player(_activity, user_config_mock, holder_mock):
-    holder_mock.get.return_value = FirstPlayerActivity
-    _activity.refresh()
+    def test_should_retrieve_data_from_holder(self, _activity, holder_mock):
+        from savegem.app.data import HolderObject
 
-    assert len(_activity.players) == 1
+        holder_mock.get.return_value = NoActivity
+        _activity.refresh()
 
-
-def test_refresh_when_active_players(_activity, holder_mock):
-    holder_mock.get.return_value = SecondPlayerActivity
-    _activity.refresh()
-
-    assert len(_activity.players) == 2
-
-def test_update_when_has_active_games(_activity, holder_mock, gdrive_mock):
-
-    from savegem.common.core.activity import Activity
-
-    games = [GameTestData.FirstGame, GameTestData.SecondGame]
-
-    gdrive_mock.download_file.return_value = json_to_bytes_io({**FirstPlayerActivity, **SecondPlayerActivity})
-    _activity.update(games)
-
-    update_args = gdrive_mock.update_file.call_args[0]
-    file_id = update_args[0]
-    data: dict = json.loads(update_args[1])
-
-    assert file_id == ConfigTestData.ActivityLogFileId
-    assert len(data.keys()) == 2
-
-    first_player_email = PlayerTestData.FirstPlayerEmail
-    second_player_email = PlayerTestData.SecondPlayerEmail
-
-    # Verify that existing activity data was not modified.
-    assert data.get(first_player_email) == games
-    assert data.get(second_player_email) == SecondPlayerActivity.get(second_player_email)
+        holder_mock.get.assert_called_with(HolderObject.Activity)
+        assert len(_activity.players) == 0
 
 
-def test_update_when_no_games(_activity, gdrive_mock):
-    gdrive_mock.download_file.return_value = json_to_bytes_io(FirstPlayerActivity)
-    _activity.update([])
+    def test_refresh_when_only_current_player(self, _activity, user_config_mock, holder_mock):
+        holder_mock.get.return_value = FirstPlayerActivity
+        _activity.refresh()
 
-    update_args = gdrive_mock.update_file.call_args[0]
-    file_id = update_args[0]
-    data: dict = json.loads(update_args[1])
+        assert len(_activity.players) == 1
 
-    assert file_id == ConfigTestData.ActivityLogFileId
-    # Previous user activity data was removed.
-    assert len(data.keys()) == 0
+
+    def test_refresh_when_active_players(self, _activity, holder_mock):
+        holder_mock.get.return_value = SecondPlayerActivity
+        _activity.refresh()
+
+        assert len(_activity.players) == 2
+
+    def test_update_when_has_active_games(self, _activity, holder_mock, gdrive_mock):
+
+        games = [GameTestData.FirstGame, GameTestData.SecondGame]
+
+        gdrive_mock.download_file.return_value = json_to_bytes_io({**FirstPlayerActivity, **SecondPlayerActivity})
+        _activity.update(games)
+
+        update_args = gdrive_mock.update_file.call_args[0]
+        file_id = update_args[0]
+        data: dict = json.loads(update_args[1])
+
+        assert file_id == ConfigTestData.ActivityLogFileId
+        assert len(data.keys()) == 2
+
+        first_player_email = PlayerTestData.FirstPlayerEmail
+        second_player_email = PlayerTestData.SecondPlayerEmail
+
+        # Verify that existing activity data was not modified.
+        assert data.get(first_player_email) == games
+        assert data.get(second_player_email) == SecondPlayerActivity.get(second_player_email)
+
+
+    def test_update_when_no_games(self, _activity, gdrive_mock):
+        gdrive_mock.download_file.return_value = json_to_bytes_io(FirstPlayerActivity)
+        _activity.update([])
+
+        update_args = gdrive_mock.update_file.call_args[0]
+        file_id = update_args[0]
+        data: dict = json.loads(update_args[1])
+
+        assert file_id == ConfigTestData.ActivityLogFileId
+        # Previous user activity data was removed.
+        assert len(data.keys()) == 0

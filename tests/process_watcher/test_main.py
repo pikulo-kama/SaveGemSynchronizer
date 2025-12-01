@@ -66,7 +66,7 @@ class TestProcessWatcher:
         return module_patch('get_running_game_processes')
 
 
-    def test_run_once_initializes_user_and_downloads_config(self, gdrive_mock, app_context_mock, app_config,
+    def test_run_once_initializes_user_and_downloads_config(self, gdrive_mock, app_context_mock, app_config_mock,
                                                             holder_mock):
 
         from savegem.process_watcher.main import ProcessWatcher
@@ -76,8 +76,8 @@ class TestProcessWatcher:
         watcher._run_once()
 
         holder_mock.download_json.assert_has_calls([
-            call(HolderObject.UserData, app_config.users_config_file_id),
-            call(HolderObject.GamesConfig, app_config.games_config_file_id)
+            call(HolderObject.UserData, app_config_mock.users_config_file_id),
+            call(HolderObject.GamesConfig, app_config_mock.games_config_file_id)
         ])
 
         app_context_mock.games.initialize.assert_called_once()
@@ -240,7 +240,7 @@ class TestProcessWatcher:
 
 
     def test_auto_skip_if_running(self, module_patch, app_context_mock, downloader_mock, push_notification_mock,
-                                  _get_run_processes_mock, _create_game_process, app_config, tr_mock, ui_socket_mock):
+                                  _get_run_processes_mock, _create_game_process, app_config_mock, tr_mock, ui_socket_mock):
         """
         Test that automatic actions skip processes that are running but have not just started or closed.
         This covers the 'if not process.has_started and not process.has_closed: continue' condition.

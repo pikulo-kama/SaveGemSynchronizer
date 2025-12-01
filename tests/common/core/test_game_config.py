@@ -50,7 +50,7 @@ def _setup(tmp_path: Path, holder_mock, db_table_mock, url_retrieve_mock, resolv
 
 
 @pytest.fixture
-def _games_config(app_context_mock, app_config, user_config_mock, app_state_mock):
+def _games_config(app_context_mock, app_config_mock, user_config_mock, app_state_mock):
     from savegem.common.core.game_config import GameConfig
 
     return GameConfig(app_context_mock)

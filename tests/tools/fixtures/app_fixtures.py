@@ -27,7 +27,7 @@ def app_state_mock(mocker: MockerFixture, app_context_mock):
 
 
 @pytest.fixture(autouse=True)
-def app_config(mocker: MockerFixture, app_context_mock):
+def app_config_mock(mocker: MockerFixture, app_context_mock):
     """
     Used to mock Google Drive configuration holder.
     """

@@ -26,7 +26,7 @@ class TestGDriveWatcher:
         }
 
 
-    def test_run_once_initializes_user_and_downloads_config(self, gdrive_mock, app_context_mock, app_config, holder_mock):
+    def test_run_once_initializes_user_and_downloads_config(self, gdrive_mock, app_context_mock, app_config_mock, holder_mock):
 
         from savegem.gdrive_watcher.main import GDriveWatcher
         from savegem.app.data import HolderObject
@@ -35,8 +35,8 @@ class TestGDriveWatcher:
         watcher._run_once()
 
         holder_mock.download_json.assert_has_calls([
-            call(HolderObject.UserData, app_config.users_config_file_id),
-            call(HolderObject.GamesConfig, app_config.games_config_file_id)
+            call(HolderObject.UserData, app_config_mock.users_config_file_id),
+            call(HolderObject.GamesConfig, app_config_mock.games_config_file_id)
         ])
 
         app_context_mock.games.initialize.assert_called_once()
@@ -123,7 +123,7 @@ class TestGDriveWatcher:
 
 
     def test_work_sends_refresh_for_all_relevant_changes(self, gdrive_mock, app_context_mock, games_config_mock,
-                                                         app_config, ui_socket_mock):
+                                                         app_config_mock, ui_socket_mock):
         """
         Test that all three relevant change types trigger the correct refresh events.
         """
@@ -135,8 +135,8 @@ class TestGDriveWatcher:
 
         # Arrange: Mock get_changes to return ALL relevant IDs/Directories
         modified_files = [
-            app_config.games_config_file_id,  # GameConfigChange
-            app_config.activity_log_file_id,  # ActivityLogUpdate
+            app_config_mock.games_config_file_id,  # GameConfigChange
+            app_config_mock.activity_log_file_id,  # ActivityLogUpdate
             "some_other_file_id"  # (Ignored)
         ]
         affected_directories = [
