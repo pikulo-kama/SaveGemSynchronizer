@@ -20,7 +20,7 @@ class CustomComponentMixin:
     def __init__(self):
         self.__metadata: Optional[WidgetMetadata] = None
 
-    def set_content(self, content):
+    def set_content(self, content):  # pragma: no cover
         """
         Used to set content of widget.
         Will set either text or pixmap
@@ -81,10 +81,11 @@ class CustomComponentMixin:
         Will also refresh child widgets if requested.
         """
 
-        _logger.debug("Refreshing widget '%s'", self.metadata.name)
-
         if self.metadata is None:
+            _logger.error("Instance of widget %s doesn't have metadata in place.", self.__class__.__name__)
             return
+
+        _logger.debug("Refreshing widget '%s'", self.metadata.name)
 
         if self.metadata.content is not None:
             content = resolve_content(self.metadata.content)

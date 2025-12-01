@@ -8,8 +8,10 @@ from tests.tools.fixtures.core_fixtures import *  # noqa
 from tests.tools.fixtures.external_fixtures import *  # noqa
 from tests.tools.fixtures.file_fixtures import *  # noqa
 from tests.tools.fixtures.gui_fixtures import *  # noqa
+from tests.tools.fixtures.qt_fixtures import *  # noqa
 from tests.tools.fixtures.service_fixtures import *  # noqa
 from tests.tools.fixtures.socket_fixtures import *  # noqa
+from tests.tools.fixtures.widget_fixtures import *  # noqa
 
 
 @pytest.fixture(scope="session", autouse=True)

@@ -18,6 +18,14 @@ def _custom_button(qtbot):
     return button
 
 
+def test_set_text_on_set_content(_custom_button):
+
+    content = "Test Content"
+
+    _custom_button.set_content(content)
+    assert _custom_button.text() == content
+
+
 def test_custom_push_button_initialization(_custom_button):
     """
     Test the button's initial state and custom properties.

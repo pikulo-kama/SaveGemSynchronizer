@@ -45,14 +45,13 @@ def test_square_input_size_and_alpha(_qt_app):
     assert circular.isNull() is False
 
 
-def test_should_round_image_with_radius(_qt_app, module_patch):
+def test_should_round_image_with_radius(_qt_app, module_patch, painter_mock):
 
     from savegem.common.util.graphics import round_image
 
     size, radius = 100, 10
     original = create_solid_pixmap(size, size, QColor(Qt.GlobalColor.blue))
 
-    module_patch("QPainter")
     painter_path_mock = module_patch("QPainterPath")
     round_image(original, radius)
 
