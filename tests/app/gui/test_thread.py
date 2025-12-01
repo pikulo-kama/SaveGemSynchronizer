@@ -13,10 +13,7 @@ def mock_worker(mocker: MockerFixture):
     """
     Provides a mock QWorker object
     """
-
-    worker = mocker.MagicMock()
-
-    return worker
+    return mocker.MagicMock()
 
 
 def test_execute_in_blocking_thread_blocks_gui(gui_mock, qthread_mock, mock_worker):
@@ -66,7 +63,7 @@ def test_execute_in_blocking_thread_unblocks_on_finish(gui_mock, qthread_mock, m
 
     gui_mock.setCursor.reset_mock()  # Reset mock to check the final state change
 
-    on_finish_handler = qthread_mock.finished.connect.call_args_list[2][0][0]
+    on_finish_handler = qthread_mock.finished.connect.call_args_list[0][0][0]
     on_finish_handler()
 
     gui_mock.setCursor.assert_called_with(Qt.CursorShape.ArrowCursor)

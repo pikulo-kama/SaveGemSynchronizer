@@ -182,12 +182,12 @@ def load_stylesheet(directory: str = None):
 
     # Get all style files and join them together.
     for file_name in os.listdir(directory):
-        file_path = Path(os.path.join(directory, file_name))
+        file_path = os.path.join(directory, file_name)
 
-        if file_path.is_dir():
-            style_string += load_stylesheet(str(file_path))
+        if Path(file_path).is_dir():
+            style_string += load_stylesheet(file_path)
         else:
-            style_string += read_file(str(file_path))
+            style_string += read_file(file_path)
 
     return resolve_style_properties(style_string)
 

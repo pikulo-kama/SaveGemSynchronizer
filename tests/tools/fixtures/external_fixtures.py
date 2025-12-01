@@ -53,6 +53,11 @@ def expandvars_mock(module_patch):
 
 
 @pytest.fixture
+def path_mock(module_patch):
+    return module_patch("Path")
+
+
+@pytest.fixture
 def sys_exit_mock(module_patch):
     return module_patch("sys.exit")
 

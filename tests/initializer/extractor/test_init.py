@@ -70,11 +70,6 @@ def mock_db_interaction(mocker):
 
 
 @pytest.fixture
-def _path_mock(module_patch):
-    return module_patch("Path")
-
-
-@pytest.fixture
 def _datetime_now():
     return datetime.datetime(2025, 11, 27, 10, 0, 0)
 
@@ -149,7 +144,7 @@ def test_invoke_extractor_dispatches_to_custom_extractor(mocker: MockerFixture, 
     mocker.patch.object(RegularExtractor, 'do_extract').assert_not_called()
 
 
-def test_regular_extractor_calls_db_and_saves_file(mock_args, db_mock, db_table_mock, save_file_mock, _path_mock,
+def test_regular_extractor_calls_db_and_saves_file(mock_args, db_mock, db_table_mock, save_file_mock, path_mock,
                                                    _datetime_now):
     """
     Tests the main success path of do_extract without filtering.
@@ -172,7 +167,7 @@ def test_regular_extractor_calls_db_and_saves_file(mock_args, db_mock, db_table_
     db_table_mock.where.assert_not_called()
 
     # 2. File system checks
-    _path_mock.return_value.parent.mkdir.assert_called_once_with(parents=True, exist_ok=True)
+    path_mock.return_value.parent.mkdir.assert_called_once_with(parents=True, exist_ok=True)
 
     expected_content = {
         "metadata": {
@@ -187,7 +182,7 @@ def test_regular_extractor_calls_db_and_saves_file(mock_args, db_mock, db_table_
     }
 
     save_file_mock.assert_called_once_with(
-        str(_path_mock.return_value),
+        str(path_mock.return_value),
         expected_content,
         as_json=True
     )

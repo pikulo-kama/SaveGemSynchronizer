@@ -1,34 +1,45 @@
 import re
+from unittest.mock import call
 
 import pytest
 from PyQt6.QtCore import Qt
+from pytest_mock import MockerFixture
 
 
 @pytest.fixture(autouse=True)
-def _setup(json_config_holder_mock, path_join_mock, resolve_resource_mock):
+def _setup(path_join_mock, resolve_resource_mock, db_mock, app_state_mock):
 
-    from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
+    from savegem.common.db.table import DatabaseRow
+    from savegem.app.gui.style import ColorMode
 
-    json_config_holder_mock.return_value = MockJsonConfigHolder(
-        {
-            "colors": {
-                "light": {
-                    "background": "#FFFFFF",
-                    "text": "#000000",
-                },
-                "dark": {
-                    "background": "#1E1E1E",
-                    "text": "#EBEBEB",
-                }
-            },
-            "fonts": {
-                "main_text": "Arial",
-                "title_text": "Roboto Bold",
-            }
-        }
-    )
+    color_table_columns = ["color_id", ColorMode.Light, ColorMode.Dark]
+    font_table_columns = ["font_id", "font_size", "font_family", "font_weight"]
+    resource_table_columns = ["resource_name", "resource_path", "color"]
+
+    colors = [
+        DatabaseRow(1, ("background", "#FFFFFF", "#1E1E1E"), color_table_columns),
+        DatabaseRow(2, ("text", "#000000", "#EBEBEB"), color_table_columns),
+    ]
+
+    fonts = [
+        DatabaseRow(1, ("main_text", 14, "Arial", None), font_table_columns),
+        DatabaseRow(2, ("title_text", 24, "Roboto Bold", 800), font_table_columns),
+    ]
+
+    resources = [
+        DatabaseRow(1, ("checkmark", "checkmark", "background"), resource_table_columns),
+        DatabaseRow(2, ("checkmark_alt", "checkmark", "text"), resource_table_columns),
+        DatabaseRow(2, ("checkmark_bad", "checkmark", None), resource_table_columns),
+    ]
+
+    db_mock.retrieve_table.side_effect = lambda table_name: {
+        "setup_color": colors,
+        "setup_font": fonts,
+        "setup_resource": resources
+    }.get(table_name)
 
     resolve_resource_mock.side_effect = lambda path: f"resolved/path/{path}"
+    app_state_mock.color_theme = None
 
 
 @pytest.fixture
@@ -46,11 +57,10 @@ def test_get_color_mode_light(_mock_color_scheme):
     Test that _get_color_mode returns 'light' for Qt.ColorScheme.Light.
     """
 
-    from savegem.app.gui.style import _COLOR_MODE_LIGHT
-    from savegem.app.gui.style import _get_color_mode
+    from savegem.app.gui.style import ColorMode, get_system_color_mode
 
     _mock_color_scheme(Qt.ColorScheme.Light)
-    assert _get_color_mode() == _COLOR_MODE_LIGHT
+    assert get_system_color_mode() == ColorMode.Light
 
 
 def test_get_color_mode_dark(_mock_color_scheme):
@@ -58,26 +68,30 @@ def test_get_color_mode_dark(_mock_color_scheme):
     Test that _get_color_mode returns 'dark' for Qt.ColorScheme.Dark.
     """
 
-    from savegem.app.gui.style import _COLOR_MODE_DARK
-    from savegem.app.gui.style import _get_color_mode
+    from savegem.app.gui.style import ColorMode, get_system_color_mode
 
     _mock_color_scheme(Qt.ColorScheme.Dark)
-    assert _get_color_mode() == _COLOR_MODE_DARK
+    assert get_system_color_mode() == ColorMode.Dark
 
 
-def test_get_color_mode_default_light(_mock_color_scheme):
+def test_get_color_mode_default_light(_mock_color_scheme, qt_app_mock):
     """
     Test that _get_color_mode returns 'light' for an unrecognized scheme (default).
     """
 
-    from savegem.app.gui.style import _get_color_mode
+    from savegem.app.gui.style import ColorMode, get_system_color_mode
 
     # Use an arbitrary int not matching Light (1) or Dark (2)
     _mock_color_scheme(99)
-    assert _get_color_mode()
+    assert get_system_color_mode() == ColorMode.Light
+
+    _mock_color_scheme(ColorMode.Dark)
+    qt_app_mock.instance.return_value = None
+
+    assert get_system_color_mode() == ColorMode.Light
 
 
-def test_color_light_mode(_mock_color_scheme):
+def test_color_light_mode(_mock_color_scheme, app_state_mock):
     """
     Test _color retrieves the correct color in light mode.
     """
@@ -90,7 +104,7 @@ def test_color_light_mode(_mock_color_scheme):
     assert color("text") == "#000000"
 
 
-def test_color_dark_mode(_mock_color_scheme):
+def test_color_dark_mode(_mock_color_scheme, app_state_mock):
     """
     Test _color retrieves the correct color in dark mode.
     """
@@ -103,6 +117,19 @@ def test_color_dark_mode(_mock_color_scheme):
     assert color("text") == "#EBEBEB"
 
 
+def test_color_from_settings(_mock_color_scheme, app_state_mock):
+
+    from savegem.app.gui.style import color, ColorMode
+
+    app_state_mock.color_theme = ColorMode.Light
+    _mock_color_scheme(Qt.ColorScheme.Dark)
+
+    # Even if system color mode is Dark, configuration
+    # in user settings (app state) should have higher precedence.
+    assert color("background") == "#FFFFFF"
+    assert color("text") == "#000000"
+
+
 def test_font():
     """
     Test _font retrieves the correct font property.
@@ -110,31 +137,17 @@ def test_font():
 
     from savegem.app.gui.style import font
 
-    assert font("main_text") == "Arial"
-    assert font("title_text") == "Roboto Bold"
+    assert font("main_text") == "14px 'Arial'; font-weight: 400"
+    assert font("title_text") == "24px 'Roboto Bold'; font-weight: 800"
 
 
-def test_image(_mock_color_scheme, resolve_resource_mock):
-    """
-    Test _image resolves the resource path correctly, uses the color mode,
-    and replaces OS separators with forward slashes for QSS format.
-    """
+def test_rgba_color(module_patch):
 
-    from savegem.app.gui.style import image
+    from savegem.app.gui.style import rgba_color
 
-    # Set to dark mode
-    _mock_color_scheme(Qt.ColorScheme.Dark)
+    module_patch("color").return_value = "#1E1E1E"
 
-    # Expected path: dark/icon.png
-    expected_resolved_path = "resolved/path/dark/icon.png"
-    expected_token = f"url('{expected_resolved_path}')"
-
-    result = image("icon.png")
-
-    # Check the call to resolve_resource used the correct OS path format (dark\icon.png)
-    # The lambda in the fixture handles the os.path.join mocking here
-    assert "dark/icon.png" in resolve_resource_mock.call_args[0][0]
-    assert result == expected_token
+    assert rgba_color("test", "0.5123") == "rgba(30, 30, 30, 0.5123)"
 
 
 def test_resolve_style_properties(_mock_color_scheme):
@@ -147,7 +160,7 @@ def test_resolve_style_properties(_mock_color_scheme):
     _mock_color_scheme(Qt.ColorScheme.Dark)
 
     input_style = """
-        background-color: color("background");
+        background-color: color('background');
         font-family: font('main_text');
         border-image: image('button.png');
         padding: 5px;
@@ -155,8 +168,8 @@ def test_resolve_style_properties(_mock_color_scheme):
 
     expected_style = """
         background-color: #1E1E1E;
-        font-family: Arial;
-        border-image: url('resolved/path/dark/button.png');
+        font-family: 14px 'Arial'; font-weight: 400;
+        border-image: url('resolved/path/button.png');
         padding: 5px;
     """
 
@@ -193,13 +206,15 @@ def test_load_stylesheet(listdir_mock, read_file_mock, _mock_color_scheme):
         elif "specific.qss" in path:
             return "QLabel { background: image('label.png'); }"
 
+        return ""
+
     read_file_mock.side_effect = mock_read_file_side_effect
 
     # Expected resolved string in Light Mode
     expected_resolved_string = (
         "QWidget { color: #000000; }"  # Light mode color
-        "QPushButton { font: Roboto Bold; }"  # Font
-        "QLabel { background: url('resolved/path/light/label.png'); }"  # Image token
+        "QPushButton { font: 24px 'Roboto Bold'; font-weight: 800; }"  # Font
+        "QLabel { background: url('resolved/path/label.png'); }"  # Image token
     )
 
     result = load_stylesheet()
@@ -213,3 +228,62 @@ def test_load_stylesheet(listdir_mock, read_file_mock, _mock_color_scheme):
     clean_expected = re.sub(r'\s+', '', expected_resolved_string)
 
     assert clean_result == clean_expected
+
+
+def test_load_stylesheet_with_sub_dir(mocker: MockerFixture, module_patch, listdir_mock, read_file_mock,
+                                      _mock_color_scheme, path_mock):
+
+    from savegem.app.gui.style import load_stylesheet
+
+    resolve_props_mock = module_patch("resolve_style_properties")
+    resolve_props_mock.side_effect = lambda style: style
+
+    dir_path_mock = mocker.Mock()
+    file_path_mock = mocker.Mock()
+
+    dir_path_mock.is_dir.return_value = True
+    file_path_mock.is_dir.return_value = False
+
+    listdir_mock.side_effect = [["file1", "file2", "subdir"], ["file3"]]
+    read_file_mock.side_effect = lambda path: f"{path} "
+    path_mock.side_effect = [file_path_mock, file_path_mock, dir_path_mock, file_path_mock]
+
+    load_stylesheet("")
+
+    assert resolve_props_mock.call_count == 2
+    resolve_props_mock.assert_has_calls([
+        call("/subdir/file3 "),  # first subdirectory
+        call("/file1 /file2 /subdir/file3 "),  # then both subdirectory with files from main dir
+    ])
+
+
+def test_dynamic_resource_creation(save_file_mock, read_file_mock, resolve_resource_mock, resolve_temp_resource_mock,
+                                   logger_mock, _mock_color_scheme):
+    """
+    Tests that dynamic resources are fetched from DB,
+    colors are resolved, content is replaced, and files are saved.
+    """
+
+    from savegem.app.gui.style import create_dynamic_resources, ColorMode
+
+    read_file_mock.return_value = '<svg fill="currentColor" />'
+    _mock_color_scheme(ColorMode.Dark)
+
+    # Setup Path Resolution (Just pass through strings for verification)
+    resolve_resource_mock.side_effect = lambda path, include_temporary: f"/resolved/{path}"
+    resolve_temp_resource_mock.side_effect = lambda name: f"/temp/{name}.svg"
+
+    create_dynamic_resources()
+
+    resolve_resource_mock.assert_has_calls([
+        call("checkmark", include_temporary=False),
+        call("checkmark", include_temporary=False)
+    ])
+
+    save_file_mock.assert_has_calls([
+        call("/temp/checkmark.svg", "<svg fill=\"#FFFFFF\" />"),
+        call("/temp/checkmark_alt.svg", "<svg fill=\"#000000\" />"),
+        call("/temp/checkmark_bad.svg", "<svg fill=\"\" />")
+    ], any_order=True)
+
+    assert save_file_mock.call_count == 3
