@@ -50,6 +50,7 @@ def games_config_mock(mocker: MockerFixture, app_context_mock):
     second_game = mocker.MagicMock()
 
     first_game.name = GameTestData.FirstGame
+    first_game.logo = GameTestData.FirstGameLogo
     first_game.settings.auto_mode = True
     second_game.name = GameTestData.SecondGame
     second_game.settings.auto_mode = False
@@ -75,6 +76,7 @@ def user_config_mock(mocker: MockerFixture, app_context_mock):
     user_mock.current.id = PlayerTestData.FirstPlayerId
     user_mock.current.name = PlayerTestData.FirstPlayerName
     user_mock.current.email = PlayerTestData.FirstPlayerEmail
+    user_mock.current.photo = PlayerTestData.ProfilePictureUrl
 
     user_mock.app = app_context_mock
     app_context_mock.users = user_mock

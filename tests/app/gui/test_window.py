@@ -135,7 +135,7 @@ class TestGUI:
         _gui.build("test_section")
 
         tr_mock.assert_called_with("window_Title", "SaveGem App")
-        assert _gui.windowTitle() == "Translated(window_Title)"
+        assert _gui.windowTitle() == "Translated(window_Title, SaveGem App)"
 
         _gui.reload_styles.assert_called_once()  # noqa
         _widget_manager_mock.remove_widgets.assert_called_once()

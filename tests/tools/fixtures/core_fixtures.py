@@ -67,8 +67,12 @@ def prop_mock(safe_module_patch):
 @pytest.fixture
 def tr_mock(mocker: MockerFixture, module_patch):
 
+    def get_tr(key, *args):
+        args = [key] + [str(arg) for arg in args]
+        return f"Translated({", ".join(args)})"
+
     mock = mocker.MagicMock()
-    mock.side_effect = lambda key, *args: f"Translated({key})"
+    mock.side_effect = get_tr
 
     module_patch("tr", new=mock)
 

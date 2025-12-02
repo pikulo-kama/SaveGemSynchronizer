@@ -35,6 +35,7 @@ class GameTestData:
 
     FirstGame = "Game 1"
     SecondGame = "Game 2"
+    FirstGameLogo = "/game/one/logo.svg"
 
 
 class LocaleTestData:

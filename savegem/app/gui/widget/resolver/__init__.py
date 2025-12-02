@@ -80,7 +80,7 @@ def get_resolver(resolver_name: str):
             _logger.debug("Loading content resolver with name %s", member_name)
             __resolvers[member_name.lower()] = member()
 
-    return __resolvers.get(resolver_name)
+    return __resolvers.get(resolver_name.lower())
 
 
 class ContentResolver:
@@ -89,7 +89,7 @@ class ContentResolver:
     Used to resolve specific tokens.
     """
 
-    def resolve(self, value: str, *args, **kw):
+    def resolve(self, value: str, *args, **kw):  # pragma: no cover
         """
         Used to resolve token
         considering its value and properties.
