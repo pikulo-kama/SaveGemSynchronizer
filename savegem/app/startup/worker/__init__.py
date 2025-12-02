@@ -35,6 +35,13 @@ class QStartupWorker(QWorker):
         QWorker.__init__(self)
         self.__job: Optional["StartupJob"] = None
 
+    @property
+    def name(self):
+        """
+        Used to get unique name of startup task.
+        """
+        return type(self).__name__
+
     def start(self):
         """
         Used to start worker.
@@ -43,7 +50,7 @@ class QStartupWorker(QWorker):
         then current worker will wait until they're finished.
         """
 
-        _logger.debug("Launching startup task %s", self.__class__.__name__)
+        _logger.debug("Launching startup task %s", self.name)
         _logger.debug("dependencies=%s", self.dependencies)
 
         while self.__has_unfinished_dependencies():

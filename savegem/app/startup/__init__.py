@@ -57,9 +57,8 @@ class StartupJob:
         """
 
         def update_execution_info():
-            task_name = type(startup_worker).__name__
-            self.__finished_tasks.append(task_name)
-            _logger.debug("Startup task %s has been completed.", task_name)
+            self.__finished_tasks.append(startup_worker.name)
+            _logger.debug("Startup task %s has been completed.", startup_worker.name)
 
             # If all tasks have been finished then initiate
             # main screen build.

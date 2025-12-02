@@ -65,8 +65,13 @@ def qthread_mock(module_patch):
 
 
 @pytest.fixture
-def exec_block_thread_mock(module_patch):
+def exec_in_block_thread_mock(module_patch):
     return module_patch("execute_in_blocking_thread")
+
+
+@pytest.fixture
+def exec_in_thread_mock(module_patch):
+    return module_patch("execute_in_thread")
 
 
 @pytest.fixture
