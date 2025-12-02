@@ -33,7 +33,7 @@ class NonSubClass:
 class TestReflectionUtil:
 
     @pytest.fixture
-    def _package_mock(self, mocker, module_patch):
+    def _package_mock(self, mocker, module_patch, importlib_mock):
         """
         Sets up the necessary mocks for sys, pkgutil, importlib, and inspect
         to simulate iterating over a package containing two modules.
@@ -62,14 +62,13 @@ class TestReflectionUtil:
 
         mock_inspect = module_patch("inspect")
         pkgutil_mock = module_patch("pkgutil")
-        mock_import_lib = module_patch("importlib")
 
         pkgutil_mock.iter_modules.return_value = [
             (mocker.MagicMock(), "module_a", False),
             (mocker.MagicMock(), "module_b", False),
         ]
 
-        mock_import_lib.import_module.side_effect = [mock_module_a, mock_module_b]
+        importlib_mock.import_module.side_effect = [mock_module_a, mock_module_b]
         mock_inspect.getmembers.side_effect = [mock_module_a_members, mock_module_b_members]
 
         yield mock_package_name

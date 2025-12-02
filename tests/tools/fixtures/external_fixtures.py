@@ -62,6 +62,11 @@ def sys_exit_mock(module_patch):
     return module_patch("sys.exit")
 
 
+@pytest.fixture
+def importlib_mock(module_patch):
+    return module_patch("importlib")
+
+
 #
 # Shutil Fixtures
 #
