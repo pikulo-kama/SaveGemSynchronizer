@@ -28,6 +28,10 @@ class TestInitializerCLI:
     def extract_callback_mock(self, module_patch):
         return module_patch("invoke_extractor")
 
+    @pytest.fixture
+    def _parser_mock(self, module_patch):
+        return module_patch('argparse.ArgumentParser')
+
     @staticmethod
     def run_main_with_args(mocker, args):
         """
@@ -38,7 +42,6 @@ class TestInitializerCLI:
 
         mocker.patch('sys.argv', ['cli_manager.py'] + args)
         main()
-
 
     def test_migrate_command_dispatch(self, mocker, migrate_callback_mock):
         """
@@ -124,31 +127,33 @@ class TestInitializerCLI:
         assert type_arg_call.kwargs['choices'] == expected_choices
 
 
-    def test_main_exits_on_no_args(self, module_patch, sys_exit_mock):
+    def test_main_exits_on_no_args(self, module_patch, sys_exit_mock, _parser_mock):
         """
         Verify main() exits and prints help if no arguments are provided.
         """
 
         from savegem.initializer.main import main
 
-        mock_parser = module_patch('argparse.ArgumentParser')
         module_patch('sys.argv', ['cli_manager.py'])
 
         # Running main should lead to sys.exit(1)
         main()
 
         # The parser's print_help method should have been called
-        mock_parser.return_value.print_help.assert_called_once()
+        _parser_mock.return_value.print_help.assert_called_once()
         sys_exit_mock.assert_called()
 
 
-    def test_main_handles_exception_and_exits(self, mocker, module_patch, sys_exit_mock):
+    def test_main_handles_exception_and_exits(self, mocker, module_patch, sys_exit_mock, _parser_mock):
         """
         Verifies that when a command raises an exception, the script prints
         an error to stderr and exits with status 1.
         """
 
+        args_mock = _parser_mock.return_value.parse_args.return_value
+        args_mock.func.side_effect = [Exception]
         mock_stderr = module_patch("sys.stderr")
+
         self.run_main_with_args(mocker, ['migrate'])
 
         # Check if anything was written to stderr

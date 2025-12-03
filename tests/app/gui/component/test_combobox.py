@@ -8,7 +8,7 @@ from pytest_mock import MockerFixture
 class TestQCustomComboBox:
 
     @pytest.fixture
-    def _custom_combobox(self, qtbot):
+    def _custom_combobox(self, mocker: MockerFixture, qtbot):
         """
         Provides a QCustomComboBox instance registered with qtbot.
         """
@@ -17,7 +17,10 @@ class TestQCustomComboBox:
 
         combobox = QCustomComboBox()
         combobox.addItems(["Item 1", "Item 2"])
+
+        mocker.patch.object(QComboBox, "showPopup")
         qtbot.addWidget(combobox)
+
         return combobox
 
 
