@@ -1,3 +1,5 @@
+import sys
+
 from constants import TimeFormat, File
 from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.component.combobox import QCustomComboBox
@@ -123,7 +125,7 @@ class LogoutController(WidgetController):
             delete_file(resolve_app_data(File.GDriveToken))
             gui().destroy()
 
-            exit(0)
+            sys.exit(0)
 
         logout_button.clicked.connect(  # noqa
             lambda: gui().confirmation(

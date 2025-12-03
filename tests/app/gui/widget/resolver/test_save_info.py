@@ -6,14 +6,11 @@ class TestSaveInfoResolver:
     NA_LABEL = "Translated(label_NA)"
 
     @pytest.fixture(autouse=True)
-    def _setup(self, tr_mock, module_patch):
+    def _setup(self, tr_mock, module_patch, get_verbose_date_mock, get_verbose_time_mock, string_to_date_mock):
+        get_verbose_date_mock.return_value = "Jan 15th, 2025"
+        get_verbose_time_mock.return_value = "10:30 AM"
+        string_to_date_mock.side_effect=lambda _: datetime(2025, 1, 15, 10, 30, 0)
 
-        module_patch("get_verbose_date", return_value="Jan 15th, 2025")
-        module_patch("get_verbose_time", return_value="10:30 AM")
-        module_patch(
-            "string_to_date",
-            side_effect=lambda _: datetime(2025, 1, 15, 10, 30, 0)
-        )
 
     @pytest.fixture
     def _resolver(self, tr_mock):

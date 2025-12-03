@@ -119,3 +119,18 @@ def db_table_mock(mocker: MockerFixture, db_mock):
 @pytest.fixture
 def get_members_mock(module_patch):
     return module_patch("get_members")
+
+
+@pytest.fixture
+def get_verbose_date_mock(module_patch):
+    return module_patch("get_verbose_date")
+
+
+@pytest.fixture
+def get_verbose_time_mock(module_patch):
+    return module_patch("get_verbose_time")
+
+
+@pytest.fixture
+def string_to_date_mock(module_patch):
+    return module_patch("string_to_date")

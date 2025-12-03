@@ -35,8 +35,6 @@ class TestGameBarController(WidgetControllerTest):
         from savegem.app.gui.controller.game_bar import GameBarController
 
         _mock_sections(_section_data)
-        resolve_content_mock.side_effect = lambda s: f"RESOLVED({s})"
-
         return GameBarController(_widget_manager)
 
     def test_setup_initializes_tabs(self, mocker: MockerFixture, _controller, _mock_tab_bar, _section_data):

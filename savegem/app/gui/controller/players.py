@@ -30,7 +30,7 @@ class PlayersController(WidgetController):
 
         if _logger.isEnabledFor(logging.DEBUG):
             _logger.debug("All Players: %s", ", ".join([p.name for p in all_players]))
-            _logger.debug("Game Players: %s", ", ".join([p.name for p in game_players]))
+            _logger.debug("Game Players: %s", ", ".join([email for email in game_players]))
             _logger.debug("Active Players: %s", ", ".join([p.name for p in active_players]))
 
         for user in all_players:
