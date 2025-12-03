@@ -1,5 +1,5 @@
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from PyQt6.QtCore import QThread
 from PyQt6.QtWidgets import QWidget
@@ -8,6 +8,7 @@ from savegem.app.gui.component.widget import QCustomWidget
 from savegem.app.gui.thread import execute_in_blocking_thread
 from savegem.app.worker import QWorker
 from savegem.common.db.manager import db
+from savegem.common.db.table import DatabaseTable
 from savegem.common.util.logger import get_logger
 from savegem.common.util.reflection import get_members
 
@@ -25,7 +26,10 @@ def load_controllers(manager: "WidgetManager"):
     controller_map = {}
 
     for member_name, member in get_members(__package__, WidgetController):
-        controller_map[member_name] = member(manager)
+        controller: WidgetController = member(manager)
+        controller.load_sections()
+
+        controller_map[member_name] = controller
 
     if _logger.isEnabledFor(logging.DEBUG):
         _logger.debug("Controllers have been loaded: %s", ", ".join(controller_map.keys()))
@@ -55,6 +59,14 @@ class WidgetController:
         # valid anymore, because of this we need to be able
         # to clear this data when refresh is happening.
         self.__state = {}
+        self.__sections: Optional[DatabaseTable] = None
+
+    def load_sections(self):
+        """
+        Used to load section data related to current
+        controller.
+        """
+
         self.__sections = db().table("ui_sections") \
             .where("controller = ?", self.__class__.__name__) \
             .order_by("order_id") \
@@ -63,27 +75,27 @@ class WidgetController:
         if not self.__sections.is_empty:
             _logger.info("Loaded %d section(s) for controller '%s'", len(self.__sections.rows), self.__class__.__name__)
 
-    def setup(self, widget: QWidget):
+    def setup(self, widget: QWidget):  # pragma: no cover
         """
         Runs only when widget is being built.
         Should be used to perform preparation actions.
         """
         pass
 
-    def refresh(self, widget: QWidget):
+    def refresh(self, widget: QWidget):  # pragma: no cover
         """
         Runs each time refresh is being initiated.
         Should be used to update dynamic data.
         """
         pass
 
-    def enable(self, widget: QWidget):
+    def enable(self, widget: QWidget):  # pragma: no cover
         """
         Runs each time widget is being enabled.
         """
         pass
 
-    def disable(self, widget: QWidget):
+    def disable(self, widget: QWidget):  # pragma: no cover
         """
         Runs each time widget is being disabled.
         """

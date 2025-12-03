@@ -23,19 +23,7 @@ def safe_module_patch(module_patch):
 
 
 @pytest.fixture
-def module_patch(mocker: MockerFixture, request: FixtureRequest):
-    """
-    Used to resolve module level mocks.
-
-    It would be transformed by replacing first part of path
-    with root package (savegem) as well as removing test_
-    prefix from file name.
-
-    Example of transformation:
-    - tests.common.core.test_app_state
-    - savegem.common.core.app_state
-    """
-
+def module_path(request: FixtureRequest):
     separator = "."
 
     path_list = str(request.module.__name__).split(separator)
@@ -50,10 +38,25 @@ def module_patch(mocker: MockerFixture, request: FixtureRequest):
     if source_file_name != "init":
         path_list.append(source_file_name)
 
-    module_path = separator.join(path_list)
+    return separator.join(path_list)
+
+
+@pytest.fixture
+def module_patch(mocker: MockerFixture, module_path):
+    """
+    Used to resolve module level mocks.
+
+    It would be transformed by replacing first part of path
+    with root package (savegem) as well as removing test_
+    prefix from file name.
+
+    Example of transformation:
+    - tests.common.core.test_app_state
+    - savegem.common.core.app_state
+    """
 
     def _patch(path, *args, **kw):
-        mock_path = f"{module_path}{separator}{path}"
+        mock_path = f"{module_path}.{path}"
         return mocker.patch(mock_path, *args, **kw)
 
     return _patch
@@ -104,6 +107,7 @@ def db_table_mock(mocker: MockerFixture, db_mock):
     db_table_mock = mocker.MagicMock()
 
     db_table_mock.where.return_value = db_table_mock
+    db_table_mock.order_by.return_value = db_table_mock
     db_table_mock.retrieve.return_value = db_table_mock
 
     db_mock.table.return_value = db_table_mock

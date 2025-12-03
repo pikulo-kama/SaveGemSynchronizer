@@ -9,7 +9,7 @@ from pytest_mock import MockerFixture
 class TestGUI:
 
     @pytest.fixture(autouse=True)
-    def _setup(self, mocker: MockerFixture, module_patch, _widget_manager_mock, prop_mock, tr_mock,
+    def _setup(self, mocker: MockerFixture, module_patch, widget_manager_mock, prop_mock, tr_mock,
                resolve_resource_mock, app_state_mock, app_context_mock, games_config_mock, qt_app_mock,
                _after_init_callback, _before_destroy_callback):
 
@@ -37,11 +37,6 @@ class TestGUI:
         qt_app_mock.primaryScreen.return_value \
             .size.return_value \
             .height.return_value = 1080
-
-
-    @pytest.fixture
-    def _widget_manager_mock(self, module_patch):
-        return module_patch("WidgetManager").return_value
 
 
     @pytest.fixture
@@ -124,7 +119,7 @@ class TestGUI:
         assert _gui.minimumHeight() == 300
 
 
-    def test_gui_build_and_show(self, mocker: MockerFixture, _gui, tr_mock, _widget_manager_mock):
+    def test_gui_build_and_show(self, mocker: MockerFixture, _gui, tr_mock, widget_manager_mock):
         """
         Test the build method correctly configures the UI and calls builders.
         """
@@ -138,29 +133,29 @@ class TestGUI:
         assert _gui.windowTitle() == "Translated(window_Title, SaveGem App)"
 
         _gui.reload_styles.assert_called_once()  # noqa
-        _widget_manager_mock.remove_widgets.assert_called_once()
-        _widget_manager_mock.build.assert_called_once_with("test_section")
+        widget_manager_mock.remove_widgets.assert_called_once()
+        widget_manager_mock.build.assert_called_once_with("test_section")
 
 
-    def test_gui_blocking(self, _gui, _widget_manager_mock):
+    def test_gui_blocking(self, _gui, widget_manager_mock):
 
         _gui.is_blocked = True
 
-        _widget_manager_mock.enable.assert_not_called()
-        _widget_manager_mock.disable.assert_called_once()
+        widget_manager_mock.enable.assert_not_called()
+        widget_manager_mock.disable.assert_called_once()
         assert _gui.is_blocked == True
 
-        _widget_manager_mock.enable.reset_mock()
-        _widget_manager_mock.disable.reset_mock()
+        widget_manager_mock.enable.reset_mock()
+        widget_manager_mock.disable.reset_mock()
 
         _gui.is_blocked = False
 
-        _widget_manager_mock.enable.assert_called_once()
-        _widget_manager_mock.disable.assert_not_called()
+        widget_manager_mock.enable.assert_called_once()
+        widget_manager_mock.disable.assert_not_called()
         assert _gui.is_blocked == False
 
 
-    def test_refresh(self, mocker: MockerFixture, _gui, logger_mock, tr_mock, _widget_manager_mock, prop_mock):
+    def test_refresh(self, mocker: MockerFixture, _gui, logger_mock, tr_mock, widget_manager_mock, prop_mock):
 
         from savegem.app.gui.constants import UIRefreshEvent
 
@@ -170,22 +165,22 @@ class TestGUI:
         _gui.refresh()
 
         logger_mock.info.assert_called_once()
-        _widget_manager_mock.refresh.assert_called_once_with(UIRefreshEvent.All)
+        widget_manager_mock.refresh.assert_called_once_with(UIRefreshEvent.All)
         prop_mock.assert_called_with("name")
         tr_mock.assert_called_once_with("window_Title", "SaveGem App")
 
 
-    def test_notification(self, _gui, holder_mock, _widget_manager_mock):
+    def test_notification(self, _gui, holder_mock, widget_manager_mock):
         from savegem.app.gui.constants import UISection
 
         message = "test"
         _gui.notification(message)
 
         holder_mock.add.assert_called_once_with("dialogMessage", message)
-        _widget_manager_mock.build.assert_called_once_with(UISection.NotificationSection)
+        widget_manager_mock.build.assert_called_once_with(UISection.NotificationSection)
 
 
-    def test_confirmation(self, mocker: MockerFixture, _gui, holder_mock, _widget_manager_mock):
+    def test_confirmation(self, mocker: MockerFixture, _gui, holder_mock, widget_manager_mock):
         from savegem.app.gui.constants import UISection
 
         message = "test"
@@ -198,7 +193,7 @@ class TestGUI:
             call("confirmationCallback", callback)
         ])
 
-        _widget_manager_mock.build.assert_called_once_with(UISection.ConfirmationSection)
+        widget_manager_mock.build.assert_called_once_with(UISection.ConfirmationSection)
 
 
     def test_gui_close_event(self, mocker: MockerFixture, _gui, app_state_mock, _qt_settings_mock):
