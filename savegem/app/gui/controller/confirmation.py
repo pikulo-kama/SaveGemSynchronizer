@@ -18,15 +18,22 @@ class ConfirmationDialogController(DialogController):
             confirm_callback = holder().get("confirmationCallback")
 
             dialog.hide()
+            self.manager.gui.is_blocked = False
             confirm_callback()
+
+        def on_cancel():
+            dialog.hide()
+            self.manager.gui.is_blocked = False
 
         confirm_button: QCustomPushButton = self.manager.get_widget(UISection.ConfirmationSection, "confirm_button")
         cancel_button: QCustomPushButton = self.manager.get_widget(UISection.ConfirmationSection, "cancel_button")
+
+        self.manager.gui.is_blocked = True
 
         confirm_button.enable()
         cancel_button.enable()
 
         confirm_button.clicked.connect(on_confirm)
-        cancel_button.clicked.connect(lambda: dialog.hide())
+        cancel_button.clicked.connect(on_cancel)
 
         super().setup(dialog)

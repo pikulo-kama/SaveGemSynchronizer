@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QWidget
 from savegem.app.gui.component import CustomComponentMixin
 
 
-class QBaseDivider(QWidget, CustomComponentMixin):
+class QBaseDivider(CustomComponentMixin, QWidget):
     """
     Base class for content divider.
     """

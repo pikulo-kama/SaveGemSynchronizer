@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QWidget
 from savegem.app.gui.component import CustomComponentMixin
 
 
-class QCustomWidget(QWidget, CustomComponentMixin):
+class QCustomWidget(CustomComponentMixin, QWidget):
     """
     Custom QWidget widget.
     """

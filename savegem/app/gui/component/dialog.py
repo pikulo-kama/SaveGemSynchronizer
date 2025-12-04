@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QDialog
 from savegem.app.gui.component import CustomComponentMixin
 
 
-class QCustomDialog(QDialog, CustomComponentMixin):
+class QCustomDialog(CustomComponentMixin, QDialog):
     """
     Custom dialog component.
     Has sliding animation and allows

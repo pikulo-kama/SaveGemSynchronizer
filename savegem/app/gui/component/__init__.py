@@ -1,7 +1,7 @@
 from typing import Union, Optional
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtWidgets import QWidget, QApplication
 
 from savegem.app.gui.component.layout import QCustomLayout
 from savegem.app.gui.widget.metadata import WidgetMetadata
@@ -19,6 +19,7 @@ class CustomComponentMixin:
 
     def __init__(self):
         self.__metadata: Optional[WidgetMetadata] = None
+        self.__disabled = False
 
     def set_content(self, content):  # pragma: no cover
         """
@@ -59,6 +60,7 @@ class CustomComponentMixin:
         """
 
         _logger.debug("Enabling widget '%s'", self.metadata.name)
+        self.__disabled = False
 
         if self.metadata.widget_type.is_interactable:
             self.setEnabled(True)  # noqa
@@ -70,10 +72,21 @@ class CustomComponentMixin:
         """
 
         _logger.debug("Disabling widget '%s'", self.metadata.name)
+        self.__disabled = True
 
         if self.metadata.widget_type.is_interactable:
             self.setEnabled(False)  # noqa
-            self.setCursor(Qt.CursorShape.WaitCursor)  # noqa
+            self.setCursor(QApplication.activeWindow().cursor())  # noqa
+
+    def event(self, event: QEvent):
+
+        # Block all pointer (user initiated) events
+        # when widget is disabled.
+        if self.__disabled and event.isPointerEvent():
+            return True
+
+        return super().event(event)  # noqa
+
 
     def refresh(self, refresh_children: bool = False):
         """

@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QWidget, QSizePolicy
 from savegem.app.gui.component import CustomComponentMixin
 
 
-class QSpacer(QWidget, CustomComponentMixin):
+class QSpacer(CustomComponentMixin, QWidget):
     """
     Simple spacer widget.
     Will take all available space while

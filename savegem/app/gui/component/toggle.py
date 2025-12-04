@@ -5,7 +5,7 @@ from savegem.app.gui.component import CustomComponentMixin
 from savegem.app.gui.constants import QBool
 
 
-class QCustomToggle(QPushButton, CustomComponentMixin):
+class QCustomToggle(CustomComponentMixin, QPushButton):
     """
     Custom toggle button component.
     """

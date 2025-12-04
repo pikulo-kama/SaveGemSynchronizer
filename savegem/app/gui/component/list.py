@@ -6,7 +6,7 @@ from savegem.app.gui.component.widget import QCustomWidget
 from savegem.app.gui.widget.metadata import WidgetMetadata
 
 
-class QScrollableWidget(QScrollArea, CustomComponentMixin):
+class QScrollableWidget(CustomComponentMixin, QScrollArea):
     """
     Scrollable widget.
     Could be either vertical or horizontal

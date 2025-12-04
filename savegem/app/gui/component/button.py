@@ -5,7 +5,7 @@ from savegem.app.gui.component import CustomComponentMixin
 from savegem.app.gui.constants import QAttr, QBool
 
 
-class QCustomPushButton(QPushButton, CustomComponentMixin):
+class QCustomPushButton(CustomComponentMixin, QPushButton):
     """
     Custom button component.
     Replaces default 'disable' behavior.

@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QProgressBar
 from savegem.app.gui.component import CustomComponentMixin
 
 
-class QWaitBar(QProgressBar, CustomComponentMixin):
+class QWaitBar(CustomComponentMixin, QProgressBar):
     """
     Progress bar used to represent that some action is running.
     Doesn't show actual progress.

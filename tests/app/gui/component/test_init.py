@@ -7,11 +7,15 @@ from pytest_mock import MockerFixture
 
 class TestCustomComponentMixin:
 
+    @pytest.fixture(autouse=True)
+    def _setup(self, qt_app_mock):
+        qt_app_mock.activeWindow.return_value.cursor.return_value = Qt.CursorShape.WaitCursor
+
     @pytest.fixture
     def _test_widget_class(self):
         from savegem.app.gui.component import CustomComponentMixin
 
-        class TestWidget(QWidget, CustomComponentMixin):
+        class TestWidget(CustomComponentMixin, QWidget):
             def __init__(self, parent=None):
 
                 QWidget.__init__(self, parent)
@@ -36,6 +40,13 @@ class TestCustomComponentMixin:
 
         return widget
 
+    @pytest.fixture
+    def _event(self, mocker: MockerFixture):
+        return mocker.MagicMock()
+
+    @pytest.fixture
+    def _base_event_mock(self, mocker: MockerFixture):
+        return mocker.patch.object(QWidget, "event")
 
     @pytest.fixture
     def _test_child_widget(self, qtbot, _test_widget_class, _test_widget):
@@ -233,3 +244,43 @@ class TestCustomComponentMixin:
         _test_widget.refresh(refresh_children=True)
 
         child_refresh_mock.assert_not_called()
+
+    def test_event_disabled_and_pointer_event_returns_true(self, _base_event_mock, _event, _test_widget):
+
+        _event.isPointerEvent.return_value = True
+
+        _test_widget.disable()
+        result = _test_widget.event(_event)
+
+        events = [event[0][0] for event in _base_event_mock.call_args_list]
+
+        # Should return True to block
+        assert result is True
+        assert _event not in events
+
+    def test_event_disabled_and_non_pointer_event_calls_super(self, _base_event_mock, _event, _test_widget):
+
+        _event.isPointerEvent.return_value = False
+
+        _test_widget.disable()
+        _test_widget.event(_event)
+
+        _base_event_mock.assert_called_with(_event)
+
+    def test_event_enabled_and_pointer_event_calls_super(self, _base_event_mock, _event, _test_widget):
+
+        _event.isPointerEvent.return_value = True
+
+        _test_widget.enable()
+        _test_widget.event(_event)
+
+        _base_event_mock.assert_called_with(_event)
+
+    def test_event_enabled_and_non_pointer_event_calls_super(self, _base_event_mock, _event, _test_widget):
+
+        _event.isPointerEvent.return_value = False
+
+        _test_widget.enable()
+        _test_widget.event(_event)
+
+        _base_event_mock.assert_called_with(_event)

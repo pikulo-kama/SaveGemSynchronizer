@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QLabel, QSizePolicy
 from savegem.app.gui.component import CustomComponentMixin
 
 
-class QCustomLabel(QLabel, CustomComponentMixin):
+class QCustomLabel(CustomComponentMixin, QLabel):
     """
     Custom QT QLabel widget.
     """

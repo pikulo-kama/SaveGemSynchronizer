@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QComboBox, QStyledItemDelegate, QStyle
 from savegem.app.gui.component import CustomComponentMixin
 
 
-class QCustomComboBox(QComboBox, CustomComponentMixin):
+class QCustomComboBox(CustomComponentMixin, QComboBox):
     """
     Custom QT ComboBox component.
     Overwrites default QComboBox
@@ -14,7 +14,8 @@ class QCustomComboBox(QComboBox, CustomComponentMixin):
     """
 
     def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
+        QComboBox.__init__(self, *args, **kw)
+        CustomComponentMixin.__init__(self)
         self.__is_enabled = True
         self.__item_delegate = NoFocusDelegate(self.view())
 
