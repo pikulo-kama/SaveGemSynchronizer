@@ -14,3 +14,11 @@ QCustomTabBar#gameBar::tab:selected {
     color: color("primary-a0");
     border-bottom-color: color("primary-a0");
 }
+
+QCustomTabBar#gameBar::tab:hover {
+    background-color: rgba("surface-a10", 0.5);
+}
+
+QCustomTabBar#gameBar::tab:selected:hover {
+    background-color: rgba("primary-a10", 0.1);
+}

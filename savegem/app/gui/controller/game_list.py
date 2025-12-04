@@ -1,4 +1,5 @@
 from savegem.app.gui.component.button import QCustomPushButton
+from savegem.app.gui.component.divider import QHDivider
 from savegem.app.gui.component.list import QScrollableWidget
 from savegem.app.gui.component.spacer import QSpacer
 from savegem.app.gui.constants import UIRefreshEvent, QBool
@@ -46,8 +47,10 @@ class GameListController(WidgetController):
             if game.meta.sync_status != SyncStatus.UpToDate:
                 game_button.setProperty("warning", QBool(True))
 
+            game_list.layout().add_dynamic_widget(QHDivider())
             game_list.layout().add_dynamic_widget(game_button)
 
+        game_list.layout().add_dynamic_widget(QHDivider())
         game_list.layout().add_dynamic_widget(QSpacer())
 
     def __change_game(self, new_game):

@@ -4,10 +4,13 @@
     background-color: transparent;
     text-align: left;
     icon: none;
+
+    border: none;
+    border-radius: 0;
 }
 
 #gameListOption:hover {
-    background-color: rgba("surface-a10", 0.3);
+    background-color: rgba("surface-a10", 0.5);
 }
 
 #gameListOption[warning="true"] {
@@ -20,8 +23,8 @@
         x1:0.02, y1:0, x2:1, y2:0,
         stop:0    color("success-a0"),
         stop:0.01 color("success-a0"),
-        stop:0.01 transparent,
-        stop:1    transparent
+        stop:0.01 rgba("success-a0", 0.1),
+        stop:1    rgba("success-a0", 0.1)
     );
 }
 

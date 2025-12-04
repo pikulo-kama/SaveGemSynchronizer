@@ -18,7 +18,6 @@
           "widget_type_id": "QWidget",
           "layout_type_id": "QVBoxLayout",
           "width": 250,
-          "margin_left": 10,
           "margin_bottom": 20,
           "children": [
             {
@@ -53,7 +52,7 @@
               "widget_type_id": "QScrollableWidget",
               "layout_type_id": "QVBoxLayout",
               "style_object_name": "gameList",
-              "margin_right": 10,
+              "spacing": 0,
               "refresh_events": [
                 "cloud_files_change",
                 "game_config_change",
