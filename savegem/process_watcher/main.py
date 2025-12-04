@@ -64,22 +64,23 @@ class ProcessWatcher(Daemon):
             if not process.has_started and not process.has_closed:
                 continue
 
+            process.game.settings.reload()
+
             # Only do automatic actions if user enabled auto mode for the game.
             if not process.game.settings.auto_mode:
-                self._logger.debug("Auto mode is turned OFF for %s", process.game.name)
+                self._logger.info("Auto mode is turned OFF for %s", process.game.name)
                 continue
 
             # Do not perform anything if auto mode is forcefully
             # disabled for the game in configuration.
             if not process.game.auto_mode_allowed:
-                self._logger.info("Auto mode is disabled for %s", process.game.name)
+                self._logger.warning("Auto mode is not allowed for %s", process.game.name)
                 continue
 
             process.game.meta.drive.refresh()
             process.game.meta.local.calculate_checksum()
-            sync_status = process.game.meta.sync_status
 
-            if sync_status == SyncStatus.UpToDate:
+            if process.game.meta.sync_status == SyncStatus.UpToDate:
                 self._logger.info(
                     "Skipping upload/download since checksum hasn't changed (%s:%s)",
                     process.game.name,

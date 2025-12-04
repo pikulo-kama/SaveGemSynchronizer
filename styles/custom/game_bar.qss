@@ -17,8 +17,10 @@ QCustomTabBar#gameBar::tab:selected {
 
 QCustomTabBar#gameBar::tab:hover {
     background-color: rgba("surface-a10", 0.5);
+    border-bottom-color: rgba("surface-a10", 0.5);
 }
 
 QCustomTabBar#gameBar::tab:selected:hover {
     background-color: rgba("primary-a10", 0.1);
+    border-bottom-color: color("primary-a0");
 }

@@ -231,6 +231,16 @@ class TestGameSettings(GameModuleTestHelper):
         db_table_mock.set_first.assert_called_once_with("auto_mode_enabled", 0)
         db_table_mock.save.assert_called_once()
 
+    def test_reload(self, db_table_mock, games_config_mock, _game):
+        from savegem.common.core.game_config import GameSettings
+
+        settings = GameSettings(_game, games_config_mock)
+        db_table_mock.retrieve.reset_mock()
+
+        settings.reload()
+
+        db_table_mock.retrieve.assert_called_once()
+
 
 class TestGame(GameModuleTestHelper):
 

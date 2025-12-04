@@ -8,7 +8,8 @@ from tests.app.gui.controller import WidgetControllerTest
 class TestGameListController(WidgetControllerTest):
 
     @pytest.fixture(autouse=True)
-    def _setup(self, games_config_mock, app_state_mock, _game_list_data, _push_button_mock):
+    def _setup(self, games_config_mock, app_state_mock, _game_list_data, _push_button_mock, _spacer_mock,
+               _h_divider_mock):
 
         games_config_mock.__iter__.return_value = _game_list_data
         games_config_mock.current = _game_list_data[0]
@@ -46,8 +47,6 @@ class TestGameListController(WidgetControllerTest):
         game.name = name
         game.meta.sync_status = sync_status
         game.is_current = is_current
-
-        game.button = mocker.MagicMock()
 
         return game
 
@@ -109,7 +108,7 @@ class TestGameListController(WidgetControllerTest):
         # 3. Assert QSpacer is added last
         _spacer_mock.assert_called_once()
         add_widget_mock.assert_any_call(_spacer_mock.return_value)
-        assert add_widget_mock.call_count == 5  # 4 buttons + 1 spacer
+        assert add_widget_mock.call_count == 10  # 4 buttons + 1 spacer + 5 dividers
 
     def test_change_game_early_exit(self, _controller, _do_work_mock):
         """

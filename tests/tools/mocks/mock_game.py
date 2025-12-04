@@ -5,10 +5,14 @@ class MockGameSettings(GameSettings):
 
     def __init__(self, auto_mode: bool):  # noqa
         self.__auto_mode = auto_mode
+        self.reload_count = 0
 
     @property
     def auto_mode(self):
         return self.__auto_mode
+
+    def reload(self):
+        self.reload_count += 1
 
 
 class MockGame(Game):

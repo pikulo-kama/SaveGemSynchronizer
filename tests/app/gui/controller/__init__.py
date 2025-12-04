@@ -86,6 +86,10 @@ class WidgetControllerTest:
         return module_patch("QCustomVBoxLayout")
 
     @pytest.fixture
+    def _h_divider_mock(self, module_patch):
+        return module_patch("QHDivider")
+
+    @pytest.fixture
     def _combobox_mock(self, module_patch):
         return module_patch("QCustomComboBox")
 

@@ -13,17 +13,18 @@ class AutoModeController(WidgetController):
     """
 
     def setup(self, auto_mode_toggle: QCustomToggle):
-        game = app().games.current
 
         def toggle_auto_mode():
+            game = app().games.current
+
             _logger.info("Setting 'Auto Mode' for %s to %s", game.name, not game.settings.auto_mode)
             game.settings.auto_mode = not game.settings.auto_mode
 
-        if game.auto_mode_allowed:
-            auto_mode_toggle.clicked.connect(toggle_auto_mode)  # noqa
+        if not app().games.current.auto_mode_allowed:
+            _logger.warning("'Auto Mode' is not allowed for %s. Click bind won't be applied.", app().games.current.name)
+            return
 
-        else:
-            _logger.warning("'Auto Mode' is not allowed for %s. Click bind won't be applied.", game.name)
+        auto_mode_toggle.clicked.connect(toggle_auto_mode)  # noqa
 
     def refresh(self, auto_mode_toggle: QCustomToggle):
         game = app().games.current

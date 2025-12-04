@@ -240,7 +240,8 @@ class TestProcessWatcher:
 
 
     def test_auto_skip_if_running(self, module_patch, app_context_mock, downloader_mock, push_notification_mock,
-                                  _get_run_processes_mock, _create_game_process, app_config_mock, tr_mock, ui_socket_mock):
+                                  _get_run_processes_mock, _create_game_process, app_config_mock, tr_mock,
+                                  ui_socket_mock):
         """
         Test that automatic actions skip processes that are running but have not just started or closed.
         This covers the 'if not process.has_started and not process.has_closed: continue' condition.
@@ -270,6 +271,13 @@ class TestProcessWatcher:
 
         watcher = ProcessWatcher()
         watcher._work()
+
+        # Verify game settings were reloaded before checking
+        # if auto mode is enabled.
+        assert proc_started.game.settings.reload_count == 1  # noqa
+        # Make sure settings are reloaded only for games that were
+        # started/closed.
+        assert proc_running_target.game.settings.reload_count == 0  # noqa
 
         # The started process MUST proceed with refresh/download
         # proc_started.game.meta.drive.refresh.assert_called_once()

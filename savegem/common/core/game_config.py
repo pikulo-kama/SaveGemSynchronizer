@@ -182,6 +182,13 @@ class GameSettings:
 
         return settings
 
+    def reload(self):
+        """
+        Used to refresh game settings from
+        application database.
+        """
+        self.__settings.retrieve()
+
 
 class Game:
     """

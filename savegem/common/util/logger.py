@@ -104,7 +104,7 @@ def _initialize_logging():
     _handler.suffix = "%Y-%m-%d.log"
     _handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
     _handler.setFormatter(logging.Formatter(
-        "%(asctime)s - (%(name)s:%(lineno)d) [%(levelname)s] : %(message)s"
+        f"%(asctime)s - (%(name)s:%(lineno)d) [{_log_file_name}] [%(levelname)s] : %(message)s"
     ))
 
     # Configure the root logger
