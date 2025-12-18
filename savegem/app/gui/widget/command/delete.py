@@ -11,13 +11,23 @@ _logger = get_logger(__name__)
 
 class WidgetDeleteCommand(FilterWidgetCommand):
     """
-    Used to mark widgets that satisfy widget filter as
-    deleted so that widget manager would remove them from
-    internal state, unlink from other widgets and then finally
-    delete widgets themselves.
+    A command designed to identify and remove widgets from the application
+    based on specific filtering criteria.
+
+    This command handles the cleanup process by resetting the state of
+    associated controllers before removing the widget from the management
+    context, ensuring no stale data remains in memory.
     """
 
     def execute(self, context: "ManagerContext"):
+        """
+        Iterates through active widgets, identifies those matching the filter,
+        resets their controllers, and removes them from the context.
+
+        Args:
+            context (ManagerContext): The context containing the widgets and
+                                      controllers to be processed.
+        """
 
         for widget in context.widgets:
 

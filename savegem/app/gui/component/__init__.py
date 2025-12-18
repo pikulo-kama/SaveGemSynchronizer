@@ -11,28 +11,39 @@ from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
 
+
 class CustomComponentMixin:
     """
-    Mixin for QT components.
-    Used to extend existing QT objects.
+    A mixin class designed to extend standard PyQt6 QWidget objects with
+    specific functionality.
+
+    This mixin provides integrated metadata handling, content resolution,
+    recursive styling, and custom event filtering for disabled states.
     """
 
     def __init__(self):
+        """
+        Initializes the mixin with default state.
+        """
         self.__metadata: Optional[WidgetMetadata] = None
         self.__disabled = False
 
     def set_content(self, content):  # pragma: no cover
         """
-        Used to set content of widget.
-        Will set either text or pixmap
-        depending on component itself and type of content.
+        Sets the visual or textual content of the widget.
+
+        This method should be overridden by subclasses to handle specific
+        content types (e.g., text or pixmap for labels, icon for buttons, etc.).
+
+        Args:
+            content: The resolved content to be applied to the widget.
         """
         pass
 
     def apply_alignment(self):
         """
-        Used to apply alignment specified in
-        metadata to the widget.
+        Applies the alignment settings defined in the widget's metadata
+        to its internal layout.
         """
 
         layout = self.layout()  # noqa
@@ -43,20 +54,29 @@ class CustomComponentMixin:
     @property
     def metadata(self) -> WidgetMetadata:
         """
-        Used to get widget metadata.
+        Returns the metadata associated with this component.
+
+        Returns:
+            WidgetMetadata: The metadata object containing component configuration.
         """
         return self.__metadata
 
     @metadata.setter
     def metadata(self, metadata: WidgetMetadata):
         """
-        Used to set widget metadata.
+        Assigns metadata to the component.
+
+        Args:
+            metadata (WidgetMetadata): The configuration metadata to attach.
         """
         self.__metadata = metadata
 
     def enable(self):
         """
-        Used to enable widget.
+        Enables the widget and restores its interactivity.
+
+        If the widget type is marked as interactable, this restores the
+        standard pointer cursor and enables the underlying Qt widget.
         """
 
         _logger.debug("Enabling widget '%s'", self.metadata.name)
@@ -68,7 +88,10 @@ class CustomComponentMixin:
 
     def disable(self):
         """
-        Used to disable widget.
+        Disables the widget and prevents user interaction.
+
+        If the widget type is marked as interactable, this sets the widget
+        to a disabled state and resets the cursor to the default window cursor.
         """
 
         _logger.debug("Disabling widget '%s'", self.metadata.name)
@@ -79,6 +102,19 @@ class CustomComponentMixin:
             self.setCursor(QApplication.activeWindow().cursor())  # noqa
 
     def event(self, event: QEvent):
+        """
+        Filters Qt events to implement custom behavior for disabled components.
+
+        Blocks all pointer-based user interactions (clicks, hovers) when the
+        internal disabled flag is set, while allowing system events to pass.
+
+        Args:
+            event (QEvent): The Qt event being processed.
+
+        Returns:
+            bool: True if the event was handled/blocked, otherwise the
+                  result of the base class event handler.
+        """
 
         # Block all pointer (user initiated) events
         # when widget is disabled.
@@ -89,8 +125,15 @@ class CustomComponentMixin:
 
     def refresh(self, refresh_children: bool = False):
         """
-        Used to refresh widget's.
-        Will also refresh child widgets if requested.
+        Refreshes the widget by re-resolving its content and tooltips.
+
+        Uses the resolver system to update the widget's state based on current
+        metadata and environment. Optionally performs a recursive refresh
+        on all nested child components.
+
+        Args:
+            refresh_children (bool): If True, triggers refresh() on all
+                                     descendants that use this mixin.
         """
 
         if self.metadata is None:
@@ -119,8 +162,11 @@ class CustomComponentMixin:
 
     def update_styles(self):
         """
-        Used to reload components and reapply styles to them.
-        Recursively updates child components.
+        Forcefully re-applies Qt styles and polishes the component.
+
+        This method is used to trigger a stylesheet re-evaluation. It
+        recursively propagates the style update to all child components
+        that use this mixin.
         """
 
         self.style().polish(self)  # noqa
@@ -129,6 +175,10 @@ class CustomComponentMixin:
             child.update_styles()
 
     def __str__(self):
+        """
+        Returns a string representation of the component for logging/debugging.
+        """
+
         type_name = self.metadata.widget_type.name
         name = self.metadata.name
         order_id = self.metadata.order_id
@@ -137,8 +187,7 @@ class CustomComponentMixin:
         return f"{type_name}[name: {name}, parent: {parent_name}, order: {order_id}]"
 
 
-"""
-Type that includes properties of both basic QT
-widget and component mixin.
-"""
 QCustomComponent = Union[QWidget, CustomComponentMixin]
+"""
+A Type alias representing a valid PyQt widget enhanced with the CustomComponentMixin.
+"""

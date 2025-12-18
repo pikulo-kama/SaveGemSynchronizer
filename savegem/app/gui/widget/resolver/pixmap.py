@@ -11,11 +11,27 @@ _logger = get_logger(__name__)
 
 class PixmapResolver(ContentResolver):
     """
-    Used to resolve image tokens.
-    Allow to scale and round image.
+    A specialized ContentResolver for handling image assets and QPixmap
+    transformations.
+
+    This resolver identifies file paths and applies graphical processing such
+    as scaling and rounding based on token parameters like 'scale', 'radius',
+    or the 'circle' flag.
     """
 
     def resolve(self, file_path: str, *args, **kw):
+        """
+        Resolves the resource path and applies the requested graphical
+        transformations to the resulting QPixmap.
+
+        Args:
+            file_path (str): The logical path to the image resource.
+            *args: Positional arguments (e.g., 'circle' for circular masking).
+            **kw: Keyword arguments for 'scale' (int) and 'radius' (int).
+
+        Returns:
+            QPixmap: The processed image or an empty pixmap if the path is invalid.
+        """
 
         if file_path is None:
             _logger.error("File path is not valid. Resolving to empty pixmap.")

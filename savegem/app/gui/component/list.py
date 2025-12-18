@@ -8,12 +8,19 @@ from savegem.app.gui.widget.metadata import WidgetMetadata
 
 class QScrollableWidget(CustomComponentMixin, QScrollArea):
     """
-    Scrollable widget.
-    Could be either vertical or horizontal
-    depending on type of specified layout.
+    A scrollable container widget that wraps an internal QCustomWidget to provide
+    scrolling capabilities for overflow content.
+
+    This component acts as a proxy, delegating layout, metadata, and styling
+    operations to its internal content widget while the QScrollArea handles
+    the viewport and scrollbar logic.
     """
 
     def __init__(self):
+        """
+        Initializes the scroll area and its internal content container.
+        """
+
         QScrollArea.__init__(self)
         CustomComponentMixin.__init__(self)
 
@@ -23,18 +30,48 @@ class QScrollableWidget(CustomComponentMixin, QScrollArea):
         self.setWidgetResizable(True)
 
     def setLayout(self, layout: QCustomLayout):
+        """
+        Sets the layout for the internal content widget.
+
+        Args:
+            layout (QCustomLayout): The layout to apply to the scrollable content.
+        """
         self.__content.setLayout(layout)
 
     def layout(self) -> QCustomLayout:
+        """
+        Returns the layout of the internal content widget.
+
+        Returns:
+            QCustomLayout: The layout used by the internal container.
+        """
         return self.__content.layout()
 
     @property
     def metadata(self) -> WidgetMetadata:
+        """
+        Retrieves the metadata from the internal content widget.
+
+        Returns:
+            WidgetMetadata: The metadata associated with the content.
+        """
         return self.__content.metadata
 
     @metadata.setter
     def metadata(self, metadata: WidgetMetadata):
+        """
+        Assigns metadata to the internal content widget.
+
+        Args:
+            metadata (WidgetMetadata): The metadata to apply.
+        """
         self.__content.metadata = metadata
 
     def setStyleSheet(self, style_sheet: str):
+        """
+        Applies a CSS style sheet to the internal content widget.
+
+        Args:
+            style_sheet (str): The QSS string to apply.
+        """
         self.__content.setStyleSheet(style_sheet)

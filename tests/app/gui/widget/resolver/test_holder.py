@@ -26,6 +26,6 @@ class TestDataResolver:
         }.get(key)
 
         resolver = DataResolver()
-        assert resolver.resolve("function") == ""
-        assert resolver.resolve("integer") == ""
-        assert resolver.resolve("object") == ""
+        assert resolver.resolve("function") is None
+        assert resolver.resolve("integer") is None
+        assert resolver.resolve("object") is None

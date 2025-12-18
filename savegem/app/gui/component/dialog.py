@@ -6,12 +6,18 @@ from savegem.app.gui.component import CustomComponentMixin
 
 class QCustomDialog(CustomComponentMixin, QDialog):
     """
-    Custom dialog component.
-    Has sliding animation and allows
-    to dismiss dialog on timer.
+    Custom dialog component that supports sliding animations and timed dismissal.
+
+    This dialog is frameless and modal by default, designed to slide in from the
+    top of its parent window and automatically hide itself after a specified
+    duration if configured.
     """
 
     def __init__(self):
+        """
+        Initializes the dialog with default animation settings and window flags.
+        """
+
         QDialog.__init__(self)
         CustomComponentMixin.__init__(self)
 
@@ -38,32 +44,34 @@ class QCustomDialog(CustomComponentMixin, QDialog):
     @pyqtProperty(int)
     def top_offset(self):
         """
-        Top offset.
-        Padding between top of the application
-        window and top of dialog (px).
+        Returns the top offset padding between the application window and the dialog.
         """
         return self.__top_offset
 
     @top_offset.setter
-    def top_offset(self, offset):
+    def top_offset(self, offset: int):
         """
-        Used to set top offset.
+        Sets the vertical padding for the dialog's final position.
+
+        Args:
+            offset (int): Padding in pixels.
         """
         self.__top_offset = offset
 
     @pyqtProperty(int)
     def slide_duration(self):
         """
-        Slide duration.
-        Amount of time sliding animation will
-        take (ms).
+        Returns the duration of the sliding animation in milliseconds.
         """
         return self.__slide_duration
 
     @slide_duration.setter
     def slide_duration(self, duration):
         """
-        Used to set slide duration.
+        Updates the animation duration and the internal duration state.
+
+        Args:
+            duration (int): Animation time in milliseconds.
         """
 
         self.__animation.setDuration(duration)
@@ -72,28 +80,23 @@ class QCustomDialog(CustomComponentMixin, QDialog):
     @pyqtProperty(int)
     def show_duration(self):
         """
-        Show duration.
-        Represents amount of time popup will
-        be visible until it would disappear (ms).
-
-        If value is 0 or less dialog will not
-        be dismissed automatically.
+        Returns the amount of time the popup remains visible before auto-dismissing.
         """
         return self.__show_duration
 
     @show_duration.setter
     def show_duration(self, duration):
         """
-        Used to set show duration.
+        Sets the visibility duration. A value of 0 or less prevents auto-dismissal.
+
+        Args:
+            duration (int): Visibility time in milliseconds.
         """
         self.__show_duration = duration
 
     def exec(self):
         """
-        Used to display dialog on top
-        of other elements.
-
-        Will show dialog using defined animation.
+        Displays the dialog modally with the entry animation.
         """
 
         self.adjustSize()
@@ -103,7 +106,7 @@ class QCustomDialog(CustomComponentMixin, QDialog):
 
     def show(self):
         """
-        Used to animate dialog sliding in.
+        Calculates positioning and triggers the slide-in animation from the top.
         """
 
         if not self.parent():
@@ -138,7 +141,7 @@ class QCustomDialog(CustomComponentMixin, QDialog):
 
     def hide(self):
         """
-        Used to animate dialog sliding out.
+        Triggers the slide-out animation and closes the dialog upon completion.
         """
 
         dialog_height = self.height()

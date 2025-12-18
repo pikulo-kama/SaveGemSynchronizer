@@ -8,41 +8,50 @@ if TYPE_CHECKING:
 class CustomLayoutMixin:
     """
     Mixin for QT layouts.
-    Used to extend existing QT objects.
+    Used to extend existing QT objects by providing a unified interface
+    for adding widgets.
     """
 
     def add_widget(self, widget: "QCustomComponent", **kw):
         """
-        Used to add widget to the layout.
+        Generic method to add a widget to the layout.
+
+        Args:
+            widget (QCustomComponent): The widget instance to add.
+            **kw: Additional keyword arguments passed to the underlying addWidget call.
         """
         self.addWidget(widget, **kw)  # noqa
 
 
 class QCustomVBoxLayout(QVBoxLayout, CustomLayoutMixin):
     """
-    Custom vertical layout.
+    Custom vertical layout that arranges widgets in a top-to-bottom stack.
     """
     pass
 
 
 class QCustomHBoxLayout(QHBoxLayout, CustomLayoutMixin):
     """
-    Custom horizontal layout.
+    Custom horizontal layout that arranges widgets in a left-to-right row.
     """
     pass
 
 
 class QCustomGridLayout(QGridLayout, CustomLayoutMixin):
     """
-    Custom grid layout.
+    Custom grid layout that automatically manages widget placement based on
+    parent metadata constraints.
     """
 
     def add_widget(self, widget: "QCustomComponent", **kw):
         """
-        Adds widget to the layout also checks
-        grid columns in layout configuration
-        to determine where child widget should be
-        placed.
+        Adds a widget to the grid by calculating the appropriate row and
+        column index based on the current child count and the parent's
+        configured column limit.
+
+        Args:
+            widget (QCustomComponent): The widget to add to the grid.
+            **kw: Additional layout parameters.
         """
 
         parent_widget: "QCustomComponent" = self.parentWidget()  # noqa
@@ -67,3 +76,6 @@ class QCustomGridLayout(QGridLayout, CustomLayoutMixin):
 
 
 QCustomLayout = Union[QLayout, CustomLayoutMixin]
+"""
+Type alias representing any standard Qt Layout combined with the CustomLayoutMixin functionality.
+"""

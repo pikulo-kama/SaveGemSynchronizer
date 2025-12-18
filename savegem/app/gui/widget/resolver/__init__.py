@@ -10,10 +10,21 @@ __resolvers: dict[str, "ContentResolver"] = {}
 
 def resolve_content(content: str, extra_resolvers: dict[str, "ContentResolver"] = None):
     """
-    Used to recursively resolve special tokens in provided
-    string and return actual string (or other object).
+    Recursively resolves special tokens within a string and returns the final
+    object or formatted string.
 
-    Example of token: pixmap{user{logo}, scaled: 123, radius: 20}
+    Tokens follow the pattern 'name{value, key: value}'. This function identifies
+    the appropriate ContentResolver based on the token name and executes its
+    resolve logic.
+
+    Args:
+        content (str): The string containing potential tokens to resolve.
+        extra_resolvers (dict): Optional dictionary of contextual resolvers
+                                to supplement global ones.
+
+    Returns:
+        Any: The fully resolved content, which could be a string, QPixmap,
+             or other object types.
     """
 
     resolvers = get_resolvers()
@@ -74,7 +85,14 @@ def resolve_content(content: str, extra_resolvers: dict[str, "ContentResolver"] 
 
 def get_resolvers():
     """
-    Used to get resolver instance by its class name.
+    Returns a global registry of available ContentResolver instances.
+
+    If the registry is empty, it uses reflection to scan the package
+    for subclasses of ContentResolver and initializes them.
+
+    Returns:
+        dict[str, ContentResolver]: A dictionary mapping lowercase resolver
+                                     class names to their instances.
     """
 
     global __resolvers
@@ -89,13 +107,22 @@ def get_resolvers():
 
 class ContentResolver:
     """
-    Content resolver.
-    Used to resolve specific tokens.
+    Base class for token resolution logic.
+
+    Subclasses must implement the resolve method to transform a token's
+    primary value and parameters into actual application objects or text.
     """
 
     def resolve(self, value: str, *args, **kw):  # pragma: no cover
         """
-        Used to resolve token
-        considering its value and properties.
+        Processes a token's components to return a resolved value.
+
+        Args:
+            value (str): The primary value found inside the token braces.
+            *args: Positional properties extracted from the token.
+            **kw: Key-value properties extracted from the token.
+
+        Returns:
+            Any: The resolved content.
         """
         pass

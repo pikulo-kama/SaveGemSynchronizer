@@ -13,11 +13,23 @@ _logger = get_logger(__name__)
 
 class WidgetRefreshCommand(FilterWidgetCommand):
     """
-    Used to refresh widgets that satisfy widget filter
-    and invokes 'refresh' handler on related controllers.
+    A command that triggers a data and visual refresh for a filtered set of widgets
+    and notifies their associated controllers.
+
+    This command orchestrates the synchronization between the widget's internal
+    state (via metadata resolution) and the controller's dynamic data.
     """
 
     def execute(self, context: "ManagerContext"):
+        """
+        Processes widgets in the context, applying refreshes where applicable
+        and invoking the 'refresh' hook on controllers.
+
+        Args:
+            context (ManagerContext): The context containing widgets and the
+                                      widget manager.
+        """
+
         refreshed_widgets = []
 
         for widget in context.widgets:
@@ -37,21 +49,45 @@ class WidgetRefreshCommand(FilterWidgetCommand):
 
     def _refresh_children(self, widget: QCustomComponent):
         """
-        Used to check whether provided widgets needs
-        to be refreshed recursively with all its children.
+        Determines if the refresh operation should propagate to the widget's children.
+
+        Args:
+            widget (QCustomComponent): The widget to evaluate.
+
+        Returns:
+            bool: Always returns False in the base implementation.
         """
         return False
 
 
 class WidgetEventRefreshCommand(WidgetRefreshCommand):
     """
-    Used to refresh all widgets that have provided
-    refresh event configured.
+    A specialized refresh command triggered by specific application events.
+
+    This command filters widgets based on whether they have registered a
+    matching event string in their 'refresh_events' metadata.
     """
 
     def __init__(self, event: str):
+        """
+        Initializes the command with an event identifier and a filter lambda.
+
+        Args:
+            event (str): The unique string identifier of the refresh event.
+        """
+
         super().__init__(lambda meta: event in meta.refresh_events)
         self.__event = event
 
     def _refresh_children(self, widget: QCustomComponent):
+        """
+        Checks metadata to see if the specific event should trigger a
+        recursive refresh.
+
+        Args:
+            widget (QCustomComponent): The widget to evaluate.
+
+        Returns:
+            bool: True if children should be refreshed for this event.
+        """
         return widget.metadata.should_refresh_children(self.__event)

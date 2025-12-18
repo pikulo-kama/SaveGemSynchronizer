@@ -31,8 +31,7 @@ _alignment_map = {
 @dataclass
 class RefreshEventMetadata:
     """
-    Holder for additional
-    refresh event metadata.
+    Holder for additional refresh event metadata, such as propagation behavior.
     """
 
     refresh_children: bool
@@ -40,7 +39,12 @@ class RefreshEventMetadata:
 
 class WidgetMetadata:
     """
-    Represents widget metadata.
+    A comprehensive data container representing the configuration and state of a
+    UI widget as defined in the system.
+
+    This class handles the parsing of styles, alignments, layouts, and event
+    registrations, acting as the primary blueprint used by WidgetBuilders to
+    instantiate and configure QCustomComponents.
     """
 
     def __init__(self,
@@ -67,6 +71,9 @@ class WidgetMetadata:
                  properties: dict[str, str] = None,
                  refresh_events: list[str] = None,
                  refresh_events_meta: dict[str, RefreshEventMetadata] = None):
+        """
+        Initializes a metadata instance with layout, style, and lifecycle parameters.
+        """
 
         self.__id = widget_id
         self.__original_id = widget_id
@@ -107,8 +114,14 @@ class WidgetMetadata:
     @classmethod
     def from_database_row(cls, metadata_row: DatabaseRow):
         """
-        Static initializer.
-        Used to initialize metadata from ui_widgets table record.
+        Constructs a WidgetMetadata instance from 'ui_widgets' database record,
+        resolving linked events and nested styling.
+
+        Args:
+            metadata_row (DatabaseRow): A record from the ui_widgets table.
+
+        Returns:
+            WidgetMetadata: The hydrated metadata object.
         """
 
         widget_id = metadata_row.get("widget_id")
@@ -163,66 +176,71 @@ class WidgetMetadata:
     @property
     def id(self) -> str:
         """
-        Used to get ID of widget.
+        Retrieves the current unique ID of the widget.
         """
         return self.__id
 
     @id.setter
     def id(self, widget_id: str):
+        """
+        Sets a new unique ID for the widget.
+        """
         self.__id = widget_id
 
     @property
     def original_id(self):
+        """
+        Retrieves the original ID defined in the database, useful for
+        identifying template segments.
+        """
         return self.__original_id
 
     @property
     def name(self) -> str:
         """
-        Used to get unique ID of widget.
-        Concatenation of section ID and widget ID.
-
-        Example: test_widget in root = root.test_widget
+        Returns a qualified name combining the section ID and widget ID.
         """
         return f"{self.section_id}.{self.id}"
 
     @property
     def section_id(self) -> str:
         """
-        Used to get ID of section with which
-        widget is associated.
-
-        If section id is None then 'root' section would be returned.
+        Retrieves the section ID, defaulting to 'root' if none is specified.
         """
         return self.__section_id or UISection.RootSection
 
     @property
     def raw_section_id(self):
         """
-        Used to get ID of section with which
-        widget is associated.
+        Retrieves the original section ID without root-fallback.
         """
         return self.__section_id
 
     @property
     def is_root_section(self) -> bool:
         """
-        Used to check whether widget is part
-        of the root section.
+        Checks if the widget belongs to the root UI section.
         """
         return self.__section_id is None
 
     @property
     def parent(self) -> "WidgetMetadata":
+        """
+        Retrieves the parent metadata object if linked.
+        """
         return self.__parent
 
     @parent.setter
     def parent(self, parent: "WidgetMetadata"):
+        """
+        Links a parent metadata object to this instance.
+        """
         self.__parent = parent
 
     @property
     def parent_widget_id(self) -> str:
         """
-        Used to get ID of parent widget.
+        Retrieves the ID of the parent widget container.
         """
 
         if self.parent is not None:
@@ -232,12 +250,15 @@ class WidgetMetadata:
 
     @parent_widget_id.setter
     def parent_widget_id(self, parent_widget_id: str):
+        """
+        Sets the ID of the parent widget container.
+        """
         self.__parent_widget_id = parent_widget_id
 
     @property
     def parent_widget_name(self) -> str:
         """
-        Used to get unique ID of parent widget.
+        Returns the qualified name of the parent widget.
         """
 
         if self.parent is not None:
@@ -248,13 +269,16 @@ class WidgetMetadata:
     @property
     def controller(self) -> str:
         """
-        Used to get name of controller associated
-        with widget.
+        Retrieves the name of the associated controller class.
         """
         return self.__controller
 
     @property
     def resolvers(self) -> dict[str, ContentResolver]:
+        """
+        Returns a mapping of resolver names to instances associated with this widget.
+        """
+
         resolvers = {}
 
         for resolver in self.__resolvers:
@@ -264,149 +288,153 @@ class WidgetMetadata:
         return resolvers
 
     def add_resolver(self, resolver: ContentResolver):
+        """
+        Registers a new content resolver for dynamic token resolution.
+        """
         self.__resolvers.append(resolver)
 
     @property
     def order_id(self) -> int:
         """
-        Used to get order value
-        in which widget would be added to layout of parent widget.
+        Retrieves the sorting order for placement within a layout.
         """
         return self.__order_id
 
     @order_id.setter
     def order_id(self, order_id: int):
+        """
+        Sets the sorting order for layout placement.
+        """
         self.__order_id = order_id
 
     @property
     def widget_type(self) -> WidgetType:
         """
-        Used to get metadata of widget type.
+        Retrieves the type metadata (e.g., QPushButton, QLabel).
         """
         return self.__widget_type
 
     @property
     def layout_type(self) -> UIObjectType:
         """
-        Used to get metadata of layout type.
+        Retrieves the layout metadata (e.g., QVBoxLayout).
         """
         return self.__layout_type
 
     @property
     def grid_columns(self) -> int:
         """
-        Used to get number of columns
-        that widget layout should have.
-
-        Only applicable if layout is of
-        Grid type.
+        Retrieves the column count for grid layouts.
         """
         return self.__grid_columns
 
     @property
     def stylesheet(self) -> str:
         """
-        Used to get custom widget stylesheet.
+        Retrieves the generated QSS stylesheet string.
         """
         return self.__stylesheet
 
     @property
     def properties(self) -> dict[str, str]:
         """
-        Used to get widget's QSS properties.
+        Retrieves dynamic properties used for QSS targeting.
         """
         return self.__properties
 
     @property
     def spacing(self) -> int:
         """
-        Used to get widget layout spacing.
+        Retrieves the internal spacing of the widget's layout.
         """
         return self.__spacing
 
     @property
     def width(self) -> int:
         """
-        Used to get widget width.
+        Retrieves the fixed width of the widget.
         """
         return self.__width
 
     @property
     def height(self) -> int:
         """
-        Used to get widget height.
+        Retrieves the fixed height of the widget.
         """
         return self.__height
 
     @property
     def margin_left(self) -> int:
         """
-        Used to get widget's left margin.
+        Retrieves the left layout margin.
         """
         return self.__margin_left
 
     @property
     def margin_top(self) -> int:
         """
-        Used to get widget's top margin.
+        Retrieves the top layout margin.
         """
         return self.__margin_top
 
     @property
     def margin_right(self) -> int:
         """
-        Used to get widget's right margin.
+        Retrieves the right layout margin.
         """
         return self.__margin_right
 
     @property
     def margin_bottom(self) -> int:
         """
-        Used to get widget's bottom margin.
+        Retrieves the bottom layout margin.
         """
         return self.__margin_bottom
 
     @property
     def object_name(self) -> str:
         """
-        Used to get name of widget's QT
-        object name.
+        Retrieves the Qt internal object name for QSS identification.
         """
         return self.__object_name
 
     @property
     def alignment(self) -> Qt.AlignmentFlag:
         """
-        Used to get widget's alignment.
+        Retrieves the alignment flag for the widget's content.
         """
         return self.__alignment
 
     @property
     def content(self) -> str:
         """
-        Used to get widget content.
+        Retrieves the raw content/text value of the widget.
         """
         return self.__content
 
     @property
     def tooltip(self) -> str:
         """
-        Used to get widget's tooltip.
+        Retrieves the tooltip text.
         """
         return self.__tooltip
 
     @property
     def refresh_events(self) -> list[str]:
         """
-        Used to get list of widget refresh events.
+        Retrieves the list of events that trigger a refresh for this widget.
         """
         return self.__refresh_events
 
     def should_refresh_children(self, event: str):
         """
-        Used to check whether for current widget
-        provided event expect child widgets to be
-        refreshed as well.
+        Checks if a specific event requires recursive child refreshing.
+
+        Args:
+            event (str): The event identifier.
+
+        Returns:
+            bool: True if children should be refreshed.
         """
 
         event_meta = self.__refresh_event_meta.get(event)
@@ -418,12 +446,10 @@ class WidgetMetadata:
 
     def __parse_style_object_name(self, object_name: str):
         """
-        Used to parse composed QSS object name and extract
-        object name and properties.
+        Parses a shorthand object name string that includes dynamic properties.
 
-        Example: objectName[origin=first, kind=second] ->
-                 styleObjectName = objectName
-                 properties = {'origin': 'first', 'kind': 'second'}
+        Args:
+            object_name (str): Suffix following the pattern 'name[prop=val]'.
         """
 
         if object_name is None:
@@ -454,11 +480,9 @@ class WidgetMetadata:
     @staticmethod
     def __parse_alignment(alignment: str) -> Qt.AlignmentFlag:
         """
-        Used to parse string alignment and transform it into
-        QT alignment object.
-
-        Example: top-left -> Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
+        Converts a hyphen-separated alignment string into Qt AlignmentFlags.
         """
+
         alignment_prop = Qt.AlignmentFlag(0)
 
         if alignment is None:
@@ -472,11 +496,9 @@ class WidgetMetadata:
     @staticmethod
     def __parse_stylesheet(stylesheet: dict):
         """
-        Used to parse JSON stylesheet of widget
-        and transform it into regular string.
-
-        Example: {"color": "red", "padding": "0px"} -> "color: red; padding: 0px"
+        Converts a dictionary of CSS properties into a standard QSS string.
         """
+
         stylesheet_string = ""
 
         _logger.debug("Parsing stylesheet.")

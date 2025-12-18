@@ -7,10 +7,19 @@ from savegem.app.gui.constants import QBool
 
 class QCustomToggle(CustomComponentMixin, QPushButton):
     """
-    Custom toggle button component.
+    A custom animated toggle switch component that extends QPushButton.
+
+    This component provides a modern "switch" visual style with a sliding thumb
+    and customizable track/thumb colors. It supports state-based animations and
+    is fully compatible with Qt Style Sheets through dynamic properties.
     """
 
     def __init__(self, *args, **kw):
+        """
+        Initializes the toggle switch with default dimensions, colors, and
+        animation configurations.
+        """
+
         QPushButton.__init__(self, *args, **kw)
         CustomComponentMixin.__init__(self)
 
@@ -35,14 +44,17 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
     @pyqtProperty(int)
     def thumb_offset(self):
         """
-        Used to get thumb offset in toggle.
+        Retrieves the current horizontal offset of the thumb.
         """
         return self.__thumb_offset
 
     @thumb_offset.setter
     def thumb_offset(self, offset):
         """
-        Used to set thumb offset in toggle.
+        Sets the horizontal offset of the thumb and triggers a repaint.
+
+        Args:
+            offset (int): The pixel offset from the left edge.
         """
 
         self.__thumb_offset = offset
@@ -51,14 +63,17 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
     @pyqtProperty(QColor)
     def track_color(self):
         """
-        Used to get track color of toggle.
+        Retrieves the current color of the toggle's background track.
         """
         return self.__track_color
 
     @track_color.setter
     def track_color(self, color: QColor):
         """
-        Used to set track color of toggle.
+        Sets the color of the toggle's background track and triggers a repaint.
+
+        Args:
+            color (QColor): The color to apply to the track.
         """
 
         self.__track_color = color
@@ -67,14 +82,17 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
     @pyqtProperty(QColor)
     def thumb_color(self):
         """
-        Used to get thumb color of toggle.
+        Retrieves the current color of the sliding thumb.
         """
         return self.__thumb_color
 
     @thumb_color.setter
     def thumb_color(self, color: QColor):
         """
-        Used to set thumb color of toggle.
+        Sets the color of the sliding thumb and triggers a repaint.
+
+        Args:
+            color (QColor): The color to apply to the thumb.
         """
 
         self.__thumb_color = color
@@ -83,14 +101,17 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
     @pyqtProperty(QColor)
     def border_color(self):
         """
-        Used to get border color of toggle.
+        Retrieves the current border color of the toggle track.
         """
         return self.__border_color
 
     @border_color.setter
     def border_color(self, color: QColor):
         """
-        Used to set border color of toggle.
+        Sets the border color of the toggle track and triggers a repaint.
+
+        Args:
+            color (QColor): The color to apply to the track border.
         """
 
         self.__border_color = color
@@ -98,8 +119,11 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
 
     def setChecked(self, checked):
         """
-        Used to change state of toggle.
-        Will also run animations.
+        Manually sets the checked state of the toggle and triggers
+        the associated animations.
+
+        Args:
+            checked (bool): The desired checked state.
         """
 
         super().setChecked(checked)
@@ -107,14 +131,38 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
         self.__on_toggle(checked)
 
     def setFixedWidth(self, width):
+        """
+        Sets a fixed width for the toggle and updates internal dimension tracking.
+
+        Args:
+            width (int): Width in pixels.
+        """
+
         self.__width = width
         super().setFixedWidth(width)
 
     def setFixedHeight(self, height):
+        """
+        Sets a fixed height for the toggle and updates internal dimension tracking.
+
+        Args:
+            height (int): Height in pixels.
+        """
+
         self.__height = height
         super().setFixedHeight(height)
 
     def paintEvent(self, event):
+        """
+        Renders the toggle switch components using QPainter.
+
+        Draws the rounded rectangular track and the circular thumb based on
+        the current thumb_offset and color properties.
+
+        Args:
+            event (QPaintEvent): The paint event provided by Qt.
+        """
+
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
@@ -135,7 +183,7 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
 
     def __animate_toggle(self):
         """
-        Toggle animation callback.
+        Calculates the target position and starts the thumb sliding animation.
         """
 
         end_value = self.__width - self.__height if self.isChecked() else 0
@@ -146,7 +194,10 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
 
     def __on_toggle(self, checked):
         """
-        Used to redraw toggle on state change.
+        Updates dynamic properties and refreshes styles when the state is toggled.
+
+        Args:
+            checked (bool): The new checked state.
         """
 
         self.setProperty("checked", QBool(checked))
@@ -155,7 +206,8 @@ class QCustomToggle(CustomComponentMixin, QPushButton):
 
     def __polish(self):
         """
-        Used to refresh component styles.
+        Forces a re-evaluation of the widget's style to apply QSS changes
+        linked to dynamic properties.
         """
 
         if not self.__polishRecursionGuard:

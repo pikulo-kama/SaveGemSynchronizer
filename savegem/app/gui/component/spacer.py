@@ -5,12 +5,20 @@ from savegem.app.gui.component import CustomComponentMixin
 
 class QSpacer(CustomComponentMixin, QWidget):
     """
-    Simple spacer widget.
-    Will take all available space while
-    maximally shrinking other widgets.
+    A lightweight spacer component designed to push other widgets aside by
+    occupying available layout space.
+
+    This component utilizes an expanding size policy to ensure it consumes
+    the maximum possible area within a layout, effectively acting as
+    flexible spring or filler.
     """
 
     def __init__(self):
+        """
+        Initializes the spacer and configures its size policy to expand
+        horizontally while remaining preferred vertically.
+        """
+
         QWidget.__init__(self)
         CustomComponentMixin.__init__(self)
 

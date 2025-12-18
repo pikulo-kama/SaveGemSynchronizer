@@ -33,13 +33,28 @@ class QIconWrapper:
 
 class IconResolver(ContentResolver):
     """
-    Used to resolve icon tokens.
-    Allow to scale the icon.
+    A specialized ContentResolver for handling icon resources.
+
+    This resolver transforms file paths into QIconWrapper objects, allowing for
+    dynamic scaling via 'size', 'width', or 'height' parameters defined in
+    the token.
     """
 
     DefaultSize: Final[int] = 10
 
     def resolve(self, file_path: str, *args, **kw):
+        """
+        Resolves the icon resource path and constructs a scaled icon wrapper.
+
+        Args:
+            file_path (str): The logical path to the icon file.
+            *args: Unused positional arguments.
+            **kw: Keyword arguments for 'size', 'width', or 'height'.
+
+        Returns:
+            QIconWrapper: A wrapper around the QIcon with specified dimensions,
+                          or None if the path is invalid.
+        """
 
         if file_path is None:
             _logger.error("File path is not valid.")

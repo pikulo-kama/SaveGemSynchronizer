@@ -25,7 +25,16 @@ _logger = get_logger(__name__)
 
 def load_controllers(manager: "WidgetManager"):
     """
-    Used to load all the controllers defined in package.
+    Scans the package for WidgetController subclasses and initializes them.
+
+    This function excludes the base TemplateWidgetController to ensure only concrete
+    implementations are loaded into the application context.
+
+    Args:
+        manager (WidgetManager): The global widget manager instance.
+
+    Returns:
+        dict: A mapping of controller names to initialized WidgetController instances.
     """
 
     controller_map = {}
@@ -50,13 +59,18 @@ def load_controllers(manager: "WidgetManager"):
 
 class WidgetController:
     """
-    Represents widget controller.
-    Controller should be used to extend default
-    actions that are being done to the widget during
-    application lifecycle.
+    Base controller class for managing widget lifecycles and business logic.
+
+    Controllers act as the bridge between the UI components and the application logic,
+    handling setup, refresh, and state management. They are persistent for the
+    duration of the application.
     """
 
     def __init__(self, manager: "WidgetManager"):
+        """
+        Initializes the controller with a reference to the WidgetManager.
+        """
+
         self.__manager = manager
 
         self.__thread: QThread
@@ -74,8 +88,8 @@ class WidgetController:
 
     def load_sections(self):
         """
-        Used to load section data related to current
-        controller.
+        Retrieves UI section metadata from the database for sections associated
+        with this specific controller.
         """
 
         self.__sections = db().table("ui_sections") \
@@ -88,67 +102,68 @@ class WidgetController:
 
     def setup(self, widget: QWidget):  # pragma: no cover
         """
-        Runs only when widget is being built.
-        Should be used to perform preparation actions.
+        Hook called during the initial construction of the widget.
         """
         pass
 
     def refresh(self, widget: QWidget):  # pragma: no cover
         """
-        Runs each time refresh is being initiated.
-        Should be used to update dynamic data.
+        Hook called whenever the widget requires a data refresh.
         """
         pass
 
     def enable(self, widget: QWidget):  # pragma: no cover
         """
-        Runs each time widget is being enabled.
+        Hook called when the widget is transitioned to an enabled state.
         """
         pass
 
     def disable(self, widget: QWidget):  # pragma: no cover
         """
-        Runs each time widget is being disabled.
+        Hook called when the widget is transitioned to a disabled state.
         """
         pass
 
     @property
     def manager(self):
         """
-        Instance of widget manager
+        Returns the WidgetManager instance.
         """
         return self.__manager
 
     @property
     def sections(self):
         """
-        Collection of UI section associated
-        with current controller.
+        Returns the database rows for sections managed by this controller.
         """
         return self.__sections
 
     def reset_state(self):
         """
-        Used to reset controller dynamic state.
+        Clears the dynamic state dictionary.
         """
         self.__state.clear()
 
     def _get_state(self, key: str):
         """
-        Used to get value from dynamic state.
+        Retrieves a value from the dynamic controller state.
         """
         return self.__state.get(key)
 
     def _set_state(self, key: str, value):
         """
-        Used to set dynamic state value.
+        Stores a value in the dynamic controller state.
         """
         self.__state[key] = value
 
     def _change_widget_parent(self, widget: QCustomWidget, target_section_id: str, target_widget_id: str):
         """
-        Helper method that allows to move provided image
-        to another widget.
+        Moves a widget from its current layout to the layout of a target widget.
+
+        Args:
+            widget (QCustomWidget): The widget to move.
+            target_section_id (str): Section ID of the new parent.
+            target_widget_id (str): Widget ID of the new parent.
         """
 
         target_widget = self.manager.get_widget(target_section_id, target_widget_id)
@@ -162,8 +177,10 @@ class WidgetController:
 
     def _do_work(self, worker: QWorker):
         """
-        Used to start worker and store it in
-        controller, so it won't be garbage collected.
+        Executes a background worker in a separate blocking thread.
+
+        Args:
+            worker (QWorker): The worker instance containing the logic to execute.
         """
 
         self.__thread = QThread()
@@ -179,29 +196,43 @@ class WidgetController:
 
 class TemplateResolver(ContentResolver):
     """
-    Dynamic resolver which is used to resolve template
-    related tokens.
+    A specialized resolver for handling tokens within dynamic templates.
 
-    Actual resolving of tokens happening inside controller.
+    This class delegates the actual resolution logic back to the
+    TemplateWidgetController, providing context for the specific element
+    being rendered.
     """
 
     def __init__(self, controller: "TemplateWidgetController", element: Any):
+        """
+        Initializes the resolver with a controller and the data element context.
+        """
+
         self.__controller = controller
         self.__element = element
 
     def resolve(self, value: str, *args, **kw):
+        """
+        Resolves a string value using the associated controller.
+        """
         return self.__controller.resolve(self.__element, value, *args, **kw)
 
 
 class TemplateWidgetController(WidgetController):
     """
-    Extended version of widget controller.
-    Allows to render and manage complex dynamic list widgets.
+    Advanced controller for rendering dynamic repeated UI elements (lists).
+
+    It divides a template into header, body, and footer segments, duplicating
+    the body segment for every item in a provided dataset.
     """
 
     HandlerPrefix: Final = "handle__"
 
     def __init__(self, manager: "WidgetManager"):
+        """
+        Initializes the template controller and maps handler methods for dynamic widgets.
+        """
+
         super().__init__(manager)
         self.__handlers = {}
 
@@ -211,12 +242,14 @@ class TemplateWidgetController(WidgetController):
 
     def refresh(self, widget: QCustomComponent):
         """
-        Used to build template widget.
-        Will build header and footer widgets as they're
-        defined in metadata.
+        Orchestrates the building of the template structure.
 
-        As for body widgets they would be built for each element of template
-        dataset.
+        Cleans up existing dynamic widgets and iterates through the dataset to
+        construct the repeated body segments, applying unique IDs and
+        contextual resolvers to each.
+
+        Args:
+            widget (QCustomComponent): The parent widget containing the template.
         """
 
         header_section = f"{widget.metadata.id}__template_header"
@@ -267,34 +300,23 @@ class TemplateWidgetController(WidgetController):
 
     def _get_data(self) -> list[Any]:
         """
-        Used to get template dataset.
-        For each record of dataset body template would
-        be rendered.
+        Retrieves the dataset used to populate the template.
         """
         return []
 
     def resolve(self, element: Any, value: str, *args, **kw):
         """
-        Used to resolve template specific tokens.
-        This method is being called by dynamic content resolver.
-
-        This method only handles 'template' tokens defined
-        in template body segment.
+        Logic for resolving template-specific tokens based on the current data element.
         """
         return value
 
     def __invoke_widget_handlers(self, segment_root: QCustomComponent, element: Any):
         """
-        Used to call handler method to allow additional operations
-        over widgets once they were created.
-        Handlers are being invoked only for widgets of body segment.
+        Automatically calls 'handle__' methods for widgets within a generated segment.
 
-        Example: If you have widget with id 'dynamic_create_button'
-        then you should create method with the name 'handle__dynamic_create_button'
-        in controller implementation.
-
-        First argument of handler method would be actual widget that was requested
-        and the second would element from dataset associated with the widget.
+        Args:
+            segment_root (QCustomComponent): The root of the newly created segment.
+            element (Any): The data element from the dataset for this segment.
         """
 
         widgets: list = segment_root.findChildren(CustomComponentMixin)
@@ -306,13 +328,10 @@ class TemplateWidgetController(WidgetController):
             if handler_method is not None:
                 handler_method(widget, element)
 
-    def __segment_metadata(self, section_id: str, widget: QCustomComponent) -> Dict[WidgetMetadata, List[WidgetMetadata]]:
+    def __segment_metadata(self, section_id: str, widget: QCustomComponent) \
+            -> Dict[WidgetMetadata, List[WidgetMetadata]]:
         """
-        Used to read template section (segment) metadata
-        and then group data by root elements.
-
-        This is necessary for templates since they could have multiple root widgets defined
-        which might mess up with the order if segmentation is not performed.
+        Groups metadata into logical segments based on their root ancestors.
         """
 
         metadata = WidgetSectionBuildCommand.retrieve_metadata(section_id)
@@ -334,8 +353,7 @@ class TemplateWidgetController(WidgetController):
 
     def __get_segment_root(self, target: WidgetMetadata, all_metadata: list[WidgetMetadata]) -> WidgetMetadata:
         """
-        Used to get metadata of root widget
-        of requested widget metadata.
+        Recursively finds the top-level metadata object for a given widget metadata.
         """
 
         for meta in all_metadata:

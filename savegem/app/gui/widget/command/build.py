@@ -17,16 +17,29 @@ _logger = get_logger(__name__)
 
 class WidgetBuildCommand(WidgetCommand):
     """
-    Used to build widgets from widget metadata and then mark them as new
-    so that widget manager would link them to existing widgets and register
-    them in internal state.
+    A command responsible for instantiating widgets from metadata and registering
+    them within the WidgetManager's context.
+
+    This class handles the complete lifecycle of widget construction, including
+    layout configuration, content resolution, styling, and property assignment.
     """
 
     def __init__(self, metadata: list[WidgetMetadata]):
+        """
+        Initializes the build command with a list of metadata objects.
+        """
+
         super().__init__()
         self.__metadata = metadata
 
     def execute(self, context: "ManagerContext"):
+        """
+        Iterates through the provided metadata, builds the widgets, and adds
+        them to the management context.
+
+        Args:
+            context (ManagerContext): The active context where widgets are registered.
+        """
 
         for meta in self.__metadata:
             context.add_widget(self._build_widget(meta))
@@ -34,7 +47,14 @@ class WidgetBuildCommand(WidgetCommand):
     @staticmethod
     def _build_widget(meta: WidgetMetadata) -> QCustomComponent:
         """
-        Used to build widget based on metadata row.
+        Constructs a single QCustomComponent instance and configures its
+        visual and logical state based on the metadata row.
+
+        Args:
+            meta (WidgetMetadata): Configuration data for the widget.
+
+        Returns:
+            QCustomComponent: The fully configured widget instance.
         """
 
         widget: QCustomComponent = meta.widget_type.type()
@@ -93,14 +113,29 @@ class WidgetBuildCommand(WidgetCommand):
 
 class WidgetSectionBuildCommand(WidgetBuildCommand):
     """
-    Used to build widgets that are related to provided section.
+    A specialized build command that targets all widgets within a specific
+    UI section by querying the database.
     """
 
     def __init__(self, section_id: str):
+        """
+        Initializes the command by fetching all metadata for the requested section.
+        """
         super().__init__(self.retrieve_metadata(section_id))
 
     @classmethod
     def retrieve_metadata(cls, section_id: str) -> list[WidgetMetadata]:
+        """
+        Queries the 'ui_widgets' database table to retrieve configuration
+        data for a specific section.
+
+        Args:
+            section_id (str): The identifier of the UI section to build.
+
+        Returns:
+            list[WidgetMetadata]: A list of metadata objects for the section.
+        """
+
         metadata = []
         ui_widgets = db().table("ui_widgets")
 

@@ -7,10 +7,15 @@ from savegem.app.gui.component import CustomComponentMixin
 
 class QBaseDivider(CustomComponentMixin, QWidget):
     """
-    Base class for content divider.
+    Abstract base class for custom content dividers that integrate with
+    PyQt6 stylesheets and the CustomComponentMixin.
     """
 
     def __init__(self):
+        """
+        Initializes the base divider with a default line thickness.
+        """
+
         QWidget.__init__(self)
         CustomComponentMixin.__init__(self)
 
@@ -18,12 +23,22 @@ class QBaseDivider(CustomComponentMixin, QWidget):
 
     def _paint_divider(self, painter: QPainter):  # pragma: no cover
         """
-        Used to draw actual divider (rectangle) using provided
-        painter instance.
+        Internal drawing logic to be implemented by horizontal or vertical
+        subclasses.
+
+        Args:
+            painter (QPainter): The painter instance used to render the divider.
         """
         pass
 
     def paintEvent(self, event):
+        """
+        Handles the widget's paint request by retrieving the background color
+        from the current palette and delegating the draw call.
+
+        Args:
+            event (QPaintEvent): The paint event provided by Qt.
+        """
 
         painter = QPainter(self)
 
@@ -41,16 +56,26 @@ class QBaseDivider(CustomComponentMixin, QWidget):
 
 class QHDivider(QBaseDivider):
     """
-    Simple horizontal divider widget.
+    A horizontal line widget used to visually separate sections in a
+    vertical layout.
     """
 
     def __init__(self):
+        """
+        Initializes the horizontal divider with a fixed height
+        using configured line thickness.
+        """
+
         QBaseDivider.__init__(self)
         super().setFixedHeight(self._line_thickness)
 
     def _paint_divider(self, painter: QPainter):
         """
-        Draws the horizontal divider line using the QSS background-color.
+        Calculates the vertical center and draws a horizontal rectangle
+        across the width of the widget.
+
+        Args:
+            painter (QPainter): The painter instance used for drawing.
         """
 
         line_y = (self.height() - self._line_thickness) // 2
@@ -64,24 +89,37 @@ class QHDivider(QBaseDivider):
 
     def setFixedHeight(self, height):  # pragma: no cover
         """
-        Prevent setting a custom height if the intent is to maintain the
-        default divider spacing of 20px.
+        Overrides the standard setFixedHeight to protect the default
+        divider dimensions.
+
+        Args:
+            height (int): The target height (ignored).
         """
         pass
 
 
 class QVDivider(QBaseDivider):
     """
-    Simple vertical divider widget.
+    A vertical line widget used to visually separate sections in a
+    horizontal layout.
     """
 
     def __init__(self):
+        """
+        Initializes the vertical divider with a fixed width using
+        configured line thickness.
+        """
+
         QBaseDivider.__init__(self)
         super().setFixedWidth(self._line_thickness)
 
     def _paint_divider(self, painter: QPainter):
         """
-        Draws the vertical divider line using the QSS background-color.
+        Calculates the horizontal center and draws a vertical rectangle
+        across the height of the widget.
+
+        Args:
+            painter (QPainter): The painter instance used for drawing.
         """
 
         line_x = (self.width() - self._line_thickness) // 2
@@ -95,7 +133,10 @@ class QVDivider(QBaseDivider):
 
     def setFixedWidth(self, width):  # pragma: no cover
         """
-        Prevent setting a custom width if the intent is to maintain the
-        default divider spacing of 20px.
+        Overrides the standard setFixedWidth to protect the default
+        divider dimensions.
+
+        Args:
+            width (int): The target width (ignored).
         """
         pass
