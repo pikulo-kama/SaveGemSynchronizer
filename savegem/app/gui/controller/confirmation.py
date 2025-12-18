@@ -3,6 +3,7 @@ from savegem.app.gui.component.button import QCustomPushButton
 from savegem.app.gui.component.dialog import QCustomDialog
 from savegem.app.gui.controller.dialog import DialogController
 from savegem.app.gui.constants import UISection
+from savegem.app.gui.window import gui
 
 
 class ConfirmationDialogController(DialogController):
@@ -18,17 +19,17 @@ class ConfirmationDialogController(DialogController):
             confirm_callback = holder().get("confirmationCallback")
 
             dialog.hide()
-            self.manager.gui.is_blocked = False
+            gui().is_blocked = False
             confirm_callback()
 
         def on_cancel():
             dialog.hide()
-            self.manager.gui.is_blocked = False
+            gui().is_blocked = False
 
         confirm_button: QCustomPushButton = self.manager.get_widget(UISection.ConfirmationSection, "confirm_button")
         cancel_button: QCustomPushButton = self.manager.get_widget(UISection.ConfirmationSection, "cancel_button")
 
-        self.manager.gui.is_blocked = True
+        gui().is_blocked = True
 
         confirm_button.enable()
         cancel_button.enable()

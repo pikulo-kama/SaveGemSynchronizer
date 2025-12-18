@@ -13,7 +13,7 @@ class QProgressPushButton(QCustomPushButton):
     will transform into progress bar.
     """
 
-    __IN_PROGRESS_ATTR = "in-progress"
+    InProgressFlag = "in-progress"
 
     def __init__(self, *args, **kw):
         QCustomPushButton.__init__(self, *args, **kw)
@@ -36,7 +36,7 @@ class QProgressPushButton(QCustomPushButton):
         in_progress = progress > 0
 
         self.__progress_bar.setTextVisible(in_progress is True)
-        self.setProperty(self.__IN_PROGRESS_ATTR, QBool(in_progress))
+        self.setProperty(self.InProgressFlag, QBool(in_progress))
         self.setEnabled(in_progress is False)
 
     def resizeEvent(self, event):

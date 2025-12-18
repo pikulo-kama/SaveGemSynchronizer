@@ -41,6 +41,7 @@ class TestQProgressPushButton:
         """
 
         from savegem.app.gui.component.button import QCustomPushButton
+        from savegem.app.gui.component.progress_button import QProgressPushButton
 
         assert isinstance(_progress_button, QCustomPushButton)
 
@@ -51,7 +52,8 @@ class TestQProgressPushButton:
         assert progress_bar.value() == 0
         assert progress_bar.isTextVisible() is False
 
-        assert _progress_button.property("in-progress") is None  # Property is set in set_progress
+        # Property is set in set_progress
+        assert _progress_button.property(QProgressPushButton.InProgressFlag) is None
 
 
     @pytest.mark.parametrize("progress, expected_in_progress, expected_enabled", [
@@ -67,6 +69,7 @@ class TestQProgressPushButton:
         Test set_progress updates QProgressBar value, text, custom property, and enabled state.
         """
 
+        from savegem.app.gui.component.progress_button import QProgressPushButton
         from savegem.app.gui.constants import QBool
 
         progress_bar = _progress_button._QProgressPushButton__progress_bar  # noqa
@@ -75,7 +78,7 @@ class TestQProgressPushButton:
         _progress_button.set_progress(progress)
 
         assert progress_bar.value() == progress
-        assert _progress_button.property("in-progress") == QBool(expected_in_progress)
+        assert _progress_button.property(QProgressPushButton.InProgressFlag) == QBool(expected_in_progress)
         assert _progress_button._QCustomPushButton__is_enabled == expected_enabled  # noqa
 
         if expected_in_progress:

@@ -1,13 +1,9 @@
-from PyQt6.QtCore import Qt
+from typing import Any, Final
 
-from savegem.app.gui.component.label import QCustomLabel
-from savegem.app.gui.component.layout import QCustomVBoxLayout, QCustomHBoxLayout, QCustomLayout
-from savegem.app.gui.component.list import QScrollableWidget
 from savegem.app.gui.component.progress_button import QProgressPushButton
-from savegem.app.gui.component.spacer import QSpacer
 from savegem.app.gui.component.widget import QCustomWidget
 from savegem.app.gui.constants import UIRefreshEvent, QBool
-from savegem.app.gui.controller import WidgetController
+from savegem.app.gui.controller import TemplateWidgetController
 from savegem.app.gui.window import gui
 from savegem.app.worker.download_worker import DownloadWorker
 from savegem.common.core.context import app
@@ -17,19 +13,44 @@ from savegem.common.service.subscriptable import DoneEvent
 from savegem.common.util.date import string_to_date, get_verbose_date, get_verbose_time
 from savegem.common.util.logger import get_logger
 
-
 _logger = get_logger(__name__)
 
 
-class SaveHistoryListController(WidgetController):
+class SaveHistoryListController(TemplateWidgetController):
     """
-    Used to build and manage list of available save files on cloud.
+    Used to manager save history list.
     """
 
-    def refresh(self, save_list: QScrollableWidget):
+    HistoryRecordActive: Final = "active"
 
-        save_list_layout: QCustomLayout = save_list.layout()
-        self.manager.remove_child_widgets(save_list)
+    def _get_data(self) -> list[Any]:
+        return app().games.current.meta.drive
+
+    def resolve(self, metadata: DriveFileMetadata, value: str, *args, **kw):
+        if value == "version":
+            return self.__get_upload_date_string(metadata)
+
+        elif value == "owner":
+            return self.__get_owner_string(metadata)
+
+        return None
+
+    @classmethod
+    def handle__history_record(cls, history_record: QCustomWidget, metadata: DriveFileMetadata):
+        """
+        Used to apply style property to history record if
+        save file checksum matches local save checksum.
+        """
+
+        is_current_save = metadata.checksum == app().games.current.meta.local.checksum
+        history_record.setProperty(cls.HistoryRecordActive, QBool(is_current_save))
+
+    def handle__restore_button(self, restore_button: QProgressPushButton, metadata: DriveFileMetadata):
+        """
+        Used to manager restore button of history record.
+        Will hide button if checksum matches local checksum
+        and will also bind callback to the button.
+        """
 
         def restore_version(file_id: str, button: QProgressPushButton):
             return lambda: gui().confirmation(
@@ -37,57 +58,11 @@ class SaveHistoryListController(WidgetController):
                 lambda: self.__restore_version(file_id, button)
             )
 
-        _logger.debug("Rendering save history for %s", app().games.current.name)
+        restore_button.clicked.connect(restore_version(metadata.id, restore_button))
+        is_current_save = metadata.checksum == app().games.current.meta.local.checksum
 
-        for metadata in app().games.current.meta.drive:
-
-            is_current_save = metadata.checksum == app().games.current.meta.local.checksum
-
-            _logger.debug(
-                "drive_metadata=%s, date=%s, checksum=%s, current=%s",
-                metadata.id, metadata.created_time, metadata.checksum, is_current_save
-            )
-
-            # Contains save file entry.
-            record_container = QCustomWidget()
-            record_container.setObjectName("saveListRecord")
-            record_container.setProperty("active", QBool(is_current_save))
-            record_container.setFixedHeight(65)
-            record_container_layout = QCustomHBoxLayout(record_container)
-
-            # Wrapper for upload date and owner.
-            details_container = QCustomWidget()
-            details_container_layout = QCustomVBoxLayout(details_container)
-            details_container_layout.setContentsMargins(0, 0, 0, 0)
-            details_container_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-
-            version_label = QCustomLabel()
-            version_label.setObjectName("saveListRecordVersion")
-            version_label.setText(self.__get_upload_date_string(metadata))
-
-            owner_label = QCustomLabel()
-            owner_label.setObjectName("saveListRecordOwner")
-            owner_label.setText(self.__get_owner_string(metadata))
-
-            # Button to restore specific version.
-            restore_button = QProgressPushButton()
-            restore_button.setText(tr("label_Restore"))
-            restore_button.clicked.connect(restore_version(metadata.id, restore_button))  # noqa
-
-            save_list.layout().add_dynamic_widget(record_container)
-
-            record_container_layout.add_dynamic_widget(details_container)
-            record_container_layout.add_dynamic_widget(QSpacer())
-
-            # Don't show restore button if checksum
-            # of drive save matches checksum of local save.
-            if not is_current_save:
-                record_container_layout.add_dynamic_widget(restore_button)
-
-            details_container_layout.add_dynamic_widget(version_label)
-            details_container_layout.add_dynamic_widget(owner_label)
-
-        save_list_layout.add_dynamic_widget(QSpacer())
+        if is_current_save:
+            self.manager.delete(lambda meta: meta.name == restore_button.metadata.name)
 
     def __restore_version(self, file_id: str, button: QProgressPushButton):
         """
@@ -98,7 +73,7 @@ class SaveHistoryListController(WidgetController):
 
             if event.success:
                 app().games.current.meta.drive.refresh()
-                self.manager.gui.refresh(UIRefreshEvent.SaveDownloaded)
+                self.manager.event_refresh(UIRefreshEvent.SaveDownloaded)
 
                 gui().notification(tr("notification_NewSaveHasBeenDownloaded"))
 

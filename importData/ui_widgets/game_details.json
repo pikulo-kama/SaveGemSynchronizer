@@ -217,7 +217,38 @@
           "refresh_events": [
             "activity_log_update",
             "game_selection_change"
-          ]
+          ],
+          "template": {
+            "body": [
+              {
+                "widget_id": "player_card",
+                "widget_type_id": "QWidget",
+                "layout_type_id": "QHBoxLayout",
+                "margin_left": 10,
+                "margin_top": 8,
+                "margin_right": 10,
+                "margin_bottom": 8,
+                "children": [
+                  {
+                    "widget_id": "player_profile_picture",
+                    "content": "pixmap{template{photo}, scale: 30, circle}",
+                    "widget_type_id": "QLabel"
+                  },
+                  {
+                    "widget_id": "player_name",
+                    "content": "template{name}",
+                    "widget_type_id": "QLabel",
+                    "style_object_name": "bodyText",
+                    "alignment": "center"
+                  },
+                  {
+                    "widget_id": "player_card_spacer",
+                    "widget_type_id": "QSpacer"
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
     }

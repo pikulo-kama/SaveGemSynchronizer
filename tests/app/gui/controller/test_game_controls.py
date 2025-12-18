@@ -168,7 +168,7 @@ class TestDownloadButtonController(WidgetControllerTest):
             callback()
 
         _mock_button.refresh.assert_called_once()
-        gui_mock.refresh.assert_called_once_with(UIRefreshEvent.SaveDownloaded)
+        _widget_manager.event_refresh.assert_called_once_with(UIRefreshEvent.SaveDownloaded)
         games_config_mock.current.meta.local.calculate_checksum.assert_called_once()
 
 

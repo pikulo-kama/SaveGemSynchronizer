@@ -148,19 +148,6 @@ class TestWidgetTypePool:
             get_widget_type("NON_EXISTENT")
 
 
-    def test_get_widget_type_by_class(self, db_mock, _mock_db_load):
-        """
-        Test lookup by the loaded class object.
-        """
-
-        from savegem.app.gui.widget.type import get_widget_type_by_class
-
-        widget_type = get_widget_type_by_class(DummyWidget)
-
-        assert widget_type.name == "LBL_NORMAL"  # The first one found with DummyWidget class
-        assert widget_type.type == DummyWidget
-
-
 class TestLayoutTypePool:
 
     LAYOUT_DB_DATA = [

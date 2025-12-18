@@ -42,16 +42,7 @@ class TestCustomLayoutMixin:
 
         layout = QCustomVBoxLayout()
         _parent_widget.setLayout(layout)
-        layout.set_manager(_mock_widget_manager)
         return layout
-
-    def test_set_manager(self, _layout, _mock_widget_manager):
-        """
-        Test manager assignment.
-        """
-
-        # Accessed via name mangling because it's private (__manager)
-        assert getattr(_layout, "_CustomLayoutMixin__manager") == _mock_widget_manager
 
     def test_add_widget_basic(self, _layout, qtbot):
         """
@@ -62,47 +53,6 @@ class TestCustomLayoutMixin:
         qtbot.addWidget(child)
 
         _layout.add_widget(child)
-
-        assert _layout.count() == 1
-        assert _layout.itemAt(0).widget() == child
-
-    def test_add_dynamic_widget_logic(self, module_patch, _layout, _parent_widget, _mock_widget_manager, qtbot):
-        """
-        Tests the heavy logic of add_dynamic_widget:
-        1. Metadata creation
-        2. ID generation
-        3. Manager registration
-        4. Recursion into child layouts
-        """
-
-        from savegem.app.gui.component.layout import QCustomHBoxLayout
-        from savegem.app.gui.component.widget import QCustomWidget
-        from savegem.app.gui.widget.metadata import WidgetMetadata
-
-        # Create a child widget that DOES NOT have metadata yet
-        child = QCustomWidget()
-        qtbot.addWidget(child)
-
-        # Give the child a layout to test recursion
-        child_layout = QCustomHBoxLayout()
-        child.setLayout(child_layout)
-        get_widget_type_mock = module_patch("get_widget_type_by_class")
-
-        _layout.add_dynamic_widget(child)
-
-        assert hasattr(child, 'metadata')
-        assert isinstance(child.metadata, WidgetMetadata)
-        # Parent ID is 'parent_section', order is 1 -> 'parent_section_child1'
-        assert child.metadata.id == "parent_section_child1"
-        assert child.metadata.parent_widget_id == "parent_section"
-        assert child.metadata.section_id == "section_1"
-        assert child.metadata.order_id == 1
-        assert child.metadata.widget_type == get_widget_type_mock.return_value
-
-        _mock_widget_manager.add_widget.assert_called_once_with(child)
-
-        # The child layout should now have the manager ref
-        assert getattr(child_layout, "_CustomLayoutMixin__manager") == _mock_widget_manager
 
         assert _layout.count() == 1
         assert _layout.itemAt(0).widget() == child

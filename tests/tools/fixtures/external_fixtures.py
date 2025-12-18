@@ -90,6 +90,10 @@ def copytree_mock(module_patch):
 def copy_mock(module_patch):
     return module_patch("shutil.copy")
 
+@pytest.fixture
+def deepcopy_mock(module_patch):
+    return module_patch("deepcopy", side_effect=lambda obj: obj)
+
 
 @pytest.fixture
 def sys_mock(module_patch):

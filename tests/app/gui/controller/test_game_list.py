@@ -1,5 +1,4 @@
 import pytest
-from unittest.mock import call
 from pytest_mock import MockerFixture
 
 from tests.app.gui.controller import WidgetControllerTest
@@ -7,54 +6,12 @@ from tests.app.gui.controller import WidgetControllerTest
 
 class TestGameListController(WidgetControllerTest):
 
-    @pytest.fixture(autouse=True)
-    def _setup(self, games_config_mock, app_state_mock, _game_list_data, _push_button_mock, _spacer_mock,
-               _h_divider_mock):
-
-        games_config_mock.__iter__.return_value = _game_list_data
-        games_config_mock.current = _game_list_data[0]
-        app_state_mock.game_name = _game_list_data[0].name
-
-        _push_button_mock.side_effect = [game.button for game in _game_list_data]
+    @pytest.fixture
+    def _game_button(self, mocker: MockerFixture):
+        return mocker.MagicMock()
 
     @pytest.fixture
-    def _game_list_data(self, _game_a, _game_b, _game_c, _game_d):
-        return [_game_a, _game_b, _game_c, _game_d]
-
-    @pytest.fixture
-    def _game_a(self, mocker: MockerFixture):
-        from savegem.common.core.save_meta import SyncStatus
-        return self._create_game(mocker, "GameA", SyncStatus.UpToDate, True)
-
-    @pytest.fixture
-    def _game_b(self, mocker: MockerFixture):
-        from savegem.common.core.save_meta import SyncStatus
-        return self._create_game(mocker, "GameB", SyncStatus.NeedsUpload)
-
-    @pytest.fixture
-    def _game_c(self, mocker: MockerFixture):
-        from savegem.common.core.save_meta import SyncStatus
-        return self._create_game(mocker, "GameC", SyncStatus.NoInformation)
-
-    @pytest.fixture
-    def _game_d(self, mocker: MockerFixture):
-        from savegem.common.core.save_meta import SyncStatus
-        return self._create_game(mocker, "GameD", SyncStatus.UpToDate)
-
-    @staticmethod
-    def _create_game(mocker: MockerFixture, name: str, sync_status, is_current: bool = False):
-        game = mocker.MagicMock()
-        game.name = name
-        game.meta.sync_status = sync_status
-        game.is_current = is_current
-
-        return game
-
-    @pytest.fixture
-    def _game_list(self, mocker: MockerFixture):
-        """
-        Mocks the QScrollableWidget passed to refresh.
-        """
+    def _game(self, mocker: MockerFixture):
         return mocker.MagicMock()
 
     @pytest.fixture
@@ -70,52 +27,68 @@ class TestGameListController(WidgetControllerTest):
     def _game_change_worker_mock(self, module_patch):
         return module_patch("GameChangeWorker")
 
-    def test_refresh_renders_list_correctly(self, _controller, _widget_manager, _game_list, _game_list_data,
-                                            _push_button_mock, _spacer_mock):
-        """
-        Tests that refresh clears children, iterates through games, sets properties,
-        and adds buttons and a spacer.
-        """
+    def test_get_data(self, _controller, games_config_mock):
+        assert _controller._get_data() == games_config_mock
 
-        from savegem.app.gui.constants import QBool
+    def test_handle_game_option_for_current_game(self, _controller, _game_button, _game, games_config_mock):
+
+        from savegem.app.gui.controller.game_list import GameListController
         from savegem.common.core.save_meta import SyncStatus
+        from savegem.app.gui.constants import QBool
 
-        _controller.refresh(_game_list)
+        games_config_mock.current = _game
+        _game.meta.sync_status = SyncStatus.UpToDate
 
-        _widget_manager.remove_child_widgets.assert_called_once_with(_game_list)
-        assert _push_button_mock.call_count == 4
-        add_widget_mock = _game_list.layout.return_value.add_dynamic_widget
+        _controller.handle__game_option(_game_button, _game)
 
-        for game in _game_list_data:
+        assert _game_button.setProperty.call_count == 1
+        _game_button.setProperty.assert_called_once_with(GameListController.GameOptionSelected, QBool(True))
 
-            # General checks
-            game.button.setText.assert_called_once_with(game.name)
-            game.button.clicked.connect.assert_called_once()
-            add_widget_mock.assert_any_call(game.button)
+    def test_handle_game_option_for_outdated_game(self, _controller, _game_button, _game, games_config_mock):
 
-            # Property Check: SELECTED (Only GameA)
-            if game.name == "GameA":
-                game.button.setProperty.assert_any_call("selected", QBool(True))
-            else:
-                assert call("selected", QBool(True)) not in game.button.setProperty.call_args_list
+        from savegem.app.gui.controller.game_list import GameListController
+        from savegem.common.core.save_meta import SyncStatus
+        from savegem.app.gui.constants import QBool
 
-            # Property Check: WARNING (GameB, GameC)
-            if game.meta.sync_status != SyncStatus.UpToDate:
-                game.button.setProperty.assert_any_call("warning", QBool(True))
-            else:
-                assert call("warning", QBool(True)) not in game.button.setProperty.call_args_list
+        _game.meta.sync_status = SyncStatus.NeedsUpload
 
-        # 3. Assert QSpacer is added last
-        _spacer_mock.assert_called_once()
-        add_widget_mock.assert_any_call(_spacer_mock.return_value)
-        assert add_widget_mock.call_count == 10  # 4 buttons + 1 spacer + 5 dividers
+        _controller.handle__game_option(_game_button, _game)
 
-    def test_change_game_early_exit(self, _controller, _do_work_mock):
-        """
-        Tests that __change_game returns early if the new game is the current game (matches app().state.game_name).
-        """
+        assert _game_button.setProperty.call_count == 1
+        _game_button.setProperty.assert_called_once_with(GameListController.GameOptionWarning, QBool(True))
 
-        _controller._GameListController__change_game("GameA")  # noqa
+    def test_handle_game_option_binds_callback(self, mocker: MockerFixture, _controller, _game_button, _game,
+                                               games_config_mock):
+        game_name = "Game"
+        change_game_mock = mocker.patch.object(_controller, "_GameListController__change_game")
+        _game.name = game_name
+
+        _controller.handle__game_option(_game_button, _game)
+
+        change_name_callback = _game_button.clicked.connect.call_args[0][0]
+        change_name_callback()
+
+        change_game_mock.assert_called_once_with(game_name)
+
+    def test_resolve(self, _controller, _game):
+
+        game_name = "Game"
+        _game.name = game_name
+
+        invalid_param_result = _controller.resolve(_game, "test", 1, 2, 3, a=1, b=2, c=3)
+        valid_param_result = _controller.resolve(_game, "name", 1, 2, 3, a=1, b=2, c=3)
+
+        assert invalid_param_result is None
+        assert valid_param_result == game_name
+
+    def test_should_not_change_game_if_same(self, _controller, app_state_mock, _game_change_worker_mock, _do_work_mock):
+
+        game_name = "Game"
+        app_state_mock.game_name = game_name
+
+        _controller._GameListController__change_game(game_name)  # noqa
+
+        _game_change_worker_mock.assert_not_called()
         _do_work_mock.assert_not_called()
 
     def test_change_game_starts_worker(self, _controller, _widget_manager, _do_work_mock, _game_change_worker_mock):
@@ -143,4 +116,4 @@ class TestGameListController(WidgetControllerTest):
         refresh_callback = _game_change_worker_mock.return_value.finished.connect.call_args[0][0]
         refresh_callback()
 
-        _widget_manager.gui.refresh.assert_called_once_with(UIRefreshEvent.GameSelectionChange)
+        _widget_manager.event_refresh.assert_called_once_with(UIRefreshEvent.GameSelectionChange)

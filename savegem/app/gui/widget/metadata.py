@@ -1,10 +1,13 @@
 import json
 import re
 from dataclasses import dataclass
+from typing import Optional
+
 from PyQt6.QtCore import Qt
 
 from savegem.app.gui.constants import UIRefreshEvent, UISection
 from savegem.app.gui.style import resolve_style_properties
+from savegem.app.gui.widget.resolver import ContentResolver
 from savegem.app.gui.widget.type import WidgetType, UIObjectType, get_widget_type, get_layout_type
 from savegem.common.db.manager import db
 from savegem.common.db.table import DatabaseRow
@@ -66,8 +69,10 @@ class WidgetMetadata:
                  refresh_events_meta: dict[str, RefreshEventMetadata] = None):
 
         self.__id = widget_id
+        self.__original_id = widget_id
         self.__section_id = section_id
         self.__parent_widget_id = parent_widget_id
+        self.__parent: Optional[WidgetMetadata] = None
         self.__controller = controller
         self.__order_id = order_id or 0
 
@@ -89,6 +94,7 @@ class WidgetMetadata:
         self.__properties = properties or {}
         self.__refresh_events = refresh_events or []
         self.__refresh_event_meta = refresh_events_meta or {}
+        self.__resolvers: list[ContentResolver] = []
 
         self.__object_name = None
         self.__parse_style_object_name(style_object_name)
@@ -161,6 +167,14 @@ class WidgetMetadata:
         """
         return self.__id
 
+    @id.setter
+    def id(self, widget_id: str):
+        self.__id = widget_id
+
+    @property
+    def original_id(self):
+        return self.__original_id
+
     @property
     def name(self) -> str:
         """
@@ -198,17 +212,37 @@ class WidgetMetadata:
         return self.__section_id is None
 
     @property
+    def parent(self) -> "WidgetMetadata":
+        return self.__parent
+
+    @parent.setter
+    def parent(self, parent: "WidgetMetadata"):
+        self.__parent = parent
+
+    @property
     def parent_widget_id(self) -> str:
         """
         Used to get ID of parent widget.
         """
+
+        if self.parent is not None:
+            return self.parent.id
+
         return self.__parent_widget_id
+
+    @parent_widget_id.setter
+    def parent_widget_id(self, parent_widget_id: str):
+        self.__parent_widget_id = parent_widget_id
 
     @property
     def parent_widget_name(self) -> str:
         """
         Used to get unique ID of parent widget.
         """
+
+        if self.parent is not None:
+            return self.parent.name
+
         return f"{self.section_id}.{self.parent_widget_id}"
 
     @property
@@ -220,12 +254,29 @@ class WidgetMetadata:
         return self.__controller
 
     @property
+    def resolvers(self) -> dict[str, ContentResolver]:
+        resolvers = {}
+
+        for resolver in self.__resolvers:
+            resolver_name = str(resolver.__class__.__name__).lower()
+            resolvers[resolver_name] = resolver
+
+        return resolvers
+
+    def add_resolver(self, resolver: ContentResolver):
+        self.__resolvers.append(resolver)
+
+    @property
     def order_id(self) -> int:
         """
         Used to get order value
         in which widget would be added to layout of parent widget.
         """
         return self.__order_id
+
+    @order_id.setter
+    def order_id(self, order_id: int):
+        self.__order_id = order_id
 
     @property
     def widget_type(self) -> WidgetType:
@@ -358,7 +409,11 @@ class WidgetMetadata:
         refreshed as well.
         """
 
-        event_meta = self.__refresh_event_meta[event]
+        event_meta = self.__refresh_event_meta.get(event)
+
+        if not event_meta:
+            return False
+
         return event_meta.refresh_children
 
     def __parse_style_object_name(self, object_name: str):

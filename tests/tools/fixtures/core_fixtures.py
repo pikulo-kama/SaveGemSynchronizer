@@ -122,6 +122,10 @@ def get_members_mock(module_patch):
 
 
 @pytest.fixture
+def get_methods_mock(module_patch):
+    return module_patch("get_methods")
+
+@pytest.fixture
 def get_verbose_date_mock(module_patch):
     return module_patch("get_verbose_date")
 

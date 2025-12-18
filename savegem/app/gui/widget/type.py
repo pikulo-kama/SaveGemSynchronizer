@@ -34,13 +34,6 @@ def get_widget_type(widget_type_name: str):
     return next(widget_type for widget_type in _get_widget_type_pool() if widget_type.name == widget_type_name)
 
 
-def get_widget_type_by_class(widget_class: type):
-    """
-    Used to get widget type metadata by class name.
-    """
-    return next(widget_type for widget_type in _get_widget_type_pool() if widget_type.type == widget_class)
-
-
 def get_layout_type(layout_type_name: str):
     """
     Used to get layout type metadata by the name.

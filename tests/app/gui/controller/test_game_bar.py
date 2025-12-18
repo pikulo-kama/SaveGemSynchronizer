@@ -92,57 +92,72 @@ class TestGameBarController(WidgetControllerTest):
         _widget_manager.remove_widgets.assert_not_called()
         _widget_manager.build.assert_not_called()
 
-    def test_change_tab_first_load(self, _controller, _widget_manager):
+    def test_change_tab_first_load(self, mocker: MockerFixture, widget_section_build_command_mock, _controller,
+                                   _widget_manager):
         """
         Tests the initial load scenario where current_section_id is None.
         """
 
-        # 1. Initial state: No current section set
-        _controller._set_state(_controller.CurrentSection, None)
+        current_section_id = None
+        new_section_id = "SECTION_A"
+        current_section_meta = mocker.MagicMock(section_id=current_section_id)
+        new_section_meta = mocker.MagicMock(section_id=new_section_id)
+        _controller._set_state(_controller.CurrentSection, current_section_id)
 
-        # 2. ACT: Change to index 0 (maps to SECTION_A)
         _controller._GameBarController__change_tab(0)  # noqa
 
-        # 3. ASSERTIONS
-        new_section_id = "SECTION_A"
-
-        # Remove should be called for the old section (which is None)
-        _widget_manager.remove_widgets.assert_called_once()
-        remove_condition = _widget_manager.remove_widgets.call_args[0][0]
-        # Verify the lambda checks against None for the old section
-        assert remove_condition(MagicMock(section_id=None)) is True
+        # Delete should be called for the old section (which is None)
+        _widget_manager.delete.assert_called_once()
+        delete_condition = _widget_manager.delete.call_args[0][0]
+        # Verify that only widgets of current section are being removed.
+        assert delete_condition(current_section_meta) is True
+        assert delete_condition(new_section_meta) is False
 
         # Build, Refresh, Enable should be called sequentially for the new section
-        _widget_manager.build.assert_called_once_with(new_section_id)
+        widget_section_build_command_mock.assert_called_once_with(new_section_id)
+        _widget_manager.execute.assert_called_once_with(widget_section_build_command_mock.return_value)
+
         _widget_manager.refresh.assert_called_once()
+        refresh_condition = _widget_manager.refresh.call_args[0][0]
+        # Verify that only widgets of new section are being refreshed.
+        assert refresh_condition(current_section_meta) is False
+        assert refresh_condition(new_section_meta) is True
+
         _widget_manager.enable.assert_called_once()
 
         # State should be updated
         assert _controller._get_state(_controller.CurrentSection) == new_section_id
 
-    def test_change_tab_switch_sections(self, _controller, _widget_manager):
+    def test_change_tab_switch_sections(self, mocker: MockerFixture, widget_section_build_command_mock, _controller,
+                                        _widget_manager):
         """
         Tests the scenario where the controller switches from one section to another.
         """
 
-        # 1. Set initial state: SECTION_A
-        _controller._set_state(_controller.CurrentSection, "SECTION_A")
-
-        # 2. ACT: Switch to index 2 (maps to SECTION_C)
-        _controller._GameBarController__change_tab(2)  # noqa
-
-        # 3. ASSERTIONS
         old_section_id = "SECTION_A"
         new_section_id = "SECTION_C"
+        old_section_meta = mocker.MagicMock(section_id=old_section_id)
+        new_section_meta = mocker.MagicMock(section_id=new_section_id)
+        _controller._set_state(_controller.CurrentSection, old_section_id)
 
-        # Verify old section removal
-        _widget_manager.remove_widgets.assert_called_once()
-        remove_condition = _widget_manager.remove_widgets.call_args[0][0]
-        assert remove_condition(MagicMock(section_id=old_section_id)) is True
+        _controller._GameBarController__change_tab(2)  # noqa
 
-        # Verify build/refresh/enable sequence
-        _widget_manager.build.assert_called_once_with(new_section_id)
+        # Verify old section deletion
+        _widget_manager.delete.assert_called_once()
+        remove_condition = _widget_manager.delete.call_args[0][0]
+        assert remove_condition(old_section_meta) is True
+        assert remove_condition(new_section_meta) is False
+
+        # Build, Refresh, Enable should be called sequentially for the new section
+        widget_section_build_command_mock.assert_called_once_with(new_section_id)
+        _widget_manager.execute.assert_called_once_with(widget_section_build_command_mock.return_value)
+
         _widget_manager.refresh.assert_called_once()
+        refresh_condition = _widget_manager.refresh.call_args[0][0]
+        # Verify that only widgets of new section are being refreshed.
+        assert refresh_condition(old_section_meta) is False
+        assert refresh_condition(new_section_meta) is True
+
         _widget_manager.enable.assert_called_once()
 
         # Final state check

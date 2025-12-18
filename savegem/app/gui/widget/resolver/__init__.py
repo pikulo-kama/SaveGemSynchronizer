@@ -8,13 +8,17 @@ _logger = get_logger(__name__)
 __resolvers: dict[str, "ContentResolver"] = {}
 
 
-def resolve_content(content: str):
+def resolve_content(content: str, extra_resolvers: dict[str, "ContentResolver"] = None):
     """
     Used to recursively resolve special tokens in provided
     string and return actual string (or other object).
 
     Example of token: pixmap{user{logo}, scaled: 123, radius: 20}
     """
+
+    resolvers = get_resolvers()
+    extra_resolvers = extra_resolvers or {}
+    resolvers = {**resolvers, **extra_resolvers}
 
     while True:
 
@@ -34,20 +38,20 @@ def resolve_content(content: str):
         properties: list = match.group(2).split(",")
 
         # Recursively check for nested tokens.
-        parameter = resolve_content(properties.pop(0))
+        parameter = resolve_content(properties.pop(0), extra_resolvers=extra_resolvers)
         args = []
         kw = {}
 
         # Collect token properties.
         for prop in properties:
             prop_parts = prop.split(":")
-            key = resolve_content(prop_parts[0].strip())
+            key = resolve_content(prop_parts[0].strip(), extra_resolvers=extra_resolvers)
 
             if len(prop_parts) == 1:
                 args.append(key)
 
             elif len(prop_parts) == 2:
-                value = resolve_content(prop_parts[1].strip())
+                value = resolve_content(prop_parts[1].strip(), extra_resolvers=extra_resolvers)
 
                 if value.isdigit():
                     value = int(value)
@@ -55,7 +59,7 @@ def resolve_content(content: str):
                 kw[key] = value
 
         resolver_name = f"{token_name.lower()}resolver"
-        resolver: ContentResolver = get_resolver(resolver_name)
+        resolver: ContentResolver = resolvers.get(resolver_name)
 
         _logger.debug("Resolving content using %s.", resolver.__class__.__name__)
         _logger.debug("param=%s, args=%s, kw=%s", parameter, args, kw)
@@ -68,7 +72,7 @@ def resolve_content(content: str):
         content = resolved_content
 
 
-def get_resolver(resolver_name: str):
+def get_resolvers():
     """
     Used to get resolver instance by its class name.
     """
@@ -80,7 +84,7 @@ def get_resolver(resolver_name: str):
             _logger.debug("Loading content resolver with name %s", member_name)
             __resolvers[member_name.lower()] = member()
 
-    return __resolvers.get(resolver_name.lower())
+    return __resolvers
 
 
 class ContentResolver:

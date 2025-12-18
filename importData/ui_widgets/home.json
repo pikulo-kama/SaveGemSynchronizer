@@ -58,7 +58,31 @@
                 "game_config_change",
                 "game_selection_change",
                 "save_downloaded"
-              ]
+              ],
+              "template": {
+                "body": [
+                  {
+                    "widget_id": "game_option_divider",
+                    "widget_type_id": "QHDivider"
+                  },
+                  {
+                    "widget_id": "game_option",
+                    "content": "template{name}",
+                    "widget_type_id": "QPushButton",
+                    "style_object_name": "gameListOption"
+                  }
+                ],
+                "footer": [
+                  {
+                    "widget_id": "game_list_footer_divider",
+                    "widget_type_id": "QHDivider"
+                  },
+                  {
+                    "widget_id": "game_list_spacer",
+                    "widget_type_id": "QSpacer"
+                  }
+               ]
+              }
             }
           ]
         },

@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout
 from constants import Resource
 from savegem.app.data import holder
 from savegem.app.gui.style import create_dynamic_resources, load_stylesheet
+from savegem.app.gui.widget.command.build import WidgetSectionBuildCommand
 from savegem.app.gui.widget.manager import WidgetManager
 from savegem.app.gui.constants import UIRefreshEvent, UISection
 from savegem.common.core.holders import prop
@@ -109,8 +110,9 @@ class GUI(QMainWindow):
         _logger.info("Building UI using section '%s'.", section)
 
         self.reload_styles()
-        self.__manager.remove_widgets(lambda _: True)
-        self.__manager.build(section)
+        self.__manager.delete()
+        self.__manager.execute(WidgetSectionBuildCommand(section))
+        self.__manager.refresh()
         self.is_blocked = False
 
         self.show()
@@ -122,7 +124,7 @@ class GUI(QMainWindow):
 
         _logger.info("Refreshing UI with event '%s'.", event)
 
-        self.__manager.refresh(event)
+        self.__manager.event_refresh(event)
         self.setWindowTitle(tr("window_Title", prop("name")))
 
     def notification(self, message: str):
@@ -133,7 +135,7 @@ class GUI(QMainWindow):
 
         _logger.debug("Presenting notification dialog with message %s", message)
         holder().add("dialogMessage", message)
-        self.__manager.build(UISection.NotificationSection)
+        self.__manager.execute(WidgetSectionBuildCommand(UISection.NotificationSection))
 
     def confirmation(self, message: str, callback: Callable):
         """
@@ -145,7 +147,7 @@ class GUI(QMainWindow):
         _logger.debug("Presenting confirmation dialog with message %s", message)
         holder().add("dialogMessage", message)
         holder().add("confirmationCallback", callback)
-        self.__manager.build(UISection.ConfirmationSection)
+        self.__manager.execute(WidgetSectionBuildCommand(UISection.ConfirmationSection))
 
     @property
     def is_blocked(self):

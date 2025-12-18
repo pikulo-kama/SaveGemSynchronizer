@@ -1,83 +1,90 @@
-from PyQt6.QtCore import QSize
-from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QWidget
+from typing import Final
 
-from savegem.app.gui.component import QCustomLayout
+from savegem.app.gui.component import QCustomComponent
 from savegem.app.gui.component.button import QCustomPushButton
-from savegem.app.gui.component.spacer import QSpacer
-from savegem.app.gui.constants import QBool
-from savegem.app.gui.controller import WidgetController
-from savegem.app.gui.widget.resolver import resolve_content
-from savegem.common.util.file import resolve_resource
+from savegem.app.gui.constants import QBool, UIRefreshEvent
+from savegem.app.gui.controller import TemplateWidgetController
+from savegem.app.gui.widget.command.build import WidgetSectionBuildCommand
+from savegem.common.db.table import DatabaseRow
 from savegem.common.util.logger import get_logger
-
 
 _logger = get_logger(__name__)
 
 
-class MenuController(WidgetController):
+
+class MenuController(TemplateWidgetController):
     """
-    Controller which is used to control
-    sidebar navigation menu widget.
+    Used to control application menu.
     """
 
-    CurrentSection = "current_section"
+    CurrentSection: Final = "current_section"
+    MenuItemActive: Final = "active"
 
-    def setup(self, menu: QWidget):
+    def _get_data(self):
+        return self.sections.rows
+
+    def refresh(self, widget: QCustomComponent):
+        super().refresh(widget)
+
+        # This will happen only once when application starts,
+        # Since this would be the only time when selected section is None.
+        selected_section_id = self._get_state(self.CurrentSection)
+        default_section_id = self.sections.get_first("section_id")
+
+        if selected_section_id is None:
+            self.__change_tab(default_section_id)
+
+    def handle__menu_item(self, menu_item: QCustomPushButton, section: DatabaseRow):
+        """
+        Used to link callback to menu item button as
+        well as apply specific styles to currently selected item.
+        """
 
         def change_tab(new_tab_id: str):
             return lambda: self.__change_tab(new_tab_id)
 
-        menu_layout: QCustomLayout = menu.layout()
+        section_id = section.get("section_id")
 
-        for section in self.sections:
-            section_id = section.get("section_id")
+        menu_item.setProperty(self.MenuItemActive, QBool(self.__is_selected(section)))
+        menu_item.clicked.connect(change_tab(section_id))  # noqa
 
-            menu_item = QCustomPushButton()
-            menu_item.setObjectName(section_id)
-            menu_item.setIconSize(QSize(25, 25))
-            menu_item.clicked.connect(change_tab(section_id))  # noqa
+    def resolve(self, section: DatabaseRow, value: str, *args, **kw):
+        if value == "label":
+            return section.get("section_label")
 
-            menu_layout.add_dynamic_widget(menu_item)
-
-        menu.layout().addWidget(QSpacer())
-
-        first_tab_id = self.sections.get_first("section_id")
-        self.__change_tab(first_tab_id)
-
-    def refresh(self, menu: QWidget):
-
-        selected_section_id = self._get_state(self.CurrentSection)
-
-        for section in self.sections:
-            section_id = section.get("section_id")
+        elif value == "icon":
             section_icon = section.get("section_icon")
-            section_label = resolve_content(section.get("section_label"))
-            is_selected = section_id == selected_section_id
 
-            if is_selected:
+            if self.__is_selected(section):
                 section_icon = f"active_{section_icon}"
 
-            menu_item: QCustomPushButton = menu.findChild(QCustomPushButton, section_id)
-            menu_item.setIcon(QIcon(resolve_resource(section_icon)))
-            menu_item.setToolTip(section_label)
-            menu_item.setProperty("active", QBool(is_selected))
+            return section_icon
 
-    def __change_tab(self, section_id: str):
+        return None
+
+    def __is_selected(self, section: DatabaseRow):
+        """
+        Used to check whether provided section is active.
+        """
+
+        selected_section_id = self._get_state(self.CurrentSection)
+        return selected_section_id == section.get("section_id")
+
+    def __change_tab(self, new_section_id: str):
         """
         Used to change current menu tab.
         """
 
-        if section_id == self._get_state(self.CurrentSection):
+        current_section_id = self._get_state(self.CurrentSection)
+
+        if new_section_id == current_section_id:
             return
 
-        self.manager.remove_widgets(
-            lambda metadata: not metadata.is_root_section
-        )
+        self._set_state(self.CurrentSection, new_section_id)
 
-        _logger.info("Changing current menu item to %s", section_id)
-        self._set_state(self.CurrentSection, section_id)
-
-        self.manager.build(section_id)
-        self.manager.refresh()
+        _logger.info("Changing current menu item to %s", new_section_id)
+        self.manager.delete(lambda meta: meta.section_id == current_section_id)
+        self.manager.execute(WidgetSectionBuildCommand(new_section_id))
+        self.manager.refresh(lambda meta: meta.section_id == new_section_id)
+        self.manager.event_refresh(UIRefreshEvent.MenuItemChanged)
         self.manager.enable()

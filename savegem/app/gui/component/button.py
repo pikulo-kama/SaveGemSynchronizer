@@ -1,8 +1,10 @@
+from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QKeyEvent, QMouseEvent
 from PyQt6.QtWidgets import QPushButton
 
 from savegem.app.gui.component import CustomComponentMixin
 from savegem.app.gui.constants import QAttr, QBool
+from savegem.app.gui.widget.resolver.icon import QIconWrapper
 
 
 class QCustomPushButton(CustomComponentMixin, QPushButton):
@@ -19,7 +21,13 @@ class QCustomPushButton(CustomComponentMixin, QPushButton):
         self.setProperty(QAttr.Disabled, QBool(False))
 
     def set_content(self, content):
-        self.setText(content)
+
+        if isinstance(content, QIconWrapper):
+            self.setIcon(content.icon)
+            self.setIconSize(QSize(content.width, content.height))
+
+        else:
+            self.setText(content)
 
     def setEnabled(self, is_enabled):
         self.__is_enabled = is_enabled

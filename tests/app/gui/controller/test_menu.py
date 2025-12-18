@@ -1,23 +1,8 @@
 import pytest
-from unittest.mock import MagicMock, call, ANY
-from PyQt6.QtCore import QSize
-from PyQt6.QtGui import QIcon
 from pytest_mock import MockerFixture
 
 from tests.app.gui.controller import WidgetControllerTest
 
-
-@pytest.fixture
-def mock_external_utils(mocker):
-    """Mocks global utilities."""
-    mocker.patch('savegem.app.gui.controller.menu.resolve_content',
-                 side_effect=lambda s: f"RESOLVED({s})")
-    mocker.patch('savegem.app.gui.controller.menu.resolve_resource',
-                 side_effect=lambda s: f"/resources/{s}")
-    mocker.patch('savegem.app.gui.controller.menu._logger', MagicMock())
-
-    # Mock QIcon to prevent PyQt type errors (though usually not necessary with MagicMock)
-    mocker.patch('savegem.app.gui.controller.menu.QIcon', return_value=MagicMock(spec=QIcon))
 
 class TestMenuController(WidgetControllerTest):
 
@@ -44,93 +29,107 @@ class TestMenuController(WidgetControllerTest):
         return MenuController(_widget_manager)
 
     @pytest.fixture
-    def _home_button(self, mocker: MockerFixture):
-        return mocker.MagicMock()
+    def _change_tab_mock(self, mocker: MockerFixture, _controller):
+        return mocker.patch.object(_controller, "_MenuController__change_tab")
 
     @pytest.fixture
-    def _settings_button(self, mocker: MockerFixture):
-        return mocker.MagicMock()
+    def _is_selected_mock(self, mocker: MockerFixture, _controller):
+        return mocker.patch.object(_controller, "_MenuController__is_selected")
 
-    @pytest.fixture
-    def _menu(self, mocker: MockerFixture, _home_button, _settings_button, _push_button_mock):
-        """
-        Mocks the QWidget instance passed as the menu, including its layout and button finding.
-        """
+    def test_get_data(self, _controller, _section_data):
+        controller_data = _controller._get_data()
 
-        mock_menu = mocker.MagicMock()
-        mock_menu.findChild.side_effect = lambda _, key: {
-            "home_section": _home_button,
-            "settings_section": _settings_button
-        }.get(key)
+        assert len(controller_data) == 2
 
-        _push_button_mock.side_effect = [_home_button, _settings_button]
+        for row in range(0, len(controller_data)):
+            assert controller_data[row].get("section_id") == _section_data[row].get("section_id")
+            assert controller_data[row].get("section_label") == _section_data[row].get("section_label")
+            assert controller_data[row].get("section_icon") == _section_data[row].get("section_icon")
 
-        return mock_menu
+    def test_refresh_when_no_current_section(self, mocker: MockerFixture, _controller, _change_tab_mock, _section_data):
 
-    def test_setup_initializes_buttons(self, mocker: MockerFixture, _controller, _menu, _section_data,
-                                       _push_button_mock, _spacer_mock, _home_button, _settings_button):
-        """
-        Tests that setup creates a button for each section, connects signals, and triggers initial load.
-        """
+        from savegem.app.gui.controller import TemplateWidgetController
+        from savegem.app.gui.controller.menu import MenuController
 
-        change_tab_mock = mocker.patch.object(_controller, "_MenuController__change_tab")
-        layout_mock = _menu.layout.return_value
+        parent_refresh_mock = mocker.patch.object(TemplateWidgetController, "refresh")
+        parent_widget = mocker.MagicMock()
 
-        _controller.setup(_menu)
+        _controller._set_state(MenuController.CurrentSection, None)
+        _controller.refresh(parent_widget)
 
-        # 1. Assert buttons were created (one for each section)
-        assert _push_button_mock.call_count == 2
+        parent_refresh_mock.assert_called_once()
+        _change_tab_mock.assert_called_once_with(_section_data[0].get("section_id"))
 
-        # Check properties set
-        _home_button.setObjectName.assert_called_once_with("home_section")
-        _settings_button.setObjectName.assert_called_once_with("settings_section")
+    def test_refresh_when_current_section(self, mocker: MockerFixture, _controller, _change_tab_mock, _section_data):
 
-        # Check icon size
-        _home_button.setIconSize.assert_called_once_with(QSize(25, 25))
+        from savegem.app.gui.controller import TemplateWidgetController
+        from savegem.app.gui.controller.menu import MenuController
 
-        # Check signal connection
-        _home_button.clicked.connect.assert_called_once()
+        parent_refresh_mock = mocker.patch.object(TemplateWidgetController, "refresh")
+        parent_widget = mocker.MagicMock()
 
-        # 3. Assert spacer and buttons added to layout
-        layout_mock.add_dynamic_widget.assert_has_calls([
-            call(_home_button),
-            call(_settings_button)
-        ], any_order=True)
+        _controller._set_state(MenuController.CurrentSection, "test_section")
+        _controller.refresh(parent_widget)
 
-        layout_mock.addWidget.assert_called_once_with(_spacer_mock.return_value)
+        parent_refresh_mock.assert_called_once()
+        _change_tab_mock.assert_not_called()
 
-        # 4. Assert initial tab change triggered for the first section
-        change_tab_mock.assert_called_once_with("home_section")
+    def test_handle_menu_item(self, mocker: MockerFixture, _controller, _change_tab_mock, _is_selected_mock):
 
-    def test_refresh_updates_buttons_correctly(self, module_patch, _controller, _menu, _section_data, _settings_button,
-                                               _home_button, resolve_content_mock, resolve_resource_mock):
-        """
-        Tests that refresh() updates icons, tooltips, and 'active' property based on state.
-        """
-
+        from savegem.app.gui.controller.menu import MenuController
         from savegem.app.gui.constants import QBool
 
-        module_patch("QIcon", side_effect=lambda path: path)
-        resolve_resource_mock.side_effect = lambda path: f"/resources/{path}"
+        menu_item = mocker.MagicMock()
+        _is_selected_mock.return_value = True
 
-        _controller._set_state(_controller.CurrentSection, "settings_section")
-        _controller.refresh(_menu)
+        _controller.handle__menu_item(menu_item, _controller.sections.rows[0])
 
-        _settings_button.setToolTip.assert_called_once_with("RESOLVED(Settings)")
-        # We only check QIcon type, content is checked by resolved string
-        _settings_button.setIcon.assert_called_once_with(ANY)
+        menu_item.setProperty.assert_called_once_with(MenuController.MenuItemActive, QBool(True))
 
-        # Check resolved resource path for active icon
-        _settings_button.setIcon.assert_called_once_with("/resources/active_settings.svg")
-        _settings_button.setProperty.assert_called_once_with("active", QBool(True))
+        menu_item.reset_mock()
+        _is_selected_mock.return_value = False
+        _controller.handle__menu_item(menu_item, _controller.sections.rows[0])
 
-        # Assertions on the HOME button mock ('home_section', icon: 'home.svg')
-        _home_button.setToolTip.assert_called_once_with("RESOLVED(Home)")
-        _home_button.setIcon.assert_called_once_with(ANY)
+        menu_item.setProperty.assert_called_once_with(MenuController.MenuItemActive, QBool(False))
 
-        # Check resolved resource path for normal icon
-        _home_button.setIcon.assert_called_once_with("/resources/home.svg")
-        _home_button.setProperty.assert_called_once_with("active", QBool(False))
+        change_tab_callback = menu_item.clicked.connect.call_args[0][0]
+        change_tab_callback()
+
+        _change_tab_mock.assert_called_once_with(_controller.sections.get_first("section_id"))
+
+    def test_resolve(self, _controller, _section_data, _is_selected_mock):
+
+        section = _controller.sections.rows[0]
+        expected_label = _controller.sections.get_first("section_label")
+        expected_icon = _controller.sections.get_first("section_icon")
+
+        _is_selected_mock.return_value = False
+
+        label_result = _controller.resolve(section, "label")
+        icon_result = _controller.resolve(section, "icon")
+        invalid_result = _controller.resolve(section, "test")
+
+        assert label_result == expected_label
+        assert icon_result == expected_icon
+        assert invalid_result is None
+
+        # Check that section icon is being modified for selected section.
+        _is_selected_mock.return_value = True
+
+        icon_result = _controller.resolve(section, "icon")
+        assert icon_result == f"active_{expected_icon}"
+
+    def test_is_selected(self, _controller):
+
+        from savegem.app.gui.controller.menu import MenuController
+
+        first_section = _controller.sections.rows[0]
+        second_section = _controller.sections.rows[1]
+
+        _controller._set_state(MenuController.CurrentSection, second_section.get("section_id"))
+
+        assert _controller._MenuController__is_selected(first_section) is False  # noqa
+        assert _controller._MenuController__is_selected(second_section) is True  # noqa
 
     def test_change_tab_early_exit(self, _controller, _widget_manager):
         """
@@ -143,14 +142,20 @@ class TestMenuController(WidgetControllerTest):
         _widget_manager.remove_widgets.assert_not_called()
         _widget_manager.build.assert_not_called()
 
-    def test_change_tab_switch_flow(self, _controller, _widget_manager):
+    def test_change_tab_switch_flow(self, mocker: MockerFixture, _controller, _widget_manager,
+                                    widget_section_build_command_mock):
         """
         Tests the core flow of tearing down the old UI and building the new section.
         """
 
-        new_section_id = "about_section"
+        from savegem.app.gui.constants import UIRefreshEvent
 
-        _controller._set_state(_controller.CurrentSection, "home_section")
+        current_section_id = "home_section"
+        new_section_id = "about_section"
+        current_section_meta = mocker.MagicMock(section_id=current_section_id)
+        new_section_meta = mocker.MagicMock(section_id=new_section_id)
+
+        _controller._set_state(_controller.CurrentSection, current_section_id)
         _controller.sections.data.append(
             {"section_id": new_section_id, "section_label": "About", "section_icon": "about.svg"}
         )
@@ -158,7 +163,17 @@ class TestMenuController(WidgetControllerTest):
         _controller._MenuController__change_tab(new_section_id)  # noqa
 
         assert _controller._get_state(_controller.CurrentSection) == new_section_id
-        _widget_manager.remove_widgets.assert_called_once()
-        _widget_manager.build.assert_called_once_with(new_section_id)
-        _widget_manager.refresh.assert_called_once()
+        _widget_manager.delete.assert_called_once()
+        delete_filter = _widget_manager.delete.call_args[0][0]
+        assert delete_filter(current_section_meta) is True
+        assert delete_filter(new_section_meta) is False
+
+        widget_section_build_command_mock.assert_called_once_with(new_section_id)
+        _widget_manager.execute.assert_called_once_with(widget_section_build_command_mock.return_value)
+
+        _widget_manager.event_refresh.assert_called_once_with(UIRefreshEvent.MenuItemChanged)
+        refresh_filter = _widget_manager.refresh.call_args[0][0]
+        assert refresh_filter(current_section_meta) is False
+        assert refresh_filter(new_section_meta) is True
+
         _widget_manager.enable.assert_called_once()

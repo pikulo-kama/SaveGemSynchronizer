@@ -1,5 +1,4 @@
 import pytest
-from unittest.mock import MagicMock
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from pytest_mock import MockerFixture
@@ -68,11 +67,10 @@ class TestCustomComponentMixin:
 
         metadata = mocker.MagicMock()
         metadata.name = "TestWidget"
-
-        # Default behavior: interactable
-        type_mock = MagicMock()
-        type_mock.is_interactable = True
-        metadata.widget_type = type_mock
+        metadata.parent_widget_name = "ParentTestWidget"
+        metadata.order_id = 3
+        metadata.widget_type.name = "QTestWidget"
+        metadata.widget_type.is_interactable = True
         metadata.alignment = Qt.AlignmentFlag.AlignLeft
         metadata.content = "some_content_key"
         metadata.tooltip = "some_tooltip_key"
@@ -284,3 +282,7 @@ class TestCustomComponentMixin:
         _test_widget.event(_event)
 
         _base_event_mock.assert_called_with(_event)
+
+    def test_str_method(self, _test_widget):
+        expected = "QTestWidget[name: TestWidget, parent: ParentTestWidget, order: 3]"
+        assert _test_widget.__str__() == expected

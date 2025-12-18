@@ -48,6 +48,7 @@ class WidgetControllerTest:
             sections_table.__iter__.side_effect = iter_rows
             sections_table.get.side_effect = lambda index, prop: section_rows[index - 1].get(prop)
             sections_table.get_first.side_effect = lambda prop: section_rows[0].get(prop)
+            sections_table.rows = section_rows
 
             module_patch(f"{self.controller_name}.sections", new=sections_table)
 

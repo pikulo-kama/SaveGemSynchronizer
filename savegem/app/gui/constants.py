@@ -7,33 +7,33 @@ class UISection:
     being built by widget manager.
     """
 
+    RootSection: Final = "root"
     """
     Root section name.
     This is main section that is being built in the first
     place when application starts.
     """
-    RootSection: Final = "root"
 
+    WaitSection: Final = "wait"
     """
     Section that should be displayed when data to present root
     section is still not available.
     """
-    WaitSection: Final = "wait"
 
+    HomeSection: Final = "home"
     """
     Section containing main application screen.
     """
-    HomeSection: Final = "home"
 
+    NotificationSection: Final = "notification"
     """
     Notification dialog section
     """
-    NotificationSection: Final = "notification"
 
+    ConfirmationSection: Final = "confirmation"
     """
     Confirmation dialog section
     """
-    ConfirmationSection: Final = "confirmation"
 
 
 class UIRefreshEvent:
@@ -49,6 +49,7 @@ class UIRefreshEvent:
     CloudSaveFilesChange: Final = "cloud_files_change"
     GameSelectionChange: Final = "game_selection_change"
     SaveDownloaded: Final = "save_downloaded"
+    MenuItemChanged: Final = "menu_item_changed"
 
 
 """

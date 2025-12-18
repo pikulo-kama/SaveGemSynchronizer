@@ -8,7 +8,7 @@ SqliteColInfo = namedtuple('SqliteColInfo', ['cid', 'name', 'type', 'notnull', '
 class TestDatabaseRow:
 
     @pytest.fixture
-    def db_row_data(self):
+    def _db_row_data(self):
         """
         Sample data for DatabaseRow initialization.
         """
@@ -16,7 +16,7 @@ class TestDatabaseRow:
 
 
     @pytest.fixture
-    def db_row_columns(self):
+    def _db_row_columns(self):
         """
         Sample columns for DatabaseRow initialization.
         """
@@ -24,7 +24,7 @@ class TestDatabaseRow:
 
 
     @pytest.fixture
-    def database_row(self, db_row_data, db_row_columns):
+    def _database_row(self, _db_row_data, _db_row_columns):
         """
         A fully initialized DatabaseRow instance.
         """
@@ -33,103 +33,107 @@ class TestDatabaseRow:
 
         return DatabaseRow(
             row_number=5,
-            data=db_row_data,
-            columns=db_row_columns
+            data=_db_row_data,
+            columns=_db_row_columns
         )
 
-    def test_database_row_init_and_get(self, database_row):
+    def test_str_method(self, _database_row):
+        expected = "DatabaseRow: {'id': 1, 'name': 'TestName', 'value': 42.5}"
+        assert _database_row.__str__() == expected
+
+    def test_database_row_init_and_get(self, _database_row):
         """
         Tests initialization and the case-insensitive get method.
         """
 
-        assert database_row.row_number == 5
-        assert database_row.get("id") == 1
-        assert database_row.get("NAME") == "TestName"
-        assert database_row.get("value") == 42.5
-        assert database_row.get("nonexistent") is None
+        assert _database_row.row_number == 5
+        assert _database_row.get("id") == 1
+        assert _database_row.get("NAME") == "TestName"
+        assert _database_row.get("value") == 42.5
+        assert _database_row.get("nonexistent") is None
 
-    def test_database_row_init_handles_missing_data(self, db_row_columns):
+    def test_database_row_init_handles_missing_data(self, _db_row_columns):
         """
         Tests init when data tuple is shorter than columns list.
         """
 
         from savegem.common.db.table import DatabaseRow
 
-        row = DatabaseRow(1, (999,), db_row_columns)
+        row = DatabaseRow(1, (999,), _db_row_columns)
 
         # Only 'ID' should be set
         assert row.get("id") == 999
         assert row.get("name") is None
         assert row.get("value") is None
 
-    def test_database_row_set_and_edits(self, database_row):
+    def test_database_row_set_and_edits(self, _database_row):
         """
         Tests setting a value and accessing the 'edits' property.
         """
 
-        database_row.set("Name", "New Name")
-        database_row.set("Value", 100)
+        _database_row.set("Name", "New Name")
+        _database_row.set("Value", 100)
 
-        assert database_row.edits == {"Name": "New Name", "Value": 100}
+        assert _database_row.edits == {"Name": "New Name", "Value": 100}
 
-    def test_database_row_has_edits(self, database_row):
+    def test_database_row_has_edits(self, _database_row):
         """
         Tests has_edits method.
         """
 
-        assert not database_row.has_edits()
+        assert not _database_row.has_edits()
 
-        database_row.set("ID", 10)
-        assert database_row.has_edits()
+        _database_row.set("ID", 10)
+        assert _database_row.has_edits()
 
-    def test_database_row_is_new_property(self, database_row):
+    def test_database_row_is_new_property(self, _database_row):
         """
         Tests is_new getter and setter.
         """
 
-        assert database_row.is_new is False
+        assert _database_row.is_new is False
 
-        database_row.is_new = True
-        assert database_row.is_new is True
+        _database_row.is_new = True
+        assert _database_row.is_new is True
 
-    def test_database_row_apply_edits(self, database_row):
+    def test_database_row_apply_edits(self, _database_row):
         """
         Tests _apply_edits method updates data and clears edits.
         """
 
-        database_row.set("name", "UpdatedName")
-        database_row.set("new_col", "NewValue")  # Editing an existing key, adding a new key
+        _database_row.set("name", "UpdatedName")
+        _database_row.set("new_col", "NewValue")  # Editing an existing key, adding a new key
 
-        assert database_row.get("name") == "TestName"  # Original data
+        assert _database_row.get("name") == "TestName"  # Original data
 
-        database_row._apply_edits()
+        _database_row._apply_edits()
 
-        assert database_row.get("name") == "UpdatedName"  # Edits applied
-        assert database_row.get("new_col") == "NewValue"
-        assert not database_row.has_edits()  # Edits cleared
+        assert _database_row.get("name") == "UpdatedName"  # Edits applied
+        assert _database_row.get("new_col") == "NewValue"
+        assert not _database_row.has_edits()  # Edits cleared
 
-    def test_database_row_to_json(self, database_row):
+    def test_database_row_to_json(self, _database_row):
         """
         Tests to_json returns the underlying data dictionary.
         """
 
-        database_row.set("Name", "Temporary Edit")
+        _database_row.set("Name", "Temporary Edit")
         # Edits are NOT reflected until _apply_edits is called
 
-        data = database_row.to_json()
+        data = _database_row.to_json()
 
         assert data == {"id": 1, "name": "TestName", "value": 42.5}
         assert isinstance(data, dict)
 
-    def test_database_row_to_json_after_apply_edits(self, database_row):
+    def test_database_row_to_json_after_apply_edits(self, _database_row):
         """
         Tests to_json reflects changes after _apply_edits.
         """
 
-        database_row.set("name", "Final Name")
-        database_row._apply_edits()
+        _database_row.set("name", "Final Name")
+        _database_row._apply_edits()
 
-        data = database_row.to_json()
+        data = _database_row.to_json()
         assert data["name"] == "Final Name"
 
 

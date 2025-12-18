@@ -80,10 +80,5 @@ def push_notification_mock(module_patch):
 
 
 @pytest.fixture
-def notification_mock(module_patch):
-    return module_patch("notification")
-
-
-@pytest.fixture
-def confirmation_mock(module_patch):
-    return module_patch("confirmation")
+def widget_section_build_command_mock(module_patch):
+    return module_patch("WidgetSectionBuildCommand")

@@ -63,28 +63,27 @@ class TestContentResolverFactory(ResolverTestModuleHelper):
         Test that resolvers are loaded only once (lazy loading/singleton).
         """
 
-        from savegem.app.gui.widget.resolver import get_resolver
+        from savegem.app.gui.widget.resolver import get_resolvers
 
         # 1. First call loads the pool
-        resolver_1 = get_resolver("mocktokenresolver")
+        resolvers_1 = get_resolvers()
 
         # 2. Second call should hit the cache
-        resolver_2 = get_resolver("MOCKTOKENRESOLVER")
+        resolvers_2 = get_resolvers()
 
         # Assert get_members was called only once
         get_members_mock.assert_called()
 
         # Assert the same instance is returned (singleton pattern)
-        assert resolver_1 is resolver_2
-        assert isinstance(resolver_1, _mock_token_resolver)
+        assert resolvers_1 is resolvers_2
 
 
 class TestResolveContent(ResolverTestModuleHelper):
 
     @pytest.fixture
     def _mock_token_resolve_method(self, mocker: MockerFixture):
-        from savegem.app.gui.widget.resolver import get_resolver
-        return mocker.patch.object(get_resolver("mocktokenresolver"), "resolve")
+        from savegem.app.gui.widget.resolver import get_resolvers
+        return mocker.patch.object(get_resolvers().get("mocktokenresolver"), "resolve")
 
     def test_no_token_returns_string(self):
         """
@@ -138,10 +137,10 @@ class TestResolveContent(ResolverTestModuleHelper):
         and the resulting non-string object breaks the outer loop correctly.
         """
 
-        from savegem.app.gui.widget.resolver import resolve_content, get_resolver
+        from savegem.app.gui.widget.resolver import resolve_content, get_resolvers
 
-        token_resolve = mocker.spy(get_resolver("mocktokenresolver"), "resolve")
-        integer_resolve = mocker.spy(get_resolver("mockintegerresolver"), "resolve")
+        token_resolve = mocker.spy(get_resolvers().get("mocktokenresolver"), "resolve")
+        integer_resolve = mocker.spy(get_resolvers().get("mockintegerresolver"), "resolve")
 
         #    Outer Token: mocktoken{...}
         #    Inner Token (Parameter): mockinteger{100}

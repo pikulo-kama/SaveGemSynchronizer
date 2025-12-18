@@ -99,6 +99,9 @@ class DatabaseRow:
         """
         return self.__data
 
+    def __str__(self):
+        return f"DatabaseRow: {self.to_json()}"
+
 
 class DatabaseTable:
     """

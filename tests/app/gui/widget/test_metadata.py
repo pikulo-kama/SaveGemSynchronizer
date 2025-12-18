@@ -1,30 +1,7 @@
 import pytest
 import json
 from PyQt6.QtCore import Qt
-
-
-class MockWidgetType:
-    def __init__(self, name):
-        self.name = name
-
-
-class MockLayoutType:
-    def __init__(self, name):
-        self.name = name
-
-
-@pytest.fixture(autouse=True)
-def _setup(module_patch):
-    """
-    Mocks all external dependencies used in the file.
-    """
-
-    # Mock type resolution functions
-    module_patch("get_widget_type", return_value=MockWidgetType("MOCK_WIDGET_TYPE"))
-    module_patch("get_layout_type", return_value=MockLayoutType("MOCK_LAYOUT_TYPE"))
-
-    # Mock style resolution function
-    module_patch("resolve_style_properties", side_effect=lambda s: f"RESOLVED({s})")
+from pytest_mock import MockerFixture
 
 
 class TestRefreshEventMetadata:
@@ -41,12 +18,37 @@ class TestRefreshEventMetadata:
 
 class TestWidgetMetadata:
 
-    MINIMAL_INIT_KWARGS = {
-        'widget_id': 'test_id',
-        'section_id': 'test_section',
-        'widget_type': MockWidgetType('Button'),
-    }
+    @pytest.fixture(autouse=True)
+    def _setup(self, module_patch, _create_type_object):
+        """
+        Mocks all external dependencies used in the file.
+        """
 
+        # Mock type resolution functions
+        module_patch("get_widget_type", return_value=_create_type_object("MOCK_WIDGET_TYPE"))
+        module_patch("get_layout_type", return_value=_create_type_object("MOCK_LAYOUT_TYPE"))
+
+        # Mock style resolution function
+        module_patch("resolve_style_properties", side_effect=lambda s: f"RESOLVED({s})")
+
+    @pytest.fixture
+    def _init_kw(self, _create_type_object):
+        return {
+            'widget_id': 'test_id',
+            'section_id': 'test_section',
+            'widget_type': _create_type_object('Button'),
+        }
+
+    @pytest.fixture
+    def _create_type_object(self, mocker: MockerFixture):
+
+        def create_type(name: str):
+            type_object = mocker.MagicMock()
+            type_object.name = name
+
+            return type_object
+
+        return create_type
 
     @pytest.fixture
     def _mock_widget_events(self, db_table_mock):
@@ -61,15 +63,85 @@ class TestWidgetMetadata:
             DatabaseRow(1, ("DATA_CHANGE", 0), ["refresh_event_id", "refresh_children"])
         ]
 
+    def test_id_setting(self, _init_kw):
 
-    def test_init_defaults(self):
+        from savegem.app.gui.widget.metadata import WidgetMetadata
+
+        original_id = _init_kw["widget_id"]
+        new_id = "new_id"
+
+        meta = WidgetMetadata(**_init_kw)
+
+        assert meta.id == original_id
+        assert meta.original_id == original_id
+
+        meta.id = new_id
+
+        assert meta.id == new_id
+        assert meta.original_id == original_id
+
+    def test_parent(self, _init_kw):
+
+        from savegem.app.gui.widget.metadata import WidgetMetadata
+
+        original_parent_id = "parent_id"
+        new_parent_id = "new_parent_id"
+        new_section_id = "new"
+
+        meta = WidgetMetadata(**_init_kw, parent_widget_id=original_parent_id)
+        parent_meta = WidgetMetadata(widget_id=new_parent_id, section_id=new_section_id, widget_type=meta.widget_type)
+
+        assert meta.parent is None
+        assert meta.parent_widget_id == original_parent_id
+        assert meta.parent_widget_name == f"{_init_kw["section_id"]}.{original_parent_id}"
+
+        meta.parent_widget_id = new_parent_id
+
+        assert meta.parent is None
+        assert meta.parent_widget_id == new_parent_id
+        assert meta.parent_widget_name == f"{_init_kw["section_id"]}.{new_parent_id}"
+
+        meta.parent = parent_meta
+        meta.parent.parent_widget_id = original_parent_id
+
+        assert meta.parent == parent_meta
+        assert meta.parent_widget_id == "new_parent_id"
+        assert meta.parent_widget_name == f"{new_section_id}.{new_parent_id}"
+
+    def test_resolvers(self, _init_kw):
+
+        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from savegem.app.gui.widget.resolver import ContentResolver
+
+        class TestResolver1(ContentResolver): pass
+        class TestResolver2(ContentResolver): pass
+
+        resolver1 = TestResolver1()
+        resolver2 = TestResolver2()
+
+        meta = WidgetMetadata(**_init_kw)
+
+        assert len(meta.resolvers) == 0
+
+        meta.add_resolver(resolver1)
+
+        assert len(meta.resolvers) == 1
+        assert meta.resolvers["testresolver1"] == resolver1
+
+        meta.add_resolver(resolver2)
+
+        assert len(meta.resolvers) == 2
+        assert meta.resolvers["testresolver1"] == resolver1
+        assert meta.resolvers["testresolver2"] == resolver2
+
+    def test_init_defaults(self, _init_kw):
         """
         Test default values and mandatory setup for refresh events.
         """
 
         from savegem.app.gui.widget.metadata import WidgetMetadata, UIRefreshEvent
 
-        meta = WidgetMetadata(**self.MINIMAL_INIT_KWARGS)
+        meta = WidgetMetadata(**_init_kw)
 
         # Mandatory refresh event check
         assert UIRefreshEvent.All in meta.refresh_events
@@ -93,8 +165,17 @@ class TestWidgetMetadata:
         assert meta.spacing is None
         assert meta.controller is None
 
+    def test_should_allow_changing_order_id(self, _init_kw):
 
-    def test_complex_init_values(self):
+        from savegem.app.gui.widget.metadata import WidgetMetadata
+
+        meta = WidgetMetadata(**_init_kw, order_id=10)
+        assert meta.order_id == 10
+
+        meta.order_id = 123
+        assert meta.order_id == 123
+
+    def test_complex_init_values(self, _create_type_object):
         """
         Test non-default initialization values and derived properties.
         """
@@ -107,7 +188,7 @@ class TestWidgetMetadata:
             widget_id='child',
             section_id='home',
             parent_widget_id='parent',
-            widget_type=MockWidgetType('Label'),  # noqa
+            widget_type=_create_type_object('Label'),
             stylesheet='color: blue',
             refresh_events=['CUSTOM_EVENT', UIRefreshEvent.All],  # UIRefreshEvent.All is redundant
             refresh_events_meta=events_meta
@@ -124,16 +205,20 @@ class TestWidgetMetadata:
         assert UIRefreshEvent.All in meta.refresh_events
         assert meta.should_refresh_children("CUSTOM_EVENT") is True
         assert meta.should_refresh_children(UIRefreshEvent.All) is False
+        assert meta.should_refresh_children("INVALID_EVENT") is False
 
-
-    def test_section_id_root(self):
+    def test_section_id_root(self, _create_type_object):
         """
         Test section_id logic when it is None.
         """
 
         from savegem.app.gui.widget.metadata import WidgetMetadata, UISection
 
-        meta = WidgetMetadata(widget_id='test', section_id=None, widget_type=MockWidgetType('Type'))  # noqa
+        meta = WidgetMetadata(
+            widget_id='test',
+            section_id=None,  # noqa
+            widget_type=_create_type_object('Type')
+        )
 
         assert meta.section_id == UISection.RootSection
         assert meta.raw_section_id is None
@@ -189,14 +274,14 @@ class TestWidgetMetadata:
         ("[onlyProps=true]", None, {"onlyProps": None}),  # This case is unlikely based on the regex but testing boundary
         (None, None, {})
     ])
-    def test_parse_style_object_name(self, raw_name, expected_name, expected_props):
+    def test_parse_style_object_name(self, _init_kw, raw_name, expected_name, expected_props):
         """
         Tests parsing object name and properties from the composed string.
         """
 
         from savegem.app.gui.widget.metadata import WidgetMetadata
 
-        meta = WidgetMetadata(**self.MINIMAL_INIT_KWARGS)
+        meta = WidgetMetadata(**_init_kw)
 
         # Access the private method via name mangling
         meta._WidgetMetadata__parse_style_object_name(raw_name)  # noqa

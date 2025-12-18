@@ -28,7 +28,59 @@
             "game_config_change",
             "game_selection_change",
             "save_downloaded"
-          ]
+          ],
+          "template": {
+            "body": [
+              {
+                "widget_id": "history_record",
+                "widget_type_id": "QWidget",
+                "layout_type_id": "QHBoxLayout",
+                "style_object_name": "saveListRecord",
+                "height": 65,
+                "margin_left": 10,
+                "margin_top": 5,
+                "margin_right": 10,
+                "margin_bottom": 5,
+                "children": [
+                  {
+                    "widget_id": "record_details",
+                    "widget_type_id": "QWidget",
+                    "layout_type_id": "QVBoxLayout",
+                    "alignment": "vcenter",
+                    "children": [
+                      {
+                        "widget_id": "version_label",
+                        "content": "template{version}",
+                        "widget_type_id": "QLabel",
+                        "style_object_name": "saveListRecordVersion"
+                      },
+                      {
+                        "widget_id": "owner_label",
+                        "content": "template{owner}",
+                        "widget_type_id": "QLabel",
+                        "style_object_name": "saveListRecordOwner"
+                      }
+                    ]
+                  },
+                  {
+                    "widget_id": "history_record_spacer",
+                    "widget_type_id": "QSpacer"
+                  },
+                  {
+                    "widget_id": "restore_button",
+                    "content": "tr{label_Restore}",
+                    "widget_type_id": "QProgressPushButton"
+                  }
+                ]
+              }
+            ],
+            "footer": [
+              {
+                "widget_id": "save_history_spacer",
+                "widget_type_id": "QSpacer"
+              }
+            ]
+          }
         }
       ]
     }

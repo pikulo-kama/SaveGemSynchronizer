@@ -28,9 +28,28 @@
               "style_object_name": "sidebarMenu",
               "margin_left": 5,
               "margin_right": 5,
+              "refresh_events": [
+                "menu_item_changed"
+              ],
               "recursive_refresh_events": [
                 "language_change"
-              ]
+              ],
+              "template": {
+                "body": [
+                  {
+                    "widget_id": "menu_item",
+                    "content": "icon{template{icon}, size: 25}",
+                    "tooltip": "template{label}",
+                    "widget_type_id": "QPushButton"
+                  }
+                ],
+                "footer": [
+                  {
+                    "widget_id": "menu_spacer",
+                    "widget_type_id": "QSpacer"
+                  }
+                ]
+              }
             },
             {
               "widget_id": "sidebar_spacer",

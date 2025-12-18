@@ -26,6 +26,9 @@ class WidgetsImporter(RegularImporter):
         for root_widget in data:
             for widget in self.__flatten_tree(root_widget, root_widget, events_table):
                 formatted_data.append(widget)
+                
+                for template_widget in self.__parse_template(widget):
+                    formatted_data.append(template_widget)
 
         return formatted_data
 
@@ -79,3 +82,35 @@ class WidgetsImporter(RegularImporter):
                 widgets.append(child_widget)
 
         return widgets
+
+    def __parse_template(self, widget: dict):
+        
+        template = widget.get("template", {})
+        data = []
+
+        for template_section in template.keys():
+            section = template.get(template_section, [])
+            data += self.__format_template_section(template_section, widget, section)
+
+        if "template" in widget:
+            del widget["template"]
+
+        return data
+
+    def __format_template_section(self, section_name: str, widget: dict, section: list[dict]):
+        section_id = f"{widget["widget_id"]}__template_{section_name}"
+        section_filter = f"section_id == '{section_id}'"
+        order = 0
+
+        db().table("ui_widgets") \
+            .where(section_filter) \
+            .retrieve() \
+            .remove_all() \
+            .save()
+
+        for segment in section:
+            order += 1
+            segment["order_id"] = order
+            segment["section_id"] = section_id
+
+        return self._format_data(section, {"filter": section_filter})

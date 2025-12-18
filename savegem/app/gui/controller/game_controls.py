@@ -64,7 +64,7 @@ class DownloadButtonController(WidgetController):
             worker.error.connect(_error_subscriber)
             worker.progress.connect(_progress_subscriber(download_button))
             worker.completed.connect(download_button.refresh)
-            worker.completed.connect(lambda: self.manager.gui.refresh(UIRefreshEvent.SaveDownloaded))
+            worker.completed.connect(lambda: self.manager.event_refresh(UIRefreshEvent.SaveDownloaded))
             worker.completed.connect(_done_subscriber("notification_NewSaveHasBeenDownloaded"))
             worker.completed.connect(lambda: app().games.current.meta.local.calculate_checksum())
 

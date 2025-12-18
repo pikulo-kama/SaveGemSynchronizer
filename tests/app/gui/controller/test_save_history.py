@@ -8,8 +8,7 @@ from tests.app.gui.controller import WidgetControllerTest
 class TestSaveHistoryListController(WidgetControllerTest):
 
     @pytest.fixture(autouse=True)
-    def _setup(self, mocker: MockerFixture, module_patch, _save_data, _widget_mock, _label_mock, string_to_date_mock,
-               _progress_button_mock, _spacer_mock, _v_layout_mock, _h_layout_mock, get_verbose_date_mock,
+    def _setup(self, mocker: MockerFixture, module_patch, string_to_date_mock, get_verbose_date_mock,
                get_verbose_time_mock, tr_mock, games_config_mock, user_config_mock):
 
         games_config_mock.current.meta.local.checksum = "C2"
@@ -34,25 +33,6 @@ class TestSaveHistoryListController(WidgetControllerTest):
         user_config_mock.by_email.side_effect = owner_by_email
 
     @pytest.fixture
-    def _save_data(self, games_config_mock, _save_a, _save_b, _widget_mock, _progress_button_mock, _h_layout_mock):
-        save_list = [_save_a, _save_b]
-
-        _widget_mock.side_effect = [
-            _save_a.record_container,
-            _save_a.details_container,
-            _save_b.record_container,
-            _save_b.details_container
-        ]
-        _h_layout_mock.side_effect = [
-            _save_a.record_container.layout.return_value,
-            _save_b.record_container.layout.return_value
-        ]
-        games_config_mock.current.meta.drive.__iter__.return_value = save_list
-        _progress_button_mock.side_effect = [_save_a.button, _save_b.button]
-
-        return save_list
-
-    @pytest.fixture
     def _save_a(self, mocker: MockerFixture):
         save = mocker.MagicMock()
         save.id = "v1_id"
@@ -75,13 +55,6 @@ class TestSaveHistoryListController(WidgetControllerTest):
         return save
 
     @pytest.fixture
-    def _save_list(self, mocker: MockerFixture):
-        """
-        Mocks the QScrollableWidget for the save history list.
-        """
-        return mocker.MagicMock()
-
-    @pytest.fixture
     def _controller(self, _widget_manager):
         """
         Provides the SaveHistoryListController instance.
@@ -90,35 +63,94 @@ class TestSaveHistoryListController(WidgetControllerTest):
         from savegem.app.gui.controller.save_history import SaveHistoryListController
         return SaveHistoryListController(_widget_manager)
 
-    def test_refresh_renders_history_items(self, _controller, _widget_manager, _save_list, _widget_mock,
-                                           _progress_button_mock, _spacer_mock, _save_data):
-        """
-        Tests that refresh iterates over metadata, sets properties, and handles conditional rendering.
-        """
+    def test_get_data(self, _controller, games_config_mock):
+        assert _controller._get_data() == games_config_mock.current.meta.drive
 
+    def test_resolve(self, mocker: MockerFixture, _controller):
+
+        metadata = mocker.MagicMock()
+        expected_version = "1.0.0"
+        expected_owner = "Arnold"
+
+        version_mock = mocker.patch.object(_controller, "_SaveHistoryListController__get_upload_date_string")
+        owner_mock = mocker.patch.object(_controller, "_SaveHistoryListController__get_owner_string")
+
+        version_mock.return_value = expected_version
+        owner_mock.return_value = expected_owner
+
+        version_result = _controller.resolve(metadata, "version")
+        owner_result = _controller.resolve(metadata, "owner")
+        invalid_result = _controller.resolve(metadata, "test")
+
+        assert version_result == expected_version
+        assert owner_result == expected_owner
+        assert invalid_result is None
+
+    def test_handle_history_record(self, mocker: MockerFixture, _controller, _save_a, games_config_mock):
+
+        from savegem.app.gui.controller.save_history import SaveHistoryListController
         from savegem.app.gui.constants import QBool
 
-        add_widget_mock = _save_list.layout.return_value.add_dynamic_widget
+        history_record = mocker.MagicMock()
 
-        _controller.refresh(_save_list)
+        # Test when history record metadata doesn't match local save metadata.
+        games_config_mock.current.meta.local.checksum = None
 
-        _widget_manager.remove_child_widgets.assert_called_once_with(_save_list)
-        add_widget_mock.assert_any_call(_spacer_mock.return_value)
+        _controller.handle__history_record(history_record, _save_a)
 
-        assert _widget_mock.call_count == 4  # Two records created. (once widget for record and another for details)
-        assert _progress_button_mock.call_count == 2  # Two buttons created (one hidden later)
-        assert add_widget_mock.call_count == 3
+        history_record.setProperty.assert_called_once_with(SaveHistoryListController.HistoryRecordActive, QBool(False))
 
-        for save in _save_data:
-            save.record_container.setProperty.assert_called_once_with("active", QBool(save.is_current))
-            record_container_layout = save.record_container.layout.return_value
-            add_widget_args = record_container_layout.add_dynamic_widget.call_args_list
-            add_widget_args = [arg[0][0] for arg in add_widget_args]
+        # Test when history record metadata does match local save metadata.
+        history_record.reset_mock()
+        games_config_mock.current.meta.local.checksum = _save_a.checksum
 
-            if save.is_current:
-               assert save.button not in add_widget_args
-            else:
-                assert save.button in add_widget_args
+        _controller.handle__history_record(history_record, _save_a)
+
+        history_record.setProperty.assert_called_once_with(SaveHistoryListController.HistoryRecordActive, QBool(True))
+
+    def test_handle_restore_button(self, mocker: MockerFixture, _controller, _save_a, games_config_mock,
+                                   _widget_manager, gui_mock, tr_mock):
+
+        button = mocker.MagicMock()
+        button.metadata.name = "Upload Button"
+
+        spacer = mocker.MagicMock()
+        spacer.metadata.name = "Spacer"
+
+        # Verify that restore button is not being removed
+        # If save file checksum doesn't match local save checksum.
+        games_config_mock.current.meta.local.checksum = None
+
+        _controller.handle__restore_button(button, _save_a)
+
+        _widget_manager.delete.assert_not_called()
+
+        # Verify that restore button is removed when
+        # checksum matches.
+        games_config_mock.current.meta.local.checksum = _save_a.checksum
+        button.reset_mock()
+
+        _controller.handle__restore_button(button, _save_a)
+
+        _widget_manager.delete.assert_called_once()
+        delete_filter = _widget_manager.delete.call_args[0][0]
+        assert delete_filter(button.metadata) is True
+        assert delete_filter(spacer.metadata) is False
+
+        # Verify restore version callback.
+        restore_version_mock = mocker.patch.object(_controller, "_SaveHistoryListController__restore_version")
+
+        button.clicked.connect.assert_called_once()
+        restore_version_local = button.clicked.connect.call_args[0][0]
+        confirmation_callback = restore_version_local()
+        confirmation_callback()
+
+        gui_mock.confirmation.assert_called_once()
+        tr_mock.assert_called_once_with("confirmation_ConfirmToDownloadSave")
+        restore_version_callback = gui_mock.confirmation.call_args[0][1]
+        restore_version_callback()
+
+        restore_version_mock.assert_called_once_with(_save_a.id, button)
 
     def test_get_upload_date_string(self, _save_a):
         """
@@ -158,7 +190,7 @@ class TestSaveHistoryListController(WidgetControllerTest):
         assert result == "test"
 
     def test_restore_version_worker_flow(self, mocker: MockerFixture, module_patch, _controller, gui_mock,
-                                         games_config_mock, _do_work_mock):
+                                         games_config_mock, _do_work_mock, _widget_manager):
         """
         Tests the __restore_version logic, verifying worker setup and completion callback.
         """
@@ -189,7 +221,7 @@ class TestSaveHistoryListController(WidgetControllerTest):
 
         # Assert post-success actions
         games_config_mock.current.meta.drive.refresh.assert_called_once()
-        gui_mock.refresh.assert_called_once_with(UIRefreshEvent.SaveDownloaded)
+        _widget_manager.event_refresh.assert_called_once_with(UIRefreshEvent.SaveDownloaded)
         gui_mock.notification.assert_called_once_with("Translated(notification_NewSaveHasBeenDownloaded)")
 
         # 5. Simulate FAILURE event (should do nothing)

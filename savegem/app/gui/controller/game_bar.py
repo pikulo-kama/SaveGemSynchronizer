@@ -1,5 +1,6 @@
 from savegem.app.gui.component.tab_bar import QCustomTabBar
 from savegem.app.gui.controller import WidgetController
+from savegem.app.gui.widget.command.build import WidgetSectionBuildCommand
 from savegem.app.gui.widget.resolver import resolve_content
 from savegem.common.util.logger import get_logger
 
@@ -42,13 +43,11 @@ class GameBarController(WidgetController):
         if new_section_id == current_section_id:
             return
 
-        self.manager.remove_widgets(
-            lambda metadata: metadata.section_id == current_section_id
-        )
+        self._set_state(self.CurrentSection, new_section_id)
 
         _logger.info("Changing game tab to '%s'", new_section_id)
-        self.manager.build(new_section_id)
-        self.manager.refresh()
-        self.manager.enable()
 
-        self._set_state(self.CurrentSection, new_section_id)
+        self.manager.delete(lambda meta: meta.section_id == current_section_id)
+        self.manager.execute(WidgetSectionBuildCommand(new_section_id))
+        self.manager.refresh(lambda meta: meta.section_id == new_section_id)
+        self.manager.enable()

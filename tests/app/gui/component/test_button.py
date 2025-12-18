@@ -1,7 +1,10 @@
 import pytest
-from PyQt6.QtGui import QMouseEvent, QKeyEvent
+from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QMouseEvent, QKeyEvent, QIcon
 from PyQt6.QtWidgets import QPushButton
 from pytest_mock import MockerFixture
+
+from savegem.app.gui.widget.resolver.icon import QIconWrapper
 
 
 class TestQCustomPushButton:
@@ -19,7 +22,6 @@ class TestQCustomPushButton:
 
         return button
 
-
     def test_set_text_on_set_content(self, _custom_button):
 
         content = "Test Content"
@@ -27,6 +29,14 @@ class TestQCustomPushButton:
         _custom_button.set_content(content)
         assert _custom_button.text() == content
 
+    def test_set_icon_on_set_content(self, _custom_button):
+
+        icon = QIcon()
+        size = 25
+        content = QIconWrapper(icon, size, size)
+
+        _custom_button.set_content(content)
+        assert _custom_button.iconSize() == QSize(size, size)
 
     def test_custom_push_button_initialization(self, _custom_button):
         """

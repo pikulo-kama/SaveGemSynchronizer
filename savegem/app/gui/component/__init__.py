@@ -87,7 +87,6 @@ class CustomComponentMixin:
 
         return super().event(event)  # noqa
 
-
     def refresh(self, refresh_children: bool = False):
         """
         Used to refresh widget's.
@@ -101,13 +100,13 @@ class CustomComponentMixin:
         _logger.debug("Refreshing widget '%s'", self.metadata.name)
 
         if self.metadata.content is not None:
-            content = resolve_content(self.metadata.content)
+            content = resolve_content(self.metadata.content, extra_resolvers=self.metadata.resolvers)
             self.set_content(content)
 
             _logger.debug("Content=%s", content)
 
         if self.metadata.tooltip is not None:
-            tooltip = resolve_content(self.metadata.tooltip)
+            tooltip = resolve_content(self.metadata.tooltip, extra_resolvers=self.metadata.resolvers)
             self.setToolTip(tooltip)  # noqa
 
             _logger.debug("Tooltip=%s", tooltip)
@@ -128,6 +127,14 @@ class CustomComponentMixin:
 
         for child in self.findChildren(CustomComponentMixin):  # noqa
             child.update_styles()
+
+    def __str__(self):
+        type_name = self.metadata.widget_type.name
+        name = self.metadata.name
+        order_id = self.metadata.order_id
+        parent_name = self.metadata.parent_widget_name
+
+        return f"{type_name}[name: {name}, parent: {parent_name}, order: {order_id}]"
 
 
 """

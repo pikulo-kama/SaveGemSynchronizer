@@ -1,10 +1,7 @@
-from typing import Optional, Union, TYPE_CHECKING
+from typing import Union, TYPE_CHECKING
 from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QGridLayout, QLayout
-from savegem.app.gui.widget.metadata import WidgetMetadata
-from savegem.app.gui.widget.type import get_widget_type_by_class
 
 if TYPE_CHECKING:
-    from savegem.app.gui.widget.manager import WidgetManager
     from savegem.app.gui.component import QCustomComponent
 
 
@@ -14,49 +11,11 @@ class CustomLayoutMixin:
     Used to extend existing QT objects.
     """
 
-    def __init__(self):
-        self.__manager: Optional["WidgetManager"] = None
-
-    def set_manager(self, manager: "WidgetManager"):
-        """
-        Used to link instance of widget manager
-        to layout.
-        """
-        self.__manager = manager
-
     def add_widget(self, widget: "QCustomComponent", **kw):
         """
         Used to add widget to the layout.
         """
         self.addWidget(widget, **kw)  # noqa
-
-    def add_dynamic_widget(self, widget: "QCustomComponent", **kw):
-        """
-        Used to add widget to the layout.
-        Will also register widget in widget manager.
-        """
-
-        parent_widget: "QCustomComponent" = self.parentWidget()  # noqa
-        parent_meta = parent_widget.metadata
-        order_id = self.count() + 1  # noqa
-
-        widget.metadata = WidgetMetadata(
-            widget_id=f"{parent_meta.id}_child{order_id}",  # noqa
-            section_id=parent_meta.raw_section_id,
-            parent_widget_id=parent_meta.id,
-            order_id=order_id,  # noqa
-            widget_type=get_widget_type_by_class(widget.__class__)
-        )
-
-        widget_layout: QCustomLayout = widget.layout()
-
-        # Propagate widget manager when
-        # dynamically adding new elements.
-        if widget_layout is not None:
-            widget_layout.set_manager(self.__manager)
-
-        self.__manager.add_widget(widget)
-        self.add_widget(widget, **kw)
 
 
 class QCustomVBoxLayout(QVBoxLayout, CustomLayoutMixin):
@@ -92,7 +51,7 @@ class QCustomGridLayout(QGridLayout, CustomLayoutMixin):
         grid_columns = parent_meta.grid_columns
         # Order of widget starts with 1.
         # We need to make it 0 based.
-        order_id = widget.metadata.order_id - 1
+        order_id = self.count()  # noqa
 
         # Make sure columns have equal weight
         # so that when there are fewer widgets than
