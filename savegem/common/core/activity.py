@@ -1,9 +1,11 @@
 import json
 
-from savegem.app.data import holder, HolderObject
+from kui.core.app import KamaApplication
+from kutil.logger import get_logger
+
+from savegem.constants import HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.service.gdrive import GDrive
-from savegem.common.util.logger import get_logger
 
 
 _logger = get_logger(__name__)
@@ -14,8 +16,8 @@ class Activity(AppData):
     Contains list of active players for current game
     """
 
-    def __init__(self, app):
-        super().__init__(app)
+    def __init__(self, context):
+        super().__init__(context)
         self.__players = []
 
     @property
@@ -53,7 +55,8 @@ class Activity(AppData):
         """
 
         self.__players.clear()
-        activity_log = holder().get(HolderObject.Activity)
+        application = KamaApplication()
+        activity_log = application.data.get(HolderObject.Activity)
         _logger.debug("Activity log: %s", activity_log)
 
         for user_email, games in activity_log.items():

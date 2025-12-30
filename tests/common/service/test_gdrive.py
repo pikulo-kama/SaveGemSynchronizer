@@ -341,7 +341,7 @@ class TestGDrive:
         Test upload_file successful completion.
         """
 
-        from constants import ZIP_MIME_TYPE
+        from savegem.constants import ZIP_MIME_TYPE
         from savegem.common.service.gdrive import GDrive
 
         file_name_from_path_mock.return_value = "test.zip"
@@ -487,7 +487,7 @@ class TestGDrive:
         Tests the case where valid credentials are loaded from the file.
         """
 
-        from constants import File
+        from savegem.constants import File
         from savegem.common.service.gdrive import GDRIVE_SCOPES, GDrive
 
         resolve_app_data_mock.return_value = File.GDriveToken
@@ -512,7 +512,7 @@ class TestGDrive:
         Tests the case where expired credentials are successfully refreshed.
         """
 
-        from constants import File
+        from savegem.constants import File
         from savegem.common.service.gdrive import GDrive
 
         resolve_app_data_mock.return_value = File.GDriveToken
@@ -538,7 +538,7 @@ class TestGDrive:
         Tests the case where the refresh fails due to an expired refresh token.
         """
 
-        from constants import File
+        from savegem.constants import File
         from savegem.common.service.gdrive import GDrive
 
         resolve_app_data_mock.return_value = File.GDriveToken
@@ -611,7 +611,7 @@ class TestGoogleAuth:
         Tests that a RuntimeError is raised if the credentials file is missing.
         """
 
-        from constants import File
+        from savegem.constants import File
         from savegem.common.service.gdrive import GoogleAuth
 
         path_exists_mock.side_effect = [False, False]

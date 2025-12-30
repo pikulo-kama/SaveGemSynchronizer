@@ -69,8 +69,8 @@ class TestProcessWatcher:
     def test_run_once_initializes_user_and_downloads_config(self, gdrive_mock, app_context_mock, app_config_mock,
                                                             holder_mock):
 
-        from savegem.process_watcher.main import ProcessWatcher
-        from savegem.app.data import HolderObject
+        from savegem.process_watcher import ProcessWatcher
+        from savegem.constants import HolderObject
 
         watcher = ProcessWatcher()
         watcher._run_once()
@@ -90,7 +90,7 @@ class TestProcessWatcher:
         Test that _work returns immediately if no process has started or closed.
         """
 
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
 
         # Create processes that are just 'Running'
         running_procs = [
@@ -116,7 +116,7 @@ class TestProcessWatcher:
         Test that the activity log is updated with currently running (non-closed) games.
         """
 
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process("Started Game", has_started=True)
         proc_closed = _create_game_process("Closed Game", has_closed=True)
@@ -143,7 +143,7 @@ class TestProcessWatcher:
         """
 
         from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process("Started Game", has_started=True, sync_status=SyncStatus.NoInformation)
         _get_run_processes_mock.return_value = [proc_started]
@@ -169,7 +169,7 @@ class TestProcessWatcher:
         """
 
         from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process(
             "Manual Game",
@@ -191,7 +191,7 @@ class TestProcessWatcher:
                                                                      _get_run_processes_mock, _create_game_process):
 
         from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process(
             "Manual Game",
@@ -218,7 +218,7 @@ class TestProcessWatcher:
         """
 
         from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process(
             "UpToDate Game",
@@ -248,7 +248,7 @@ class TestProcessWatcher:
         """
 
         from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
         from savegem.app.gui.constants import UIRefreshEvent
 
         proc_started = _create_game_process(
@@ -296,7 +296,7 @@ class TestProcessWatcher:
 
         from savegem.app.gui.constants import UIRefreshEvent
         from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
 
         game_name = "Started Game"
         proc_started = _create_game_process(
@@ -328,7 +328,7 @@ class TestProcessWatcher:
         """
 
         from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher.main import ProcessWatcher
+        from savegem.process_watcher import ProcessWatcher
 
         game_name = "Closed Game"
         proc_closed = _create_game_process(

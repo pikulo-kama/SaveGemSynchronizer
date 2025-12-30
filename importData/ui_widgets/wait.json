@@ -9,8 +9,8 @@
     {
       "widget_id": "wait_bar_root",
       "section_id": "wait",
-      "widget_type_id": "QWidget",
-      "layout_type_id": "QVBoxLayout",
+      "widget_type_id": "KWidget",
+      "layout_type_id": "KVBoxLayout",
       "spacing": 30,
       "width": 400,
       "margin_bottom": 50,
@@ -18,12 +18,12 @@
         {
           "widget_id": "app_logo",
           "content": "pixmap{gem_outline.svg, scale: 80}",
-          "widget_type_id": "QLabel",
+          "widget_type_id": "KLabel",
           "alignment": "center"
         },
         {
           "widget_id": "wait_bar",
-          "widget_type_id": "QWaitBar",
+          "widget_type_id": "KWaitBar",
           "alignment": "bottom",
           "height": 10
         }

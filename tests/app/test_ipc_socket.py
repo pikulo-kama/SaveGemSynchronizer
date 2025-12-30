@@ -166,7 +166,7 @@ class TestUISocket:
         """
 
         from savegem.app.ipc_socket import UISocket
-        from savegem.app.data import HolderObject
+        from savegem.constants import HolderObject
 
         # Call the static method directly
         UISocket._UISocket__update_activity()  # noqa
@@ -186,7 +186,7 @@ class TestUISocket:
         """
 
         from savegem.app.ipc_socket import UISocket, UIRefreshEvent
-        from savegem.app.data import HolderObject
+        from savegem.constants import HolderObject
 
         UISocket._UISocket__update_games_configuration(UIRefreshEvent.GameConfigChange)  # noqa
 

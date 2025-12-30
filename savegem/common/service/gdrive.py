@@ -1,6 +1,5 @@
 import io
 import json
-import logging
 import os.path
 
 from google.auth.exceptions import RefreshError
@@ -10,11 +9,12 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload, MediaIoBaseUpload
+from kui.core.app import KamaApplication
+from kutil.file import file_name_from_path, save_file
+from kutil.logger import get_logger
 
-from constants import ZIP_MIME_TYPE, JSON_MIME_TYPE, File, UTF_8
-from savegem.common.util.file import resolve_app_data, resolve_project_data, file_name_from_path, save_file
-from savegem.common.util.logger import get_logger
-from savegem.common.util.profiler import measure_time
+from savegem.constants import ZIP_MIME_TYPE, JSON_MIME_TYPE, File, UTF_8
+
 
 _logger = get_logger(__name__)
 GDRIVE_SCOPES = [
@@ -77,7 +77,6 @@ class GDrive:
             return None
 
     @classmethod
-    @measure_time(when=logging.DEBUG)
     def download_file(cls, file_id, subscriber=None):
         """
         Used to in the first place to download archives.
@@ -99,7 +98,16 @@ class GDrive:
         return file
 
     @classmethod
-    @measure_time(when=logging.DEBUG)
+    def download_json_file(cls, file_id, subscriber=None):
+        file_bytes = cls.download_file(file_id, subscriber)
+
+        if file_bytes is None:
+            return None
+
+        file_bytes.seek(0)
+        return json.load(file_bytes)
+
+    @classmethod
     def upload_file(cls, file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE,
                     properties: dict = None, subscriber=None):
         """
@@ -214,11 +222,12 @@ class GDrive:
         Used to authenticate to Google Cloud as well as refresh token if needed.
         """
 
-        token_file_name = resolve_app_data(File.GDriveToken)
+        application = KamaApplication()
+        token_file_path = application.discovery.get_app_data_root(File.GDriveToken)
 
         # Get credentials from file (possible if authentication was done previously)
         _logger.info("Token was found. Application will use credentials from token.")
-        creds = Credentials.from_authorized_user_file(token_file_name, GDRIVE_SCOPES)
+        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
 
         if creds and creds.valid:
             return creds
@@ -248,7 +257,10 @@ class GoogleAuth:
         Used to check if user is authenticated
         and file with auth token exists.
         """
-        return os.path.exists(resolve_app_data(File.GDriveToken))
+
+        application = KamaApplication()
+        token_file_path = application.discovery.get_app_data_root(File.GDriveToken)
+        return os.path.exists(token_file_path)
 
     @staticmethod
     def authenticate():
@@ -256,24 +268,25 @@ class GoogleAuth:
         Used to initiate Google authentication process.
         """
 
-        token_file_name = resolve_app_data(File.GDriveToken)
-        credentials_file_name = resolve_project_data(File.GDriveCreds)
+        application = KamaApplication()
+        token_file_path = application.discovery.get_app_data_root(File.GDriveToken)
+        credentials_file_path = application.discovery.get_project_root(File.GDriveCreds)
 
         # User is already authenticated.
-        if os.path.exists(token_file_name):
+        if os.path.exists(token_file_path):
             _logger.info("Skipping authentication. User is already authenticated.")
             return
 
         # Authenticate with credentials and then store them for future use
-        if not os.path.exists(credentials_file_name):
+        if not os.path.exists(credentials_file_path):
             _logger.critical(f"{File.GDriveCreds} is missing.")
             raise RuntimeError(f"Google Cloud credentials are missing in root of the project. Add {File.GDriveCreds}.")
 
         _logger.info("Attempting authentication using credentials.")
 
-        flow = InstalledAppFlow.from_client_secrets_file(credentials_file_name, GDRIVE_SCOPES)
+        flow = InstalledAppFlow.from_client_secrets_file(credentials_file_path, GDRIVE_SCOPES)
         creds = flow.run_local_server(port=0)
 
         _logger.info("Authentication completed.")
         _logger.info("Saving Google Cloud access token for later use.")
-        save_file(token_file_name, json.loads(creds.to_json()), as_json=True)
+        save_file(token_file_path, json.loads(creds.to_json()), as_json=True)

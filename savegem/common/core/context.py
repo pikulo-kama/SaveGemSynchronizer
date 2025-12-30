@@ -63,7 +63,7 @@ class ApplicationContext:
         return self.__activity
 
 
-def app():  # pragma: no cover
+def context():  # pragma: no cover
     """
     Used to get global app context instance.
     """

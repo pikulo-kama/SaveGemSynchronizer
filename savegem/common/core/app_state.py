@@ -1,12 +1,12 @@
 from typing import Final, Optional
 
-from constants import TimeFormat
-from savegem.common.core.app_data import AppData
-from savegem.common.core.holders import locales, prop
-from savegem.common.db.manager import db
-from savegem.common.db.table import DatabaseTable
-from savegem.common.util.logger import get_logger
+from kdb.table import DatabaseTable
+from kui.core.app import KamaApplication
+from kui_db_plugin.database import db
+from kutil.logger import get_logger
 
+from savegem.constants import TimeFormat
+from savegem.common.core.app_data import AppData
 
 _logger = get_logger(__name__)
 
@@ -26,8 +26,8 @@ class AppState(AppData):
 
     TemporaryUser: Final = "<temporary>"
 
-    def __init__(self, app):
-        super().__init__(app)
+    def __init__(self, context):
+        super().__init__(context)
         self.__state_table: Optional[DatabaseTable] = None
         self.__on_state_change = None
 
@@ -65,15 +65,8 @@ class AppState(AppData):
         """
 
         locale = self.__state_table.get_first(self.SelectedLocale)
-
-        if locale not in locales():
-            default_locale = prop("defaultLocale")
-            _logger.warning("Locale '%s' was not found. Using default locale '%s'.", str(locale), default_locale)
-
-            locale = default_locale
-            self.locale = default_locale
-
         _logger.debug("Current locale = %s", locale)
+
         return locale
 
     @locale.setter
@@ -81,6 +74,9 @@ class AppState(AppData):
         """
         Set active locale.
         """
+
+        application = KamaApplication()
+        application.locale = locale
         self.__set_state_value(self.SelectedLocale, locale, execute_callback=True)
 
     @property
@@ -95,6 +91,9 @@ class AppState(AppData):
         """
         Used to set application color theme.
         """
+
+        application = KamaApplication()
+        application.color_mode = color_theme
         self.__set_state_value(self.ColorTheme, color_theme)
 
     @property
@@ -129,6 +128,7 @@ class AppState(AppData):
         """
 
         user_id = self.TemporaryUser
+        application = KamaApplication()
 
         if self.app.users.current is not None:
             user_id = self.app.users.current.id
@@ -137,13 +137,13 @@ class AppState(AppData):
 
         # Remove temporary user record
         # in case it's already in database.
-        db().table(self.AppStateTable) \
+        db.table(self.AppStateTable) \
             .where("user_id = ?", self.TemporaryUser) \
             .retrieve() \
             .remove_all() \
             .save()
 
-        state = db().table(self.AppStateTable) \
+        state: DatabaseTable = db.table(self.AppStateTable) \
             .where("user_id = ?", user_id) \
             .retrieve()
 
@@ -151,8 +151,14 @@ class AppState(AppData):
         # present for the user.
         if state.is_empty:
             _logger.info("Creating new app state entry for user %s", user_id)
-            state.add_row()
-            state.set_first("user_id", user_id)
+            state.add(
+                user_id=user_id,
+                language=application.locale,
+                color_theme=application.color_mode
+            ).save()
+
+        application.locale = state.get_first(self.SelectedLocale)
+        application.color_mode = state.get_first(self.ColorTheme)
 
         self.__state_table = state
 

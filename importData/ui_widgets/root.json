@@ -3,18 +3,19 @@
     "table_name": "ui_widgets",
     "type": "Widgets",
     "extract_date": "2025-11-23T03:21:40.252711",
-    "filter": "section_id IS NULL"
+    "filter": "section_id = 'root'"
   },
   "data": [
     {
       "widget_id": "window",
-      "widget_type_id": "QWidget",
-      "layout_type_id": "QHBoxLayout",
+      "section_id": "root",
+      "widget_type_id": "KWidget",
+      "layout_type_id": "KHBoxLayout",
       "children": [
         {
           "widget_id": "sidebar",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QVBoxLayout",
+          "widget_type_id": "KWidget",
+          "layout_type_id": "KVBoxLayout",
           "style_object_name": "sidebar",
           "width": 60,
           "margin_top": 10,
@@ -23,8 +24,8 @@
             {
               "widget_id": "menu",
               "controller": "MenuController",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QVBoxLayout",
+              "widget_type_id": "KWidget",
+              "layout_type_id": "KVBoxLayout",
               "style_object_name": "sidebarMenu",
               "margin_left": 5,
               "margin_right": 5,
@@ -40,26 +41,26 @@
                     "widget_id": "menu_item",
                     "content": "icon{template{icon}, size: 25}",
                     "tooltip": "template{label}",
-                    "widget_type_id": "QPushButton"
+                    "widget_type_id": "KPushButton"
                   }
                 ],
                 "footer": [
                   {
                     "widget_id": "menu_spacer",
-                    "widget_type_id": "QSpacer"
+                    "widget_type_id": "KSpacer"
                   }
                 ]
               }
             },
             {
               "widget_id": "sidebar_spacer",
-              "widget_type_id": "QSpacer"
+              "widget_type_id": "KSpacer"
             },
             {
               "widget_id": "user_picture",
               "content": "pixmap{user{photo}, scale: 35, circle}",
               "tooltip": "user{name}",
-              "widget_type_id": "QLabel",
+              "widget_type_id": "KLabel",
               "alignment": "bottom-center",
               "height": 50
             }
@@ -67,8 +68,8 @@
         },
         {
           "widget_id": "content",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QVBoxLayout",
+          "widget_type_id": "KWidget",
+          "layout_type_id": "KVBoxLayout",
           "margin_top": 10,
           "margin_right": 10,
           "margin_bottom": 5

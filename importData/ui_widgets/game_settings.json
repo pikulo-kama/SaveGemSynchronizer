@@ -10,8 +10,8 @@
       "widget_id": "game_settings_root",
       "section_id": "game_settings",
       "controller": "GameBarTabController",
-      "widget_type_id": "QScrollableWidget",
-      "layout_type_id": "QVBoxLayout",
+      "widget_type_id": "KScrollableWidget",
+      "layout_type_id": "KVBoxLayout",
       "margin_left": 10,
       "margin_top": 20,
       "margin_right": 10,
@@ -19,8 +19,8 @@
       "children": [
         {
           "widget_id": "auto_mode_setting",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QHBoxLayout",
+          "widget_type_id": "KWidget",
+          "layout_type_id": "KHBoxLayout",
           "style_object_name": "settingCard",
           "alignment": "left-vcenter",
           "height": 75,
@@ -29,14 +29,14 @@
           "children": [
             {
               "widget_id": "auto_mode_setting_vl",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QVBoxLayout",
+              "widget_type_id": "KWidget",
+              "layout_type_id": "KVBoxLayout",
               "width": 100,
               "children": [
                 {
                   "widget_id": "auto_mode_setting_title",
                   "content": "tr{label_AutoModeGameSetting}",
-                  "widget_type_id": "QLabel",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "bodyText",
                   "stylesheet": {
                     "font-weight": "bold"
@@ -45,19 +45,19 @@
                 {
                   "widget_id": "auto_mode_setting_description",
                   "content": "tr{label_AutoModeGameSettingDesc}",
-                  "widget_type_id": "QLabel",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "smallText"
                 }
               ]
             },
             {
               "widget_id": "auto_mode_settings_spacer",
-              "widget_type_id": "QSpacer"
+              "widget_type_id": "KSpacer"
             },
             {
               "widget_id": "auto_mode_toggle",
               "controller": "AutoModeController",
-              "widget_type_id": "QToggle",
+              "widget_type_id": "KToggle",
               "width": 55,
               "height": 25,
               "refresh_events": [
@@ -68,7 +68,7 @@
         },
         {
           "widget_id": "game_settings_spacer",
-          "widget_type_id": "QSpacer"
+          "widget_type_id": "KSpacer"
         }
       ]
     }

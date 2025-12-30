@@ -155,7 +155,7 @@ class TestWidgetController:
     def test_do_work(self, mocker: MockerFixture, _widget_manager, logger_mock, exec_in_block_thread_mock,
                      qthread_mock):
         """
-        Tests the _do_work helper method initiates worker execution in a blocking thread.
+        Tests the _do_work helper method initiates worker1 execution in a blocking thread.
         """
 
         from savegem.app.gui.controller import WidgetController
@@ -163,7 +163,7 @@ class TestWidgetController:
         mock_controller = WidgetController(_widget_manager)
 
         worker = mocker.MagicMock()
-        worker.__class__.__name__ = "MyBackgroundWorker"  # Set explicit worker name
+        worker.__class__.__name__ = "MyBackgroundWorker"  # Set explicit worker1 name
 
         mock_controller._do_work(worker)
 
@@ -174,11 +174,11 @@ class TestWidgetController:
 
         exec_in_block_thread_mock.assert_called_once_with(
             qthread_mock.return_value,  # The newly created thread
-            worker  # The worker instance
+            worker  # The worker1 instance
         )
 
         logger_mock.debug.assert_any_call(
-            "Starting %s worker from controller %s",
+            "Starting %s worker1 from controller %s",
             "MyBackgroundWorker",
             "WidgetController"
         )

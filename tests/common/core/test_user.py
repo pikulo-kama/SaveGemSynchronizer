@@ -100,7 +100,7 @@ class TestUser:
         Tests successful photo download and path generation.
         """
 
-        from constants import JPG_EXTENSION
+        from savegem.constants import JPG_EXTENSION
 
         # Check that URL retrieve was called with the correct link and mocked path
         url_retrieve_mock.assert_called_once_with(PlayerPhotoLink, _test_user.photo)
@@ -145,7 +145,7 @@ class TestUserState:
         Mocks the global holder() and its get() method.
         """
 
-        from savegem.app.data import HolderObject
+        from savegem.constants import HolderObject
 
         # Configure holder().get() to return specific mock data based on argument
         holder_mock.get.side_effect = lambda arg: {

@@ -1,5 +1,0 @@
-
-#root,
-#scrollableRoot {
-    background-color: color("surface-a0");
-}

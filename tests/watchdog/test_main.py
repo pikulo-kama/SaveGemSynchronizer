@@ -51,7 +51,7 @@ class TestWatchdog:
         Fixture for the Watchdog instance
         """
 
-        from savegem.watchdog.main import Watchdog
+        from savegem.watchdog import Watchdog
 
         watchdog = Watchdog()
         watchdog.interval = 1.0

@@ -3,13 +3,15 @@ import re
 import urllib.request
 from typing import Final, Iterator
 
-from constants import File, JPG_EXTENSION
-from savegem.app.data import holder, HolderObject
+from kui.core.app import KamaApplication
+from kui_db_plugin.database import db
+from kutil.file import delete_file
+from kutil.logger import get_logger
+
+from savegem.constants import File, JPG_EXTENSION
+from savegem.constants import HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
-from savegem.common.db.manager import db
-from savegem.common.util.file import delete_file, resolve_resource, resolve_temp_resource, resolve_app_data
-from savegem.common.util.logger import get_logger
 
 _logger = get_logger(__name__)
 
@@ -46,14 +48,16 @@ class GameConfig(AppData):
         """
 
         _logger.debug("Downloading game configuration from drive.")
-        game_config = holder().get(HolderObject.GamesConfig)
+        application = KamaApplication()
+        game_config = application.data.get(HolderObject.GamesConfig)
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
             # Remove token when failed to remove game config.
             # Since there is a chance that user used wrong account to
             # authenticate we remove token so that he could log in again.
-            delete_file(resolve_app_data(File.GDriveToken))
+            drive_token_path = application.discovery.get_app_data_root(File.GDriveToken)
+            delete_file(drive_token_path)
 
             _logger.error(message)
             raise RuntimeError(message)
@@ -167,18 +171,15 @@ class GameSettings:
 
         user_id = game_config.app.users.current.id
 
-        settings = db() \
-            .table("game_settings") \
+        settings = db.table("game_settings") \
             .where("user_id = ? AND game_name = ?", user_id, self.__game.name) \
             .retrieve()
 
-        if len(settings.rows) == 1:
-            return settings
-
-        row = settings.add_row()
-        settings.set(row, "user_id", user_id)
-        settings.set(row, "game_name", self.__game.name)
-        settings.save()
+        if settings.is_empty:
+            settings.add(
+                user_id=user_id,
+                game_name=self.__game.name
+            ).save()
 
         return settings
 
@@ -334,10 +335,12 @@ class Game:
         Will use default SaveGem logo as fallback value.
         """
 
-        if logo_url is None:
-            return resolve_resource("gem.svg")
+        application = KamaApplication()
 
-        logo_path = resolve_temp_resource(f"{self.name}{JPG_EXTENSION}")
+        if logo_url is None:
+            return application.discovery.get_resources_directory("gem.svg")
+
+        logo_path = application.discovery.get_temp_resources_directory(f"{self.name}{JPG_EXTENSION}")
         urllib.request.urlretrieve(logo_url, logo_path)
 
         return logo_path

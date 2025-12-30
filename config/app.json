@@ -3,20 +3,5 @@
   "version": "5.0.0",
   "description": "SaveGem UI Application",
   "processName": "SaveGem.exe",
-  "author": "Artur Parkour",
-  "defaultLocale" : "en_US",
-
-  "ipc" : {
-    "uiSocketPort" : 53541,
-    "processWatcherSocketPort" : 53542,
-    "gdriveWatcherSocketPort" : 53543
-  },
-
-  "windowWidth" : 1080,
-  "windowHeight" : 720,
-  "minWindowWidth" : 960,
-  "minWindowHeight" : 540,
-
-  "popupWidth" : 400,
-  "popupHeight" : 150
+  "author": "Artur Parkour"
 }

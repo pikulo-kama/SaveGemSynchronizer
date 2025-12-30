@@ -10,8 +10,8 @@
       "widget_id": "notification_dialog",
       "section_id": "notification",
       "controller": "DialogController",
-      "widget_type_id": "QDialog",
-      "layout_type_id": "QHBoxLayout",
+      "widget_type_id": "KDialog",
+      "layout_type_id": "KHBoxLayout",
       "style_object_name": "notificationDialog",
       "alignment": "left",
       "width": 400,
@@ -21,13 +21,13 @@
         {
           "widget_id": "checkmark_icon",
           "content": "pixmap{checkmark.svg, scale: 30}",
-          "widget_type_id": "QLabel",
+          "widget_type_id": "KLabel",
           "alignment": "vcenter"
         },
         {
           "widget_id": "notification_message",
           "content": "data{dialogMessage}",
-          "widget_type_id": "QWordWrapLabel",
+          "widget_type_id": "KWordWrapLabel",
           "style_object_name": "bodyText",
           "alignment": "vcenter"
         }

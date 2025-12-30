@@ -5,11 +5,11 @@ class TestInitializationWorker:
     def test_dependencies(self):
         """
         Tests that the dependencies list is fully and correctly defined,
-        ensuring this worker runs last.
+        ensuring this worker1 runs last.
         """
 
-        from savegem.app.startup.worker.initializer import InitializationWorker
-        from savegem.app.startup.worker.data import ActivityWorker, GameConfigDownloadWorker, \
+        from savegem.startup import InitializationWorker
+        from savegem.startup import ActivityWorker, GameConfigDownloadWorker, \
             CurrentUserDownloadWorker, AllUsersDownloadWorker, UserDataDownloadWorker
 
         worker = InitializationWorker()
@@ -30,7 +30,7 @@ class TestInitializationWorker:
         methods on the global app context.
         """
 
-        from savegem.app.startup.worker.initializer import InitializationWorker
+        from savegem.startup import InitializationWorker
 
         worker = InitializationWorker()
         worker._run()

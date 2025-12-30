@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from typing import Final
 
-from savegem.common.core.context import app
+from kutil.process import get_running_processes
+
+from savegem.common.core.context import context
 from savegem.common.core.game_config import Game
-from savegem.common.util.process import get_running_processes
 
 _previous_game_names = []
 
@@ -29,7 +30,7 @@ def get_running_game_processes():
         elif game_name in _previous_game_names and game_name not in current_game_names:
             status = ProcessStatus.Closed
 
-        processes.append(GameProcess(app().games.by_name(game_name), status))
+        processes.append(GameProcess(context().games.by_name(game_name), status))
 
     _previous_game_names = current_game_names
     return processes
@@ -41,7 +42,7 @@ def _get_active_games():
     and return list of games that are currently running.
     """
 
-    games_by_processes = {game.process_name: game.name for game in app().games}
+    games_by_processes = {game.process_name: game.name for game in context().games}
     running_processes = get_running_processes(list(games_by_processes.keys()))
 
     return [games_by_processes.get(proc.name()) for proc in running_processes]

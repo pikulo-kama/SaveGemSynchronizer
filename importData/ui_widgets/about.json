@@ -10,8 +10,8 @@
       "widget_id": "about_root",
       "section_id": "about",
       "controller": "MenuItemController",
-      "widget_type_id": "QScrollableWidget",
-      "layout_type_id": "QVBoxLayout",
+      "widget_type_id": "KScrollableWidget",
+      "layout_type_id": "KVBoxLayout",
       "alignment": "top-vcenter",
       "spacing": 50,
       "margin_left": 20,
@@ -20,26 +20,26 @@
       "children": [
         {
           "widget_id": "app_title_layout",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QVBoxLayout",
+          "widget_type_id": "KWidget",
+          "layout_type_id": "KVBoxLayout",
           "alignment": "top-vcenter",
           "children": [
             {
               "widget_id": "app_wrapper",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QHBoxLayout",
+              "widget_type_id": "KWidget",
+              "layout_type_id": "KHBoxLayout",
               "alignment": "left",
               "children": [
                 {
                   "widget_id": "app_icon",
                   "content": "pixmap{gem_outline.svg, scale: 50}",
-                  "widget_type_id": "QLabel",
+                  "widget_type_id": "KLabel",
                   "alignment": "vcenter"
                 },
                 {
                   "widget_id": "app_name",
-                  "content": "prop{name}",
-                  "widget_type_id": "QLabel",
+                  "content": "prop{application.name}",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "heroText",
                   "alignment": "vcenter"
                 }
@@ -48,20 +48,20 @@
             {
               "widget_id": "app_description",
               "content": "tr{label_AppDescription}",
-              "widget_type_id": "QLabel",
+              "widget_type_id": "KLabel",
               "style_object_name": "accentText"
             }
           ]
         },
         {
           "widget_id": "app_details",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QVBoxLayout",
+          "widget_type_id": "KWidget",
+          "layout_type_id": "KVBoxLayout",
           "children": [
             {
               "widget_id": "app_details_title",
               "content": "tr{label_ApplicationDetails}",
-              "widget_type_id": "QLabel",
+              "widget_type_id": "KLabel",
               "style_object_name": "bodyText",
               "stylesheet": {
                 "color": "rgba('text-primary', 0.6)"
@@ -69,15 +69,15 @@
             },
             {
               "widget_id": "version_container",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QHBoxLayout",
+              "widget_type_id": "KWidget",
+              "layout_type_id": "KHBoxLayout",
               "alignment": "left",
               "spacing": 20,
               "children": [
                 {
                   "widget_id": "version_label",
                   "content": "tr{label_Version}:",
-                  "widget_type_id": "QLabel",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
@@ -85,23 +85,23 @@
                 },
                 {
                   "widget_id": "version_value",
-                  "content": "prop{version}",
-                  "widget_type_id": "QLabel",
+                  "content": "prop{application.version}",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "accentText"
                 }
               ]
             },
             {
               "widget_id": "author_container",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QHBoxLayout",
+              "widget_type_id": "KWidget",
+              "layout_type_id": "KHBoxLayout",
               "alignment": "left",
               "spacing": 20,
               "children": [
                 {
                   "widget_id": "author_label",
                   "content": "tr{label_Author}:",
-                  "widget_type_id": "QLabel",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
@@ -109,8 +109,8 @@
                 },
                 {
                   "widget_id": "author_value",
-                  "content": "prop{author}",
-                  "widget_type_id": "QLabel",
+                  "content": "prop{application.author}",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "accentText"
                 }
               ]
@@ -119,13 +119,13 @@
         },
         {
           "widget_id": "contact_us",
-          "widget_type_id": "QWidget",
-          "layout_type_id": "QVBoxLayout",
+          "widget_type_id": "KWidget",
+          "layout_type_id": "KVBoxLayout",
           "children": [
             {
               "widget_id": "contact_us_title",
               "content": "tr{label_ContactUs}",
-              "widget_type_id": "QLabel",
+              "widget_type_id": "KLabel",
               "style_object_name": "bodyText",
               "stylesheet": {
                 "color": "rgba('text-primary', 0.6)"
@@ -133,15 +133,15 @@
             },
             {
               "widget_id": "contact_us_container",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QHBoxLayout",
+              "widget_type_id": "KWidget",
+              "layout_type_id": "KHBoxLayout",
               "alignment": "left",
               "spacing": 20,
               "children": [
                 {
                   "widget_id": "github_label",
                   "content": "GitHub:",
-                  "widget_type_id": "QLabel",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
@@ -150,22 +150,22 @@
                 {
                   "widget_id": "github_value",
                   "content": "<a href='https://github.com/pikulo-kama/SaveGemSynchronizer'>https://github.com/pikulo-kama/SaveGemSynchronizer</a>",
-                  "widget_type_id": "QRichLabel",
+                  "widget_type_id": "KRichLabel",
                   "style_object_name": "accentText"
                 }
               ]
             },
             {
               "widget_id": "email_container",
-              "widget_type_id": "QWidget",
-              "layout_type_id": "QHBoxLayout",
+              "widget_type_id": "KWidget",
+              "layout_type_id": "KHBoxLayout",
               "alignment": "left",
               "spacing": 20,
               "children": [
                 {
                   "widget_id": "email_label",
                   "content": "tr{label_Email}:",
-                  "widget_type_id": "QLabel",
+                  "widget_type_id": "KLabel",
                   "style_object_name": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
@@ -174,7 +174,7 @@
                 {
                   "widget_id": "email_value",
                   "content": "<a href='mailto:jhorr2222@gmail.com'>jhorr2222@gmail.com</a>",
-                  "widget_type_id": "QRichLabel",
+                  "widget_type_id": "KRichLabel",
                   "style_object_name": "accentText"
                 }
               ]
@@ -183,13 +183,13 @@
         },
         {
           "widget_id": "copyright_disclaimer",
-          "content": "tr{window_CopyrightDisclaimer, prop{name}}",
-          "widget_type_id": "QLabel"
+          "content": "tr{window_CopyrightDisclaimer, prop{application.name}}",
+          "widget_type_id": "KLabel"
         },
         {
           "widget_id": "copyright",
-          "controller": "CopyrightController",
-          "widget_type_id": "QLabel",
+          "content": "tr{window_Copyright, date{year}, prop{application.name}}",
+          "widget_type_id": "KLabel",
           "stylesheet": {
             "color": "rgba('text-primary', 0.7)"
           }

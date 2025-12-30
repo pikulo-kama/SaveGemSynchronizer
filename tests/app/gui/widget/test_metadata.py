@@ -305,8 +305,8 @@ class TestWidgetMetadata:
         input_data = {
             "widget_id": "main_view",
             "section_id": "root",
-            "widget_type_id": "QCustomWidget",
-            "layout_type_id": "QCustomVBoxLayout",
+            "widget_type_id": "KCustomWidget",
+            "layout_type_id": "KCustomVBoxLayout",
             "parent_widget_id": None,
             "controller": "MainController",
             "order_id": 1,

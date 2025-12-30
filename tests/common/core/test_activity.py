@@ -28,7 +28,7 @@ class TestActivity:
 
 
     def test_should_retrieve_data_from_holder(self, _activity, holder_mock):
-        from savegem.app.data import HolderObject
+        from savegem.constants import HolderObject
 
         holder_mock.get.return_value = NoActivity
         _activity.refresh()

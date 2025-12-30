@@ -1,11 +1,12 @@
 from PyQt6.QtCore import pyqtSignal, QObject
+from kui.core.app import KamaApplication
+from kutil.logger import get_logger
 
-from savegem.app.data import holder, HolderObject
-from savegem.app.gui.constants import UIRefreshEvent
-from savegem.common.core.context import app
-from savegem.common.core.holders import prop
+from savegem.constants import HolderObject
+from savegem.constants import UIRefreshEvent
+from savegem.common.core.context import context
 from savegem.common.core.ipc_socket import IPCSocket, IPCCommand, IPCProp
-from savegem.common.util.logger import get_logger
+from savegem.common.service.gdrive import GDrive
 from savegem.gdrive_watcher.ipc_socket import google_drive_watcher_socket
 from savegem.process_watcher.ipc_socket import process_watcher_socket
 
@@ -18,7 +19,8 @@ class UISocket(IPCSocket, QObject):
     rebuild_window = pyqtSignal()
 
     def __init__(self):
-        IPCSocket.__init__(self, prop("ipc.uiSocketPort"))
+        application = KamaApplication()
+        IPCSocket.__init__(self, application.config.get("ipc.ui-socket-port"))
         QObject.__init__(self)
 
         self.__child_processes = [google_drive_watcher_socket, process_watcher_socket]
@@ -65,8 +67,12 @@ class UISocket(IPCSocket, QObject):
 
     @staticmethod
     def __update_activity():
-        holder().download_json(HolderObject.Activity, app().config.activity_log_file_id)
-        app().activity.refresh()
+        application = KamaApplication()
+        application.data.add(
+            HolderObject.Activity, 
+            GDrive.download_json_file(context().config.activity_log_file_id)
+        )
+        context().activity.refresh()
 
     @staticmethod
     def __update_games_configuration(event: str):
@@ -74,10 +80,14 @@ class UISocket(IPCSocket, QObject):
         # If game config changed on drive then download it again
         # and reinitialize game state.
         if event == UIRefreshEvent.GameConfigChange:
-            holder().download_json(HolderObject.GamesConfig, app().config.games_config_file_id)
-            app().games.initialize()
+            application = KamaApplication()
+            application.data.add(
+                HolderObject.GamesConfig, 
+                GDrive.download_json_file(context().config.games_config_file_id)
+            )
+            context().games.initialize()
 
-        for game in app().games:
+        for game in context().games:
             game.meta.local.calculate_checksum()
             game.meta.drive.refresh()
 

@@ -79,7 +79,7 @@ class TestDateUtil:
         Tests time formatting using the default 24-hour (Military) format.
         """
 
-        from constants import TimeFormat
+        from savegem.constants import TimeFormat
         from savegem.common.util.date import get_verbose_time
 
         app_state_mock.time_format = TimeFormat.Military
@@ -101,7 +101,7 @@ class TestDateUtil:
         Tests time formatting using the 12-hour (Regular) format.
         """
 
-        from constants import TimeFormat
+        from savegem.constants import TimeFormat
         from savegem.common.util.date import get_verbose_time
 
         app_state_mock.time_format = TimeFormat.Regular

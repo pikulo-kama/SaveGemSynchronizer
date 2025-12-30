@@ -77,7 +77,7 @@ class TestAppState:
     def test_should_call_callback_when_changing_time_format(self, _app_state, db_table_mock):
 
         from savegem.common.core.app_state import AppState
-        from constants import TimeFormat
+        from savegem.constants import TimeFormat
 
         _app_state.time_format = TimeFormat.Regular
 
@@ -91,7 +91,7 @@ class TestAppState:
 
     def test_should_use_default_time_format_if_not_provided(self, _app_state, db_table_mock):
 
-        from constants import TimeFormat
+        from savegem.constants import TimeFormat
 
         db_table_mock.get_first.return_value = None
         assert _app_state.time_format == TimeFormat.Military

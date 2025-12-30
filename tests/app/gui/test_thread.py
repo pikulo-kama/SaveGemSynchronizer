@@ -33,7 +33,7 @@ class TestThread:
         # 2. Check cursor change
         gui_mock.setCursor.assert_called_with(Qt.CursorShape.WaitCursor)
 
-        # 3. Check thread and worker initialization
+        # 3. Check thread and worker1 initialization
         mock_worker.moveToThread.assert_called_with(qthread_mock)
         qthread_mock.start.assert_called_once()
 
@@ -58,7 +58,7 @@ class TestThread:
         # Simulate the thread finishing: Call the final connected handler directly.
         # The 'on_finish' function is the LAST thing connected to thread.finished.
         # We call the *fourth* connection made to thread.finished.connect
-        # (quit, worker.deleteLater, thread.deleteLater, on_finish)
+        # (quit, worker1.deleteLater, thread.deleteLater, on_finish)
 
         # In a real test, we would look up the connected function. Since we're mocking,
         # we simulate the effect of the 'on_finish' function:
@@ -107,11 +107,11 @@ class TestThread:
 
         execute_in_blocking_thread(qthread_mock, mock_worker)
 
-        # The worker.finished signal connects to thread.quit()
+        # The worker1.finished signal connects to thread.quit()
         mock_worker.finished.connect.assert_called_with(qthread_mock.quit)
 
         # thread.finished signal connects to:
-        # 1. worker.deleteLater
+        # 1. worker1.deleteLater
         # 2. thread.deleteLater
         # 3. on_finish (The qthread_mock.finished.connect should be called 3 times total)
         assert qthread_mock.finished.connect.call_count == 3

@@ -135,7 +135,7 @@ class TestDownloadButtonController(WidgetControllerTest):
     def test_start_download_worker_connections(self, module_patch, _widget_manager, _mock_button, _download_worker,
                                                _do_work_mock, games_config_mock, gui_mock):
         """
-        Tests the execution path inside the start_download function, verifying worker setup.
+        Tests the execution path inside the start_download function, verifying worker1 setup.
         """
 
         from savegem.app.gui.controller.game_controls import DownloadButtonController
@@ -207,7 +207,7 @@ class TestUploadButtonController(WidgetControllerTest):
     def test_start_upload_worker_connections(self, module_patch, _widget_manager, _mock_button, _upload_worker,
                                                _do_work_mock, games_config_mock, gui_mock):
         """
-        Tests the execution path inside the start_upload function, verifying worker setup.
+        Tests the execution path inside the start_upload function, verifying worker1 setup.
         """
 
         from savegem.app.gui.controller.game_controls import UploadButtonController

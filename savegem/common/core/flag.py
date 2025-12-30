@@ -1,9 +1,8 @@
 from typing import Final, Optional
 
-from savegem.common.db.manager import db
-from savegem.common.db.table import DatabaseTable
-from savegem.common.util.logger import get_logger
-
+from kdb.table import DatabaseTable
+from kui_db_plugin.database import db
+from kutil.logger import get_logger
 
 _logger = get_logger(__name__)
 _flags: Optional["FlagCollection"] = None
@@ -70,17 +69,16 @@ class Flag:
         WIll create new flag entry if flag is not in table.
         """
 
-        flags_table = db().table(self.FlagsTable) \
+        flags_table = db.table(self.FlagsTable) \
             .where(f"{self.FlagId} = ?", self.id) \
             .retrieve()
 
         if flags_table.is_empty:
             _logger.debug("'%s' flag entry is missing. Creating new one.", self.id)
-            flags_table.add_row()
-            flags_table.set_first(self.FlagId, self.id)
-            flags_table.set_first(self.FlagState, 1 if self.__default_value else 0)
-
-            flags_table.save()
+            flags_table.add(
+                flag_id=self.id,
+                flag_state=1 if self.__default_value else 0
+            ).save()
 
         self.__flag_table = flags_table
 

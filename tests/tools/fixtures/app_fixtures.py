@@ -20,7 +20,7 @@ def app_state_mock(mocker: MockerFixture, app_context_mock):
     type(app_state_mock).locale = LocaleTestData.FirstLocale
     type(app_state_mock).is_auto_mode = False
 
-    app_state_mock.app = app_context_mock
+    app_state_mock.context = app_context_mock
     app_context_mock.state = app_state_mock
 
     return app_state_mock
@@ -37,7 +37,7 @@ def app_config_mock(mocker: MockerFixture, app_context_mock):
     type(config_mock).activity_log_file_id = ConfigTestData.ActivityLogFileId
     type(config_mock).users_config_file_id = ConfigTestData.UsersConfigFileId
 
-    config_mock.app = app_context_mock
+    config_mock.context = app_context_mock
     app_context_mock.config = config_mock
 
     return config_mock
@@ -64,7 +64,7 @@ def games_config_mock(mocker: MockerFixture, app_context_mock):
     games_mock.first = first_game
     games_mock.second = second_game
 
-    games_mock.app = app_context_mock
+    games_mock.context = app_context_mock
     app_context_mock.games = games_mock
 
     return games_mock
@@ -78,7 +78,7 @@ def user_config_mock(mocker: MockerFixture, app_context_mock):
     user_mock.current.email = PlayerTestData.FirstPlayerEmail
     user_mock.current.photo = PlayerTestData.ProfilePictureUrl
 
-    user_mock.app = app_context_mock
+    user_mock.context = app_context_mock
     app_context_mock.users = user_mock
 
     return user_mock
@@ -87,7 +87,7 @@ def user_config_mock(mocker: MockerFixture, app_context_mock):
 @pytest.fixture
 def activity_mock(mocker: MockerFixture, app_context_mock):
     mock = mocker.MagicMock()
-    mock.app = app_context_mock
+    mock.context = app_context_mock
     app_context_mock.activity = mock
 
     return mock

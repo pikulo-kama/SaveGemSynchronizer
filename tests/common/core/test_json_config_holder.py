@@ -18,7 +18,7 @@ class TestJsonConfigHolder:
         if it's not present.
         """
 
-        from constants import JSON_EXTENSION
+        from savegem.constants import JSON_EXTENSION
         from savegem.common.core.json_config_holder import JsonConfigHolder
 
         config_name = "test_config"
@@ -38,7 +38,7 @@ class TestJsonConfigHolder:
         Test that the config_path is used as-is if the extension is already present.
         """
 
-        from constants import JSON_EXTENSION
+        from savegem.constants import JSON_EXTENSION
         from savegem.common.core.json_config_holder import JsonConfigHolder
 
         expected_path = "test_config" + JSON_EXTENSION

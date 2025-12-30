@@ -101,7 +101,7 @@ class TestLogger:
 
 
     @pytest.mark.parametrize("log_name, configured_level, expected_level", [
-        ("com.app.worker", "DEBUG", logging.DEBUG),
+        ("com.app.worker1", "DEBUG", logging.DEBUG),
         ("com.app.api", "WARN", logging.WARN),
         ("com.app.disabled", "OFF", "OFF"),
     ])
@@ -138,7 +138,7 @@ class TestLogger:
         Tests that logging is initialized correctly on the first call, setting up the root logger.
         """
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
 
         module_patch("logging.Formatter")
         resolve_log_mock.side_effect = lambda name: name

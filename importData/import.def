@@ -1,7 +1,5 @@
 
 # Setup Tables
-setup_layout_type.json
-setup_widget_type.json
 setup_resource.json
 setup_locale.json
 setup_text_resource.json

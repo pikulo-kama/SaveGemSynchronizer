@@ -16,7 +16,7 @@ from tests.tools.fixtures.widget_fixtures import *  # noqa
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_file_system():
-    from constants import Directory
+    from savegem.constants import Directory
 
     def create_dummy_file(path: str):
         with open(path, "w") as file:

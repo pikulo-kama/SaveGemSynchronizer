@@ -192,7 +192,7 @@ class TestSaveHistoryListController(WidgetControllerTest):
     def test_restore_version_worker_flow(self, mocker: MockerFixture, module_patch, _controller, gui_mock,
                                          games_config_mock, _do_work_mock, _widget_manager):
         """
-        Tests the __restore_version logic, verifying worker setup and completion callback.
+        Tests the __restore_version logic, verifying worker1 setup and completion callback.
         """
 
         from savegem.common.service.subscriptable import DoneEvent, EventKind
@@ -206,7 +206,7 @@ class TestSaveHistoryListController(WidgetControllerTest):
         restore_func = lambda: _controller._SaveHistoryListController__restore_version(file_id, mock_button)  # noqa
         restore_func()
 
-        # 1. Assert worker setup
+        # 1. Assert worker1 setup
         download_worker.assert_called_once_with(file_id)
         _do_work_mock.assert_called_once_with(download_worker.return_value)
 

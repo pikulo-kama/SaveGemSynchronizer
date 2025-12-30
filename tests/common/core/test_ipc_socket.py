@@ -59,7 +59,7 @@ class TestIPCSocket:
     def test_listen_state_changed_command(self, mocker: MockerFixture, _ipc_socket, _socket, app_state_mock,
                                           _mock_is_socket_running):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
         from savegem.common.util.test import ExitTestLoop
 
@@ -106,7 +106,7 @@ class TestIPCSocket:
     def test_listen_custom_command(self, mocker: MockerFixture, _ipc_socket, _socket, app_state_mock,
                                    _mock_is_socket_running, logger_mock):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.core.ipc_socket import IPCSocket, IPCProp
         from savegem.common.util.test import ExitTestLoop
 
@@ -140,7 +140,7 @@ class TestIPCSocket:
 
     def test_send_string_command_success(self, _ipc_socket, _socket):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
 
         socket_mock = _socket.return_value
@@ -156,7 +156,7 @@ class TestIPCSocket:
 
     def test_send_dict_message_success(self, _ipc_socket, _socket):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.core.ipc_socket import IPCProp
 
         test_message = {IPCProp.Command: "test", "data": [1, 2]}

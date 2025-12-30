@@ -189,7 +189,7 @@ class TestStyle:
         Test load_stylesheet reads all files, concatenates them, and resolves properties.
         """
 
-        from constants import Directory
+        from savegem.constants import Directory
         from savegem.app.gui.style import load_stylesheet
 
         _mock_color_scheme(Qt.ColorScheme.Light)

@@ -12,7 +12,7 @@ class TestStartupJob:
 
     @pytest.fixture
     def _mock_startup_worker(self):
-        from savegem.app.startup import QStartupWorker
+        from savegem.startup import QStartupWorker
 
         class MockStartupWorker(QStartupWorker):
             """
@@ -54,7 +54,7 @@ class TestStartupJob:
         Test initialization of internal state and task loading.
         """
 
-        from savegem.app.startup import StartupJob
+        from savegem.startup import StartupJob
 
         job = StartupJob()
 
@@ -68,7 +68,7 @@ class TestStartupJob:
         """
 
         from savegem.app.gui.constants import UISection
-        from savegem.app.startup import StartupJob
+        from savegem.startup import StartupJob
 
         job = StartupJob()
         job.start()
@@ -90,7 +90,7 @@ class TestStartupJob:
         Tests that task completion is correctly recorded.
         """
 
-        from savegem.app.startup import StartupJob
+        from savegem.startup import StartupJob
 
         job = StartupJob()
         worker = _mock_startup_worker()
@@ -98,7 +98,7 @@ class TestStartupJob:
         # Get the callback function
         callback = job._StartupJob__on_worker_finish(worker)  # noqa
 
-        callback()  # Simulate worker A finishing
+        callback()  # Simulate worker1 A finishing
         assert job.finished_tasks == ["Worker"]
 
     def test_on_worker_finish_final_build(self, gui_mock, _mock_tasks):
@@ -106,7 +106,7 @@ class TestStartupJob:
         Tests that gui().build() is only called when ALL tasks have finished.
         """
 
-        from savegem.app.startup import StartupJob
+        from savegem.startup import StartupJob
 
         job = StartupJob()
 

@@ -1,0 +1,10 @@
+
+KamaWidget#settingCard {
+    border: 1px solid color("surface-a20");
+    border-radius: 5px;
+}
+
+KamaWidget#settingGroup {
+    background-color: color("surface-a10");
+    border-radius: 5px;
+}

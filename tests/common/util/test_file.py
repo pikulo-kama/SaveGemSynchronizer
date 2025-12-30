@@ -12,7 +12,7 @@ class TestFileUtil:
 
     def test_should_resolve_config(self, path_join_mock):
 
-        from constants import Directory
+        from savegem.constants import Directory
         from savegem.common.util.file import resolve_config, resolve_resource, resolve_temp_file, \
             resolve_app_data, resolve_log, resolve_project_data, resolve_temp_resource, resolve_import_data, \
             resolve_migration
@@ -67,7 +67,7 @@ class TestFileUtil:
 
     def test_should_resolve_temporary_resources(self, path_join_mock, path_exists_mock):
 
-        from constants import Directory
+        from savegem.constants import Directory
         from savegem.common.util.file import resolve_resource
 
         file_name = "Test"
@@ -139,7 +139,7 @@ class TestFileUtil:
 
     def test_read_file_basic_text(self, tmp_path):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.util.file import read_file
 
         content = "Hello, this is a test line.\nAnother line."
@@ -154,7 +154,7 @@ class TestFileUtil:
 
     def test_read_file_as_json(self, tmp_path):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.util.file import read_file
 
         json_data = {"name": "Test User", "id": 123, "active": True}
@@ -172,7 +172,7 @@ class TestFileUtil:
 
     def test_read_file_invalid_json(self, tmp_path):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.util.file import read_file
 
         invalid_content = "{'key': 'value'"
@@ -187,7 +187,7 @@ class TestFileUtil:
 
     def test_save_file_plain_text(self, tmp_path):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.util.file import save_file
 
         content = "A simple line of text.\nWith a second line."
@@ -218,7 +218,7 @@ class TestFileUtil:
 
     def test_save_file_as_json_text_mode(self, tmp_path):
 
-        from constants import UTF_8
+        from savegem.constants import UTF_8
         from savegem.common.util.file import save_file
 
         data = {"key1": "value1", "key2": [1, 2, 3]}
@@ -252,7 +252,7 @@ class TestFileUtil:
 
     def test_file_checksum_basic_sha256(self, tmp_path):
 
-        from constants import SHA_256
+        from savegem.constants import SHA_256
         from savegem.common.util.file import file_checksum
 
         content = b"test"

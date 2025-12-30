@@ -9,7 +9,7 @@ class TestQWorker:
         Test that calling _run() on the base QWorker raises NotImplementedError.
         """
 
-        from savegem.app.worker import QWorker
+        from savegem.worker import QWorker
 
         with pytest.raises(NotImplementedError):
             QWorker()._run()
@@ -19,7 +19,7 @@ class TestQWorker:
         Test start() correctly calls _run, emits finished, and handles mutex locks.
         """
 
-        from savegem.app.worker import QWorker
+        from savegem.worker import QWorker
 
         class ConcreteWorker(QWorker):
             def _run(self):
@@ -46,12 +46,12 @@ class TestQWorker:
         Test that start() finished is NOT emitted if _run raises an exception.
         """
 
-        from savegem.app.worker import QWorker
+        from savegem.worker import QWorker
 
         # Arrange: Worker that always fails
         class FailingWorker(QWorker):
             def _run(self):
-                raise ValueError("Simulated worker error")
+                raise ValueError("Simulated worker1 error")
 
         worker = FailingWorker()
 
@@ -59,8 +59,8 @@ class TestQWorker:
         finished_callback = mocker.Mock()
         worker.finished.connect(finished_callback)
 
-        # Act and Assert 1: Check that the worker raises the error
-        with pytest.raises(ValueError, match="Simulated worker error"):
+        # Act and Assert 1: Check that the worker1 raises the error
+        with pytest.raises(ValueError, match="Simulated worker1 error"):
             worker.start()
 
         # Assert 3: finished signal should NOT be emitted
@@ -75,9 +75,9 @@ class TestQSubscriptableWorker:
         Provides an instance of QSubscriptableWorker.
         """
 
-        from savegem.app.worker import QSubscriptableWorker
+        from savegem.worker import SubscriptableWorker
 
-        worker = QSubscriptableWorker()
+        worker = SubscriptableWorker()
         # Mock _run to prevent NotImplementedError if start() were called
         worker._run = lambda: None
 

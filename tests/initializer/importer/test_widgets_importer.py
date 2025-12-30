@@ -11,8 +11,8 @@ class TestWidgetsImporter:
             {
                 "widget_id": "wait_bar_root",
                 "section_id": "wait",
-                "widget_type_id": "QWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KWidget",
+                "layout_type_id": "KVBoxLayout",
                 "spacing": 30,
                 "width": 400,
                 "margin_bottom": 50,
@@ -20,7 +20,7 @@ class TestWidgetsImporter:
                     {
                         "widget_id": "app_logo",
                         "content": "pixmap{gem_outline.svg, scale: 80}",
-                        "widget_type_id": "QLabel",
+                        "widget_type_id": "KLabel",
                         "alignment": "center"
                     },
                     {
@@ -41,8 +41,8 @@ class TestWidgetsImporter:
             {
                 "widget_id": "wait_bar_root",
                 "section_id": "wait",
-                "widget_type_id": "QWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KWidget",
+                "layout_type_id": "KVBoxLayout",
                 "spacing": 30,
                 "width": 400,
                 "margin_bottom": 50,
@@ -53,7 +53,7 @@ class TestWidgetsImporter:
                 "content": "pixmap{gem_outline.svg, scale: 80}",
                 'order_id': 1,
                 'parent_widget_id': 'wait_bar_root',
-                "widget_type_id": "QLabel",
+                "widget_type_id": "KLabel",
                 "alignment": "center"
             },
             {
@@ -87,8 +87,8 @@ class TestWidgetsImporter:
                 "widget_id": "game_list",
                 "controller": "GameListController",
                 "section_id": "test",
-                "widget_type_id": "QScrollableWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KScrollableWidget",
+                "layout_type_id": "KVBoxLayout",
                 "template": {
                     "header": [
                         {
@@ -97,28 +97,28 @@ class TestWidgetsImporter:
                             "children": [
                                 {
                                     "widget_id": "header_1_1",
-                                    "widget_type_id": "QLabel"
+                                    "widget_type_id": "KLabel"
                                 },
                                 {
                                     "widget_id": "header_1_2",
-                                    "widget_type_id": "QLabel"
+                                    "widget_type_id": "KLabel"
                                 }
                             ]
                         },
                         {
                             "widget_id": "header_2",
-                            "widget_type_id": "QSpacer"
+                            "widget_type_id": "KSpacer"
                         }
                     ],
                     "body": [
                         {
                             "widget_id": "body_1",
-                            "widget_type_id": "QHDivider"
+                            "widget_type_id": "KHDivider"
                         },
                         {
                             "widget_id": "body_2",
                             "content": "template{name}",
-                            "widget_type_id": "QPushButton",
+                            "widget_type_id": "KPushButton",
                             "style_object_name": "gameListOption"
                         }
                     ],
@@ -129,17 +129,17 @@ class TestWidgetsImporter:
                             "children": [
                                 {
                                     "widget_id": "footer_1_1",
-                                    "widget_type_id": "QLabel"
+                                    "widget_type_id": "KLabel"
                                 },
                                 {
                                     "widget_id": "footer_1_2",
-                                    "widget_type_id": "QLabel"
+                                    "widget_type_id": "KLabel"
                                 }
                             ]
                         },
                         {
                             "widget_id": "footer_2",
-                            "widget_type_id": "QSpacer"
+                            "widget_type_id": "KSpacer"
                         }
                     ]
                 }
@@ -150,10 +150,10 @@ class TestWidgetsImporter:
             # Root widget imported first.
             {
                 "controller": "GameListController",
-                "layout_type_id": "QVBoxLayout",
+                "layout_type_id": "KVBoxLayout",
                 "section_id": "test",
                 "widget_id": "game_list",
-                "widget_type_id": "QScrollableWidget"
+                "widget_type_id": "KScrollableWidget"
             },
             # Then header widgets.
             {
@@ -168,28 +168,28 @@ class TestWidgetsImporter:
                 "parent_widget_id": "header_1",
                 "section_id": "game_list__template_header",
                 "widget_id": "header_1_1",
-                "widget_type_id": "QLabel"
+                "widget_type_id": "KLabel"
             },
             {
                 "order_id": 2,
                 "parent_widget_id": "header_1",
                 "section_id": "game_list__template_header",
                 "widget_id": "header_1_2",
-                "widget_type_id": "QLabel"
+                "widget_type_id": "KLabel"
             },
             # Second header root widget.
             {
                 "order_id": 2,
                 "section_id": "game_list__template_header",
                 "widget_id": "header_2",
-                "widget_type_id": "QSpacer"
+                "widget_type_id": "KSpacer"
             },
             # Body widgets.
             {
                 "order_id": 1,
                 "section_id": "game_list__template_body",
                 "widget_id": "body_1",
-                "widget_type_id": "QHDivider"
+                "widget_type_id": "KHDivider"
             },
             {
                 "content": "template{name}",
@@ -197,7 +197,7 @@ class TestWidgetsImporter:
                 "section_id": "game_list__template_body",
                 "style_object_name": "gameListOption",
                 "widget_id": "body_2",
-                "widget_type_id": "QPushButton"
+                "widget_type_id": "KPushButton"
             },
             # Footer widgets.
             {
@@ -211,20 +211,20 @@ class TestWidgetsImporter:
                 "parent_widget_id": "footer_1",
                 "section_id": "game_list__template_footer",
                 "widget_id": "footer_1_1",
-                "widget_type_id": "QLabel"
+                "widget_type_id": "KLabel"
             },
             {
                 "order_id": 2,
                 "parent_widget_id": "footer_1",
                 "section_id": "game_list__template_footer",
                 "widget_id": "footer_1_2",
-                "widget_type_id": "QLabel"
+                "widget_type_id": "KLabel"
             },
             {
                 "order_id": 2,
                 "section_id": "game_list__template_footer",
                 "widget_id": "footer_2",
-                "widget_type_id": "QSpacer"
+                "widget_type_id": "KSpacer"
             }
         ]
 
@@ -271,8 +271,8 @@ class TestWidgetsImporter:
             {
                 "widget_id": "wait_bar_root",
                 "section_id": "wait",
-                "widget_type_id": "QWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KWidget",
+                "layout_type_id": "KVBoxLayout",
                 "refresh_events": [
                     first_event,
                     second_event

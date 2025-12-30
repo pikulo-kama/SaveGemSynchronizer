@@ -11,8 +11,8 @@ class TestWidgetsExtractor:
             {
                 "widget_id": "wait_bar_root",
                 "section_id": "wait",
-                "widget_type_id": "QWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KWidget",
+                "layout_type_id": "KVBoxLayout",
                 "spacing": 30,
                 "width": 400,
                 "margin_bottom": 50,
@@ -23,7 +23,7 @@ class TestWidgetsExtractor:
                 "content": "pixmap{gem_outline.svg, scale: 80}",
                 'order_id': 1,
                 'parent_widget_id': 'wait_bar_root',
-                "widget_type_id": "QLabel",
+                "widget_type_id": "KLabel",
                 "alignment": "center"
             },
             {
@@ -42,8 +42,8 @@ class TestWidgetsExtractor:
             {
                 "widget_id": "wait_bar_root",
                 "section_id": "wait",
-                "widget_type_id": "QWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KWidget",
+                "layout_type_id": "KVBoxLayout",
                 "spacing": 30,
                 "width": 400,
                 "margin_bottom": 50,
@@ -51,7 +51,7 @@ class TestWidgetsExtractor:
                     {
                         "widget_id": "app_logo",
                         "content": "pixmap{gem_outline.svg, scale: 80}",
-                        "widget_type_id": "QLabel",
+                        "widget_type_id": "KLabel",
                         "alignment": "center"
                     },
                     {
@@ -87,8 +87,8 @@ class TestWidgetsExtractor:
         data = [
             {
                 "widget_id": "wait_bar_root",
-                "widget_type_id": "QWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KWidget",
+                "layout_type_id": "KVBoxLayout",
                 "spacing": 30,
                 "width": 400,
                 "margin_bottom": 50,
@@ -117,8 +117,8 @@ class TestWidgetsExtractor:
             {
                 "widget_id": "wait_bar_root",
                 "section_id": "wait",
-                "widget_type_id": "QWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KWidget",
+                "layout_type_id": "KVBoxLayout",
                 "spacing": 30,
                 "width": 400,
                 "margin_bottom": 50,
@@ -129,8 +129,8 @@ class TestWidgetsExtractor:
             {
                 "widget_id": "wait_bar_root",
                 "section_id": "wait",
-                "widget_type_id": "QWidget",
-                "layout_type_id": "QVBoxLayout",
+                "widget_type_id": "KWidget",
+                "layout_type_id": "KVBoxLayout",
                 "spacing": 30,
                 "width": 400,
                 "margin_bottom": 50,

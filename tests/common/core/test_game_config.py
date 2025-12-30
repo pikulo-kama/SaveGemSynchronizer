@@ -96,7 +96,7 @@ class TestGameConfig(GameModuleTestHelper):
         Tests successful download and verifies filtering logic for players and hidden games.
         """
 
-        from savegem.app.data import HolderObject
+        from savegem.constants import HolderObject
 
         _games_config.initialize()
         holder_mock.get.assert_called_once_with(HolderObject.GamesConfig)
@@ -125,7 +125,7 @@ class TestGameConfig(GameModuleTestHelper):
         Tests the failure path when GDrive download fails.
         """
 
-        from constants import File
+        from savegem.constants import File
 
         holder_mock.get.return_value = None
 

@@ -1,10 +1,11 @@
 from typing import Final
 
-from constants import File
+from kui.core.app import KamaApplication
+from kui.core.json_holder import JsonConfigHolder
+from kutil.logger import get_logger
+
+from savegem.constants import File
 from savegem.common.core.app_data import AppData
-from savegem.common.core.json_config_holder import JsonConfigHolder
-from savegem.common.util.file import resolve_project_data
-from savegem.common.util.logger import get_logger
 
 
 _logger = get_logger(__name__)
@@ -20,9 +21,11 @@ class AppConfig(AppData):
     GameConfigFileProp: Final = "gameConfigFileId"
     UsersConfigFileProp: Final = "usersConfigFileId"
 
-    def __init__(self, app):
-        super().__init__(app)
-        self.__config = JsonConfigHolder(resolve_project_data(File.GDriveConfig))
+    def __init__(self, context):
+        super().__init__(context)
+
+        application = KamaApplication()
+        self.__config = JsonConfigHolder(application.discovery.get_project_root(File.GDriveConfig))
 
         _logger.debug("Activity Log File ID - %s", self.activity_log_file_id)
         _logger.debug("Game Config File ID - %s", self.games_config_file_id)

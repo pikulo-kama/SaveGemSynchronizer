@@ -43,7 +43,7 @@ class SettingsControllerTestModuleHelper(WidgetControllerTest):
 
     @pytest.fixture(autouse=True)
     def _module_setup(self, app_state_mock):
-        from constants import TimeFormat
+        from savegem.constants import TimeFormat
         from savegem.app.gui.style import ColorMode
 
         app_state_mock.locale = "en_US"
@@ -126,7 +126,7 @@ class TestTimeFormatDropdownController(SettingsControllerTestModuleHelper):
         Tests that setup adds two format options, sets current index, and connects signal.
         """
 
-        from constants import TimeFormat
+        from savegem.constants import TimeFormat
 
         _controller.setup(_combobox)
 
@@ -143,7 +143,7 @@ class TestTimeFormatDropdownController(SettingsControllerTestModuleHelper):
         Tests the on_time_format_change callback correctly updates state.
         """
 
-        from constants import TimeFormat
+        from savegem.constants import TimeFormat
 
         # Setup mock return values for the callback logic
         _combobox.itemData.return_value = TimeFormat.Military
@@ -275,7 +275,7 @@ class TestLogoutController(SettingsControllerTestModuleHelper):
         Tests the core logout logic: file deletion, GUI destruction, and program exit.
         """
 
-        from constants import File
+        from savegem.constants import File
 
         # Set up the expected app data path
         resolve_app_data_mock.return_value = "/mock/auth/token.dat"

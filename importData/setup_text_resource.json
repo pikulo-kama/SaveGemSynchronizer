@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "table_name": "setup_text_resource",
+    "table_name": "text_resources",
     "type": "TextResource",
     "extract_date": "2025-11-25T02:27:37.935289"
   },
@@ -398,11 +398,11 @@
       "uk_UA": "Сповіщення"
     },
     "window_Copyright": {
-      "de_DE": "© {0} {1}™. Lizenziert unter GPLv3.",
-      "en_US": "© {0} {1}™. Licensed under GPLv3.",
-      "es_ES": "© {0} {1}™. Licenciado bajo GPLv3.",
-      "fr_FR": "© {0} {1}™. Sous licence GPLv3.",
-      "uk_UA": "© {0} {1}™. Ліцензовано за GPLv3."
+      "de_DE": "© 2023-{0} {1}™. Lizenziert unter GPLv3.",
+      "en_US": "© 2023-{0} {1}™. Licensed under GPLv3.",
+      "es_ES": "© 2023-{0} {1}™. Licenciado bajo GPLv3.",
+      "fr_FR": "© 2023-{0} {1}™. Sous licence GPLv3.",
+      "uk_UA": "© 2023-{0} {1}™. Ліцензовано за GPLv3."
     },
     "window_CopyrightDisclaimer": {
       "de_DE": "{0} ist ein inoffizielles Dienstprogramm eines Drittanbieters.\n\nAlle Spieltitel, Logos und zugehörigen geistigen Eigentumsrechte sind Eigentum ihrer jeweiligen Inhaber.\n{0} ist weder mit einem Spielepublisher oder -entwickler verbunden, von diesem befürwortet noch gesponsert.",
@@ -410,13 +410,6 @@
       "es_ES": "{0} es una utilidad no oficial de terceros.\n\nTodos los títulos de juegos, logotipos y propiedad intelectual asociada son propiedad de sus respectivos dueños.\n{0} no está afiliado, respaldado ni patrocinado por ningún editor o desarrollador de juegos.",
       "fr_FR": "{0} est un utilitaire tiers non officiel.\n\nTous les titres de jeux, logos et propriétés intellectuelles associées appartiennent à leurs propriétaires respectifs.\n{0} n'est ni affilié, ni approuvé, ni sponsorisé par un éditeur ou développeur de jeux.",
       "uk_UA": "{0} є неофіційною сторонньою утилітою.\n\nУсі назви ігор, логотипи та пов'язана з ними інтелектуальна власність є власністю їхніх відповідних власників.\n{0} не пов'язаний, не схвалений і не спонсорується жодним видавцем чи розробником ігор."
-    },
-    "window_Title": {
-      "de_DE": "{0} Synchronisierer",
-      "en_US": "{0} Synchronizer",
-      "es_ES": "Sincronizador {0}",
-      "fr_FR": "Synchroniseur {0}",
-      "uk_UA": "Синхронізатор {0}"
     }
   }
 }
