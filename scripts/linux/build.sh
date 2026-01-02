@@ -8,7 +8,7 @@ verify_file_exists "credentials.json"
 verify_file_exists "config.json"
 
 # Install dependencies
-pip install -r requirements.txt
+pip install .
 apt install jq zip
 
 # Build executable with pyinstaller

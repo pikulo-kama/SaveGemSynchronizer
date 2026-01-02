@@ -6,7 +6,7 @@ Assert-File-Exists "credentials.json"
 Assert-File-Exists "service_info.json"
 
 # Install dependencies
-pip install -r requirements.txt
+pip install .
 
 # Build executable with pyinstaller and create archive.
 python -m PyInstaller --distpath output/dist --workpath output --clean --noconfirm build.spec

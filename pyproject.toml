@@ -1,0 +1,42 @@
+[project]
+name = "savegem"
+version = "5.0.0"
+license = {file = "LICENSE"}
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "kama-ui @ git+https://github.com/pikulo-kama/kama-ui.git",
+    "kama-dbm @ git+https://github.com/pikulo-kama/kama-dbm.git",
+    "kama-ui-db-plugin @ git+https://github.com/pikulo-kama/kama-ui-db-plugin.git",
+    "PyQt6 >= 6.10.0, < 7.0.0",
+    "pyqt6-sip >= 13.10.3, < 14.0.0",
+    "PyYAML >= 6.0.3, < 7.0.0",
+    "google-api-python-client >= 2.187.0, < 3.0.0",
+    "google-auth-httplib2 >= 0.2.1, < 1.0.0",
+    "google_auth_oauthlib >= 1.2.3, < 2.0.0",
+    "pyinstaller >= 6.17.0, < 7.0.0",
+    "winotify >= 1.1.0, < 2.0.0"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest >= 9.0.1, < 10.0.0",
+    "pytest-qt >= 4.5.0, < 5.0.0",
+    "pytest-mock >= 3.15.1, < 4.0.0",
+    "pytest-cov >= 7.0.0, < 8.0.0"
+]
+
+[tool.setuptools.packages.find]
+# Only include the actual source code folder
+where = ["."]
+include = ["savegem*"]
+
+[tool.setuptools.package-data]
+# Ensure non-python files are still included in the build
+"*" = ["*.ttf", "*.json", "*.yaml", "*.sql", "*.exe"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=savegem --cov-report=term-missing"

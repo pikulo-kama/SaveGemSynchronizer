@@ -1,8 +1,10 @@
 /venv
 /output
+/build
 /.idea
 /.vscode
 __pycache__/
+**/*.egg-info/
 
 config.json
 credentials.json
