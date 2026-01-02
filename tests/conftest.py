@@ -43,7 +43,7 @@ def setup_file_system():
         os.mkdir(Directory().Logback)
         os.mkdir(Directory().Output)
 
-        create_dummy_file(os.path.join(Directory().ProjectRoot, "config.json"))
+        create_dummy_file(os.path.join(Directory().ProjectRoot, "service_info.json"))
         create_dummy_file(os.path.join(Directory().Config, "app.json"))
         create_dummy_file(os.path.join(Directory().Logback, "SaveGem.json"))
 

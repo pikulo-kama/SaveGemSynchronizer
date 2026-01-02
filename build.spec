@@ -1,12 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 import json
+import logging
 from datetime import date
 
 from PyInstaller.building.api import PYZ, EXE, COLLECT
 from PyInstaller.building.build_main import Analysis
-# For some reason these are not being picked up by IDE, even though they're available at runtime
-# noinspection PyUnresolvedReferences
+from PyInstaller.log import logger  # noqa
 from PyInstaller.utils.win32.versioninfo import VSVersionInfo, VarFileInfo, VarStruct, StringFileInfo, StringTable, \
     StringStruct, FixedFileInfo
 
@@ -16,7 +16,7 @@ def read_config(service_name: str) -> dict:
     Used to read and return service configuration file.
     """
 
-    with open(f"config/{service_name}.json") as file:
+    with open(f"service_info/{service_name}.json") as file:
         return json.load(file)
 
 
@@ -37,7 +37,7 @@ def build_exe_info(service_name: str):
     description = service_config.get("description", "Unknown")
     process_name = service_config.get("processName", "Unknown")
     product_name = process_name.replace(".exe", "")
-    period = "2023" if date.today().year == 2023 else f"2023-{date.today().year}"
+    period = f"2023-{date.today().year}"
 
     version_info = VSVersionInfo(
         ffi=FixedFileInfo(
@@ -81,7 +81,8 @@ def build_exe(
         icon: str = "NONE",
         console: bool = False,
         datas: list = None,
-        hooks: list = None
+        hooks: list = None,
+        hidden_imports: list = None
 ):
     """
     Used to build EXE file.
@@ -99,7 +100,8 @@ def build_exe(
         [f"savegem/{service_name}/main.py"],
         binaries=[],
         datas=datas,
-        hookspath=hooks or [],
+        hiddenimports=hidden_imports or [],
+        hookspath=hooks,
         hooksconfig={},
         excludes=[],
         noarchive=False
@@ -121,20 +123,22 @@ def build_exe(
 
     return exe, analysis
 
+logger.setLevel(logging.DEBUG)
 
 credentials_data = ('credentials.json', '.')
 drive_config_data = ('config.json', '.')
 
-gui, gui_a = build_exe(
+app, app_a = build_exe(
     service_name="app",
-    hooks=["hooks"],
     datas=[
         credentials_data,
         drive_config_data,
+        "importData",
         "resources",
-        "config",
+        "migration",
         "styles"
     ],
+    hooks=['hooks'],
     icon='resources/application.ico'
 )
 
@@ -143,7 +147,8 @@ process_watcher, process_watcher_a = build_exe(
     datas=[
         credentials_data,
         drive_config_data,
-        "config"
+        "resources",
+        "service_info"
     ]
 )
 
@@ -152,41 +157,30 @@ gdrive_watcher, gdrive_watcher_a = build_exe(
     datas=[
         credentials_data,
         drive_config_data,
-        "resources",
-        "config"
+        "service_info"
     ]
-)
-
-initializer, initializer_a = build_exe(
-    service_name="initializer",
-    hooks=["hooks"],
-    datas=["importData", "migration"],
-    console=True
 )
 
 watchdog, watchdog_a = build_exe(
     service_name="watchdog",
-    datas=["config"]
+    datas=["service_info"]
 )
 
 # Collect everything into one folder
 COLLECT(
-    gui,
+    app,
     process_watcher,
     gdrive_watcher,
-    initializer,
     watchdog,
 
-    gui_a.binaries +
+    app_a.binaries +
     process_watcher_a.binaries +
     gdrive_watcher_a.binaries +
-    initializer_a.binaries,
     watchdog_a.binaries,
 
-    gui_a.datas +
+    app_a.datas +
     process_watcher_a.datas +
     gdrive_watcher_a.datas,
-    initializer_a.datas,
 
     upx=True,
     name=read_config("app").get("name")

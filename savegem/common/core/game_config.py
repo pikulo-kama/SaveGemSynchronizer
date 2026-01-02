@@ -4,11 +4,13 @@ import urllib.request
 from typing import Final, Iterator
 
 from kui.core.app import KamaApplication
+from kui.core.shortcut import dynamic_data, resolve_app_data, resolve_resource, resolve_temp_resource
 from kui_db_plugin.database import db
 from kutil.file import delete_file
+from kutil.file_type import JPG
 from kutil.logger import get_logger
 
-from savegem.constants import File, JPG_EXTENSION
+from savegem.constants import File
 from savegem.constants import HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
@@ -48,15 +50,14 @@ class GameConfig(AppData):
         """
 
         _logger.debug("Downloading game configuration from drive.")
-        application = KamaApplication()
-        game_config = application.data.get(HolderObject.GamesConfig)
+        game_config = dynamic_data(HolderObject.GamesConfig)
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
-            # Remove token when failed to remove game config.
+            # Remove token when failed to remove game service_info.
             # Since there is a chance that user used wrong account to
             # authenticate we remove token so that he could log in again.
-            drive_token_path = application.discovery.get_app_data_root(File.GDriveToken)
+            drive_token_path = resolve_app_data(File.GDriveToken)
             delete_file(drive_token_path)
 
             _logger.error(message)
@@ -292,7 +293,7 @@ class Game:
         save_directory = self.local_path
 
         for file_name in sorted(os.listdir(save_directory)):
-            # Only include files that are present in game config.
+            # Only include files that are present in game service_info.
             if any(p.match(file_name) for p in self.filter_patterns):
                 yield os.path.join(save_directory, file_name)
 
@@ -335,12 +336,11 @@ class Game:
         Will use default SaveGem logo as fallback value.
         """
 
-        application = KamaApplication()
-
         if logo_url is None:
-            return application.discovery.get_resources_directory("gem.svg")
+            return resolve_resource("gem.svg")
 
-        logo_path = application.discovery.get_temp_resources_directory(f"{self.name}{JPG_EXTENSION}")
+        logo_name = JPG.add_extension(self.name)
+        logo_path = resolve_temp_resource(logo_name)
         urllib.request.urlretrieve(logo_url, logo_path)
 
         return logo_path

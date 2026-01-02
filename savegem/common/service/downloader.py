@@ -3,10 +3,11 @@ import shutil
 from typing import Final
 
 from kui.core.app import KamaApplication
+from kui.core.shortcut import resolve_temp_file
 from kutil.file import save_file, cleanup_directory
+from kutil.file_type import ZIP
 from kutil.logger import get_logger
 
-from savegem.constants import ZIP_EXTENSION
 from savegem.common.core.game_config import Game
 from savegem.common.service.gdrive import GDrive
 from savegem.common.service.subscriptable import SubscriptableService, ErrorEvent, DoneEvent, EventKind
@@ -35,9 +36,9 @@ class Downloader(SubscriptableService):
         # 6 - Update in-memory save files metadata.
         self._set_stages(6)
 
-        application = KamaApplication()
         saves_directory = game.local_path
-        temp_zip_file_path = application.discovery.get_output_directory(f"save.{ZIP_EXTENSION}")
+        zip_file_name = ZIP.add_extension("save")
+        temp_zip_file_path = resolve_temp_file(zip_file_name)
 
         _logger.debug("savesDirectory = %s", saves_directory)
 
@@ -78,7 +79,7 @@ class Downloader(SubscriptableService):
         shutil.unpack_archive(
             temp_zip_file_path,
             saves_directory,
-            ZIP_EXTENSION
+            ZIP.stem
         )
         self._complete_stage()
 

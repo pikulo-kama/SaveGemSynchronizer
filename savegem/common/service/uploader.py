@@ -4,12 +4,12 @@ from datetime import datetime
 import shutil
 
 from googleapiclient.errors import HttpError
-from kui.core.app import KamaApplication
+from kui.core.shortcut import resolve_temp_file
+from kutil.file_type import ZIP
 from kutil.logger import get_logger
 
 from savegem.common.core.context import context
 
-from savegem.constants import ZIP_EXTENSION
 from savegem.common.core.game_config import Game
 from savegem.common.core.save_meta import SaveMetaProp
 from savegem.common.service.gdrive import GDrive
@@ -40,8 +40,7 @@ class Uploader(SubscriptableService):
         saves_root_dir = game.local_path
         now = datetime.now()
         current_date = now.strftime("%Y-%m-%d-%H-%M-%S")
-        application = KamaApplication()
-        target_archive_path = application.discovery.get_output_directory(f"{game.name}-{current_date}")
+        target_archive_path = resolve_temp_file(f"{game.name}-{current_date}")
 
         if not os.path.exists(saves_root_dir):
             _logger.error("Directory with saves is missing %s", saves_root_dir)
@@ -67,7 +66,7 @@ class Uploader(SubscriptableService):
 
         # Archive save contents to mitigate impact on drive storage.
         _logger.info("Archiving save files that need to be uploaded.")
-        archive_path = shutil.make_archive(target_archive_path, ZIP_EXTENSION, target_archive_path)
+        archive_path = shutil.make_archive(target_archive_path, ZIP.stem, target_archive_path)
         self._complete_stage()
 
         archive_props = {
@@ -82,7 +81,7 @@ class Uploader(SubscriptableService):
         try:
             _logger.info("Uploading archive to cloud.")
             GDrive.upload_file(
-                f"{target_archive_path}.{ZIP_EXTENSION}",
+                ZIP.add_extension(target_archive_path),
                 game.drive_directory,
                 properties=archive_props,
                 subscriber=lambda completion: self._complete_stage(completion)

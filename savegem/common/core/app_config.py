@@ -1,7 +1,7 @@
 from typing import Final
 
-from kui.core.app import KamaApplication
 from kui.core.json_holder import JsonConfigHolder
+from kui.core.shortcut import resolve_project_file
 from kutil.logger import get_logger
 
 from savegem.constants import File
@@ -23,9 +23,7 @@ class AppConfig(AppData):
 
     def __init__(self, context):
         super().__init__(context)
-
-        application = KamaApplication()
-        self.__config = JsonConfigHolder(application.discovery.get_project_root(File.GDriveConfig))
+        self.__config = JsonConfigHolder(resolve_project_file(File.GDriveConfig))
 
         _logger.debug("Activity Log File ID - %s", self.activity_log_file_id)
         _logger.debug("Game Config File ID - %s", self.games_config_file_id)
@@ -58,6 +56,6 @@ class AppConfig(AppData):
         return self.__config.get_value(AppConfig.UsersConfigFileProp)
 
     def refresh(self):  # pragma: no cover
-        # No need to reload config since it
+        # No need to reload service_info since it
         # is not modified by application.
         pass

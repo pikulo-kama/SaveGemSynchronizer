@@ -1,10 +1,11 @@
 from kui.component.progress_button import KamaProgressPushButton
 from kui.core.app import KamaApplication
 from kui.core.controller import WidgetController
+from kui.core.shortcut import tr
 
 from savegem.constants import UIRefreshEvent
-from savegem.worker.download_worker import DownloadWorker
-from savegem.worker.upload_worker import UploadWorker
+from savegem.app.worker.download_worker import DownloadWorker
+from savegem.app.worker.upload_worker import UploadWorker
 from savegem.common.core.context import context
 from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
 
@@ -20,8 +21,7 @@ def _done_subscriber(message_key: str):
     def callback(event: DoneEvent):
         # Only show notification if there was no error.
         if event.success:
-            message = application.text_resources.get(message_key)
-            application.window.notification(message)
+            application.window.notification(tr(message_key))
 
     return callback
 
@@ -44,14 +44,14 @@ def _error_subscriber(event: ErrorEvent):
 
     if event.kind == EventKind.SavesDirectoryMissing:
         game_path = context().games.current.local_path
-        message = application.tr("notification_ErrorSaveDirectoryMissing", game_path)
+        message = tr("notification_ErrorSaveDirectoryMissing", game_path)
         application.window.notification(message)
 
     elif event.kind == EventKind.DriveMetadataMissing:
-        application.window.notification(application.tr("label_StorageIsEmptyDesc"))
+        application.window.notification(tr("label_StorageIsEmptyDesc"))
 
     elif event.kind == EventKind.ErrorUploadingToDrive:
-        application.window.notification(application.tr("notification_ErrorUploadingToDrive"))
+        application.window.notification(tr("notification_ErrorUploadingToDrive"))
 
 
 class DownloadButtonController(WidgetController):
@@ -81,7 +81,7 @@ class DownloadButtonController(WidgetController):
 
         download_button.clicked.connect(  # noqa
             lambda: application.window.confirmation(
-                application.tr("confirmation_ConfirmToDownloadSave"),
+                tr("confirmation_ConfirmToDownloadSave"),
                 start_download
             )
         )

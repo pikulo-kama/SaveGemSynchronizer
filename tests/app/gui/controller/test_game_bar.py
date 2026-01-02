@@ -1,6 +1,6 @@
 import pytest
 from pytest_mock import MockerFixture
-from unittest.mock import MagicMock, call
+from unittest.mock import call
 
 from tests.app.gui.controller import WidgetControllerTest
 

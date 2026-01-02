@@ -34,7 +34,7 @@ class GameModuleTestHelper:
             logo="test",
             local_path=_game_path,
             drive_directory="test_drive_id",
-            files_filter=["save.*\\.dat", "save.*\\.bak", "config\\.ini"],
+            files_filter=["save.*\\.dat", "save.*\\.bak", "service_info\\.ini"],
             auto_mode_allowed=True,
             players=[PlayerTestData.FirstPlayerEmail]
         )
@@ -297,10 +297,10 @@ class TestGame(GameModuleTestHelper):
         assert len(patterns) == 3
         assert patterns[0].pattern == "save.*\\.dat"
         assert patterns[1].pattern == "save.*\\.bak"
-        assert patterns[2].pattern == "config\\.ini"
+        assert patterns[2].pattern == "service_info\\.ini"
 
         assert patterns[0].match("save001.dat") is not None
-        assert patterns[0].match("config.ini") is None
+        assert patterns[0].match("service_info.ini") is None
 
     def test_game_filter_patterns_no_filter(self, _games_config, _game_path):
         """
@@ -337,7 +337,7 @@ class TestGame(GameModuleTestHelper):
         expandvars_mock.return_value = "/user/home/TestSaves"
         listdir_mock.return_value = [
             "save_100.dat",  # Matches pattern 1
-            "config.ini",  # Matches pattern 2
+            "service_info.ini",  # Matches pattern 2
             "temp.log",  # No match
             "save_001.bak",  # Matches pattern 1
             "metadata_file.json",  # No match
@@ -348,7 +348,7 @@ class TestGame(GameModuleTestHelper):
 
         # 3. Assert: Only expected files should be included, and they should be sorted
         assert file_list == [
-            "/user/home/TestSaves/config.ini",
+            "/user/home/TestSaves/service_info.ini",
             "/user/home/TestSaves/save_001.bak",
             "/user/home/TestSaves/save_100.dat"
         ]

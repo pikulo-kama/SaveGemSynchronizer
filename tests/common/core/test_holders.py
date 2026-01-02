@@ -11,7 +11,7 @@ class TestHolders:
 
         from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
 
-        # Reset global module state so functions like prop() run the config loader again
+        # Reset global module state so functions like prop() run the service_info loader again
         import savegem.common.core.holders as holders_module
         mocker.patch.object(holders_module, '_app_config', None)
         mocker.patch.object(holders_module, '_locales', None)

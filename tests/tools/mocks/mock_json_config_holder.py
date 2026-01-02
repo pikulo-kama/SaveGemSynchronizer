@@ -3,7 +3,7 @@ from savegem.common.core.editable_json_config_holder import EditableJsonConfigHo
 
 class MockJsonConfigHolder(EditableJsonConfigHolder):
     """
-    Mock for JsonConfigHolder to control config values
+    Mock for JsonConfigHolder to control service_info values
     """
 
 

@@ -2,6 +2,7 @@ from datetime import date
 
 from kui.core.app import KamaApplication
 from kui.core.resolver import ContentResolver
+from kui.core.shortcut import tr
 from kutil.date import string_to_date, get_verbose_date, get_verbose_time
 from kutil.logger import get_logger
 from savegem.common.core.context import context
@@ -39,9 +40,7 @@ class SaveInfoResolver(ContentResolver):
     """
 
     def resolve(self, key: str, *args, **kw):
-
-        application = KamaApplication()
-        na_label = application.tr("label_NA")
+        na_label = tr("label_NA")
 
         if key == "size":
             return self.__get_save_size() or na_label
@@ -61,10 +60,10 @@ class SaveInfoResolver(ContentResolver):
         sync_status = context().games.current.meta.sync_status
 
         if key == "status":
-            return application.tr(_status_label_map.get(sync_status))
+            return tr(_status_label_map.get(sync_status))
 
         elif key == "statusDescription":
-            return application.tr(_status_desc_map.get(sync_status))
+            return tr(_status_desc_map.get(sync_status))
 
         elif key == "statusIcon":
             return _status_icon_map.get(sync_status)
@@ -128,10 +127,9 @@ class SaveInfoResolver(ContentResolver):
         if not metadata.is_present or metadata.size < 0:
             return None
 
-        application = KamaApplication()
         size = metadata.size
 
         if size < 1000:
-            return application.tr("label_SizeKilobytes", size)
+            return tr("label_SizeKilobytes", size)
         else:
-            return application.tr("label_SizeMegabytes", size // 1024)
+            return tr("label_SizeMegabytes", size // 1024)

@@ -4,9 +4,9 @@ import sys
 import time
 from typing import Final
 
-from kui.core.app import KamaApplication
 from kui.core.json_holder import JsonConfigHolder
-from kutil.file_extension import JSON
+from kui.core.shortcut import prop, resolve_project_file
+from kutil.file_type import JSON
 from kutil.logger import get_logger
 from kutil.process import is_process_already_running
 
@@ -23,14 +23,11 @@ class Daemon(abc.ABC):
     DefaultInterval: Final = 5
 
     def __init__(self, service_name: str, requires_auth: bool):
-
-        application = KamaApplication()
-
         self._logger = get_logger(service_name)
         self.__interval = self.DefaultInterval
         self.__service_name = service_name
         self.__requires_auth = requires_auth
-        config_path = application.discovery.get_config_directory(JSON.add_to(service_name))
+        config_path = resolve_project_file("service_info", JSON.add_extension(service_name))
 
         if os.path.exists(config_path):
             config = JsonConfigHolder(config_path)
@@ -51,8 +48,7 @@ class Daemon(abc.ABC):
         Used to start daemon.
         """
 
-        application = KamaApplication()
-        self._logger.info("Starting service '%s' version %s.", self.__service_name, application.config.get("version"))
+        self._logger.info("Starting service '%s' version %s.", self.__service_name, prop("version"))
         self._logger.info("Polling rate '%s' seconds.", self.__interval)
 
         run_once_executed = False

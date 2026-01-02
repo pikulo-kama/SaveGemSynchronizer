@@ -190,7 +190,7 @@ class TestUISocket:
 
         UISocket._UISocket__update_games_configuration(UIRefreshEvent.GameConfigChange)  # noqa
 
-        # 1. Check config download and initialization (since event is GameConfigChange)
+        # 1. Check service_info download and initialization (since event is GameConfigChange)
         holder_mock.download_json.assert_called_once_with(
             HolderObject.GamesConfig, ConfigTestData.GameConfigFileId
         )
@@ -216,7 +216,7 @@ class TestUISocket:
 
         UISocket._UISocket__update_games_configuration(UIRefreshEvent.CloudSaveFilesChange)  # noqa
 
-        # 1. Check config download/init is skipped (since event is NOT GameConfigChange)
+        # 1. Check service_info download/init is skipped (since event is NOT GameConfigChange)
         holder_mock.download_json.assert_not_called()
         games_config_mock.initialize.assert_not_called()
 

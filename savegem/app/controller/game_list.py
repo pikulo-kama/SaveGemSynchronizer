@@ -6,7 +6,7 @@ from kui.core.controller import TemplateWidgetController
 from kutil.logger import get_logger
 
 from savegem.constants import UIRefreshEvent
-from savegem.worker.game_change_worker import GameChangeWorker
+from savegem.app.worker.game_change_worker import GameChangeWorker
 from savegem.common.core.context import context
 from savegem.common.core.game_config import Game
 from savegem.common.core.save_meta import SyncStatus

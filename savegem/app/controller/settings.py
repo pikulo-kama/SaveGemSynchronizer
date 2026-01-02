@@ -4,6 +4,7 @@ from kui.component.button import KamaPushButton
 from kui.component.combobox import KamaComboBox
 from kui.core.app import KamaApplication
 from kui.core.controller import WidgetController
+from kui.core.shortcut import tr, resolve_app_data
 from kui.core.style import ColorMode
 from kui_db_plugin.database import db
 from kutil.file import delete_file
@@ -65,17 +66,15 @@ class TimeFormatDropdownController(WidgetController):
             _logger.debug("Changing time format to %s", time_format_id)
             context().state.time_format = time_format_id
 
-        application = KamaApplication()
-        time_format_dropdown.addItem(application.tr("label_TimeFormat12"), TimeFormat.Regular)
-        time_format_dropdown.addItem(application.tr("label_TimeFormat24"), TimeFormat.Military)
+        time_format_dropdown.addItem(tr("label_TimeFormat12"), TimeFormat.Regular)
+        time_format_dropdown.addItem(tr("label_TimeFormat24"), TimeFormat.Military)
 
         time_format_dropdown.setCurrentIndex(context().state.time_format)
         time_format_dropdown.currentIndexChanged.connect(on_time_format_change)  # noqa
 
     def refresh(self, time_format_dropdown: KamaComboBox):
-        application = KamaApplication()
-        time_format_dropdown.setItemText(0, application.tr("label_TimeFormat12"))
-        time_format_dropdown.setItemText(1, application.tr("label_TimeFormat24"))
+        time_format_dropdown.setItemText(0, tr("label_TimeFormat12"))
+        time_format_dropdown.setItemText(1, tr("label_TimeFormat24"))
 
 
 class ColorThemeDropdownController(WidgetController):
@@ -94,19 +93,18 @@ class ColorThemeDropdownController(WidgetController):
             application.window.reload_styles()
             self.manager.refresh()
 
-        theme_dropdown.addItem(application.tr("label_ColorModeSystem"), None)
-        theme_dropdown.addItem(application.tr("label_ColorModeLight"), ColorMode.Light)
-        theme_dropdown.addItem(application.tr("label_ColorModeDark"), ColorMode.Dark)
+        theme_dropdown.addItem(tr("label_ColorModeSystem"), None)
+        theme_dropdown.addItem(tr("label_ColorModeLight"), ColorMode.Light)
+        theme_dropdown.addItem(tr("label_ColorModeDark"), ColorMode.Dark)
 
         current_theme_index = theme_dropdown.findData(context().state.color_theme)
         theme_dropdown.setCurrentIndex(current_theme_index)
         theme_dropdown.currentIndexChanged.connect(on_theme_change)  # noqa
 
     def refresh(self, theme_dropdown: KamaComboBox):
-        application = KamaApplication()
-        theme_dropdown.setItemText(0, application.tr("label_ColorModeSystem"))
-        theme_dropdown.setItemText(1, application.tr("label_ColorModeLight"))
-        theme_dropdown.setItemText(2, application.tr("label_ColorModeDark"))
+        theme_dropdown.setItemText(0, tr("label_ColorModeSystem"))
+        theme_dropdown.setItemText(1, tr("label_ColorModeLight"))
+        theme_dropdown.setItemText(2, tr("label_ColorModeDark"))
 
 
 class LogoutController(WidgetController):
@@ -126,14 +124,14 @@ class LogoutController(WidgetController):
             _logger.debug("Logging out from application.")
 
             # Delete auth token.
-            delete_file(application.discovery.get_app_data_root(File.GDriveToken))
+            delete_file(resolve_app_data(File.GDriveToken))
             application.window.destroy()
 
             sys.exit(0)
 
         logout_button.clicked.connect(  # noqa
             lambda: application.window.confirmation(
-                application.tr("confirmation_ConfirmLogout"),
+                tr("confirmation_ConfirmLogout"),
                 logout
             )
         )

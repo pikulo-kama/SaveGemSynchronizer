@@ -1,5 +1,4 @@
-
-from kui.core.app import KamaApplication
+from kui.core.shortcut import add_dynamic_data
 from kui.core.startup import KamaStartupWorker
 from kutil.logger import get_logger
 
@@ -17,8 +16,7 @@ class CurrentUserDownloadWorker(KamaStartupWorker):
     """
 
     def _run(self):
-        application = KamaApplication()
-        application.data.add(HolderObject.CurrentUser, GDrive.get_current_user())
+        add_dynamic_data(HolderObject.CurrentUser, GDrive.get_current_user())
 
 
 class AllUsersDownloadWorker(KamaStartupWorker):
@@ -27,8 +25,7 @@ class AllUsersDownloadWorker(KamaStartupWorker):
     """
 
     def _run(self):
-        application = KamaApplication()
-        application.data.add(HolderObject.AllUsers, GDrive.get_users_with_access(context().config.games_config_file_id))
+        add_dynamic_data(HolderObject.AllUsers, GDrive.get_users_with_access(context().config.games_config_file_id))
 
 
 class UserDataDownloadWorker(KamaStartupWorker):
@@ -37,8 +34,7 @@ class UserDataDownloadWorker(KamaStartupWorker):
     """
 
     def _run(self):
-        application = KamaApplication()
-        application.data.add(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
+        add_dynamic_data(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
 
 
 class ActivityWorker(KamaStartupWorker):
@@ -47,8 +43,7 @@ class ActivityWorker(KamaStartupWorker):
     """
 
     def _run(self):
-        application = KamaApplication()
-        application.data.add(HolderObject.Activity, GDrive.download_json_file(context().config.activity_log_file_id))
+        add_dynamic_data(HolderObject.Activity, GDrive.download_json_file(context().config.activity_log_file_id))
 
 
 class GameConfigDownloadWorker(KamaStartupWorker):
@@ -57,5 +52,4 @@ class GameConfigDownloadWorker(KamaStartupWorker):
     """
 
     def _run(self):
-        application = KamaApplication()
-        application.data.add(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
+        add_dynamic_data(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))

@@ -1,6 +1,7 @@
 /venv
 /output
 /.idea
+/.vscode
 __pycache__/
 
 config.json

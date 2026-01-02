@@ -2,9 +2,9 @@ import json
 from socket import socket, AF_INET, SOCK_STREAM
 from typing import Final
 
+from kui.core.constants import UTF_8
 from kutil.logger import get_logger
 
-from savegem.constants import UTF_8
 from savegem.common.core.context import context
 from savegem.common.util.test import ExitTestLoop
 

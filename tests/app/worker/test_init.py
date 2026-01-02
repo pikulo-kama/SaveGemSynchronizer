@@ -9,7 +9,7 @@ class TestQWorker:
         Test that calling _run() on the base QWorker raises NotImplementedError.
         """
 
-        from savegem.worker import QWorker
+        from savegem.app.worker import QWorker
 
         with pytest.raises(NotImplementedError):
             QWorker()._run()
@@ -19,7 +19,7 @@ class TestQWorker:
         Test start() correctly calls _run, emits finished, and handles mutex locks.
         """
 
-        from savegem.worker import QWorker
+        from savegem.app.worker import QWorker
 
         class ConcreteWorker(QWorker):
             def _run(self):
@@ -46,7 +46,7 @@ class TestQWorker:
         Test that start() finished is NOT emitted if _run raises an exception.
         """
 
-        from savegem.worker import QWorker
+        from savegem.app.worker import QWorker
 
         # Arrange: Worker that always fails
         class FailingWorker(QWorker):
@@ -75,7 +75,7 @@ class TestQSubscriptableWorker:
         Provides an instance of QSubscriptableWorker.
         """
 
-        from savegem.worker import SubscriptableWorker
+        from savegem.app.worker import SubscriptableWorker
 
         worker = SubscriptableWorker()
         # Mock _run to prevent NotImplementedError if start() were called

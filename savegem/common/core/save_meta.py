@@ -5,9 +5,8 @@ from typing import Final, TYPE_CHECKING, Iterator
 
 from kui.core.json_holder import EditableJsonConfigHolder
 from kutil.file import file_checksum
+from kutil.file_type import ZIP
 from kutil.logger import get_logger
-
-from savegem.constants import ZIP_MIME_TYPE, SHA_256
 from savegem.common.service.gdrive import GDrive
 
 if TYPE_CHECKING:
@@ -187,7 +186,7 @@ class LocalMetadata(Metadata):
         Used to calculate checksum of save files.
         """
 
-        checksum = hashlib.new(SHA_256)
+        checksum = hashlib.sha256()
 
         for file_path in self._game.file_list:
             # Don't include metadata when calculating checksum.
@@ -334,7 +333,7 @@ class DriveMetadata(Metadata):
         self.__files_metadata.clear()
 
         metadata = GDrive.query_metadata(
-            f"mimeType='{ZIP_MIME_TYPE}' and '{self._game.drive_directory}' in parents and trashed=false",
+            f"mimeType='{ZIP.mime_type}' and '{self._game.drive_directory}' in parents and trashed=false",
             "files(id, appProperties, createdTime)"
         )
 

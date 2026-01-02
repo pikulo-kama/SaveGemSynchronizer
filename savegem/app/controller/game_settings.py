@@ -1,6 +1,6 @@
 from kui.component.toggle import KamaToggle
-from kui.core.app import KamaApplication
 from kui.core.controller import WidgetController
+from kui.core.shortcut import tr
 from kutil.logger import get_logger
 
 from savegem.common.core.context import context
@@ -29,7 +29,6 @@ class AutoModeController(WidgetController):
         auto_mode_toggle.clicked.connect(toggle_auto_mode)  # noqa
 
     def refresh(self, auto_mode_toggle: KamaToggle):
-        application = KamaApplication()
         game = context().games.current
         is_checked = game.settings.auto_mode
         tooltip = ""
@@ -38,7 +37,7 @@ class AutoModeController(WidgetController):
             _logger.warning("'Auto Mode' is not allowed for %s. Disabling setting.", game.name)
 
             is_checked = False
-            tooltip = application.tr("label_SettingIsDisabled")
+            tooltip = tr("label_SettingIsDisabled")
 
         auto_mode_toggle.setChecked(is_checked)
         auto_mode_toggle.setToolTip(tooltip)

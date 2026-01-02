@@ -56,7 +56,7 @@ class TestDaemon:
 
     def test_daemon_init_with_config(self, module_patch, path_exists_mock, json_config_holder_mock, _mock_daemon):
         """
-        Test successful initialization when config file is present.
+        Test successful initialization when service_info file is present.
         """
 
         from savegem.common.service.daemon import Daemon
@@ -65,7 +65,7 @@ class TestDaemon:
 
         daemon = _mock_daemon("TestService", requires_auth=False)
 
-        assert daemon.interval == 10  # Should use the value from mocked config
+        assert daemon.interval == 10  # Should use the value from mocked service_info
         assert daemon.initialized is True
 
         json_config_holder_mock.assert_called_once()
@@ -75,7 +75,7 @@ class TestDaemon:
 
     def test_daemon_init_without_config(self, module_patch, path_exists_mock, _mock_daemon):
         """
-        Test initialization when config file is missing.
+        Test initialization when service_info file is missing.
         """
 
         from savegem.common.service.daemon import Daemon

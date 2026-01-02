@@ -8,7 +8,7 @@ class TestPushNotification:
         and that its methods (set_audio, show) are called.
         """
 
-        from savegem.push_notification import push_notification
+        from savegem.process_watcher.push_notification import push_notification
 
         mock_notification = module_patch("Notification")
         mock_audio = module_patch("audio")

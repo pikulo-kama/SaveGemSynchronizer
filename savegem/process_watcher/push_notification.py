@@ -1,7 +1,6 @@
 from kui.core.app import KamaApplication
+from kui.core.shortcut import tr, resolve_resource
 from winotify import Notification, audio
-
-from savegem.constants import Resource
 
 
 def push_notification(message: str):
@@ -13,9 +12,9 @@ def push_notification(message: str):
 
     toast = Notification(
         app_id=application.name,
-        title=application.tr("popup_NotificationTitle"),
+        title=tr("popup_NotificationTitle"),
         msg=message,
-        icon=application.discovery.get_resources_directory(Resource.ApplicationIco)
+        icon=resolve_resource("application.ico")
     )
 
     toast.set_audio(audio.Default, loop=False)

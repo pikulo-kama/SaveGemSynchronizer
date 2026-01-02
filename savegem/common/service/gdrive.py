@@ -9,11 +9,13 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload, MediaIoBaseUpload
-from kui.core.app import KamaApplication
+from kui.core.shortcut import resolve_app_data, resolve_project_file
 from kutil.file import file_name_from_path, save_file
+from kutil.file_type import ZIP, JSON
 from kutil.logger import get_logger
 
-from savegem.constants import ZIP_MIME_TYPE, JSON_MIME_TYPE, File, UTF_8
+from savegem.constants import File
+from kui.core.constants import UTF_8
 
 
 _logger = get_logger(__name__)
@@ -108,7 +110,7 @@ class GDrive:
         return json.load(file_bytes)
 
     @classmethod
-    def upload_file(cls, file_path: str, parent_directory_id: str, mime_type=ZIP_MIME_TYPE,
+    def upload_file(cls, file_path: str, parent_directory_id: str, mime_type=None,
                     properties: dict = None, subscriber=None):
         """
         Used to upload file to Google Drive into provided directory.
@@ -117,7 +119,7 @@ class GDrive:
         done = False
         media = MediaFileUpload(
             file_path,
-            mimetype=mime_type,
+            mimetype=mime_type or ZIP.mime_type,
             resumable=True,
             chunksize=cls.ChunkSize
         )
@@ -142,14 +144,14 @@ class GDrive:
             raise error
 
     @classmethod
-    def update_file(cls, file_id: str, data: str, mime_type=JSON_MIME_TYPE, subscriber=None):
+    def update_file(cls, file_id: str, data: str, mime_type: str = None, subscriber=None):
         """
         Used to update existing file in Google Drive.
         """
 
         done = False
         bytes_io = io.BytesIO(data.encode(UTF_8))
-        media = MediaIoBaseUpload(bytes_io, mime_type, resumable=True)
+        media = MediaIoBaseUpload(bytes_io, mime_type or JSON.mime_type, resumable=True)
 
         try:
             request = cls.__get_drive().files().update(
@@ -222,8 +224,7 @@ class GDrive:
         Used to authenticate to Google Cloud as well as refresh token if needed.
         """
 
-        application = KamaApplication()
-        token_file_path = application.discovery.get_app_data_root(File.GDriveToken)
+        token_file_path = resolve_app_data(File.GDriveToken)
 
         # Get credentials from file (possible if authentication was done previously)
         _logger.info("Token was found. Application will use credentials from token.")
@@ -258,8 +259,7 @@ class GoogleAuth:
         and file with auth token exists.
         """
 
-        application = KamaApplication()
-        token_file_path = application.discovery.get_app_data_root(File.GDriveToken)
+        token_file_path = resolve_app_data(File.GDriveToken)
         return os.path.exists(token_file_path)
 
     @staticmethod
@@ -268,9 +268,8 @@ class GoogleAuth:
         Used to initiate Google authentication process.
         """
 
-        application = KamaApplication()
-        token_file_path = application.discovery.get_app_data_root(File.GDriveToken)
-        credentials_file_path = application.discovery.get_project_root(File.GDriveCreds)
+        token_file_path = resolve_app_data(File.GDriveToken)
+        credentials_file_path = resolve_project_file(File.GDriveCreds)
 
         # User is already authenticated.
         if os.path.exists(token_file_path):

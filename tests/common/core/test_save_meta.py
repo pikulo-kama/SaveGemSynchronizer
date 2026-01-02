@@ -146,7 +146,7 @@ class TestLocalMetadata(SaveMetaModuleTestHelper):
     ])
     def test_local_metadata_getters(self, mock_game, editable_json_config_holder_mock, prop, expected_key, set_value):
         """
-        Tests that property getters call get_value on the config holder.
+        Tests that property getters call get_value on the service_info holder.
         """
 
         from savegem.common.core.save_meta import SaveMetaProp, LocalMetadata
@@ -174,7 +174,7 @@ class TestLocalMetadata(SaveMetaModuleTestHelper):
 
     def test_local_metadata_setters(self, mock_game, editable_json_config_holder_mock):
         """
-        Tests that property setters call set_value on the config holder.
+        Tests that property setters call set_value on the service_info holder.
         """
 
         from savegem.common.core.save_meta import LocalMetadata, SaveMetaProp
@@ -229,7 +229,7 @@ class TestLocalMetadata(SaveMetaModuleTestHelper):
 
     def test_local_metadata_refresh(self, mock_game, editable_json_config_holder_mock):
         """
-        Tests that refresh re-initializes the config holder.
+        Tests that refresh re-initializes the service_info holder.
         """
 
         from savegem.common.core.save_meta import LocalMetadata

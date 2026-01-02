@@ -1,6 +1,6 @@
 from kutil.logger import get_logger
 
-from savegem.worker import SubscriptableWorker
+from savegem.app.worker import SubscriptableWorker
 from savegem.common.core.context import context
 from savegem.common.service.downloader import Downloader
 

@@ -1,8 +1,7 @@
-from kui.core.app import KamaApplication
-
+from kui.core.shortcut import tr, dynamic_data, add_dynamic_data
 from savegem.constants import HolderObject
 from savegem.constants import UIRefreshEvent
-from savegem.push_notification import push_notification
+from savegem.process_watcher.push_notification import push_notification
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.save_meta import SyncStatus
 from savegem.common.service.daemon import Daemon
@@ -29,13 +28,12 @@ class ProcessWatcher(Daemon):
         self.__uploader = Uploader()
 
     def _run_once(self):
-        application = KamaApplication()
-        application.data.add(HolderObject.CurrentUser, GDrive.get_current_user())
+        add_dynamic_data(HolderObject.CurrentUser, GDrive.get_current_user())
         # No need to get all users that have access since process watcher
         # only needs current user information.
-        application.data.add(HolderObject.AllUsers, [application.data.get(HolderObject.CurrentUser)])
-        application.data.add(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
-        application.data.add(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
+        add_dynamic_data(HolderObject.AllUsers, [dynamic_data(HolderObject.CurrentUser)])
+        add_dynamic_data(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
+        add_dynamic_data(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
 
         context().users.initialize()
         context().games.initialize()
@@ -59,8 +57,6 @@ class ProcessWatcher(Daemon):
         Used to perform download/upload of save files when game closes/opens.
         Only works if auto mode is enabled.
         """
-        
-        application = KamaApplication()
 
         for process in processes:
             # No need to perform extra actions such as metadata download
@@ -98,7 +94,7 @@ class ProcessWatcher(Daemon):
                     process.game.name
                 )
                 self.__downloader.download(process.game)
-                push_notification(application.tr("notification_NewSaveHasBeenDownloaded"))
+                push_notification(tr("notification_NewSaveHasBeenDownloaded"))
                 ui_socket.send_ui_refresh_command(UIRefreshEvent.CloudSaveFilesChange)
 
             elif process.has_closed:
@@ -107,7 +103,7 @@ class ProcessWatcher(Daemon):
                     process.game.name
                 )
                 self.__uploader.upload(process.game)
-                push_notification(application.tr("notification_SaveHasBeenUploaded"))
+                push_notification(tr("notification_SaveHasBeenUploaded"))
 
 
 if __name__ == "__main__":  # pragma: no cover

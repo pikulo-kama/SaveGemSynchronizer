@@ -1,6 +1,6 @@
 import json
 
-from kui.core.app import KamaApplication
+from kui.core.shortcut import dynamic_data
 from kutil.logger import get_logger
 
 from savegem.constants import HolderObject
@@ -55,8 +55,7 @@ class Activity(AppData):
         """
 
         self.__players.clear()
-        application = KamaApplication()
-        activity_log = application.data.get(HolderObject.Activity)
+        activity_log = dynamic_data(HolderObject.Activity)
         _logger.debug("Activity log: %s", activity_log)
 
         for user_email, games in activity_log.items():

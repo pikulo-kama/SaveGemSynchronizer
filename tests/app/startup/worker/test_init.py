@@ -16,12 +16,12 @@ class TestQStartupWorker:
 
     @pytest.fixture
     def _base_start_mock(self, mocker: MockerFixture):
-        from savegem.worker import QWorker
+        from savegem.app.worker import QWorker
         return mocker.patch.object(QWorker, "start")
 
     @pytest.fixture
     def _worker_a(self):
-        from savegem.startup import QStartupWorker
+        from savegem.app.startup import QStartupWorker
 
         class WorkerA(QStartupWorker):
             pass
@@ -30,7 +30,7 @@ class TestQStartupWorker:
 
     @pytest.fixture
     def _worker_b(self):
-        from savegem.startup import QStartupWorker
+        from savegem.app.startup import QStartupWorker
 
         class WorkerB(QStartupWorker):
             @property
@@ -41,7 +41,7 @@ class TestQStartupWorker:
 
     @pytest.fixture
     def _worker_c(self):
-        from savegem.startup import QStartupWorker
+        from savegem.app.startup import QStartupWorker
 
         class WorkerC(QStartupWorker):
             @property
@@ -59,7 +59,7 @@ class TestQStartupWorker:
         Tests that all subclasses are correctly found and instantiated.
         """
 
-        from savegem.startup import get_startup_workers
+        from savegem.app.startup import get_startup_workers
 
         workers = get_startup_workers()
 
@@ -74,7 +74,7 @@ class TestQStartupWorker:
         Test initialization and linking to the job.
         """
 
-        from savegem.startup import QStartupWorker
+        from savegem.app.startup import QStartupWorker
 
         worker = _worker_a()
 

@@ -1,5 +1,5 @@
 from PyQt6.QtCore import pyqtSignal, QObject
-from kui.core.app import KamaApplication
+from kui.core.shortcut import prop, add_dynamic_data
 from kutil.logger import get_logger
 
 from savegem.constants import HolderObject
@@ -19,8 +19,7 @@ class UISocket(IPCSocket, QObject):
     rebuild_window = pyqtSignal()
 
     def __init__(self):
-        application = KamaApplication()
-        IPCSocket.__init__(self, application.config.get("ipc.ui-socket-port"))
+        IPCSocket.__init__(self, prop("ipc.ui-socket-port"))
         QObject.__init__(self)
 
         self.__child_processes = [google_drive_watcher_socket, process_watcher_socket]
@@ -67,8 +66,7 @@ class UISocket(IPCSocket, QObject):
 
     @staticmethod
     def __update_activity():
-        application = KamaApplication()
-        application.data.add(
+        add_dynamic_data(
             HolderObject.Activity, 
             GDrive.download_json_file(context().config.activity_log_file_id)
         )
@@ -77,11 +75,10 @@ class UISocket(IPCSocket, QObject):
     @staticmethod
     def __update_games_configuration(event: str):
 
-        # If game config changed on drive then download it again
+        # If game service_info changed on drive then download it again
         # and reinitialize game state.
         if event == UIRefreshEvent.GameConfigChange:
-            application = KamaApplication()
-            application.data.add(
+            add_dynamic_data(
                 HolderObject.GamesConfig, 
                 GDrive.download_json_file(context().config.games_config_file_id)
             )

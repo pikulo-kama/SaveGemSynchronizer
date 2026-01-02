@@ -1,0 +1,25 @@
+application:
+  name: "SaveGem"
+  author: "Artur Parkour"
+  version: "5.0.0"
+  locale: "en_US"
+  icon: "gem.svg"
+
+  base-package: "savegem.app"
+  controller-package: "{base}.controller"
+  resolver-package: "{base}.resolver"
+  startup-package: "{base}.startup"
+
+window:
+  width: 1080
+  height: 720
+  min-width: 960
+  min-height: 540
+
+datasource:
+  db-path: "{AppDataDirectory}savegem.db"
+
+ipc:
+  ui-socket-port: 53541
+  process-watcher-port: 53542
+  google-drive-watcher-port: 53543

@@ -17,7 +17,7 @@ class WidgetControllerTest:
     @pytest.fixture
     def _widget_manager(self, module_patch, gui_mock):
         manager_mock = module_patch(f"{self.controller_name}.manager")
-        manager_mock.gui = gui_mock
+        manager_mock.app = gui_mock
 
         return manager_mock
 

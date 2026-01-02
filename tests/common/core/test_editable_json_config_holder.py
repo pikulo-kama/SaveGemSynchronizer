@@ -93,7 +93,7 @@ class TestEditableJsonConfigHolder:
     def test_before_file_open_creates_directories_and_default_file(self, mocker: MockerFixture, _test_config_path,
                                                                    save_file_mock, makedirs_mock, path_exists_mock):
         """
-        Test the _before_file_open logic when the config file does not exist.
+        Test the _before_file_open logic when the service_info file does not exist.
         We must use a manual patch approach here to control os.path.exists behavior
         within this specific test.
         """

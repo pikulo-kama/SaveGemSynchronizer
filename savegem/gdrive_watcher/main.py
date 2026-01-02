@@ -1,6 +1,6 @@
 import threading
 
-from kui.core.app import KamaApplication
+from kui.core.shortcut import add_dynamic_data, dynamic_data
 
 from savegem.constants import HolderObject
 from savegem.constants import UIRefreshEvent
@@ -19,14 +19,12 @@ class GDriveWatcher(Daemon):
         Daemon.__init__(self, "gdrive_watcher", True)
 
     def _run_once(self):
-        application = KamaApplication()
-        
-        application.data.add(HolderObject.CurrentUser, GDrive.get_current_user())
+        add_dynamic_data(HolderObject.CurrentUser, GDrive.get_current_user())
         # No need to get all users that have access since GDrive watcher
         # only needs current user information.
-        application.data.add(HolderObject.AllUsers, [application.data.get(HolderObject.CurrentUser)])
-        application.data.add(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
-        application.data.add(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
+        add_dynamic_data(HolderObject.AllUsers, [dynamic_data(HolderObject.CurrentUser)])
+        add_dynamic_data(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
+        add_dynamic_data(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
 
         context().users.initialize()
         context().games.initialize()
@@ -49,7 +47,7 @@ class GDriveWatcher(Daemon):
         activity_log_modified = context().config.activity_log_file_id in files
 
         self._logger.debug("Current game files modified: %s", save_files_modified)
-        self._logger.debug("Games config modified: %s", games_config_modified)
+        self._logger.debug("Games service_info modified: %s", games_config_modified)
         self._logger.debug("Activity log modified: %s", activity_log_modified)
 
         if save_files_modified:

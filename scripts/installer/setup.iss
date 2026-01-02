@@ -1,17 +1,16 @@
 
 #include "helpers.iss"
 
-#define AppName GetProperty("config\app.json", "name")
-#define Author GetProperty("config\app.json", "author")
-#define AppExeName GetProperty("config\app.json", "processName")
-#define AppVersion GetProperty("config\app.json", "version")
+#define AppName GetProperty("service_info\app.json", "name")
+#define Author GetProperty("service_info\app.json", "author")
+#define AppExeName GetProperty("service_info\app.json", "processName")
+#define AppVersion GetProperty("service_info\app.json", "version")
 
-#define WatchdogName GetProperty("config\watchdog.json", "name")
-#define WatchdogExeName GetProperty("config\watchdog.json", "processName")
+#define WatchdogName GetProperty("service_info\watchdog.json", "name")
+#define WatchdogExeName GetProperty("service_info\watchdog.json", "processName")
 
-#define ProcessWatcherExeName GetProperty("config\process_watcher.json", "processName")
-#define GDriveWatcherExeName GetProperty("config\gdrive_watcher.json", "processName")
-#define DatabaseInitializerExeName GetProperty("config\initializer.json", "processName")
+#define ProcessWatcherExeName GetProperty("service_info\process_watcher.json", "processName")
+#define GDriveWatcherExeName GetProperty("service_info\gdrive_watcher.json", "processName")
 
 [Setup]
 ; --- App Info ---
@@ -202,8 +201,8 @@ begin
     Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
     
     // Migrate database and reimport non-user related data.
-    Exec(ExpandConstant('{app}\{#DatabaseInitializerExeName}'), 'migrate', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    Exec(ExpandConstant('{app}\{#DatabaseInitializerExeName}'), 'import --definition_file=import.def', '', SW_HIDE, ewNoWait, ResultCode);
+    Exec(ExpandConstant('{app}\_internal\bin\kama-dbm.exe'), 'migrate --migration_directories="{app}\_internal\migration" --database="{userappdata}\{#AppName}\savegem.db"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    Exec(ExpandConstant('{app}\_internal\bin\kama-dbm.exe'), 'import --definition_file="{app}\_internal\importData\import.def" --database="{userappdata}\{#AppName}\savegem.db"', '', SW_HIDE, ewNoWait, ResultCode);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

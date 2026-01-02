@@ -3,15 +3,18 @@ import sys
 import threading
 
 from kui.core.app import KamaApplication
+from kui.core.shortcut import prop
 from kutil.file import cleanup_directory
 from kutil.logger import get_logger
 
 from savegem.constants import UISection
+
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.flag import flags
 from savegem.common.core.ipc_socket import IPCCommand
 from savegem.common.service.gdrive import GoogleAuth
 from savegem.common.core.context import context
+
 
 _logger = get_logger("app")
 
@@ -24,7 +27,7 @@ def main():
     application = KamaApplication()
 
     _logger.info("Starting SaveGem application.")
-    _logger.info("version %s", application.config.get("version"))
+    _logger.info("version %s", prop("application.version"))
 
     context().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     application.window.after_init.connect(lambda: flags().gui_initialized.enable())
@@ -42,9 +45,9 @@ def teardown():
     application = KamaApplication()
 
     _logger.info("Cleaning up 'output' directory.")
-    cleanup_directory(application.discovery.get_output_directory())
+    cleanup_directory(application.discovery.Output)
     _logger.info("Creating directory for dynamic resources.")
-    os.mkdir(application.discovery.get_temp_resources_directory())
+    os.mkdir(application.discovery.TempResources)
 
     flags().gui_initialized.disable()
 

@@ -3,10 +3,11 @@ import json
 import urllib.request
 from typing import Iterator, Final, Optional
 
-from kui.core.app import KamaApplication
+from kui.core.shortcut import dynamic_data, resolve_temp_resource
+from kutil.file_type import JPG
 from kutil.logger import get_logger
 
-from savegem.constants import JPG_EXTENSION, UTF_8
+from kui.core.constants import UTF_8
 from savegem.constants import HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.service.gdrive import GDrive
@@ -93,8 +94,8 @@ class User:
         if photo_link is None:
             return None
 
-        application = KamaApplication()
-        image_path = application.discovery.get_temp_resources_directory(self.id + JPG_EXTENSION)
+        image_name = JPG.add_extension(self.id)
+        image_path = resolve_temp_resource(image_name)
         urllib.request.urlretrieve(photo_link, image_path)
 
         return image_path
@@ -121,9 +122,8 @@ class UserState(AppData):
         Can be only done once in application lifetime.
         """
 
-        application = KamaApplication()
-        users = application.data.get(HolderObject.AllUsers)
-        current_user = application.data.get(HolderObject.CurrentUser)
+        users = dynamic_data(HolderObject.AllUsers)
+        current_user = dynamic_data(HolderObject.CurrentUser)
 
         current_user_email = current_user.get("emailAddress")
         user_info = self.__upload_user_info(current_user)
@@ -166,8 +166,7 @@ class UserState(AppData):
 
     def __upload_user_info(self, current_user_data: dict):
 
-        application = KamaApplication()
-        user_data = application.data.get(HolderObject.UserData)
+        user_data = dynamic_data(HolderObject.UserData)
 
         user_email = current_user_data.get("emailAddress")
         user_name = current_user_data.get("displayName")

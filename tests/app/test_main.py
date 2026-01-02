@@ -11,7 +11,7 @@ class TestApplication:
         Mocks all UI and system dependencies needed for the main application entry point.
         """
 
-        sys_mock.argv = ['app.py']
+        sys_mock.argv = ['main.py']
 
 
     @pytest.fixture
@@ -37,7 +37,7 @@ class TestApplication:
             call("version %s", "1.0.0")
         ])
 
-        qt_app_mock.assert_called_once_with(['app.py'])
+        qt_app_mock.assert_called_once_with(['main.py'])
         assert gui_mock.application is qt_app_mock.return_value
 
         # 2. State Change and Signals Setup

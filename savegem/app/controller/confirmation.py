@@ -1,8 +1,9 @@
 from kui.component.button import KamaPushButton
 from kui.component.dialog import KamaDialog
 from kui.core.app import KamaApplication
+from kui.core.shortcut import dynamic_data
 
-from savegem.controller.dialog import DialogController
+from savegem.app.controller.dialog import DialogController
 from savegem.constants import UISection
 
 
@@ -18,7 +19,7 @@ class ConfirmationDialogController(DialogController):
         application = KamaApplication()
 
         def on_confirm():
-            confirm_callback = application.data.get("confirmationCallback")
+            confirm_callback = dynamic_data("confirmationCallback")
 
             dialog.hide()
             application.window.is_blocked = False

@@ -5,11 +5,12 @@ from kui.component.widget import KamaWidget
 from kui.core.app import KamaApplication
 from kui.core.constants import QBool
 from kui.core.controller import TemplateWidgetController
+from kui.core.shortcut import tr
 from kutil.date import string_to_date, get_verbose_date, get_verbose_time
 from kutil.logger import get_logger
 
 from savegem.constants import UIRefreshEvent, TimeFormat
-from savegem.worker.download_worker import DownloadWorker
+from savegem.app.worker.download_worker import DownloadWorker
 from savegem.common.core.context import context
 from savegem.common.core.save_meta import DriveFileMetadata
 from savegem.common.service.subscriptable import DoneEvent
@@ -57,7 +58,7 @@ class SaveHistoryListController(TemplateWidgetController):
             application = KamaApplication()
 
             return lambda: application.window.confirmation(
-                application.tr("confirmation_ConfirmToDownloadSave"),
+                tr("confirmation_ConfirmToDownloadSave"),
                 lambda: self.__restore_version(file_id, button)
             )
 
@@ -79,7 +80,7 @@ class SaveHistoryListController(TemplateWidgetController):
                 context().games.current.meta.drive.refresh()
                 self.manager.event_refresh(UIRefreshEvent.SaveDownloaded)
 
-                application.window.notification(application.tr("notification_NewSaveHasBeenDownloaded"))
+                application.window.notification(tr("notification_NewSaveHasBeenDownloaded"))
 
         worker = DownloadWorker(file_id)
 
