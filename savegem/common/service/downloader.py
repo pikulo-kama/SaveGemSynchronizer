@@ -2,7 +2,6 @@ import os.path
 import shutil
 from typing import Final
 
-from kui.core.app import KamaApplication
 from kui.core.shortcut import resolve_temp_file
 from kutil.file import save_file, cleanup_directory
 from kutil.file_type import ZIP

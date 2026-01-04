@@ -3,7 +3,6 @@ import re
 import urllib.request
 from typing import Final, Iterator
 
-from kui.core.app import KamaApplication
 from kui.core.shortcut import dynamic_data, resolve_app_data, resolve_resource, resolve_temp_resource
 from kui_db_plugin.database import db
 from kutil.file import delete_file

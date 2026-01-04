@@ -93,7 +93,7 @@ class AppState(AppData):
         """
 
         application = KamaApplication()
-        application.color_mode = color_theme
+        application.style.color_mode = color_theme
         self.__set_state_value(self.ColorTheme, color_theme)
 
     @property
@@ -154,11 +154,11 @@ class AppState(AppData):
             state.add(
                 user_id=user_id,
                 language=application.locale,
-                color_theme=application.color_mode
+                color_theme=application.style.color_mode
             ).save()
 
         application.locale = state.get_first(self.SelectedLocale)
-        application.color_mode = state.get_first(self.ColorTheme)
+        application.style.color_mode = state.get_first(self.ColorTheme)
 
         self.__state_table = state
 
