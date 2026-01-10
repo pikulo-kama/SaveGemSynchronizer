@@ -2,6 +2,7 @@ import json
 from socket import socket, AF_INET, SOCK_STREAM
 from typing import Final
 
+from kui.core.app import KamaApplication
 from kui.core.constants import UTF_8
 from kutil.logger import get_logger
 
@@ -78,9 +79,7 @@ class IPCSocket:
                 if command == IPCCommand.StateChanged:
                     context().state.refresh()
 
-                else:
-                    self._handle(command, message)
-
+                self._handle(command, message)
                 connection.close()
 
             except ExitTestLoop as error:

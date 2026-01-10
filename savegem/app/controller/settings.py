@@ -34,6 +34,7 @@ class LanguageDropdownController(WidgetController):
 
             _logger.debug("Changing language to %s", new_locale)
             context().state.locale = new_locale
+            application.translations.locale = new_locale
             application.window.refresh(UIRefreshEvent.LanguageChange)
 
         for language in db.retrieve_table("setup_locale"):
@@ -90,6 +91,7 @@ class ColorThemeDropdownController(WidgetController):
 
             _logger.debug("Changing color theme to %s", color_theme)
             context().state.color_theme = color_theme
+            application.style.color_mode = color_theme
             application.window.reload_styles()
             self.manager.refresh()
 

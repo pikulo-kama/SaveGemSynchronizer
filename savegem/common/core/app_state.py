@@ -1,7 +1,6 @@
 from typing import Final, Optional
 
 from kdb.table import DatabaseTable
-from kui.core.app import KamaApplication
 from kui_db_plugin.database import db
 from kutil.logger import get_logger
 
@@ -74,9 +73,6 @@ class AppState(AppData):
         """
         Set active locale.
         """
-
-        application = KamaApplication()
-        application.translations.locale = locale
         self.__set_state_value(self.SelectedLocale, locale, execute_callback=True)
 
     @property
@@ -91,9 +87,6 @@ class AppState(AppData):
         """
         Used to set application color theme.
         """
-
-        application = KamaApplication()
-        application.style.color_mode = color_theme
         self.__set_state_value(self.ColorTheme, color_theme)
 
     @property
@@ -128,7 +121,6 @@ class AppState(AppData):
         """
 
         user_id = self.TemporaryUser
-        application = KamaApplication()
 
         if self.app.users.current is not None:
             user_id = self.app.users.current.id
@@ -151,14 +143,7 @@ class AppState(AppData):
         # present for the user.
         if state.is_empty:
             _logger.info("Creating new app state entry for user %s", user_id)
-            state.add(
-                user_id=user_id,
-                language=application.translations.locale,
-                color_theme=application.style.color_mode
-            ).save()
-
-        application.translations.locale = state.get_first(self.SelectedLocale)
-        application.style.color_mode = state.get_first(self.ColorTheme)
+            state.add(user_id=user_id).save()
 
         self.__state_table = state
 

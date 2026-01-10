@@ -1,3 +1,4 @@
+from kui.core.app import KamaApplication
 from kui.core.shortcut import tr, dynamic_data, add_dynamic_data
 from savegem.constants import HolderObject
 from savegem.constants import UIRefreshEvent
@@ -37,6 +38,10 @@ class ProcessWatcher(Daemon):
 
         context().users.initialize()
         context().games.initialize()
+        context().state.refresh()
+
+        application = KamaApplication()
+        application.translations.locale = context().state.locale
 
     def _work(self):
         active_processes = get_running_game_processes()
