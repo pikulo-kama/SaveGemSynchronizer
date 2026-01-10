@@ -108,7 +108,7 @@ class SaveInfoResolver(ContentResolver):
         # Don't show year if it's current year.
         creation_date = get_verbose_date(
             creation_datetime,
-            locale=application.locale,
+            locale=application.translations.locale,
             show_year=creation_datetime.year != date.today().year
         )
 

@@ -1,4 +1,4 @@
-from kui.core.startup import KamaStartupWorker
+from kui.core.service.startup import KamaStartupWorker
 from savegem.common.core.context import context
 
 

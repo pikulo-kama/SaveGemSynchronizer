@@ -76,7 +76,7 @@ class AppState(AppData):
         """
 
         application = KamaApplication()
-        application.locale = locale
+        application.translations.locale = locale
         self.__set_state_value(self.SelectedLocale, locale, execute_callback=True)
 
     @property
@@ -153,11 +153,11 @@ class AppState(AppData):
             _logger.info("Creating new app state entry for user %s", user_id)
             state.add(
                 user_id=user_id,
-                language=application.locale,
+                language=application.translations.locale,
                 color_theme=application.style.color_mode
             ).save()
 
-        application.locale = state.get_first(self.SelectedLocale)
+        application.translations.locale = state.get_first(self.SelectedLocale)
         application.style.color_mode = state.get_first(self.ColorTheme)
 
         self.__state_table = state

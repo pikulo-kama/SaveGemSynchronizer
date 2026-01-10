@@ -11,7 +11,7 @@ def push_notification(message: str):
     application = KamaApplication()
 
     toast = Notification(
-        app_id=application.name,
+        app_id=application.config.name,
         title=tr("popup_NotificationTitle"),
         msg=message,
         icon=resolve_resource("application.ico")

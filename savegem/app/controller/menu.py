@@ -4,7 +4,7 @@ from kui.component.button import KamaPushButton
 from kui.core.component import KamaComponent
 from kui.core.constants import QBool
 from kui.core.controller import TemplateWidgetController
-from kui.core.provider import Section
+from kui.core.service.provider import Section
 from kutil.logger import get_logger
 
 from savegem.constants import UIRefreshEvent

@@ -98,7 +98,7 @@ class SaveHistoryListController(TemplateWidgetController):
 
         application = KamaApplication()
         creation_datetime = string_to_date(metadata.created_time)
-        creation_date = get_verbose_date(creation_datetime, locale=application.locale)
+        creation_date = get_verbose_date(creation_datetime, locale=application.translations.locale)
         creation_time = get_verbose_time(
             creation_datetime,
             use_military=context().state.time_format == TimeFormat.Military

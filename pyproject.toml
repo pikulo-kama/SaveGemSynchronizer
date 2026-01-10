@@ -36,7 +36,7 @@ include = ["savegem*"]
 
 [tool.setuptools.package-data]
 # Ensure non-python files are still included in the build
-"*" = ["*.ttf", "*.json", "*.yaml", "*.sql", "*.exe"]
+"*" = ["*.json", "*.yaml", "*.sql", "*.exe"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=savegem --cov-report=term-missing"

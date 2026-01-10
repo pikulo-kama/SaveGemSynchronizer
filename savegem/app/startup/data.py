@@ -1,5 +1,5 @@
 from kui.core.shortcut import add_dynamic_data
-from kui.core.startup import KamaStartupWorker
+from kui.core.service.startup import KamaStartupWorker
 from kutil.logger import get_logger
 
 from savegem.constants import HolderObject
