@@ -15,6 +15,9 @@ class InitializationWorker(KamaStartupWorker):
         context().state.refresh()
         context().games.initialize()
 
+        if context().state.locale is None:
+            context().state.locale = application.config.default_locale
+
         application.translations.locale = context().state.locale
         application.style.color_mode = context().state.color_theme
 
