@@ -2,31 +2,28 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T03:21:40.252711",
-    "filter": "section_id = 'root'"
+    "extract_date": "2026-01-14T20:50:37.808055",
+    "filter": "section = 'root'"
   },
   "data": [
     {
-      "widget_id": "window",
-      "section_id": "root",
-      "widget_type_id": "KWidget",
-      "layout_type_id": "KHBoxLayout",
+      "id": "window",
+      "section": "root",
+      "layout": "KHBoxLayout",
       "children": [
         {
-          "widget_id": "sidebar",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
-          "style_object_name": "sidebar",
+          "id": "sidebar",
+          "layout": "KVBoxLayout",
+          "style_id": "sidebar",
           "width": 60,
           "margin_top": 10,
           "margin_bottom": 10,
           "children": [
             {
-              "widget_id": "menu",
+              "id": "menu",
+              "layout": "KVBoxLayout",
               "controller": "MenuController",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KVBoxLayout",
-              "style_object_name": "sidebarMenu",
+              "style_id": "sidebarMenu",
               "margin_left": 5,
               "margin_right": 5,
               "refresh_events": [
@@ -38,38 +35,37 @@
               "template": {
                 "body": [
                   {
-                    "widget_id": "menu_item",
+                    "id": "menu_item",
+                    "type": "KPushButton",
                     "content": "icon{template{icon}, size: 25}",
-                    "tooltip": "template{label}",
-                    "widget_type_id": "KPushButton"
+                    "tooltip": "template{label}"
                   }
                 ],
                 "footer": [
                   {
-                    "widget_id": "menu_spacer",
-                    "widget_type_id": "KSpacer"
+                    "id": "menu_spacer",
+                    "type": "KSpacer"
                   }
                 ]
               }
             },
             {
-              "widget_id": "sidebar_spacer",
-              "widget_type_id": "KSpacer"
+              "id": "sidebar_spacer",
+              "type": "KSpacer"
             },
             {
-              "widget_id": "user_picture",
+              "id": "user_picture",
+              "type": "KLabel",
               "content": "pixmap{user{photo}, scale: 35, circle}",
               "tooltip": "user{name}",
-              "widget_type_id": "KLabel",
               "alignment": "bottom-center",
               "height": 50
             }
           ]
         },
         {
-          "widget_id": "content",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
+          "id": "content",
+          "layout": "KVBoxLayout",
           "margin_top": 10,
           "margin_right": 10,
           "margin_bottom": 5

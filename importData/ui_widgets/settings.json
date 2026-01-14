@@ -2,75 +2,72 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T02:54:56.150952",
-    "filter": "section_id = 'settings'"
+    "extract_date": "2026-01-14T20:50:50.039826",
+    "filter": "section = 'settings'"
   },
   "data": [
     {
-      "widget_id": "settings_root",
-      "section_id": "settings",
+      "id": "settings_root",
+      "section": "settings",
+      "layout": "KHBoxLayout",
       "controller": "MenuItemController",
-      "widget_type_id": "KWidget",
-      "layout_type_id": "KHBoxLayout",
       "alignment": "left",
       "margin_left": 20,
       "margin_top": 20,
       "margin_right": 20,
       "children": [
         {
-          "widget_id": "settings_root_wrapper",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
+          "id": "settings_root_wrapper",
+          "layout": "KVBoxLayout",
           "stylesheet": {
             "max-width": "900px"
           },
           "children": [
             {
-              "widget_id": "settings_title_wrapper",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "settings_title_wrapper",
+              "layout": "KHBoxLayout",
               "spacing": 10,
               "margin_bottom": 10,
               "children": [
                 {
-                  "widget_id": "logo_image",
+                  "id": "logo_image",
+                  "type": "KLabel",
                   "content": "pixmap{gear.svg, scale: 30}",
-                  "widget_type_id": "KLabel",
                   "alignment": "left-vcenter"
                 },
                 {
-                  "widget_id": "settings_title",
+                  "id": "settings_title",
+                  "type": "KLabel",
                   "content": "tr{label_Settings}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "heroText",
+                  "style_id": "heroText",
                   "alignment": "left-vcenter",
                   "refresh_events": [
                     "language_change"
                   ]
                 },
                 {
-                  "widget_id": "title_section_spacer",
-                  "widget_type_id": "KSpacer"
+                  "id": "title_section_spacer",
+                  "type": "KSpacer"
                 }
               ]
             },
             {
-              "widget_id": "settings_title_divider",
-              "widget_type_id": "KHDivider"
+              "id": "settings_title_divider",
+              "type": "KHDivider"
             },
             {
-              "widget_id": "settings_container",
-              "widget_type_id": "KScrollableWidget",
-              "layout_type_id": "KVBoxLayout",
+              "id": "settings_container",
+              "type": "KScrollableWidget",
+              "layout": "KVBoxLayout",
               "alignment": "top",
               "spacing": 15,
               "margin_top": 20,
               "children": [
                 {
-                  "widget_id": "general_settings_section_label",
+                  "id": "general_settings_section_label",
+                  "type": "KLabel",
                   "content": "tr{label_GeneralSettings}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "subtitleText",
+                  "style_id": "subtitleText",
                   "alignment": "top",
                   "height": 30,
                   "refresh_events": [
@@ -78,30 +75,27 @@
                   ]
                 },
                 {
-                  "widget_id": "general_settings_section",
-                  "widget_type_id": "KWidget",
-                  "layout_type_id": "KVBoxLayout",
-                  "style_object_name": "settingGroup",
+                  "id": "general_settings_section",
+                  "layout": "KVBoxLayout",
+                  "style_id": "settingGroup",
                   "margin_left": 20,
                   "margin_right": 20,
                   "children": [
                     {
-                      "widget_id": "language_setting",
-                      "widget_type_id": "KWidget",
-                      "layout_type_id": "KHBoxLayout",
+                      "id": "language_setting",
+                      "layout": "KHBoxLayout",
                       "alignment": "vcenter",
                       "height": 75,
                       "children": [
                         {
-                          "widget_id": "language_setting_label_wrapper",
-                          "widget_type_id": "KWidget",
-                          "layout_type_id": "KVBoxLayout",
+                          "id": "language_setting_label_wrapper",
+                          "layout": "KVBoxLayout",
                           "children": [
                             {
-                              "widget_id": "language_setting_label",
+                              "id": "language_setting_label",
+                              "type": "KLabel",
                               "content": "tr{label_Language}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "bodyText",
+                              "style_id": "bodyText",
                               "stylesheet": {
                                 "font-weight": "bold"
                               },
@@ -110,10 +104,10 @@
                               ]
                             },
                             {
-                              "widget_id": "language_setting_label_description",
+                              "id": "language_setting_label_description",
+                              "type": "KLabel",
                               "content": "tr{label_LanguageDesc}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "smallText",
+                              "style_id": "smallText",
                               "refresh_events": [
                                 "language_change"
                               ]
@@ -121,39 +115,37 @@
                           ]
                         },
                         {
-                          "widget_id": "language_setting_spacer",
-                          "widget_type_id": "KSpacer"
+                          "id": "language_setting_spacer",
+                          "type": "KSpacer"
                         },
                         {
-                          "widget_id": "language_setting_dropdown",
+                          "id": "language_setting_dropdown",
+                          "type": "KComboBox",
                           "controller": "LanguageDropdownController",
-                          "widget_type_id": "KComboBox",
                           "width": 150,
                           "height": 35
                         }
                       ]
                     },
                     {
-                      "widget_id": "language_time_format_divider",
-                      "widget_type_id": "KHDivider"
+                      "id": "language_time_format_divider",
+                      "type": "KHDivider"
                     },
                     {
-                      "widget_id": "time_format_setting",
-                      "widget_type_id": "KWidget",
-                      "layout_type_id": "KHBoxLayout",
+                      "id": "time_format_setting",
+                      "layout": "KHBoxLayout",
                       "alignment": "vcenter",
                       "height": 75,
                       "children": [
                         {
-                          "widget_id": "time_format_setting_label_wrapper",
-                          "widget_type_id": "KWidget",
-                          "layout_type_id": "KVBoxLayout",
+                          "id": "time_format_setting_label_wrapper",
+                          "layout": "KVBoxLayout",
                           "children": [
                             {
-                              "widget_id": "time_format_setting_label",
+                              "id": "time_format_setting_label",
+                              "type": "KLabel",
                               "content": "tr{label_TimeFormat}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "bodyText",
+                              "style_id": "bodyText",
                               "stylesheet": {
                                 "font-weight": "bold"
                               },
@@ -162,10 +154,10 @@
                               ]
                             },
                             {
-                              "widget_id": "time_format_setting_label_description",
+                              "id": "time_format_setting_label_description",
+                              "type": "KLabel",
                               "content": "tr{label_TimeFormatDesc}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "smallText",
+                              "style_id": "smallText",
                               "refresh_events": [
                                 "language_change"
                               ]
@@ -173,13 +165,13 @@
                           ]
                         },
                         {
-                          "widget_id": "time_format_setting_spacer",
-                          "widget_type_id": "KSpacer"
+                          "id": "time_format_setting_spacer",
+                          "type": "KSpacer"
                         },
                         {
-                          "widget_id": "time_format_setting_dropdown",
+                          "id": "time_format_setting_dropdown",
+                          "type": "KComboBox",
                           "controller": "TimeFormatDropdownController",
-                          "widget_type_id": "KComboBox",
                           "width": 150,
                           "height": 35,
                           "refresh_events": [
@@ -189,26 +181,24 @@
                       ]
                     },
                     {
-                      "widget_id": "time_format_theme_divider",
-                      "widget_type_id": "KHDivider"
+                      "id": "time_format_theme_divider",
+                      "type": "KHDivider"
                     },
                     {
-                      "widget_id": "theme_setting",
-                      "widget_type_id": "KWidget",
-                      "layout_type_id": "KHBoxLayout",
+                      "id": "theme_setting",
+                      "layout": "KHBoxLayout",
                       "alignment": "vcenter",
                       "height": 75,
                       "children": [
                         {
-                          "widget_id": "theme_setting_label_wrapper",
-                          "widget_type_id": "KWidget",
-                          "layout_type_id": "KVBoxLayout",
+                          "id": "theme_setting_label_wrapper",
+                          "layout": "KVBoxLayout",
                           "children": [
                             {
-                              "widget_id": "theme_setting_label",
+                              "id": "theme_setting_label",
+                              "type": "KLabel",
                               "content": "tr{label_Theme}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "bodyText",
+                              "style_id": "bodyText",
                               "stylesheet": {
                                 "font-weight": "bold"
                               },
@@ -217,10 +207,10 @@
                               ]
                             },
                             {
-                              "widget_id": "theme_setting_label_description",
+                              "id": "theme_setting_label_description",
+                              "type": "KLabel",
                               "content": "tr{label_ThemeDesc}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "smallText",
+                              "style_id": "smallText",
                               "refresh_events": [
                                 "language_change"
                               ]
@@ -228,13 +218,13 @@
                           ]
                         },
                         {
-                          "widget_id": "theme_setting_spacer",
-                          "widget_type_id": "KSpacer"
+                          "id": "theme_setting_spacer",
+                          "type": "KSpacer"
                         },
                         {
-                          "widget_id": "theme_setting_dropdown",
+                          "id": "theme_setting_dropdown",
+                          "type": "KComboBox",
                           "controller": "ColorThemeDropdownController",
-                          "widget_type_id": "KComboBox",
                           "width": 150,
                           "height": 35,
                           "refresh_events": [
@@ -246,10 +236,10 @@
                   ]
                 },
                 {
-                  "widget_id": "account_settings_section_label",
+                  "id": "account_settings_section_label",
+                  "type": "KLabel",
                   "content": "tr{label_AccountSettings}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "subtitleText",
+                  "style_id": "subtitleText",
                   "alignment": "vcenter",
                   "height": 50,
                   "refresh_events": [
@@ -257,30 +247,27 @@
                   ]
                 },
                 {
-                  "widget_id": "account_settings_section",
-                  "widget_type_id": "KWidget",
-                  "layout_type_id": "KVBoxLayout",
-                  "style_object_name": "settingGroup",
+                  "id": "account_settings_section",
+                  "layout": "KVBoxLayout",
+                  "style_id": "settingGroup",
                   "margin_left": 20,
                   "margin_right": 20,
                   "children": [
                     {
-                      "widget_id": "logout_section",
-                      "widget_type_id": "KWidget",
-                      "layout_type_id": "KHBoxLayout",
+                      "id": "logout_section",
+                      "layout": "KHBoxLayout",
                       "alignment": "vcenter",
                       "height": 75,
                       "children": [
                         {
-                          "widget_id": "logout_section_label_wrapper",
-                          "widget_type_id": "KWidget",
-                          "layout_type_id": "KVBoxLayout",
+                          "id": "logout_section_label_wrapper",
+                          "layout": "KVBoxLayout",
                           "children": [
                             {
-                              "widget_id": "logout_section_label",
+                              "id": "logout_section_label",
+                              "type": "KLabel",
                               "content": "tr{label_Logout}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "bodyText",
+                              "style_id": "bodyText",
                               "stylesheet": {
                                 "font-weight": "bold"
                               },
@@ -289,10 +276,10 @@
                               ]
                             },
                             {
-                              "widget_id": "logout_section_label_description",
+                              "id": "logout_section_label_description",
+                              "type": "KLabel",
                               "content": "tr{label_LogoutDesc}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "smallText",
+                              "style_id": "smallText",
                               "refresh_events": [
                                 "language_change"
                               ]
@@ -300,15 +287,15 @@
                           ]
                         },
                         {
-                          "widget_id": "logout_section_spacer",
-                          "widget_type_id": "KSpacer"
+                          "id": "logout_section_spacer",
+                          "type": "KSpacer"
                         },
                         {
-                          "widget_id": "logout_button",
+                          "id": "logout_button",
+                          "type": "KPushButton",
                           "content": "tr{label_Logout}",
                           "controller": "LogoutController",
-                          "widget_type_id": "KPushButton",
-                          "style_object_name": "logoutButton",
+                          "style_id": "logoutButton",
                           "alignment": "left",
                           "width": 50,
                           "refresh_events": [

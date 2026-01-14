@@ -2,27 +2,26 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T02:59:16.241143",
-    "filter": "section_id = 'confirmation'"
+    "extract_date": "2026-01-14T20:48:32.723644",
+    "filter": "section = 'confirmation'"
   },
   "data": [
     {
-      "widget_id": "confirmation_dialog",
-      "section_id": "confirmation",
+      "id": "confirmation_dialog",
+      "section": "confirmation",
+      "type": "KDialog",
+      "layout": "KVBoxLayout",
       "controller": "ConfirmationDialogController",
-      "widget_type_id": "KDialog",
-      "layout_type_id": "KVBoxLayout",
-      "style_object_name": "confirmationDialog",
+      "style_id": "confirmationDialog",
       "alignment": "left",
       "spacing": 15,
       "width": 400,
       "margin_bottom": 20,
       "children": [
         {
-          "widget_id": "confirmation_title_container",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KHBoxLayout",
-          "style_object_name": "confirmationDialogContainer",
+          "id": "confirmation_title_container",
+          "layout": "KHBoxLayout",
+          "style_id": "confirmationDialogContainer",
           "alignment": "left",
           "margin_left": 20,
           "margin_top": 10,
@@ -30,33 +29,32 @@
           "margin_bottom": 10,
           "children": [
             {
-              "widget_id": "confirmation_icon",
+              "id": "confirmation_icon",
+              "type": "KLabel",
               "content": "pixmap{exclamation_mark.svg, scale: 20}",
-              "widget_type_id": "KLabel",
               "alignment": "vcenter"
             },
             {
-              "widget_id": "confirmation_title",
+              "id": "confirmation_title",
+              "type": "KLabel",
               "content": "tr{popup_ConfirmationTitle}",
-              "widget_type_id": "KLabel",
-              "style_object_name": "sectionTitleTextInverted",
+              "style_id": "sectionTitleTextInverted",
               "alignment": "vcenter"
             }
           ]
         },
         {
-          "widget_id": "confirmation_message_container",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
+          "id": "confirmation_message_container",
+          "layout": "KVBoxLayout",
           "alignment": "vcenter",
           "margin_left": 20,
           "margin_right": 20,
           "children": [
             {
-              "widget_id": "confirmation_message",
+              "id": "confirmation_message",
+              "type": "KWordWrapLabel",
               "content": "data{dialogMessage}",
-              "widget_type_id": "KWordWrapLabel",
-              "style_object_name": "bodyText",
+              "style_id": "bodyText",
               "alignment": "vcenter",
               "margin_left": 20,
               "margin_right": 20
@@ -64,23 +62,22 @@
           ]
         },
         {
-          "widget_id": "confirmation_controls",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KHBoxLayout",
+          "id": "confirmation_controls",
+          "layout": "KHBoxLayout",
           "spacing": 10,
           "margin_left": 20,
           "margin_right": 20,
           "children": [
             {
-              "widget_id": "confirm_button",
+              "id": "confirm_button",
+              "type": "KPushButton",
               "content": "tr{popup_ConfirmationButtonConfirm}",
-              "widget_type_id": "KPushButton",
-              "style_object_name": "[kind=primary]"
+              "style_id": "[kind=primary]"
             },
             {
-              "widget_id": "cancel_button",
-              "content": "tr{popup_ConfirmationButtonCancel}",
-              "widget_type_id": "KPushButton"
+              "id": "cancel_button",
+              "type": "KPushButton",
+              "content": "tr{popup_ConfirmationButtonCancel}"
             }
           ]
         }

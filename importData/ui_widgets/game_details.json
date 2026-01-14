@@ -2,16 +2,16 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T03:24:19.847092",
-    "filter": "section_id = 'game_details'"
+    "extract_date": "2026-01-14T20:48:47.859590",
+    "filter": "section = 'game_details'"
   },
   "data": [
     {
-      "widget_id": "game_details_root",
-      "section_id": "game_details",
+      "id": "game_details_root",
+      "section": "game_details",
+      "type": "KScrollableWidget",
+      "layout": "KVBoxLayout",
       "controller": "GameBarTabController",
-      "widget_type_id": "KScrollableWidget",
-      "layout_type_id": "KVBoxLayout",
       "alignment": "top",
       "spacing": 10,
       "margin_left": 10,
@@ -19,53 +19,50 @@
       "margin_right": 10,
       "children": [
         {
-          "widget_id": "last_cloud_save_label",
+          "id": "last_cloud_save_label",
+          "type": "KLabel",
           "content": "tr{label_LastCloudSave}",
-          "widget_type_id": "KLabel",
-          "style_object_name": "sectionTitleText"
+          "style_id": "sectionTitleText"
         },
         {
-          "widget_id": "save_details_container",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KHBoxLayout",
+          "id": "save_details_container",
+          "layout": "KHBoxLayout",
           "spacing": 15,
           "height": 150,
           "children": [
             {
-              "widget_id": "save_date_card",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KVBoxLayout",
-              "style_object_name": "detailsCard",
+              "id": "save_date_card",
+              "layout": "KVBoxLayout",
+              "style_id": "detailsCard",
               "children": [
                 {
-                  "widget_id": "save_date_card_vl",
-                  "widget_type_id": "KWidget",
-                  "layout_type_id": "KVBoxLayout",
+                  "id": "save_date_card_vl",
+                  "layout": "KVBoxLayout",
                   "alignment": "top-left",
                   "spacing": 2,
                   "margin_left": 20,
                   "margin_top": 20,
                   "children": [
                     {
-                      "widget_id": "save_date_card_icon",
+                      "id": "save_date_card_icon",
+                      "type": "KLabel",
                       "content": "pixmap{calendar.svg, scale: 30}",
-                      "widget_type_id": "KLabel",
                       "width": 30,
                       "height": 30
                     },
                     {
-                      "widget_id": "save_date_card_label",
+                      "id": "save_date_card_label",
+                      "type": "KLabel",
                       "content": "tr{label_Date}",
-                      "widget_type_id": "KLabel",
-                      "style_object_name": "detailsCardTitle",
+                      "style_id": "detailsCardTitle",
                       "alignment": "vcenter",
                       "height": 35
                     },
                     {
-                      "widget_id": "save_date_card_date",
+                      "id": "save_date_card_date",
+                      "type": "KLabel",
                       "content": "saveInfo{uploadDate}",
-                      "widget_type_id": "KLabel",
-                      "style_object_name": "detailsCardContent",
+                      "style_id": "detailsCardContent",
                       "height": 25,
                       "refresh_events": [
                         "cloud_files_change",
@@ -74,10 +71,10 @@
                       ]
                     },
                     {
-                      "widget_id": "save_date_card_time",
+                      "id": "save_date_card_time",
+                      "type": "KLabel",
                       "content": "saveInfo{uploadTime}",
-                      "widget_type_id": "KLabel",
-                      "style_object_name": "detailsCardContent",
+                      "style_id": "detailsCardContent",
                       "height": 30,
                       "refresh_events": [
                         "cloud_files_change",
@@ -90,39 +87,36 @@
               ]
             },
             {
-              "widget_id": "save_owner_card",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KVBoxLayout",
-              "style_object_name": "detailsCard",
+              "id": "save_owner_card",
+              "layout": "KVBoxLayout",
+              "style_id": "detailsCard",
               "children": [
                 {
-                  "widget_id": "save_owner_card_vl",
-                  "widget_type_id": "KWidget",
-                  "layout_type_id": "KVBoxLayout",
+                  "id": "save_owner_card_vl",
+                  "layout": "KVBoxLayout",
                   "alignment": "top-left",
                   "spacing": 2,
                   "margin_left": 20,
                   "margin_top": 20,
                   "children": [
                     {
-                      "widget_id": "save_owner_card_icon",
+                      "id": "save_owner_card_icon",
+                      "type": "KLabel",
                       "content": "pixmap{person.svg, scale: 30}",
-                      "widget_type_id": "KLabel",
                       "width": 30,
                       "height": 30
                     },
                     {
-                      "widget_id": "save_owner_card_label",
+                      "id": "save_owner_card_label",
+                      "type": "KLabel",
                       "content": "tr{label_Author}",
-                      "widget_type_id": "KLabel",
-                      "style_object_name": "detailsCardTitle",
+                      "style_id": "detailsCardTitle",
                       "alignment": "vcenter",
                       "height": 35
                     },
                     {
-                      "widget_id": "save_owner_value_wrapper",
-                      "widget_type_id": "KWidget",
-                      "layout_type_id": "KHBoxLayout",
+                      "id": "save_owner_value_wrapper",
+                      "layout": "KHBoxLayout",
                       "alignment": "vcenter",
                       "recursive_refresh_events": [
                         "cloud_files_change",
@@ -131,16 +125,16 @@
                       ],
                       "children": [
                         {
-                          "widget_id": "save_owner_card_user_photo",
+                          "id": "save_owner_card_user_photo",
+                          "type": "KLabel",
                           "content": "pixmap{saveInfo{ownerPhoto}, scale: 25, circle}",
-                          "widget_type_id": "KLabel",
                           "height": 30
                         },
                         {
-                          "widget_id": "save_owner_card_user_name",
+                          "id": "save_owner_card_user_name",
+                          "type": "KLabel",
                           "content": "saveInfo{ownerName}",
-                          "widget_type_id": "KLabel",
-                          "style_object_name": "detailsCardContent",
+                          "style_id": "detailsCardContent",
                           "height": 30
                         }
                       ]
@@ -150,40 +144,38 @@
               ]
             },
             {
-              "widget_id": "save_size_card",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KVBoxLayout",
-              "style_object_name": "detailsCard",
+              "id": "save_size_card",
+              "layout": "KVBoxLayout",
+              "style_id": "detailsCard",
               "children": [
                 {
-                  "widget_id": "save_size_card_vl",
-                  "widget_type_id": "KWidget",
-                  "layout_type_id": "KVBoxLayout",
+                  "id": "save_size_card_vl",
+                  "layout": "KVBoxLayout",
                   "alignment": "top-left",
                   "spacing": 2,
                   "margin_left": 20,
                   "margin_top": 20,
                   "children": [
                     {
-                      "widget_id": "save_size_card_icon",
+                      "id": "save_size_card_icon",
+                      "type": "KLabel",
                       "content": "pixmap{drive.svg, scale: 30}",
-                      "widget_type_id": "KLabel",
                       "width": 30,
                       "height": 30
                     },
                     {
-                      "widget_id": "save_size_card_label",
+                      "id": "save_size_card_label",
+                      "type": "KLabel",
                       "content": "tr{label_Size}",
-                      "widget_type_id": "KLabel",
-                      "style_object_name": "detailsCardTitle",
+                      "style_id": "detailsCardTitle",
                       "alignment": "vcenter",
                       "height": 30
                     },
                     {
-                      "widget_id": "save_size_card_value",
+                      "id": "save_size_card_value",
+                      "type": "KLabel",
                       "content": "saveInfo{size}",
-                      "widget_type_id": "KLabel",
-                      "style_object_name": "detailsCardContent",
+                      "style_id": "detailsCardContent",
                       "height": 30,
                       "refresh_events": [
                         "cloud_files_change",
@@ -197,23 +189,21 @@
           ]
         },
         {
-          "widget_id": "details_players_spacer",
-          "widget_type_id": "KWidget",
+          "id": "details_players_spacer",
           "height": 30
         },
         {
-          "widget_id": "players_label",
+          "id": "players_label",
+          "type": "KLabel",
           "content": "tr{label_Players}",
-          "widget_type_id": "KLabel",
-          "style_object_name": "sectionTitleText"
+          "style_id": "sectionTitleText"
         },
         {
-          "widget_id": "players_container",
+          "id": "players_container",
+          "layout": "KGridLayout",
           "controller": "PlayersController",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KGridLayout",
           "grid_columns": 3,
-          "style_object_name": "playersContainer",
+          "style_id": "playersContainer",
           "refresh_events": [
             "activity_log_update",
             "game_selection_change"
@@ -221,29 +211,28 @@
           "template": {
             "body": [
               {
-                "widget_id": "player_card",
-                "widget_type_id": "KWidget",
-                "layout_type_id": "KHBoxLayout",
+                "id": "player_card",
+                "layout": "KHBoxLayout",
                 "margin_left": 10,
                 "margin_top": 8,
                 "margin_right": 10,
                 "margin_bottom": 8,
                 "children": [
                   {
-                    "widget_id": "player_profile_picture",
-                    "content": "pixmap{template{photo}, scale: 30, circle}",
-                    "widget_type_id": "KLabel"
+                    "id": "player_profile_picture",
+                    "type": "KLabel",
+                    "content": "pixmap{template{photo}, scale: 30, circle}"
                   },
                   {
-                    "widget_id": "player_name",
+                    "id": "player_name",
+                    "type": "KLabel",
                     "content": "template{name}",
-                    "widget_type_id": "KLabel",
-                    "style_object_name": "bodyText",
+                    "style_id": "bodyText",
                     "alignment": "center"
                   },
                   {
-                    "widget_id": "player_card_spacer",
-                    "widget_type_id": "KSpacer"
+                    "id": "player_card_spacer",
+                    "type": "KSpacer"
                   }
                 ]
               }

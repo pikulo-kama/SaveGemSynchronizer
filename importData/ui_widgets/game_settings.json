@@ -2,62 +2,60 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T02:57:08.907569",
-    "filter": "section_id = 'game_settings'"
+    "extract_date": "2026-01-14T20:49:23.200082",
+    "filter": "section = 'game_settings'"
   },
   "data": [
     {
-      "widget_id": "game_settings_root",
-      "section_id": "game_settings",
+      "id": "game_settings_root",
+      "section": "game_settings",
+      "type": "KScrollableWidget",
+      "layout": "KVBoxLayout",
       "controller": "GameBarTabController",
-      "widget_type_id": "KScrollableWidget",
-      "layout_type_id": "KVBoxLayout",
       "margin_left": 10,
       "margin_top": 20,
       "margin_right": 10,
       "margin_bottom": 20,
       "children": [
         {
-          "widget_id": "auto_mode_setting",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KHBoxLayout",
-          "style_object_name": "settingCard",
+          "id": "auto_mode_setting",
+          "layout": "KHBoxLayout",
+          "style_id": "settingCard",
           "alignment": "left-vcenter",
           "height": 75,
           "margin_left": 20,
           "margin_right": 20,
           "children": [
             {
-              "widget_id": "auto_mode_setting_vl",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KVBoxLayout",
+              "id": "auto_mode_setting_vl",
+              "layout": "KVBoxLayout",
               "width": 100,
               "children": [
                 {
-                  "widget_id": "auto_mode_setting_title",
+                  "id": "auto_mode_setting_title",
+                  "type": "KLabel",
                   "content": "tr{label_AutoModeGameSetting}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "bodyText",
+                  "style_id": "bodyText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
                 },
                 {
-                  "widget_id": "auto_mode_setting_description",
+                  "id": "auto_mode_setting_description",
+                  "type": "KLabel",
                   "content": "tr{label_AutoModeGameSettingDesc}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "smallText"
+                  "style_id": "smallText"
                 }
               ]
             },
             {
-              "widget_id": "auto_mode_settings_spacer",
-              "widget_type_id": "KSpacer"
+              "id": "auto_mode_settings_spacer",
+              "type": "KSpacer"
             },
             {
-              "widget_id": "auto_mode_toggle",
+              "id": "auto_mode_toggle",
+              "type": "KToggle",
               "controller": "AutoModeController",
-              "widget_type_id": "KToggle",
               "width": 55,
               "height": 25,
               "refresh_events": [
@@ -67,8 +65,8 @@
           ]
         },
         {
-          "widget_id": "game_settings_spacer",
-          "widget_type_id": "KSpacer"
+          "id": "game_settings_spacer",
+          "type": "KSpacer"
         }
       ]
     }

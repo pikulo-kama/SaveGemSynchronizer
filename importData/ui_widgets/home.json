@@ -2,56 +2,53 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T03:26:26.064967",
-    "filter": "section_id = 'home'"
+    "extract_date": "2026-01-14T20:49:43.505920",
+    "filter": "section = 'home'"
   },
   "data": [
     {
-      "widget_id": "home_root",
-      "section_id": "home",
+      "id": "home_root",
+      "section": "home",
+      "layout": "KHBoxLayout",
       "controller": "MenuItemController",
-      "widget_type_id": "KWidget",
-      "layout_type_id": "KHBoxLayout",
       "children": [
         {
-          "widget_id": "left_section",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
+          "id": "left_section",
+          "layout": "KVBoxLayout",
           "width": 250,
           "margin_bottom": 20,
           "children": [
             {
-              "widget_id": "logo_section",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "logo_section",
+              "layout": "KHBoxLayout",
               "height": 80,
               "margin_left": 5,
               "children": [
                 {
-                  "widget_id": "logo_image",
+                  "id": "logo_image",
+                  "type": "KLabel",
                   "content": "pixmap{gem_outline.svg, scale: 60}",
-                  "widget_type_id": "KLabel",
                   "alignment": "left-center"
                 },
                 {
-                  "widget_id": "logo_text",
+                  "id": "logo_text",
+                  "type": "KLabel",
                   "content": "prop{application.name}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "heroText",
+                  "style_id": "heroText",
                   "alignment": "left-center"
                 },
                 {
-                  "widget_id": "logo_section_spacer",
-                  "widget_type_id": "KSpacer"
+                  "id": "logo_section_spacer",
+                  "type": "KSpacer"
                 }
               ]
             },
             {
-              "widget_id": "game_list",
+              "id": "game_list",
+              "type": "KScrollableWidget",
+              "layout": "KVBoxLayout",
               "controller": "GameListController",
-              "widget_type_id": "KScrollableWidget",
-              "layout_type_id": "KVBoxLayout",
-              "style_object_name": "gameList",
+              "style_id": "gameList",
               "spacing": 0,
               "refresh_events": [
                 "cloud_files_change",
@@ -62,56 +59,52 @@
               "template": {
                 "body": [
                   {
-                    "widget_id": "game_option_divider",
-                    "widget_type_id": "KHDivider"
+                    "id": "game_option_divider",
+                    "type": "KHDivider"
                   },
                   {
-                    "widget_id": "game_option",
+                    "id": "game_option",
+                    "type": "KPushButton",
                     "content": "template{name}",
-                    "widget_type_id": "KPushButton",
-                    "style_object_name": "gameListOption"
+                    "style_id": "gameListOption"
                   }
                 ],
                 "footer": [
                   {
-                    "widget_id": "game_list_footer_divider",
-                    "widget_type_id": "KHDivider"
+                    "id": "game_list_footer_divider",
+                    "type": "KHDivider"
                   },
                   {
-                    "widget_id": "game_list_spacer",
-                    "widget_type_id": "KSpacer"
+                    "id": "game_list_spacer",
+                    "type": "KSpacer"
                   }
-               ]
+                ]
               }
             }
           ]
         },
         {
-          "widget_id": "hl_root_divider",
-          "widget_type_id": "KVDivider"
+          "id": "hl_root_divider",
+          "type": "KVDivider"
         },
         {
-          "widget_id": "right_section",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
+          "id": "right_section",
+          "layout": "KVBoxLayout",
           "children": [
             {
-              "widget_id": "right_section_body_h_wrapper",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "right_section_body_h_wrapper",
+              "layout": "KHBoxLayout",
               "children": [
                 {
-                  "widget_id": "right_section_body_v_wrapper",
-                  "widget_type_id": "KWidget",
-                  "layout_type_id": "KVBoxLayout",
+                  "id": "right_section_body_v_wrapper",
+                  "layout": "KVBoxLayout",
                   "stylesheet": {
                     "max-width": "900px"
                   },
                   "children": [
                     {
-                      "widget_id": "game_header",
-                      "widget_type_id": "KWidget",
-                      "layout_type_id": "KVBoxLayout",
+                      "id": "game_header",
+                      "layout": "KVBoxLayout",
                       "height": 130,
                       "recursive_refresh_events": [
                         "game_config_change",
@@ -119,39 +112,37 @@
                       ],
                       "children": [
                         {
-                          "widget_id": "hl_game_header",
-                          "widget_type_id": "KWidget",
-                          "layout_type_id": "KHBoxLayout",
+                          "id": "hl_game_header",
+                          "layout": "KHBoxLayout",
                           "alignment": "left-vcenter",
                           "margin_left": 10,
                           "margin_right": 10,
                           "margin_bottom": 10,
                           "children": [
                             {
-                              "widget_id": "game_logo",
+                              "id": "game_logo",
+                              "type": "KLabel",
                               "content": "pixmap{game{logo}, scale: 40, radius: 3}",
-                              "widget_type_id": "KLabel",
                               "alignment": "left-vcenter",
                               "width": 45
                             },
                             {
-                              "widget_id": "game_name",
+                              "id": "game_name",
+                              "type": "KLabel",
                               "content": "game{name}",
-                              "widget_type_id": "KLabel",
-                              "style_object_name": "subtitleText",
+                              "style_id": "subtitleText",
                               "alignment": "left-center"
                             },
                             {
-                              "widget_id": "game_logo_badge_spacer",
-                              "widget_type_id": "KSpacer"
+                              "id": "game_logo_badge_spacer",
+                              "type": "KSpacer"
                             },
                             {
-                              "widget_id": "sync_status_badge",
+                              "id": "sync_status_badge",
+                              "layout": "KHBoxLayout",
                               "tooltip": "saveInfo{statusDescription}",
                               "controller": "SyncStatusController",
-                              "widget_type_id": "KWidget",
-                              "layout_type_id": "KHBoxLayout",
-                              "style_object_name": "syncStatusBadge",
+                              "style_id": "syncStatusBadge",
                               "alignment": "left-vcenter",
                               "height": 25,
                               "margin_left": 5,
@@ -163,26 +154,25 @@
                               ],
                               "children": [
                                 {
-                                  "widget_id": "sync_status_icon_container",
-                                  "widget_type_id": "KWidget",
-                                  "layout_type_id": "KVBoxLayout",
+                                  "id": "sync_status_icon_container",
+                                  "layout": "KVBoxLayout",
                                   "alignment": "vcenter",
                                   "width": 18,
                                   "height": 18,
                                   "children": [
                                     {
-                                      "widget_id": "sync_status_icon",
+                                      "id": "sync_status_icon",
+                                      "type": "KLabel",
                                       "content": "pixmap{saveInfo{statusIcon}, scale: 12}",
-                                      "widget_type_id": "KLabel",
                                       "alignment": "center"
                                     }
                                   ]
                                 },
                                 {
-                                  "widget_id": "sync_status",
+                                  "id": "sync_status",
+                                  "type": "KLabel",
                                   "content": "saveInfo{status}",
-                                  "widget_type_id": "KLabel",
-                                  "style_object_name": "smallTextInverted",
+                                  "style_id": "smallTextInverted",
                                   "alignment": "left-center",
                                   "stylesheet": {
                                     "font-weight": "bold",
@@ -194,51 +184,48 @@
                           ]
                         },
                         {
-                          "widget_id": "game_tab_bar",
+                          "id": "game_tab_bar",
+                          "type": "KTabBar",
                           "controller": "GameBarController",
-                          "widget_type_id": "KTabBar",
-                          "style_object_name": "gameBar"
+                          "style_id": "gameBar"
                         }
                       ]
                     },
                     {
-                      "widget_id": "game_container",
-                      "widget_type_id": "KWidget",
-                      "layout_type_id": "KVBoxLayout"
+                      "id": "game_container",
+                      "layout": "KVBoxLayout"
                     }
                   ]
                 }
               ]
             },
             {
-              "widget_id": "game_container_controls_divider",
-              "widget_type_id": "KHDivider"
+              "id": "game_container_controls_divider",
+              "type": "KHDivider"
             },
             {
-              "widget_id": "game_controls",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "game_controls",
+              "layout": "KHBoxLayout",
               "height": 60,
               "margin_left": 10,
               "margin_right": 10,
               "margin_bottom": 10,
               "children": [
                 {
-                  "widget_id": "game_lower_bar_spacer",
-                  "widget_type_id": "KSpacer"
+                  "id": "game_lower_bar_spacer",
+                  "type": "KSpacer"
                 },
                 {
-                  "widget_id": "game_controls_wrapper",
-                  "widget_type_id": "KWidget",
-                  "layout_type_id": "KHBoxLayout",
+                  "id": "game_controls_wrapper",
+                  "layout": "KHBoxLayout",
                   "alignment": "bottom-right",
                   "children": [
                     {
-                      "widget_id": "upload_button",
+                      "id": "upload_button",
+                      "type": "KProgressPushButton",
                       "content": "tr{label_UploadSaveToDrive}",
                       "controller": "UploadButtonController",
-                      "widget_type_id": "KProgressPushButton",
-                      "style_object_name": "[id=uploadButton]",
+                      "style_id": "[id=uploadButton]",
                       "width": 200,
                       "height": 40,
                       "refresh_events": [
@@ -246,15 +233,14 @@
                       ]
                     },
                     {
-                      "widget_id": "buttons_spacer",
-                      "widget_type_id": "KWidget",
+                      "id": "buttons_spacer",
                       "width": 5
                     },
                     {
-                      "widget_id": "download_button",
+                      "id": "download_button",
+                      "type": "KProgressPushButton",
                       "controller": "DownloadButtonController",
-                      "widget_type_id": "KProgressPushButton",
-                      "style_object_name": "[id=downloadButton, kind=primary]",
+                      "style_id": "[id=downloadButton, kind=primary]",
                       "height": 40,
                       "refresh_events": [
                         "language_change"

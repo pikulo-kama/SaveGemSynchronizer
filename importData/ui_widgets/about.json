@@ -2,16 +2,16 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T02:55:20.134412",
-    "filter": "section_id = 'about'"
+    "extract_date": "2026-01-14T20:47:38.504040",
+    "filter": "section = 'about'"
   },
   "data": [
     {
-      "widget_id": "about_root",
-      "section_id": "about",
+      "id": "about_root",
+      "section": "about",
+      "type": "KScrollableWidget",
+      "layout": "KVBoxLayout",
       "controller": "MenuItemController",
-      "widget_type_id": "KScrollableWidget",
-      "layout_type_id": "KVBoxLayout",
       "alignment": "top-vcenter",
       "spacing": 50,
       "margin_left": 20,
@@ -19,177 +19,169 @@
       "margin_right": 20,
       "children": [
         {
-          "widget_id": "app_title_layout",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
+          "id": "app_title_layout",
+          "layout": "KVBoxLayout",
           "alignment": "top-vcenter",
           "children": [
             {
-              "widget_id": "app_wrapper",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "app_wrapper",
+              "layout": "KHBoxLayout",
               "alignment": "left",
               "children": [
                 {
-                  "widget_id": "app_icon",
+                  "id": "app_icon",
+                  "type": "KLabel",
                   "content": "pixmap{gem_outline.svg, scale: 50}",
-                  "widget_type_id": "KLabel",
                   "alignment": "vcenter"
                 },
                 {
-                  "widget_id": "app_name",
+                  "id": "app_name",
+                  "type": "KLabel",
                   "content": "prop{application.name}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "heroText",
+                  "style_id": "heroText",
                   "alignment": "vcenter"
                 }
               ]
             },
             {
-              "widget_id": "app_description",
+              "id": "app_description",
+              "type": "KLabel",
               "content": "tr{label_AppDescription}",
-              "widget_type_id": "KLabel",
-              "style_object_name": "accentText"
+              "style_id": "accentText"
             }
           ]
         },
         {
-          "widget_id": "app_details",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
+          "id": "app_details",
+          "layout": "KVBoxLayout",
           "children": [
             {
-              "widget_id": "app_details_title",
+              "id": "app_details_title",
+              "type": "KLabel",
               "content": "tr{label_ApplicationDetails}",
-              "widget_type_id": "KLabel",
-              "style_object_name": "bodyText",
+              "style_id": "bodyText",
               "stylesheet": {
                 "color": "rgba('text-primary', 0.6)"
               }
             },
             {
-              "widget_id": "version_container",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "version_container",
+              "layout": "KHBoxLayout",
               "alignment": "left",
               "spacing": 20,
               "children": [
                 {
-                  "widget_id": "version_label",
+                  "id": "version_label",
+                  "type": "KLabel",
                   "content": "tr{label_Version}:",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "accentText",
+                  "style_id": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
                 },
                 {
-                  "widget_id": "version_value",
+                  "id": "version_value",
+                  "type": "KLabel",
                   "content": "prop{application.version}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "accentText"
+                  "style_id": "accentText"
                 }
               ]
             },
             {
-              "widget_id": "author_container",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "author_container",
+              "layout": "KHBoxLayout",
               "alignment": "left",
               "spacing": 20,
               "children": [
                 {
-                  "widget_id": "author_label",
+                  "id": "author_label",
+                  "type": "KLabel",
                   "content": "tr{label_Author}:",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "accentText",
+                  "style_id": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
                 },
                 {
-                  "widget_id": "author_value",
+                  "id": "author_value",
+                  "type": "KLabel",
                   "content": "prop{application.author}",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "accentText"
+                  "style_id": "accentText"
                 }
               ]
             }
           ]
         },
         {
-          "widget_id": "contact_us",
-          "widget_type_id": "KWidget",
-          "layout_type_id": "KVBoxLayout",
+          "id": "contact_us",
+          "layout": "KVBoxLayout",
           "children": [
             {
-              "widget_id": "contact_us_title",
+              "id": "contact_us_title",
+              "type": "KLabel",
               "content": "tr{label_ContactUs}",
-              "widget_type_id": "KLabel",
-              "style_object_name": "bodyText",
+              "style_id": "bodyText",
               "stylesheet": {
                 "color": "rgba('text-primary', 0.6)"
               }
             },
             {
-              "widget_id": "contact_us_container",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "contact_us_container",
+              "layout": "KHBoxLayout",
               "alignment": "left",
               "spacing": 20,
               "children": [
                 {
-                  "widget_id": "github_label",
+                  "id": "github_label",
+                  "type": "KLabel",
                   "content": "GitHub:",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "accentText",
+                  "style_id": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
                 },
                 {
-                  "widget_id": "github_value",
+                  "id": "github_value",
+                  "type": "KRichLabel",
                   "content": "<a href='https://github.com/pikulo-kama/SaveGemSynchronizer'>https://github.com/pikulo-kama/SaveGemSynchronizer</a>",
-                  "widget_type_id": "KRichLabel",
-                  "style_object_name": "accentText"
+                  "style_id": "accentText"
                 }
               ]
             },
             {
-              "widget_id": "email_container",
-              "widget_type_id": "KWidget",
-              "layout_type_id": "KHBoxLayout",
+              "id": "email_container",
+              "layout": "KHBoxLayout",
               "alignment": "left",
               "spacing": 20,
               "children": [
                 {
-                  "widget_id": "email_label",
+                  "id": "email_label",
+                  "type": "KLabel",
                   "content": "tr{label_Email}:",
-                  "widget_type_id": "KLabel",
-                  "style_object_name": "accentText",
+                  "style_id": "accentText",
                   "stylesheet": {
                     "font-weight": "bold"
                   }
                 },
                 {
-                  "widget_id": "email_value",
+                  "id": "email_value",
+                  "type": "KRichLabel",
                   "content": "<a href='mailto:jhorr2222@gmail.com'>jhorr2222@gmail.com</a>",
-                  "widget_type_id": "KRichLabel",
-                  "style_object_name": "accentText"
+                  "style_id": "accentText"
                 }
               ]
             }
           ]
         },
         {
-          "widget_id": "copyright_disclaimer",
-          "content": "tr{window_CopyrightDisclaimer, prop{application.name}}",
-          "widget_type_id": "KLabel"
+          "id": "copyright_disclaimer",
+          "type": "KLabel",
+          "content": "tr{window_CopyrightDisclaimer, prop{application.name}}"
         },
         {
-          "widget_id": "copyright",
+          "id": "copyright",
+          "type": "KLabel",
           "content": "tr{window_Copyright, date{year}, prop{application.name}}",
-          "widget_type_id": "KLabel",
           "stylesheet": {
             "color": "rgba('text-primary', 0.7)"
           }

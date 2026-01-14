@@ -2,26 +2,25 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T02:58:13.315910",
-    "filter": "section_id = 'game_history'"
+    "extract_date": "2026-01-14T20:49:08.362601",
+    "filter": "section = 'game_history'"
   },
   "data": [
     {
-      "widget_id": "game_history_root",
-      "section_id": "game_history",
+      "id": "game_history_root",
+      "section": "game_history",
+      "layout": "KVBoxLayout",
       "controller": "GameBarTabController",
-      "widget_type_id": "KWidget",
-      "layout_type_id": "KVBoxLayout",
       "margin_left": 10,
       "margin_top": 20,
       "margin_right": 10,
       "margin_bottom": 20,
       "children": [
         {
-          "widget_id": "save_history_list",
+          "id": "save_history_list",
+          "type": "KScrollableWidget",
+          "layout": "KVBoxLayout",
           "controller": "SaveHistoryListController",
-          "widget_type_id": "KScrollableWidget",
-          "layout_type_id": "KVBoxLayout",
           "margin_right": 10,
           "refresh_events": [
             "cloud_files_change",
@@ -32,10 +31,9 @@
           "template": {
             "body": [
               {
-                "widget_id": "history_record",
-                "widget_type_id": "KWidget",
-                "layout_type_id": "KHBoxLayout",
-                "style_object_name": "saveListRecord",
+                "id": "history_record",
+                "layout": "KHBoxLayout",
+                "style_id": "saveListRecord",
                 "height": 65,
                 "margin_left": 10,
                 "margin_top": 5,
@@ -43,41 +41,40 @@
                 "margin_bottom": 5,
                 "children": [
                   {
-                    "widget_id": "record_details",
-                    "widget_type_id": "KWidget",
-                    "layout_type_id": "KVBoxLayout",
+                    "id": "record_details",
+                    "layout": "KVBoxLayout",
                     "alignment": "vcenter",
                     "children": [
                       {
-                        "widget_id": "version_label",
+                        "id": "version_label",
+                        "type": "KLabel",
                         "content": "template{version}",
-                        "widget_type_id": "KLabel",
-                        "style_object_name": "saveListRecordVersion"
+                        "style_id": "saveListRecordVersion"
                       },
                       {
-                        "widget_id": "owner_label",
+                        "id": "owner_label",
+                        "type": "KLabel",
                         "content": "template{owner}",
-                        "widget_type_id": "KLabel",
-                        "style_object_name": "saveListRecordOwner"
+                        "style_id": "saveListRecordOwner"
                       }
                     ]
                   },
                   {
-                    "widget_id": "history_record_spacer",
-                    "widget_type_id": "KSpacer"
+                    "id": "history_record_spacer",
+                    "type": "KSpacer"
                   },
                   {
-                    "widget_id": "restore_button",
-                    "content": "tr{label_Restore}",
-                    "widget_type_id": "KProgressPushButton"
+                    "id": "restore_button",
+                    "type": "KProgressPushButton",
+                    "content": "tr{label_Restore}"
                   }
                 ]
               }
             ],
             "footer": [
               {
-                "widget_id": "save_history_spacer",
-                "widget_type_id": "KSpacer"
+                "id": "save_history_spacer",
+                "type": "KSpacer"
               }
             ]
           }

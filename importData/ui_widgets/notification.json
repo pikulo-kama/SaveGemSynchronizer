@@ -2,33 +2,33 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T03:00:22.190704",
-    "filter": "section_id = 'notification'"
+    "extract_date": "2026-01-14T20:50:15.554259",
+    "filter": "section = 'notification'"
   },
   "data": [
     {
-      "widget_id": "notification_dialog",
-      "section_id": "notification",
+      "id": "notification_dialog",
+      "section": "notification",
+      "type": "KDialog",
+      "layout": "KHBoxLayout",
       "controller": "DialogController",
-      "widget_type_id": "KDialog",
-      "layout_type_id": "KHBoxLayout",
-      "style_object_name": "notificationDialog",
+      "style_id": "notificationDialog",
       "alignment": "left",
       "width": 400,
       "margin_left": 10,
       "margin_right": 10,
       "children": [
         {
-          "widget_id": "checkmark_icon",
+          "id": "checkmark_icon",
+          "type": "KLabel",
           "content": "pixmap{checkmark.svg, scale: 30}",
-          "widget_type_id": "KLabel",
           "alignment": "vcenter"
         },
         {
-          "widget_id": "notification_message",
+          "id": "notification_message",
+          "type": "KWordWrapLabel",
           "content": "data{dialogMessage}",
-          "widget_type_id": "KWordWrapLabel",
-          "style_object_name": "bodyText",
+          "style_id": "bodyText",
           "alignment": "vcenter"
         }
       ]

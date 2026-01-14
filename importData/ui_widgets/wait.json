@@ -2,28 +2,27 @@
   "metadata": {
     "table_name": "ui_widgets",
     "type": "Widgets",
-    "extract_date": "2025-11-23T03:00:05.712676",
-    "filter": "section_id = 'wait'"
+    "extract_date": "2026-01-14T20:46:56.008603",
+    "filter": "section = 'wait'"
   },
   "data": [
     {
-      "widget_id": "wait_bar_root",
-      "section_id": "wait",
-      "widget_type_id": "KWidget",
-      "layout_type_id": "KVBoxLayout",
+      "id": "wait_bar_root",
+      "section": "wait",
+      "layout": "KVBoxLayout",
       "spacing": 30,
       "width": 400,
       "margin_bottom": 50,
       "children": [
         {
-          "widget_id": "app_logo",
+          "id": "app_logo",
+          "type": "KLabel",
           "content": "pixmap{gem_outline.svg, scale: 80}",
-          "widget_type_id": "KLabel",
           "alignment": "center"
         },
         {
-          "widget_id": "wait_bar",
-          "widget_type_id": "KWaitBar",
+          "id": "wait_bar",
+          "type": "KWaitBar",
           "alignment": "bottom",
           "height": 10
         }
