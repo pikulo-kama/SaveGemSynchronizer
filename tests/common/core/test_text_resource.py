@@ -12,7 +12,7 @@ class TestTextResource:
         from savegem.common.core.text_resource import TextResource
         from savegem.common.db.table import DatabaseRow
 
-        # Reset text resource state.
+        # Reset text resources state.
         mocker.patch.object(TextResource, "_TextResource__current_locale", None)
         mocker.patch.object(TextResource, "_TextResource__resource_map", {})
 

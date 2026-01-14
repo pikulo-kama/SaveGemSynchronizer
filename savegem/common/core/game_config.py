@@ -3,7 +3,7 @@ import re
 import urllib.request
 from typing import Final, Iterator
 
-from kui.core.shortcut import dynamic_data, resolve_app_data, resolve_resource, resolve_temp_resource
+from kui.core.shortcut import dynamic_data, resolve_app_data, resolve_image, resolve_temp_image
 from kui_db_plugin.database import db
 from kutil.file import delete_file
 from kutil.file_type import JPG
@@ -336,10 +336,10 @@ class Game:
         """
 
         if logo_url is None:
-            return resolve_resource("gem.svg")
+            return resolve_image("gem.svg")
 
         logo_name = JPG.add_extension(self.name)
-        logo_path = resolve_temp_resource(logo_name)
+        logo_path = resolve_temp_image(logo_name)
         urllib.request.urlretrieve(logo_url, logo_path)
 
         return logo_path

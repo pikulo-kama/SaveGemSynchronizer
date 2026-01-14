@@ -54,7 +54,7 @@ class TestGameConfig(GameModuleTestHelper):
         Mocks GDrive.download_file to return the successful file data.
         """
 
-        resolve_temp_resource_mock.side_effect = lambda path: f"/resource/path/{path}"
+        resolve_temp_resource_mock.side_effect = lambda path: f"/resources/path/{path}"
 
         holder_mock.get.return_value = [
             {
@@ -157,7 +157,7 @@ class TestGameConfig(GameModuleTestHelper):
 
         game_a = _games_config.by_name(GameTestData.FirstGame)
         assert game_a.process_name == "GameA.exe"
-        assert game_a.logo == "/resource/path/Game 1.jpg"
+        assert game_a.logo == "/resources/path/Game 1.jpg"
         assert _games_config.current.name == GameTestData.FirstGame
         assert _games_config.empty is False
 

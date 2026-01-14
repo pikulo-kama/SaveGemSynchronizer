@@ -135,11 +135,10 @@ app, app_a = build_exe(
         drive_config_data,
         "importData",
         "resources",
-        "migration",
-        "styles"
+        "migration"
     ],
     hooks=['hooks'],
-    icon='resources/application.ico'
+    icon='resources/images/application.ico'
 )
 
 process_watcher, process_watcher_a = build_exe(

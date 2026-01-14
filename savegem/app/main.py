@@ -1,10 +1,8 @@
-import os
 import sys
 import threading
 
 from kui.core.app import KamaApplication
 from kui.core.shortcut import prop
-from kutil.file import cleanup_directory
 from kutil.logger import get_logger
 
 from savegem.constants import UISection
@@ -31,25 +29,10 @@ def main():
 
     context().state.on_change(lambda: ui_socket.notify_children(IPCCommand.StateChanged))
     application.window.after_init.connect(lambda: flags().gui_initialized.enable())
-    application.window.before_destroy.connect(teardown)
+    application.window.before_destroy.connect(lambda: flags().gui_initialized.disable())
 
     GoogleAuth.authenticate()
     sys.exit(application.exec())
-
-
-def teardown():
-    """
-    Used to clean up temporary data.
-    """
-
-    application = KamaApplication()
-
-    _logger.info("Cleaning up 'output' directory.")
-    cleanup_directory(application.discovery.Output)
-    _logger.info("Creating directory for dynamic resources.")
-    os.mkdir(application.discovery.TempResources)
-
-    flags().gui_initialized.disable()
 
 
 def rebuild():

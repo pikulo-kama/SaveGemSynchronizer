@@ -3,7 +3,7 @@ import json
 import urllib.request
 from typing import Iterator, Final, Optional
 
-from kui.core.shortcut import dynamic_data, resolve_temp_resource
+from kui.core.shortcut import dynamic_data, resolve_temp_image
 from kutil.file_type import JPG
 from kutil.logger import get_logger
 
@@ -95,7 +95,7 @@ class User:
             return None
 
         image_name = JPG.add_extension(self.id)
-        image_path = resolve_temp_resource(image_name)
+        image_path = resolve_temp_image(image_name)
         urllib.request.urlretrieve(photo_link, image_path)
 
         return image_path

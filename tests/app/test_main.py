@@ -110,7 +110,7 @@ class TestApplication:
 
         logger_mock.info.assert_has_calls([
             call("Cleaning up 'output' directory."),
-            call("Creating directory for dynamic resources.")
+            call("Creating directory for dynamic images.")
         ])
 
         cleanup_directory_mock.assert_called_once_with(Directory().Output)
@@ -120,7 +120,7 @@ class TestApplication:
 
     def test_rebuild_resets_state_and_rebuilds_gui(self, module_patch, app_state_mock, gui_mock):
         """
-        Tests the sequence of state refresh, text resource reset, and GUI build.
+        Tests the sequence of state refresh, text resources reset, and GUI build.
         """
 
         from savegem.app import rebuild

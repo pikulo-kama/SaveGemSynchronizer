@@ -262,7 +262,7 @@ class TestStyle:
     def test_dynamic_resource_creation(self, save_file_mock, read_file_mock, resolve_resource_mock,
                                        resolve_temp_resource_mock, logger_mock, _mock_color_scheme):
         """
-        Tests that dynamic resources are fetched from DB,
+        Tests that dynamic images are fetched from DB,
         colors are resolved, content is replaced, and files are saved.
         """
 

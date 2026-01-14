@@ -1,6 +1,6 @@
 
 # Setup Tables
-setup_resource.json
+setup_dynamic_image.json
 setup_locale.json
 setup_text_resource.json
 setup_color.json
