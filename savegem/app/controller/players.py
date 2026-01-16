@@ -2,11 +2,11 @@ from typing import Any, Final
 
 from kui.component.widget import KamaWidget
 from kui.core.constants import QAttr
-from kui.core.controller import TemplateWidgetController
+from kui.core.controller import TemplateWidgetController, TemplateWidgetContext
+from kui.core.metadata import ControllerArgs
 from kutil.logger import get_logger
 
 from savegem.common.core.context import context
-from savegem.common.core.user import User
 
 _logger = get_logger(__name__)
 
@@ -18,7 +18,7 @@ class PlayersController(TemplateWidgetController):
 
     PlayerActive: Final = "active"
 
-    def _get_data(self) -> list[Any]:
+    def retrieve_data(self, args: ControllerArgs) -> list[Any]:
         active_players = context().activity.players
         game_players = context().games.current.players
         players = []
@@ -40,20 +40,20 @@ class PlayersController(TemplateWidgetController):
 
         return players
 
-    def resolve(self, player: User, value: str, *args, **kw):
+    def resolve(self, widget_context: TemplateWidgetContext, value: str, *args, **kw):
         if value == "name":
-            return player.short_name
+            return widget_context.element.short_name
 
         elif value == "photo":
-            return player.photo
+            return widget_context.element.photo
 
         return None
 
     @classmethod
-    def handle__player_card(cls, player_card: KamaWidget, player: User):
+    def handle__player_card(cls, player_card: KamaWidget, widget_context: TemplateWidgetContext):
         """
         Used to apply style property to players that are currently in-game.
         """
 
-        if player in context().activity.players:
+        if widget_context.element in context().activity.players:
             player_card.setProperty(QAttr.Id, cls.PlayerActive)

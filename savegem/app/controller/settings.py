@@ -4,6 +4,7 @@ from kui.component.button import KamaPushButton
 from kui.component.combobox import KamaComboBox
 from kui.core.app import KamaApplication
 from kui.core.controller import WidgetController
+from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr, resolve_app_data
 from kui.core.style import ColorMode
 from kui_db_plugin.database import db
@@ -21,7 +22,7 @@ class LanguageDropdownController(WidgetController):
     Used to control language dropdown setting.
     """
 
-    def setup(self, language_combobox: KamaComboBox):
+    def setup(self, language_combobox: KamaComboBox, args: ControllerArgs):
 
         def on_language_change(index: int):
             """
@@ -54,7 +55,7 @@ class TimeFormatDropdownController(WidgetController):
     Used to control time format dropdown setting.
     """
 
-    def setup(self, time_format_dropdown: KamaComboBox):
+    def setup(self, time_format_dropdown: KamaComboBox, args: ControllerArgs):
 
         def on_time_format_change(index: int):
             """
@@ -73,7 +74,7 @@ class TimeFormatDropdownController(WidgetController):
         time_format_dropdown.setCurrentIndex(context().state.time_format)
         time_format_dropdown.currentIndexChanged.connect(on_time_format_change)  # noqa
 
-    def refresh(self, time_format_dropdown: KamaComboBox):
+    def refresh(self, time_format_dropdown: KamaComboBox, args: ControllerArgs):
         time_format_dropdown.setItemText(0, tr("label_TimeFormat12"))
         time_format_dropdown.setItemText(1, tr("label_TimeFormat24"))
 
@@ -83,7 +84,7 @@ class ColorThemeDropdownController(WidgetController):
     Used to control dropdown with application color modes.
     """
 
-    def setup(self, theme_dropdown: KamaComboBox):
+    def setup(self, theme_dropdown: KamaComboBox, args: ControllerArgs):
         application = KamaApplication()
 
         def on_theme_change(index: int):
@@ -103,7 +104,7 @@ class ColorThemeDropdownController(WidgetController):
         theme_dropdown.setCurrentIndex(current_theme_index)
         theme_dropdown.currentIndexChanged.connect(on_theme_change)  # noqa
 
-    def refresh(self, theme_dropdown: KamaComboBox):
+    def refresh(self, theme_dropdown: KamaComboBox, args: ControllerArgs):
         theme_dropdown.setItemText(0, tr("label_ColorModeSystem"))
         theme_dropdown.setItemText(1, tr("label_ColorModeLight"))
         theme_dropdown.setItemText(2, tr("label_ColorModeDark"))
@@ -114,7 +115,7 @@ class LogoutController(WidgetController):
     Used to control 'Log Out' button.
     """
 
-    def setup(self, logout_button: KamaPushButton):
+    def setup(self, logout_button: KamaPushButton, args: ControllerArgs):
         application = KamaApplication()
 
         def logout():

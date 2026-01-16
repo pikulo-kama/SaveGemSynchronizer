@@ -1,6 +1,7 @@
 from kui.component.label import KamaLabel
 from kui.core.constants import QAttr, QBool
 from kui.core.controller import WidgetController
+from kui.core.metadata import ControllerArgs
 from kutil.logger import get_logger
 
 from savegem.common.core.context import context
@@ -15,7 +16,7 @@ class SyncStatusController(WidgetController):
     based on synchronization status of current game.
     """
 
-    def refresh(self, sync_status_badge: KamaLabel):
+    def refresh(self, sync_status_badge: KamaLabel, args: ControllerArgs):
         sync_status = context().games.current.meta.sync_status
         _logger.debug("game=%s, sync_status=%s", context().games.current.name, sync_status.name)
 

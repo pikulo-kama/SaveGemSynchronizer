@@ -1,5 +1,6 @@
 from kui.component.toggle import KamaToggle
 from kui.core.controller import WidgetController
+from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr
 from kutil.logger import get_logger
 
@@ -14,7 +15,7 @@ class AutoModeController(WidgetController):
     Used to control 'Auto Mode' game setting.
     """
 
-    def setup(self, auto_mode_toggle: KamaToggle):
+    def setup(self, auto_mode_toggle: KamaToggle, args: ControllerArgs):
 
         def toggle_auto_mode():
             game = context().games.current
@@ -28,7 +29,7 @@ class AutoModeController(WidgetController):
 
         auto_mode_toggle.clicked.connect(toggle_auto_mode)  # noqa
 
-    def refresh(self, auto_mode_toggle: KamaToggle):
+    def refresh(self, auto_mode_toggle: KamaToggle, args: ControllerArgs):
         game = context().games.current
         is_checked = game.settings.auto_mode
         tooltip = ""
@@ -42,9 +43,9 @@ class AutoModeController(WidgetController):
         auto_mode_toggle.setChecked(is_checked)
         auto_mode_toggle.setToolTip(tooltip)
 
-    def enable(self, auto_mode_toggle: KamaToggle):
-        self.disable(auto_mode_toggle)
+    def enable(self, auto_mode_toggle: KamaToggle, args: ControllerArgs):
+        self.disable(auto_mode_toggle, args)
 
-    def disable(self, auto_mode_toggle: KamaToggle):
+    def disable(self, auto_mode_toggle: KamaToggle, args: ControllerArgs):
         if not context().games.current.auto_mode_allowed:
             auto_mode_toggle.setEnabled(False)

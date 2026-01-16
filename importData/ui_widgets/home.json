@@ -10,7 +10,10 @@
       "id": "home_root",
       "section": "home",
       "layout": "KHBoxLayout",
-      "controller": "MenuItemController",
+      "controller": "RebindParentController",
+      "args": {
+        "parent": "root.content"
+      },
       "children": [
         {
           "id": "left_section",
@@ -186,7 +189,14 @@
                         {
                           "id": "game_tab_bar",
                           "type": "KTabBar",
-                          "controller": "GameBarController",
+                          "controller": "SectionTabBarController",
+                          "args": {
+                            "sections": [
+                              "game_details",
+                              "game_history",
+                              "game_settings"
+                            ]
+                          },
                           "style_id": "gameBar"
                         }
                       ]

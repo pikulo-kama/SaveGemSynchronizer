@@ -11,7 +11,10 @@
       "section": "about",
       "type": "KScrollableWidget",
       "layout": "KVBoxLayout",
-      "controller": "MenuItemController",
+      "controller": "RebindParentController",
+      "args": {
+        "parent": "root.content"
+      },
       "alignment": "top-vcenter",
       "spacing": 50,
       "margin_left": 20,

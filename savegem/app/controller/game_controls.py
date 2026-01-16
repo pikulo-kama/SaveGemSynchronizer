@@ -1,6 +1,7 @@
 from kui.component.progress_button import KamaProgressPushButton
 from kui.core.app import KamaApplication
 from kui.core.controller import WidgetController
+from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr
 
 from savegem.constants import UIRefreshEvent
@@ -59,7 +60,7 @@ class DownloadButtonController(WidgetController):
     Controller which is used to configure download button.
     """
 
-    def setup(self, download_button: KamaProgressPushButton):
+    def setup(self, download_button: KamaProgressPushButton, args: ControllerArgs):
 
         def start_download():
             """
@@ -75,7 +76,7 @@ class DownloadButtonController(WidgetController):
             worker.completed.connect(_done_subscriber("notification_NewSaveHasBeenDownloaded"))
             worker.completed.connect(lambda: context().games.current.meta.local.calculate_checksum())
 
-            self._do_work(worker)
+            self.work(worker)
 
         application = KamaApplication()
 
@@ -92,7 +93,7 @@ class UploadButtonController(WidgetController):
     Controller which is used to configure upload button.
     """
 
-    def setup(self, upload_button: KamaProgressPushButton):
+    def setup(self, upload_button: KamaProgressPushButton, args: ControllerArgs):
 
         def start_upload():
             """
@@ -107,6 +108,6 @@ class UploadButtonController(WidgetController):
             worker.completed.connect(lambda: context().games.current.meta.drive.refresh())
             worker.completed.connect(_done_subscriber("notification_SaveHasBeenUploaded"))
 
-            self._do_work(worker)
+            self.work(worker)
 
         upload_button.clicked.connect(start_upload)  # noqa

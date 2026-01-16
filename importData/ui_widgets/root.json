@@ -22,20 +22,24 @@
             {
               "id": "menu",
               "layout": "KVBoxLayout",
-              "controller": "MenuController",
+              "controller": "SectionListController",
+              "args": {
+                "sections": [
+                  "home",
+                  "settings",
+                  "about"
+                ]
+              },
               "style_id": "sidebarMenu",
               "margin_left": 5,
               "margin_right": 5,
-              "refresh_events": [
-                "menu_item_changed"
-              ],
               "recursive_refresh_events": [
                 "language_change"
               ],
               "template": {
                 "body": [
                   {
-                    "id": "menu_item",
+                    "id": "section_button",
                     "type": "KPushButton",
                     "content": "icon{template{icon}, size: 25}",
                     "tooltip": "template{label}"

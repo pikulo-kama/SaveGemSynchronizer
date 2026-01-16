@@ -2,7 +2,6 @@ import json
 from socket import socket, AF_INET, SOCK_STREAM
 from typing import Final
 
-from kui.core.app import KamaApplication
 from kui.core.constants import UTF_8
 from kutil.logger import get_logger
 

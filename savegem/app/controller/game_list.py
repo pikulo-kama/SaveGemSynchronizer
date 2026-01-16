@@ -2,13 +2,13 @@ from typing import Any, Final
 
 from kui.component.button import KamaPushButton
 from kui.core.constants import QBool
-from kui.core.controller import TemplateWidgetController
+from kui.core.controller import TemplateWidgetController, TemplateWidgetContext
+from kui.core.metadata import ControllerArgs
 from kutil.logger import get_logger
 
 from savegem.constants import UIRefreshEvent
 from savegem.app.worker.game_change_worker import GameChangeWorker
 from savegem.common.core.context import context
-from savegem.common.core.game_config import Game
 from savegem.common.core.save_meta import SyncStatus
 
 
@@ -23,10 +23,10 @@ class GameListController(TemplateWidgetController):
     GameOptionSelected: Final = "selected"
     GameOptionWarning: Final = "warning"
 
-    def _get_data(self) -> list[Any]:
+    def retrieve_data(self, args: ControllerArgs) -> list[Any]:
         return context().games
 
-    def handle__game_option(self, game_button: KamaPushButton, game: Game):
+    def handle__game_option(self, game_button: KamaPushButton, widget_context: TemplateWidgetContext):
         """
         Used to link callback to game option and apply
         style properties to it.
@@ -35,17 +35,17 @@ class GameListController(TemplateWidgetController):
         def change_name(game_name: str):
             return lambda: self.__change_game(game_name)
 
-        game_button.clicked.connect(change_name(game.name))  # noqa
+        game_button.clicked.connect(change_name(widget_context.element.name))  # noqa
 
-        if game == context().games.current:
+        if widget_context.element == context().games.current:
             game_button.setProperty(self.GameOptionSelected, QBool(True))
 
-        if game.meta.sync_status != SyncStatus.UpToDate:
+        if widget_context.element.meta.sync_status != SyncStatus.UpToDate:
             game_button.setProperty(self.GameOptionWarning, QBool(True))
 
-    def resolve(self, game: Game, value: str, *args, **kw):
+    def resolve(self, widget_context: TemplateWidgetContext, value: str, *args, **kw):
         if value == "name":
-            return game.name
+            return widget_context.element.name
 
         return None
 
@@ -63,4 +63,4 @@ class GameListController(TemplateWidgetController):
         worker = GameChangeWorker(new_game)
         worker.finished.connect(lambda: self.manager.event_refresh(UIRefreshEvent.GameSelectionChange))
 
-        self._do_work(worker)
+        self.work(worker)

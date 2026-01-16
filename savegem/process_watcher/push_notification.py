@@ -1,5 +1,5 @@
 from kui.core.app import KamaApplication
-from kui.core.shortcut import tr, resolve_resource
+from kui.core.shortcut import tr, resolve_image
 from winotify import Notification, audio
 
 
@@ -14,7 +14,7 @@ def push_notification(message: str):
         app_id=application.config.name,
         title=tr("popup_NotificationTitle"),
         msg=message,
-        icon=resolve_resource("application.ico")
+        icon=resolve_image("application.ico")
     )
 
     toast.set_audio(audio.Default, loop=False)

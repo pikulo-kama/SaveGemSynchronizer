@@ -10,7 +10,10 @@
       "id": "settings_root",
       "section": "settings",
       "layout": "KHBoxLayout",
-      "controller": "MenuItemController",
+      "controller": "RebindParentController",
+      "args": {
+        "parent": "root.content"
+      },
       "alignment": "left",
       "margin_left": 20,
       "margin_top": 20,

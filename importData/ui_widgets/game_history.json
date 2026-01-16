@@ -10,7 +10,10 @@
       "id": "game_history_root",
       "section": "game_history",
       "layout": "KVBoxLayout",
-      "controller": "GameBarTabController",
+      "controller": "RebindParentController",
+      "args": {
+        "parent": "home.game_container"
+      },
       "margin_left": 10,
       "margin_top": 20,
       "margin_right": 10,

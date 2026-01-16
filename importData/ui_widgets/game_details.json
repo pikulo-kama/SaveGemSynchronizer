@@ -11,7 +11,10 @@
       "section": "game_details",
       "type": "KScrollableWidget",
       "layout": "KVBoxLayout",
-      "controller": "GameBarTabController",
+      "controller": "RebindParentController",
+      "args": {
+        "parent": "home.game_container"
+      },
       "alignment": "top",
       "spacing": 10,
       "margin_left": 10,

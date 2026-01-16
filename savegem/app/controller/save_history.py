@@ -4,7 +4,8 @@ from kui.component.progress_button import KamaProgressPushButton
 from kui.component.widget import KamaWidget
 from kui.core.app import KamaApplication
 from kui.core.constants import QBool
-from kui.core.controller import TemplateWidgetController
+from kui.core.controller import TemplateWidgetController, TemplateWidgetContext
+from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr
 from kutil.date import string_to_date, get_verbose_date, get_verbose_time
 from kutil.logger import get_logger
@@ -25,29 +26,29 @@ class SaveHistoryListController(TemplateWidgetController):
 
     HistoryRecordActive: Final = "active"
 
-    def _get_data(self) -> list[Any]:
+    def retrieve_data(self, args: ControllerArgs) -> list[Any]:
         return context().games.current.meta.drive
 
-    def resolve(self, metadata: DriveFileMetadata, value: str, *args, **kw):
+    def resolve(self, widget_context: TemplateWidgetContext, value: str, *args, **kw):
         if value == "version":
-            return self.__get_upload_date_string(metadata)
+            return self.__get_upload_date_string(widget_context.element)
 
         elif value == "owner":
-            return self.__get_owner_string(metadata)
+            return self.__get_owner_string(widget_context.element)
 
         return None
 
     @classmethod
-    def handle__history_record(cls, history_record: KamaWidget, metadata: DriveFileMetadata):
+    def handle__history_record(cls, history_record: KamaWidget, widget_context: TemplateWidgetContext):
         """
         Used to apply style property to history record if
         save file checksum matches local save checksum.
         """
 
-        is_current_save = metadata.checksum == context().games.current.meta.local.checksum
+        is_current_save = widget_context.element.checksum == context().games.current.meta.local.checksum
         history_record.setProperty(cls.HistoryRecordActive, QBool(is_current_save))
 
-    def handle__restore_button(self, restore_button: KamaProgressPushButton, metadata: DriveFileMetadata):
+    def handle__restore_button(self, restore_button: KamaProgressPushButton, widget_context: TemplateWidgetContext):
         """
         Used to manager restore button of history record.
         Will hide button if checksum matches local checksum
@@ -62,8 +63,8 @@ class SaveHistoryListController(TemplateWidgetController):
                 lambda: self.__restore_version(file_id, button)
             )
 
-        restore_button.clicked.connect(restore_version(metadata.id, restore_button))
-        is_current_save = metadata.checksum == context().games.current.meta.local.checksum
+        restore_button.clicked.connect(restore_version(widget_context.element.id, restore_button))
+        is_current_save = widget_context.element.checksum == context().games.current.meta.local.checksum
 
         if is_current_save:
             self.manager.delete(lambda meta: meta.name == restore_button.metadata.name)
@@ -88,7 +89,7 @@ class SaveHistoryListController(TemplateWidgetController):
         worker.completed.connect(on_completed)
 
         _logger.debug("Restoring save with ID = %s for game %s", file_id, context().games.current.name)
-        self._do_work(worker)
+        self.work(worker)
 
     @staticmethod
     def __get_upload_date_string(metadata: DriveFileMetadata):
