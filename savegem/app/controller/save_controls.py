@@ -67,14 +67,17 @@ class DownloadButtonController(WidgetController):
             Used to start download of save from cloud.
             """
 
+            def on_complete():
+                context().games.current.meta.local.calculate_checksum()
+                self.manager.event_refresh(UIRefreshEvent.SaveDownloaded)
+
             worker = DownloadWorker()
 
             worker.error.connect(_error_subscriber)
             worker.progress.connect(_progress_subscriber(download_button))
             worker.completed.connect(download_button.refresh)
-            worker.completed.connect(lambda: self.manager.event_refresh(UIRefreshEvent.SaveDownloaded))
+            worker.completed.connect(on_complete)
             worker.completed.connect(_done_subscriber("notification_NewSaveHasBeenDownloaded"))
-            worker.completed.connect(lambda: context().games.current.meta.local.calculate_checksum())
 
             self.work(worker)
 
