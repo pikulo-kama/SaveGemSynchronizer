@@ -4,7 +4,7 @@ class TestTrResolver:
 
     def test_no_args(self, tr_mock):
 
-        from savegem.app.gui.widget.resolver.tr import TrResolver
+        from src.savegem import TrResolver
 
         resolver = TrResolver()
         resolver.resolve("name", "John")

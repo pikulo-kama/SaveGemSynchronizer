@@ -9,8 +9,8 @@ class TestTextResource:
     @pytest.fixture(autouse=True)
     def _setup(self, mocker: MockerFixture, db_table_mock):
 
-        from savegem.common.core.text_resource import TextResource
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import TextResource
+        from src.savegem import DatabaseRow
 
         # Reset text resources state.
         mocker.patch.object(TextResource, "_TextResource__current_locale", None)
@@ -44,7 +44,7 @@ class TestTextResource:
 
     def test_should_not_read_file_again_if_locale_same(self, db_mock):
 
-        from savegem.common.core.text_resource import TextResource
+        from src.savegem import TextResource
 
         TextResource.get(LocaleTestData.FirstLocale, "key1")
         TextResource.get(LocaleTestData.FirstLocale, "key1")
@@ -54,7 +54,7 @@ class TestTextResource:
 
     def test_reset(self, db_mock):
 
-        from savegem.common.core.text_resource import TextResource
+        from src.savegem import TextResource
 
         TextResource.get(LocaleTestData.FirstLocale, "key1")
         TextResource.reset()
@@ -65,7 +65,7 @@ class TestTextResource:
 
     def test_should_read_file_if_locale_changed(self, db_mock):
 
-        from savegem.common.core.text_resource import TextResource
+        from src.savegem import TextResource
 
         TextResource.get(LocaleTestData.FirstLocale, "key1")
         TextResource.get(LocaleTestData.SecondLocale, "key1")
@@ -75,7 +75,7 @@ class TestTextResource:
 
     def test_should_handle_non_existing_keys(self):
 
-        from savegem.common.core.text_resource import TextResource
+        from src.savegem import TextResource
 
         non_existing_key = "key321"
         value = TextResource.get(LocaleTestData.FirstLocale, non_existing_key, "arg1", "arg2")
@@ -85,7 +85,7 @@ class TestTextResource:
 
     def test_should_resolve_arguments(self):
 
-        from savegem.common.core.text_resource import TextResource
+        from src.savegem import TextResource
 
         value = TextResource.get(LocaleTestData.FirstLocale, "key2", "arg1", "arg2")
         assert value == f"{LocaleTestData.FirstLocale},arg1,arg2"
@@ -93,7 +93,7 @@ class TestTextResource:
 
     def test_tr_should_use_local_from_state(self, app_state_mock):
 
-        from savegem.common.core.text_resource import tr
+        from src.savegem import tr
 
         app_state_mock.locale = LocaleTestData.FirstLocale
         assert tr("key1") == LocaleTestData.FirstLocale

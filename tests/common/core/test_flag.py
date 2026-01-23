@@ -11,7 +11,7 @@ class TestFlag:
         Resets the global _flags variable before each test to ensure isolation.
         """
 
-        import savegem.common.core.flag as flags_module
+        from src import savegem as flags_module
         mocker.patch.object(flags_module, '_flags', None)
 
 
@@ -23,7 +23,7 @@ class TestFlag:
         and can be configured for Flag initialization behavior.
         """
 
-        from savegem.common.core.flag import Flag
+        from src.savegem.common.core.flag import Flag
 
         def _factory(initial_is_empty=True, initial_state=0):
 
@@ -50,7 +50,7 @@ class TestFlag:
 
     @pytest.fixture
     def _mock_flag_collection(self, mocker: MockerFixture):
-        from savegem.common.core.flag import FlagCollection
+        from src.savegem.common.core.flag import FlagCollection
 
         return mocker.MagicMock(spec=FlagCollection)
 
@@ -61,7 +61,7 @@ class TestFlag:
         It should create a new row with FlagState = 0.
         """
 
-        from savegem.common.core.flag import Flag
+        from src.savegem.common.core.flag import Flag
 
         # Ensure the initial mock table is configured to be empty
         db_table_mock.is_empty = True
@@ -95,7 +95,7 @@ class TestFlag:
         It should NOT create or save a new row, regardless of default_state.
         """
 
-        from savegem.common.core.flag import Flag
+        from src.savegem.common.core.flag import Flag
 
         # Ensure the initial mock table is configured to exist
         db_table_mock.is_empty = False
@@ -114,7 +114,7 @@ class TestFlag:
         Tests the enabled property when the stored state is 1 (enabled).
         """
 
-        from savegem.common.core.flag import Flag
+        from src.savegem.common.core.flag import Flag
 
         # Create a mock table that will return 1 for FlagState on get_first
         _mock_db_table_factory(initial_is_empty=False, initial_state=1)
@@ -134,7 +134,7 @@ class TestFlag:
         Tests the enabled property when the stored state is 0 (disabled).
         """
 
-        from savegem.common.core.flag import Flag
+        from src.savegem.common.core.flag import Flag
 
         # Create a mock table that will return 0 for FlagState on get_first
         _mock_db_table_factory(initial_is_empty=False, initial_state=0)
@@ -151,7 +151,7 @@ class TestFlag:
         Tests the enable method. It should set the state to 1 and save.
         """
 
-        from savegem.common.core.flag import Flag
+        from src.savegem.common.core.flag import Flag
 
         data_state = _mock_db_table_factory(initial_is_empty=False, initial_state=0)
         test_flag = Flag(_mock_flag_collection, "test_enable", False)
@@ -173,7 +173,7 @@ class TestFlag:
         Tests the disable method. It should set the state to 0 and save.
         """
 
-        from savegem.common.core.flag import Flag
+        from src.savegem.common.core.flag import Flag
 
         data_state = _mock_db_table_factory(initial_is_empty=False, initial_state=0)
         test_flag = Flag(_mock_flag_collection, "test_disable", False)
@@ -195,7 +195,7 @@ class TestFlag:
         Tests that FlagCollection correctly initializes and creates the 'gui_initialized' flag.
         """
 
-        from savegem.common.core.flag import FlagCollection, Flag
+        from src.savegem.common.core.flag import FlagCollection, Flag
 
         collection = FlagCollection()
         gui_flag = collection.gui_initialized
@@ -215,7 +215,7 @@ class TestFlag:
         Tests the register_flag method.
         """
 
-        from savegem.common.core.flag import FlagCollection, Flag
+        from src.savegem.common.core.flag import FlagCollection, Flag
 
         collection = FlagCollection()
 
@@ -234,7 +234,7 @@ class TestFlag:
         Tests the get method for an existing flag.
         """
 
-        from savegem.common.core.flag import FlagCollection
+        from src.savegem.common.core.flag import FlagCollection
 
         collection = FlagCollection()
         retrieved_flag = collection.get("gui_initialized")
@@ -247,7 +247,7 @@ class TestFlag:
         Tests the get method for a flag that does not exist.
         """
 
-        from savegem.common.core.flag import FlagCollection
+        from src.savegem.common.core.flag import FlagCollection
 
         collection = FlagCollection()
 
@@ -262,7 +262,7 @@ class TestFlag:
         on the first call.
         """
 
-        from savegem.common.core.flag import flags, FlagCollection
+        from src.savegem.common.core.flag import flags, FlagCollection
 
         # 1. First call creates the instance
         instance1 = flags()
@@ -277,7 +277,7 @@ class TestFlag:
         on subsequent calls.
         """
 
-        from savegem.common.core.flag import flags
+        from src.savegem.common.core.flag import flags
 
         # 1. First call creates and returns the instance
         instance1 = flags()

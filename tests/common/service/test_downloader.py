@@ -42,7 +42,7 @@ class TestDownloader:
         Fixture for the Downloader instance with a subscribed mock.
         """
 
-        from savegem.common.service.downloader import Downloader
+        from src.savegem.common.service.downloader import Downloader
 
         downloader = Downloader()
         downloader.subscribe(_mock_subscriber)
@@ -57,8 +57,8 @@ class TestDownloader:
         Test a successful full download process.
         """
 
-        from savegem.common.service.downloader import Downloader
-        from savegem.common.service.subscriptable import DoneEvent
+        from src.savegem.common.service.downloader import Downloader
+        from src.savegem.common.service.subscriptable import DoneEvent
 
         resolve_temp_file_mock.return_value = "/tmp/save.zip"
         path_exists_mock.return_value = True  # Directory exists
@@ -135,7 +135,7 @@ class TestDownloader:
         Test early exit when the local saves directory is missing.
         """
 
-        from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind, ProgressEvent
+        from src.savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind, ProgressEvent
 
         path_exists_mock.return_value = False
 
@@ -171,7 +171,7 @@ class TestDownloader:
         Test early exit when drive metadata is not present after refresh.
         """
 
-        from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
+        from src.savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
 
         path_exists_mock.return_value = True
 
@@ -207,7 +207,7 @@ class TestDownloader:
         Test the private backup method when a backup directory already exists.
         """
 
-        from savegem.common.service.downloader import Downloader
+        from src.savegem.common.service.downloader import Downloader
 
         saves_dir = "/path/to/saves"
         backup_dir = saves_dir + Downloader.BackupSuffix
@@ -236,7 +236,7 @@ class TestDownloader:
         Test the private backup method when no backup directory exists.
         """
 
-        from savegem.common.service.downloader import Downloader
+        from src.savegem.common.service.downloader import Downloader
 
         path_exists_mock.return_value = False
         saves_dir = "/path/to/saves"

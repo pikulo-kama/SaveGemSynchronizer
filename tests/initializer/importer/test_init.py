@@ -7,7 +7,7 @@ class TestRegularImporter:
 
     @pytest.fixture
     def _custom_importer_mock(self):
-        from savegem.initializer.importer import RegularImporter
+        from src.savegem import RegularImporter
 
         class MockCustomImporter(RegularImporter):
             """
@@ -41,7 +41,7 @@ class TestRegularImporter:
     @pytest.fixture
     def _custom_importers(self, get_members_mock, _custom_importer_mock):
 
-        from savegem.initializer.importer import RegularImporter
+        from src.savegem import RegularImporter
 
         importers = [
             ("RegularImporter", RegularImporter),
@@ -63,8 +63,8 @@ class TestRegularImporter:
         Verifies default RegularImporter is called.
         """
 
-        from savegem.initializer.importer import RegularImporter
-        from savegem.initializer.importer import invoke_importer_for_file
+        from src.savegem import RegularImporter
+        from src.savegem import invoke_importer_for_file
 
         _mock_args.file_name = "test.json"
         read_file_mock.return_value = {"metadata": {"type": "Regular"}, "data": []}
@@ -82,8 +82,8 @@ class TestRegularImporter:
         Verifies dynamic dispatch to CustomImporter.
         """
 
-        from savegem.initializer.importer import RegularImporter
-        from savegem.initializer.importer import invoke_importer_for_file
+        from src.savegem import RegularImporter
+        from src.savegem import invoke_importer_for_file
 
         _mock_args.file_name = "custom_test.json"
 
@@ -107,7 +107,7 @@ class TestRegularImporter:
         Test flow when --file_name is provided (skips checksums).
         """
 
-        from savegem.initializer.importer import invoke_importer
+        from src.savegem import invoke_importer
 
         _mock_args.file_name = "direct_file.json"
         invoke_importer(_mock_args)
@@ -128,7 +128,7 @@ class TestRegularImporter:
         Test flow when --definition_file is provided and checksums differ.
         """
 
-        from savegem.initializer.importer import invoke_importer
+        from src.savegem import invoke_importer
 
         # Definition file content (two files, one comment, one empty line)
         read_file_mock.side_effect = [
@@ -170,7 +170,7 @@ class TestRegularImporter:
         Test flow when checksums match, skipping import.
         """
 
-        from savegem.initializer.importer import invoke_importer
+        from src.savegem import invoke_importer
 
         # Definition file contains one file
         read_file_mock.return_value = "file_unchanged.json\n"
@@ -192,7 +192,7 @@ class TestRegularImporter:
         Tests the critical exit path when file_name is missing.
         """
 
-        from savegem.initializer.importer import RegularImporter
+        from src.savegem import RegularImporter
 
         _mock_args.file_name = None
 
@@ -210,7 +210,7 @@ class TestRegularImporter:
         Tests the successful data import, checking for remove_all and add_row/set.
         """
 
-        from savegem.initializer.importer import RegularImporter
+        from src.savegem import RegularImporter
 
         _mock_args.file_name = "data.json"
 
@@ -260,7 +260,7 @@ class TestRegularImporter:
         Tests that a filter is applied to the table object before remove_all.
         """
 
-        from savegem.initializer.importer import RegularImporter
+        from src.savegem import RegularImporter
 
         _mock_args.file_name = "data.json"
 
@@ -286,7 +286,7 @@ class TestRegularImporter:
         Tests that _format_data is called correctly.
         """
 
-        from savegem.initializer.importer import RegularImporter
+        from src.savegem import RegularImporter
 
         _mock_args.file_name = "data.json"
 

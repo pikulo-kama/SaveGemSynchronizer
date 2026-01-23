@@ -7,7 +7,7 @@ class TestApplicationContext:
         Tests that all public properties return the correct, cached mock instance.
         """
 
-        from savegem.common.core.context import ApplicationContext
+        from src.savegem.common.core.context import ApplicationContext
 
         user_state = module_patch("UserState")
         app_state = module_patch("AppState")

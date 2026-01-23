@@ -13,7 +13,7 @@ class TestQCustomComboBox:
         Provides a QCustomComboBox instance registered with qtbot.
         """
 
-        from savegem.app.gui.component.combobox import QCustomComboBox
+        from src.savegem import QCustomComboBox
 
         combobox = QCustomComboBox()
         combobox.addItems(["Item 1", "Item 2"])
@@ -132,7 +132,7 @@ class TestQCustomComboBox:
 
     def test_show_popup(self, mocker: MockerFixture, _custom_combobox):
 
-        from savegem.app.gui.component.combobox import NoFocusDelegate
+        from src.savegem import NoFocusDelegate
 
         view_mock = mocker.patch.object(_custom_combobox, "view")
         set_delegate_mock = view_mock.return_value.setItemDelegate
@@ -153,7 +153,7 @@ class TestQCustomComboBox:
         before calling the parent paint method.
         """
 
-        from savegem.app.gui.component.combobox import NoFocusDelegate
+        from src.savegem import NoFocusDelegate
 
         # Create a real QStyleOptionViewItem (easier than mocking bitwise operations)
         delegate = NoFocusDelegate()
@@ -190,7 +190,7 @@ class TestQCustomComboBox:
         Verifies that if the option does NOT have focus, the state is untouched.
         """
 
-        from savegem.app.gui.component.combobox import NoFocusDelegate
+        from src.savegem import NoFocusDelegate
 
         delegate = NoFocusDelegate()
         option = QStyleOptionViewItem()

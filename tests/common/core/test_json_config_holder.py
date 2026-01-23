@@ -18,8 +18,8 @@ class TestJsonConfigHolder:
         if it's not present.
         """
 
-        from savegem.constants import JSON_EXTENSION
-        from savegem.common.core.json_config_holder import JsonConfigHolder
+        from src.savegem.constants import JSON_EXTENSION
+        from src.savegem import JsonConfigHolder
 
         config_name = "test_config"
         expected_path = config_name + JSON_EXTENSION
@@ -38,8 +38,8 @@ class TestJsonConfigHolder:
         Test that the config_path is used as-is if the extension is already present.
         """
 
-        from savegem.constants import JSON_EXTENSION
-        from savegem.common.core.json_config_holder import JsonConfigHolder
+        from src.savegem.constants import JSON_EXTENSION
+        from src.savegem import JsonConfigHolder
 
         expected_path = "test_config" + JSON_EXTENSION
 
@@ -57,7 +57,7 @@ class TestJsonConfigHolder:
         Test the sequence of initialization calls.
         """
 
-        from savegem.common.core.json_config_holder import JsonConfigHolder
+        from src.savegem import JsonConfigHolder
 
         mock_before_file_open = mocker.spy(JsonConfigHolder, '_before_file_open')
 
@@ -78,7 +78,7 @@ class TestJsonConfigHolder:
         Test that get_value retrieves data correctly.
         """
 
-        from savegem.common.core.json_config_holder import JsonConfigHolder
+        from src.savegem import JsonConfigHolder
 
         holder = JsonConfigHolder("test_config")
 
@@ -94,7 +94,7 @@ class TestJsonConfigHolder:
         Test that get_value returns the default_value if the property is missing.
         """
 
-        from savegem.common.core.json_config_holder import JsonConfigHolder
+        from src.savegem import JsonConfigHolder
 
         JsonConfigHolder("test_config")
 
@@ -112,7 +112,7 @@ class TestJsonConfigHolder:
         Test that get returns the full internal data dictionary.
         """
 
-        from savegem.common.core.json_config_holder import JsonConfigHolder
+        from src.savegem import JsonConfigHolder
 
         holder = JsonConfigHolder("test_config")
 
@@ -128,7 +128,7 @@ class TestJsonConfigHolder:
         Test _load_data explicitly reads the file and updates _data.
         """
 
-        from savegem.common.core.json_config_holder import JsonConfigHolder
+        from src.savegem import JsonConfigHolder
 
         holder = JsonConfigHolder("test_config")
 

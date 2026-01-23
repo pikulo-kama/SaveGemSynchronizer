@@ -4,7 +4,7 @@ class TestPropResolver:
 
     def test_resolve(self, prop_mock):
 
-        from savegem.app.gui.widget.resolver.prop import PropResolver
+        from src.savegem import PropResolver
 
         prop_mock.side_effect = lambda key: {
             "prop1": "first",

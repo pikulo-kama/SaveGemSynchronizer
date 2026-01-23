@@ -13,7 +13,7 @@ class TestWatchdog:
         Mocks Daemon's __init__ to inject required attributes into Watchdog
         """
 
-        from savegem.common.service.daemon import Daemon
+        from src.savegem.common.service.daemon import Daemon
 
         # Function that replaces the original Daemon.__init__ call
         def mock_daemon_init(_self, service_name, requires_auth):
@@ -51,7 +51,7 @@ class TestWatchdog:
         Fixture for the Watchdog instance
         """
 
-        from savegem.watchdog import Watchdog
+        from src.savegem.watchdog import Watchdog
 
         watchdog = Watchdog()
         watchdog.interval = 1.0
@@ -111,7 +111,7 @@ class TestWatchdog:
         Test process starts, exits cleanly (0), and prepares for restart
         """
 
-        from savegem.common.service.daemon import ExitTestLoop
+        from src.savegem.common.service.daemon import ExitTestLoop
 
         popen_mock, mock_process = mock_subprocess
         command_args = ["echo", "hello", "world"]
@@ -140,7 +140,7 @@ class TestWatchdog:
         Test process handles FileNotFoundError when executable is missing
         """
 
-        from savegem.common.service.daemon import ExitTestLoop
+        from src.savegem.common.service.daemon import ExitTestLoop
 
         popen_mock, _ = mock_subprocess
         command_args = ["missing_executable", "--arg"]
@@ -160,7 +160,7 @@ class TestWatchdog:
         Test process handles generic unhandled exceptions during execution
         """
 
-        from savegem.common.service.daemon import ExitTestLoop
+        from src.savegem.common.service.daemon import ExitTestLoop
 
         popen_mock, _ = mock_subprocess
         command_string = "echo test"

@@ -8,8 +8,8 @@ class TestDataFetchWorkers:
         Tests CurrentUserDownloadWorker calls GDrive.get_current_user and stores the result.
         """
 
-        from savegem.app.startup import CurrentUserDownloadWorker
-        from savegem.constants import HolderObject
+        from src.savegem.app.startup import CurrentUserDownloadWorker
+        from src.savegem.constants import HolderObject
 
         # Setup expected return value
         gdrive_mock.get_current_user.return_value = {"name": "Test User"}
@@ -31,8 +31,8 @@ class TestDataFetchWorkers:
         Tests AllUsersDownloadWorker calls GDrive.get_users_with_access with the correct ID.
         """
 
-        from savegem.app.startup import AllUsersDownloadWorker
-        from savegem.constants import HolderObject
+        from src.savegem.app.startup import AllUsersDownloadWorker
+        from src.savegem.constants import HolderObject
 
         # Setup expected return value
         gdrive_mock.get_users_with_access.return_value = ["user_a", "user_b"]
@@ -62,8 +62,8 @@ class TestDataFetchWorkers:
         obtained from app().service_info.
         """
 
-        from savegem.constants import HolderObject
-        import savegem.app.startup.worker1.data as data_module
+        from src.savegem.constants import HolderObject
+        from src import savegem as data_module
 
         worker_class = getattr(data_module, class_name)
         expected_holder_key = getattr(HolderObject, holder_key_name)

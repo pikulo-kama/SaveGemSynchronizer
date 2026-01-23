@@ -23,8 +23,8 @@ class TestProcessWatcher:
         Factory to create a mock GameProcess instance with controlled attributes.
         """
 
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher.game_process import GameProcess, ProcessStatus
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem.process_watcher.game_process import GameProcess, ProcessStatus
         from tests.tools.mocks.mock_game import MockGame, MockGameSettings
 
         def _factory(name: str, has_started: bool = False, has_closed: bool = False, auto_mode_enabled: bool = False,
@@ -69,8 +69,8 @@ class TestProcessWatcher:
     def test_run_once_initializes_user_and_downloads_config(self, gdrive_mock, app_context_mock, app_config_mock,
                                                             holder_mock):
 
-        from savegem.process_watcher import ProcessWatcher
-        from savegem.constants import HolderObject
+        from src.savegem.process_watcher import ProcessWatcher
+        from src.savegem.constants import HolderObject
 
         watcher = ProcessWatcher()
         watcher._run_once()
@@ -90,7 +90,7 @@ class TestProcessWatcher:
         Test that _work returns immediately if no process has started or closed.
         """
 
-        from savegem.process_watcher import ProcessWatcher
+        from src.savegem.process_watcher import ProcessWatcher
 
         # Create processes that are just 'Running'
         running_procs = [
@@ -116,7 +116,7 @@ class TestProcessWatcher:
         Test that the activity log is updated with currently running (non-closed) games.
         """
 
-        from savegem.process_watcher import ProcessWatcher
+        from src.savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process("Started Game", has_started=True)
         proc_closed = _create_game_process("Closed Game", has_closed=True)
@@ -142,8 +142,8 @@ class TestProcessWatcher:
         Test that automatic actions are skipped if app.state.is_auto_mode is False.
         """
 
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher import ProcessWatcher
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process("Started Game", has_started=True, sync_status=SyncStatus.NoInformation)
         _get_run_processes_mock.return_value = [proc_started]
@@ -168,8 +168,8 @@ class TestProcessWatcher:
         Test that automatic actions are skipped if game.auto_mode_allowed is False.
         """
 
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher import ProcessWatcher
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process(
             "Manual Game",
@@ -190,8 +190,8 @@ class TestProcessWatcher:
     def test_should_skip_auto_actions_if_game_has_auto_mode_disabled(self, app_context_mock, downloader_mock,
                                                                      _get_run_processes_mock, _create_game_process):
 
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher import ProcessWatcher
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process(
             "Manual Game",
@@ -217,8 +217,8 @@ class TestProcessWatcher:
         Test that automatic actions are skipped if sync_status is UpToDate, even if the game started.
         """
 
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher import ProcessWatcher
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem.process_watcher import ProcessWatcher
 
         proc_started = _create_game_process(
             "UpToDate Game",
@@ -247,9 +247,9 @@ class TestProcessWatcher:
         This covers the 'if not process.has_started and not process.has_closed: continue' condition.
         """
 
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher import ProcessWatcher
-        from savegem.app.gui.constants import UIRefreshEvent
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem.process_watcher import ProcessWatcher
+        from src.savegem import UIRefreshEvent
 
         proc_started = _create_game_process(
             "Started Game",
@@ -294,9 +294,9 @@ class TestProcessWatcher:
         Test full download workflow when a game starts and the save is modified (needs download).
         """
 
-        from savegem.app.gui.constants import UIRefreshEvent
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher import ProcessWatcher
+        from src.savegem import UIRefreshEvent
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem.process_watcher import ProcessWatcher
 
         game_name = "Started Game"
         proc_started = _create_game_process(
@@ -327,8 +327,8 @@ class TestProcessWatcher:
         Test full upload workflow when a game closes and the save is modified (needs upload).
         """
 
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.process_watcher import ProcessWatcher
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem.process_watcher import ProcessWatcher
 
         game_name = "Closed Game"
         proc_closed = _create_game_process(

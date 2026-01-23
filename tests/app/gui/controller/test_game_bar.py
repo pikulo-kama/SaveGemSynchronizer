@@ -32,7 +32,7 @@ class TestGameBarController(WidgetControllerTest):
         Provides the GameBarController instance with mocked dependencies.
         """
 
-        from savegem.app.gui.controller.game_bar import GameBarController
+        from src.savegem import GameBarController
 
         _mock_sections(_section_data)
         return GameBarController(_widget_manager)
@@ -80,7 +80,7 @@ class TestGameBarController(WidgetControllerTest):
         Tests that if the new section ID matches the current state, the function returns early.
         """
 
-        from savegem.app.gui.controller.game_bar import GameBarController
+        from src.savegem import GameBarController
 
         # 1. Set the initial state to SECTION_B
         _controller._set_state(GameBarController.CurrentSection, "SECTION_B")

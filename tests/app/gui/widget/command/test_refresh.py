@@ -5,8 +5,8 @@ class TestWidgetRefreshCommand:
 
     def test_execute(self, mocker: MockerFixture):
 
-        from savegem.app.gui.widget.command.refresh import WidgetRefreshCommand
-        from savegem.app.gui.widget.manager import ManagerContext
+        from src.savegem import WidgetRefreshCommand
+        from src.savegem import ManagerContext
 
         manager = mocker.MagicMock()
         widget1 = mocker.MagicMock()
@@ -38,7 +38,7 @@ class TestWidgetRefreshCommand:
 
     def test_refresh_children(self, mocker: MockerFixture):
 
-        from savegem.app.gui.widget.command.refresh import WidgetRefreshCommand
+        from src.savegem import WidgetRefreshCommand
 
         command = WidgetRefreshCommand(lambda meta: meta.id == "test1")
 
@@ -50,7 +50,7 @@ class TestWidgetEventRefreshCommand:
 
     def test_constructor(self, mocker: MockerFixture, module_patch):
 
-        from savegem.app.gui.widget.command.refresh import WidgetEventRefreshCommand
+        from src.savegem import WidgetEventRefreshCommand
 
         test_event = "event"
         refresh_command_init = module_patch("WidgetRefreshCommand.__init__")

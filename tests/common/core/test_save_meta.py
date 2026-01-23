@@ -89,7 +89,7 @@ class TestMetadataWrapper(SaveMetaModuleTestHelper):
         Tests all possible sync status outcomes based on checksum comparison.
         """
 
-        from savegem.common.core.save_meta import MetadataWrapper, SyncStatus
+        from src.savegem.common.core.save_meta import MetadataWrapper, SyncStatus
 
         if expected_status == "LocalOnly":
             expected_status = SyncStatus.LocalOnly
@@ -123,7 +123,7 @@ class TestMetadataWrapper(SaveMetaModuleTestHelper):
 
     def test_metadata_getter_props(self, _local_meta, _drive_meta):
 
-        from savegem.common.core.save_meta import MetadataWrapper
+        from src.savegem.common.core.save_meta import MetadataWrapper
 
         wrapper = MetadataWrapper(_local_meta, _drive_meta)
 
@@ -134,7 +134,7 @@ class TestMetadataWrapper(SaveMetaModuleTestHelper):
 class TestLocalMetadata(SaveMetaModuleTestHelper):
 
     def test_local_metadata_initialization(self, mock_game, editable_json_config_holder_mock):
-        from savegem.common.core.save_meta import LocalMetadata
+        from src.savegem.common.core.save_meta import LocalMetadata
 
         LocalMetadata(mock_game)
         editable_json_config_holder_mock.assert_called_once_with(mock_game.metadata_file_path)
@@ -149,7 +149,7 @@ class TestLocalMetadata(SaveMetaModuleTestHelper):
         Tests that property getters call get_value on the service_info holder.
         """
 
-        from savegem.common.core.save_meta import SaveMetaProp, LocalMetadata
+        from src.savegem.common.core.save_meta import SaveMetaProp, LocalMetadata
 
         if expected_key == "Owner":
             expected_key = SaveMetaProp.Owner
@@ -177,7 +177,7 @@ class TestLocalMetadata(SaveMetaModuleTestHelper):
         Tests that property setters call set_value on the service_info holder.
         """
 
-        from savegem.common.core.save_meta import LocalMetadata, SaveMetaProp
+        from src.savegem.common.core.save_meta import LocalMetadata, SaveMetaProp
 
         local_meta = LocalMetadata(mock_game)
         mock_holder = editable_json_config_holder_mock.return_value
@@ -200,7 +200,7 @@ class TestLocalMetadata(SaveMetaModuleTestHelper):
         Tests that calculate_checksum skips metadata file and correctly combines file hashes.
         """
 
-        from savegem.common.core.save_meta import LocalMetadata
+        from src.savegem.common.core.save_meta import LocalMetadata
 
         local_meta = LocalMetadata(mock_game)
 
@@ -232,7 +232,7 @@ class TestLocalMetadata(SaveMetaModuleTestHelper):
         Tests that refresh re-initializes the service_info holder.
         """
 
-        from savegem.common.core.save_meta import LocalMetadata
+        from src.savegem.common.core.save_meta import LocalMetadata
 
         LocalMetadata(mock_game).refresh()
         # The constructor should have been called twice: once for init, once for refresh
@@ -243,7 +243,7 @@ class TestLocalMetadata(SaveMetaModuleTestHelper):
 class TestDriveMetadata(SaveMetaModuleTestHelper):
 
     def test_drive_metadata_refresh_success(self, mock_game, gdrive_mock):
-        from savegem.common.core.save_meta import SaveMetaProp, DriveMetadata
+        from src.savegem.common.core.save_meta import SaveMetaProp, DriveMetadata
 
         drive_meta = DriveMetadata(mock_game)
 
@@ -289,7 +289,7 @@ class TestDriveMetadata(SaveMetaModuleTestHelper):
         gdrive_mock.query_metadata.assert_called_once()
 
     def test_drive_metadata_refresh_no_saves(self, mock_game, gdrive_mock, logger_mock):
-        from savegem.common.core.save_meta import DriveMetadata
+        from src.savegem.common.core.save_meta import DriveMetadata
 
         drive_meta = DriveMetadata(mock_game)
         gdrive_mock.query_metadata.return_value = {"files": []}
@@ -304,7 +304,7 @@ class TestDriveMetadata(SaveMetaModuleTestHelper):
         Tests refresh when GDrive query returns None (indicating a structural error).
         """
 
-        from savegem.common.core.save_meta import DriveMetadata
+        from src.savegem.common.core.save_meta import DriveMetadata
 
         drive_meta = DriveMetadata(mock_game)
 

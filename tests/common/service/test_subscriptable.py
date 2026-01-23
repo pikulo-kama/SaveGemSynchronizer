@@ -18,7 +18,7 @@ class TestSubscriptableService:
         A fresh SubscriptableService instance.
         """
 
-        from savegem.common.service.subscriptable import SubscriptableService
+        from src.savegem.common.service.subscriptable import SubscriptableService
 
         return SubscriptableService()
 
@@ -28,7 +28,7 @@ class TestSubscriptableService:
         Test ErrorEvent initializes correctly.
         """
 
-        from savegem.common.service.subscriptable import EventKind, EventType, ErrorEvent
+        from src.savegem.common.service.subscriptable import EventKind, EventType, ErrorEvent
 
         error_kind = EventKind.DriveMetadataMissing
         event = ErrorEvent(error_kind)
@@ -41,7 +41,7 @@ class TestSubscriptableService:
         Test ProgressEvent initializes correctly.
         """
 
-        from savegem.common.service.subscriptable import EventType, ProgressEvent
+        from src.savegem.common.service.subscriptable import EventType, ProgressEvent
 
         progress_percentage = 50
         event = ProgressEvent(None, progress_percentage)
@@ -55,7 +55,7 @@ class TestSubscriptableService:
         Test DoneEvent for a successful completion.
         """
 
-        from savegem.common.service.subscriptable import EventType, DoneEvent
+        from src.savegem.common.service.subscriptable import EventType, DoneEvent
 
         event = DoneEvent(None)
         assert event.type == EventType.Done
@@ -68,7 +68,7 @@ class TestSubscriptableService:
         Test DoneEvent for a failure (indicated by kind being present).
         """
 
-        from savegem.common.service.subscriptable import EventKind, EventType, DoneEvent
+        from src.savegem.common.service.subscriptable import EventKind, EventType, DoneEvent
 
         error_kind = EventKind.SavesDirectoryMissing
         event = DoneEvent(error_kind)
@@ -92,7 +92,7 @@ class TestSubscriptableService:
         Test sending a simple progress event.
         """
 
-        from savegem.common.service.subscriptable import EventType, ProgressEvent
+        from src.savegem.common.service.subscriptable import EventType, ProgressEvent
 
         _service.subscribe(_subscriber_mock)
         progress_event = ProgressEvent(None, 25)
@@ -109,7 +109,7 @@ class TestSubscriptableService:
         Test sending an ErrorEvent also triggers a DoneEvent.
         """
 
-        from savegem.common.service.subscriptable import EventKind, ErrorEvent, \
+        from src.savegem.common.service.subscriptable import EventKind, ErrorEvent, \
             DoneEvent
 
         _service.subscribe(_subscriber_mock)
@@ -137,7 +137,7 @@ class TestSubscriptableService:
         Test _set_stages sends an initial ProgressEvent.
         """
 
-        from savegem.common.service.subscriptable import ProgressEvent
+        from src.savegem.common.service.subscriptable import ProgressEvent
 
         _service.subscribe(_subscriber_mock)
         stage_count = 5

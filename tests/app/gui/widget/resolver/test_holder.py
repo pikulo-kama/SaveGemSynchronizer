@@ -4,7 +4,7 @@ class TestDataResolver:
 
     def test_should_resolve_string_data(self, holder_mock):
 
-        from savegem.app.gui.widget.resolver.holder import DataResolver
+        from src.savegem import DataResolver
 
         holder_mock.get.side_effect = lambda key: {
             "first": "Test123",
@@ -17,7 +17,7 @@ class TestDataResolver:
 
     def test_should_not_resolve_non_string_data(self, holder_mock):
 
-        from savegem.app.gui.widget.resolver.holder import DataResolver
+        from src.savegem import DataResolver
 
         holder_mock.get.side_effect = lambda key: {
             "function": lambda: None,

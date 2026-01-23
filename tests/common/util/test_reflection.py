@@ -80,7 +80,7 @@ class TestReflectionUtil:
         yields all classes that are subclasses of the target class, but not the target class itself.
         """
 
-        from savegem.common.util.reflection import get_members
+        from src.savegem import get_members
 
         # Assumes "mock_package" is configured by the external setup
         target_clazz = MockBaseClass
@@ -107,7 +107,7 @@ class TestReflectionUtil:
         is never yielded, even if inspect.getmembers finds it.
         """
 
-        from savegem.common.util.reflection import get_members
+        from src.savegem import get_members
 
         target_clazz = MockBaseClass
 
@@ -125,7 +125,7 @@ class TestReflectionUtil:
         do not inherit from the target class are excluded.
         """
 
-        from savegem.common.util.reflection import get_members
+        from src.savegem import get_members
 
         target_clazz = MockBaseClass
 

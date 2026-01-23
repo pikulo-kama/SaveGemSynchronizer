@@ -14,7 +14,7 @@ class TestDataHolder:
         (the same object) on multiple calls.
         """
 
-        from savegem.constants import holder, DataHolder
+        from src.savegem.constants import holder, DataHolder
 
         # 1. First call creates the instance
         holder1 = holder()
@@ -30,7 +30,7 @@ class TestDataHolder:
         Test basic storage and retrieval of data.
         """
 
-        from savegem.constants import HolderObject, DataHolder
+        from src.savegem.constants import HolderObject, DataHolder
 
         test_data = {"key": "value", "count": 100}
 
@@ -50,7 +50,7 @@ class TestDataHolder:
         Test successful download and JSON deserialization.
         """
 
-        from savegem.constants import HolderObject, DataHolder
+        from src.savegem.constants import HolderObject, DataHolder
 
         test_json_data = {"setting": "active"}
         gdrive_mock.download_file.return_value.__enter__.return_value = json_to_bytes_io(test_json_data)
@@ -72,7 +72,7 @@ class TestDataHolder:
         Test case where GDrive fails to return file bytes (e.g., file not found).
         """
 
-        from savegem.constants import HolderObject, DataHolder
+        from src.savegem.constants import HolderObject, DataHolder
 
         gdrive_mock.download_file.return_value.__enter__.return_value = None
 
@@ -90,7 +90,7 @@ class TestDataHolder:
         but we verify the process up until the JSON failure.
         """
 
-        from savegem.constants import HolderObject, DataHolder
+        from src.savegem.constants import HolderObject, DataHolder
 
         # Mock GDrive to return an empty stream
         mock_file_stream = BytesIO(b'')

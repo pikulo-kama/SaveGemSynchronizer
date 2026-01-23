@@ -1,0 +1,101 @@
+import threading
+
+from kui.core.shortcut import add_dynamic_data, dynamic_data
+
+from src.savegem.constants import HolderObject
+from src.savegem.constants import UIRefreshEvent
+from src.savegem.app.ipc_socket import ui_socket
+from src.savegem.common.core.context import context
+from src.savegem.common.core.flag import flags
+from src.savegem.common.service.daemon import Daemon
+from src.savegem.common.service.gdrive import GDrive
+from src.savegem.gdrive_watcher.ipc_socket import google_drive_watcher_socket
+
+
+class GDriveWatcher(Daemon):
+
+    def __init__(self):
+        self.__start_page_token = None
+        Daemon.__init__(self, "gdrive_watcher", True)
+
+    def _run_once(self):
+        add_dynamic_data(HolderObject.CurrentUser, GDrive.get_current_user())
+        # No need to get all users that have access since GDrive watcher
+        # only needs current user information.
+        add_dynamic_data(HolderObject.AllUsers, [dynamic_data(HolderObject.CurrentUser)])
+        add_dynamic_data(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
+        add_dynamic_data(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
+
+        context().users.initialize()
+        context().games.initialize()
+
+    def _work(self):
+        """
+        Used to poll from Google Drive Changes API
+        and check whether UI dependent files have been updated.
+        """
+
+        # Google Drive watcher service should only work when GUI is running
+        # since otherwise it would be doing extra work by polling Google Drive
+        # API as well as will constantly send data to non-existing socket.
+        if not flags().gui_initialized.enabled:
+            return
+
+        files, directories = self.__get_changes()
+        save_files_modified = context().games.current.drive_directory in directories
+        games_config_modified = context().config.games_config_file_id in files
+        activity_log_modified = context().config.activity_log_file_id in files
+
+        self._logger.debug("Current game files modified: %s", save_files_modified)
+        self._logger.debug("Games service_info modified: %s", games_config_modified)
+        self._logger.debug("Activity log modified: %s", activity_log_modified)
+
+        if save_files_modified:
+            ui_socket.send_ui_refresh_command(UIRefreshEvent.CloudSaveFilesChange)
+
+        if games_config_modified:
+            ui_socket.send_ui_refresh_command(UIRefreshEvent.GameConfigChange)
+
+        if activity_log_modified:
+            ui_socket.send_ui_refresh_command(UIRefreshEvent.ActivityLogUpdate)
+
+    def __get_changes(self):
+        """
+        Used to get formatted changes from Google Drive Changes API.
+        """
+
+        response = GDrive.get_changes(self.__start_page_token)
+        self.__start_page_token = response.get("newStartPageToken")
+
+        modified_files = []
+        affected_directories = []
+
+        changes = response.get("changes", [])
+        self._logger.debug("changes=%s", changes)
+        self._logger.debug("startPageToken=%s", self.__start_page_token)
+
+        for change in changes:
+            file = change.get("file")
+            is_removed = change.get("removed", False)
+
+            # This is a hack to make a workaround for
+            # Google Drive "genius" logic of not providing any information
+            # about what was removed on cloud. To be safe if something is removed
+            # on drive we will assume it was for current game and refresh UI.
+            if is_removed:
+                affected_directories.append(context().games.current.drive_directory)
+                continue
+
+            modified_files.append(file.get("id"))
+            affected_directories.append(file.get("parents")[0])
+
+        self._logger.debug("modified_files=%s", modified_files)
+        self._logger.debug("affected_directories=%s", affected_directories)
+
+        return modified_files, affected_directories
+
+
+if __name__ == "__main__":  # pragma: no cover
+    # Start Google Drive Watcher socket.
+    threading.Thread(target=google_drive_watcher_socket.listen, daemon=True).start()
+    GDriveWatcher().start()

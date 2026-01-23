@@ -62,7 +62,7 @@ class TestGameProcess:
     def test_should_get_active_game_objects(self, module_patch, _first_game, _second_game, _first_process,
                                             _second_process):
 
-        from savegem.process_watcher.game_process import _get_active_games
+        from src.savegem.process_watcher.game_process import _get_active_games
 
         get_run_processes_mock = module_patch("get_running_processes")
         get_run_processes_mock.return_value = [_first_process, _second_process]
@@ -76,7 +76,7 @@ class TestGameProcess:
 
     def test_when_no_active_processes(self, _active_games_mock):
 
-        from savegem.process_watcher.game_process import get_running_game_processes
+        from src.savegem.process_watcher.game_process import get_running_game_processes
 
         _active_games_mock.return_value = []
         assert len(get_running_game_processes()) == 0
@@ -84,7 +84,7 @@ class TestGameProcess:
 
     def test_when_process_has_started(self, _active_games_mock, _mock_previous_games, _first_game):
 
-        from savegem.process_watcher.game_process import get_running_game_processes, GameProcess
+        from src.savegem.process_watcher.game_process import get_running_game_processes, GameProcess
 
         _mock_previous_games([])
         _active_games_mock.return_value = [_first_game.name]
@@ -99,7 +99,7 @@ class TestGameProcess:
 
     def test_when_process_has_ended(self, _active_games_mock, _mock_previous_games, _first_game):
 
-        from savegem.process_watcher.game_process import get_running_game_processes
+        from src.savegem.process_watcher.game_process import get_running_game_processes
 
         _mock_previous_games([_first_game.name])
         _active_games_mock.return_value = []
@@ -113,7 +113,7 @@ class TestGameProcess:
 
     def test_when_process_is_idle(self, _active_games_mock, _mock_previous_games, _first_game):
 
-        from savegem.process_watcher.game_process import get_running_game_processes
+        from src.savegem.process_watcher.game_process import get_running_game_processes
 
         _mock_previous_games([_first_game.name])
         _active_games_mock.return_value = [_first_game.name]

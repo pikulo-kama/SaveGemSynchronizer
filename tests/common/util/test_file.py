@@ -12,8 +12,8 @@ class TestFileUtil:
 
     def test_should_resolve_config(self, path_join_mock):
 
-        from savegem.constants import Directory
-        from savegem.common.util.file import resolve_config, resolve_resource, resolve_temp_file, \
+        from src.savegem.constants import Directory
+        from src.savegem import resolve_config, resolve_resource, resolve_temp_file, \
             resolve_app_data, resolve_log, resolve_project_data, resolve_temp_resource, resolve_import_data, \
             resolve_migration
 
@@ -67,8 +67,8 @@ class TestFileUtil:
 
     def test_should_resolve_temporary_resources(self, path_join_mock, path_exists_mock):
 
-        from savegem.constants import Directory
-        from savegem.common.util.file import resolve_resource
+        from src.savegem.constants import Directory
+        from src.savegem import resolve_resource
 
         file_name = "Test"
         path_exists_mock.return_value = True
@@ -86,7 +86,7 @@ class TestFileUtil:
 
     def test_should_not_cleanup_non_existing_dir(self, listdir_mock):
 
-        from savegem.common.util.file import cleanup_directory
+        from src.savegem import cleanup_directory
 
         cleanup_directory("non/existing/dir")
         listdir_mock.assert_not_called()
@@ -94,7 +94,7 @@ class TestFileUtil:
 
     def test_should_remove_all_contents(self, tmp_path: Path):
 
-        from savegem.common.util.file import resolve_temp_file, cleanup_directory, save_file
+        from src.savegem import resolve_temp_file, cleanup_directory, save_file
 
         test_dir = tmp_path / "TestDir"
         nested_test_dir = test_dir / "AnotherTestDir"
@@ -113,7 +113,7 @@ class TestFileUtil:
 
     def test_should_handle_error_silently_when_cleanup_dir(self, mocker: MockerFixture, tmp_path: Path, module_patch):
 
-        from savegem.common.util.file import cleanup_directory, save_file
+        from src.savegem import cleanup_directory, save_file
 
         print_mock = mocker.patch("builtins.print")
         unlink_mock = module_patch("os.unlink")
@@ -130,7 +130,7 @@ class TestFileUtil:
 
     def test_should_fail_read_file_if_doesnt_exist(self):
 
-        from savegem.common.util.file import resolve_temp_file, \
+        from src.savegem import resolve_temp_file, \
             read_file
 
         with pytest.raises(RuntimeError):
@@ -139,8 +139,8 @@ class TestFileUtil:
 
     def test_read_file_basic_text(self, tmp_path):
 
-        from savegem.constants import UTF_8
-        from savegem.common.util.file import read_file
+        from src.savegem.constants import UTF_8
+        from src.savegem import read_file
 
         content = "Hello, this is a test line.\nAnother line."
         file_path = tmp_path / "test_file.txt"
@@ -154,8 +154,8 @@ class TestFileUtil:
 
     def test_read_file_as_json(self, tmp_path):
 
-        from savegem.constants import UTF_8
-        from savegem.common.util.file import read_file
+        from src.savegem.constants import UTF_8
+        from src.savegem import read_file
 
         json_data = {"name": "Test User", "id": 123, "active": True}
         json_content = json.dumps(json_data)
@@ -172,8 +172,8 @@ class TestFileUtil:
 
     def test_read_file_invalid_json(self, tmp_path):
 
-        from savegem.constants import UTF_8
-        from savegem.common.util.file import read_file
+        from src.savegem.constants import UTF_8
+        from src.savegem import read_file
 
         invalid_content = "{'key': 'value'"
         file_path = tmp_path / "bad_data.json"
@@ -187,8 +187,8 @@ class TestFileUtil:
 
     def test_save_file_plain_text(self, tmp_path):
 
-        from savegem.constants import UTF_8
-        from savegem.common.util.file import save_file
+        from src.savegem.constants import UTF_8
+        from src.savegem import save_file
 
         content = "A simple line of text.\nWith a second line."
         file_path = tmp_path / "text_output.txt"
@@ -203,7 +203,7 @@ class TestFileUtil:
 
     def test_save_file_binary_data(self, tmp_path):
 
-        from savegem.common.util.file import save_file
+        from src.savegem import save_file
 
         binary_data = b'\xde\xad\xbe\xef\x00\x01\x02'
         file_path = tmp_path / "binary_output.bin"
@@ -218,8 +218,8 @@ class TestFileUtil:
 
     def test_save_file_as_json_text_mode(self, tmp_path):
 
-        from savegem.constants import UTF_8
-        from savegem.common.util.file import save_file
+        from src.savegem.constants import UTF_8
+        from src.savegem import save_file
 
         data = {"key1": "value1", "key2": [1, 2, 3]}
         file_path = tmp_path / "json_output.json"
@@ -237,7 +237,7 @@ class TestFileUtil:
 
     def test_should_delete_file(self, module_patch, path_exists_mock, remove_mock):
 
-        from savegem.common.util.file import resolve_temp_file, \
+        from src.savegem import resolve_temp_file, \
             delete_file
 
         path_exists_mock.return_value = False
@@ -252,8 +252,8 @@ class TestFileUtil:
 
     def test_file_checksum_basic_sha256(self, tmp_path):
 
-        from savegem.constants import SHA_256
-        from savegem.common.util.file import file_checksum
+        from src.savegem.constants import SHA_256
+        from src.savegem import file_checksum
 
         content = b"test"
         file_path = tmp_path / "test_file.txt"
@@ -269,7 +269,7 @@ class TestFileUtil:
 
     def test_file_name_from_path(self, mock_path_separator):
 
-        from savegem.common.util.file import file_name_from_path
+        from src.savegem import file_name_from_path
 
         mock_path_separator("/")
 
@@ -283,7 +283,7 @@ class TestFileUtil:
 
     def test_remove_extension_from_path(self):
 
-        from savegem.common.util.file import remove_extension_from_path
+        from src.savegem import remove_extension_from_path
 
         assert remove_extension_from_path("test") == "test"
         assert remove_extension_from_path("test.txt") == "test"

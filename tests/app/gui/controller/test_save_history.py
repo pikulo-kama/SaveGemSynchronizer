@@ -60,7 +60,7 @@ class TestSaveHistoryListController(WidgetControllerTest):
         Provides the SaveHistoryListController instance.
         """
 
-        from savegem.app.gui.controller.save_history import SaveHistoryListController
+        from src.savegem import SaveHistoryListController
         return SaveHistoryListController(_widget_manager)
 
     def test_get_data(self, _controller, games_config_mock):
@@ -88,8 +88,8 @@ class TestSaveHistoryListController(WidgetControllerTest):
 
     def test_handle_history_record(self, mocker: MockerFixture, _controller, _save_a, games_config_mock):
 
-        from savegem.app.gui.controller.save_history import SaveHistoryListController
-        from savegem.app.gui.constants import QBool
+        from src.savegem import SaveHistoryListController
+        from src.savegem import QBool
 
         history_record = mocker.MagicMock()
 
@@ -157,7 +157,7 @@ class TestSaveHistoryListController(WidgetControllerTest):
         Tests static method __get_upload_date_string returns correct formatted string.
         """
 
-        from savegem.app.gui.controller.save_history import SaveHistoryListController
+        from src.savegem import SaveHistoryListController
 
         # Note: Accessing private static method via name mangling
         result = SaveHistoryListController._SaveHistoryListController__get_upload_date_string(_save_a)  # noqa
@@ -168,7 +168,7 @@ class TestSaveHistoryListController(WidgetControllerTest):
         Tests static method __get_owner_string returns owner name if user is found.
         """
 
-        from savegem.app.gui.controller.save_history import SaveHistoryListController
+        from src.savegem import SaveHistoryListController
 
         _save_a.email = "amy@a.com"
 
@@ -180,7 +180,7 @@ class TestSaveHistoryListController(WidgetControllerTest):
         Tests static method __get_owner_string returns email if user is not found.
         """
 
-        from savegem.app.gui.controller.save_history import SaveHistoryListController
+        from src.savegem import SaveHistoryListController
 
         _save_b.owner = "test"
         user_config_mock.by_email.return_value = None
@@ -195,8 +195,8 @@ class TestSaveHistoryListController(WidgetControllerTest):
         Tests the __restore_version logic, verifying worker1 setup and completion callback.
         """
 
-        from savegem.common.service.subscriptable import DoneEvent, EventKind
-        from savegem.app.gui.constants import UIRefreshEvent
+        from src.savegem.common.service.subscriptable import DoneEvent, EventKind
+        from src.savegem import UIRefreshEvent
 
         file_id = "v1-restore-id"
         mock_button = mocker.MagicMock()

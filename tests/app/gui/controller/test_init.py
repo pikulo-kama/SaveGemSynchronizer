@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, call
 import pytest
 from pytest_mock import MockerFixture
 
-from savegem.app.gui.widget.command.build import WidgetSectionBuildCommand
+from src.savegem import WidgetSectionBuildCommand
 
 
 class TestWidgetController:
@@ -15,7 +15,7 @@ class TestWidgetController:
 
     @pytest.fixture
     def _mock_controller(self):
-        from savegem.app.gui.controller import WidgetController
+        from src.savegem import WidgetController
 
         class MockController(WidgetController):
             """A concrete controller subclass for testing reflection."""
@@ -36,7 +36,7 @@ class TestWidgetController:
         Provides a fresh WidgetController instance.
         """
 
-        from savegem.app.gui.controller import WidgetController
+        from src.savegem import WidgetController
 
         return WidgetController(widget_manager_mock)
 
@@ -45,7 +45,7 @@ class TestWidgetController:
         Tests that load_controllers finds subclasses via reflection and instantiates them.
         """
 
-        from savegem.app.gui.controller import load_controllers, TemplateWidgetController
+        from src.savegem import load_controllers, TemplateWidgetController
 
         def _get_members(_, __):
             yield "MockController", _mock_controller
@@ -72,7 +72,7 @@ class TestWidgetController:
         Test initialization correctly queries the database for sections.
         """
 
-        from savegem.app.gui.controller import WidgetController
+        from src.savegem import WidgetController
 
         # ACT: Initialize a generic controller
         controller = WidgetController(_widget_manager)
@@ -95,7 +95,7 @@ class TestWidgetController:
         Test the basic dynamic state management methods.
         """
 
-        from savegem.app.gui.controller import WidgetController
+        from src.savegem import WidgetController
 
         mock_controller = WidgetController(_widget_manager)
 
@@ -115,7 +115,7 @@ class TestWidgetController:
         Test the manager property getter.
         """
 
-        from savegem.app.gui.controller import WidgetController
+        from src.savegem import WidgetController
 
         mock_controller = WidgetController(_widget_manager)
         assert mock_controller.manager == _widget_manager
@@ -126,7 +126,7 @@ class TestWidgetController:
         correctly to move a widget.
         """
 
-        from savegem.app.gui.controller import WidgetController
+        from src.savegem import WidgetController
 
         mock_controller = WidgetController(_widget_manager)
 
@@ -158,7 +158,7 @@ class TestWidgetController:
         Tests the _do_work helper method initiates worker1 execution in a blocking thread.
         """
 
-        from savegem.app.gui.controller import WidgetController
+        from src.savegem import WidgetController
 
         mock_controller = WidgetController(_widget_manager)
 
@@ -188,7 +188,7 @@ class TestTemplateResolver:
 
     def test_resolve_should_happen_in_controller(self, mocker: MockerFixture):
 
-        from savegem.app.gui.controller import TemplateResolver
+        from src.savegem import TemplateResolver
 
         test_value = "test"
         test_args = [1, 2, 432]
@@ -213,7 +213,7 @@ class TestTemplateWidgetController:
 
     @pytest.fixture
     def _template_controller(self, _manager):
-        from savegem.app.gui.controller import TemplateWidgetController
+        from src.savegem import TemplateWidgetController
         return TemplateWidgetController(_manager)
 
     @pytest.fixture
@@ -236,7 +236,7 @@ class TestTemplateWidgetController:
         Test if handlers are correctly discovered and mapped during initialization.
         """
 
-        from savegem.app.gui.controller import TemplateWidgetController
+        from src.savegem import TemplateWidgetController
 
         # Define mock methods to be 'discovered' by get_methods
         widget_a = "widget_a"

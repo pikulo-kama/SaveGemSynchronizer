@@ -23,7 +23,7 @@ class TestThread:
         Test that the function correctly sets the wait cursor and blocks the GUI.
         """
 
-        from savegem.app.gui.thread import execute_in_blocking_thread
+        from src.savegem import execute_in_blocking_thread
 
         execute_in_blocking_thread(qthread_mock, mock_worker)
 
@@ -46,7 +46,7 @@ class TestThread:
         Test that the GUI unblocks and cursor is reset when the thread finishes.
         """
 
-        from savegem.app.gui.thread import execute_in_blocking_thread
+        from src.savegem import execute_in_blocking_thread
 
         # Set up a spy on the final finish callback
         execute_in_blocking_thread(qthread_mock, mock_worker)
@@ -77,7 +77,7 @@ class TestThread:
         Test that the function returns immediately if the GUI is already blocked.
         """
 
-        from savegem.app.gui.thread import execute_in_blocking_thread
+        from src.savegem import execute_in_blocking_thread
 
         # Set GUI to blocked state before execution
         gui_mock.is_blocked = True
@@ -103,7 +103,7 @@ class TestThread:
         Test that all required signal connections for thread cleanup are made.
         """
 
-        from savegem.app.gui.thread import execute_in_blocking_thread
+        from src.savegem import execute_in_blocking_thread
 
         execute_in_blocking_thread(qthread_mock, mock_worker)
 

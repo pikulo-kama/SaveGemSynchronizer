@@ -21,8 +21,8 @@ class TestEditableJsonConfigHolder:
         Test that the file existence check and creation logic is triggered on initialization.
         """
 
-        from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
-        from savegem.common.util.file import save_file
+        from src.savegem import EditableJsonConfigHolder
+        from src.savegem import save_file
 
         save_file(_test_config_path, {}, as_json=True)
 
@@ -35,8 +35,8 @@ class TestEditableJsonConfigHolder:
         Test that set_value updates the internal data and calls save_file.
         """
 
-        from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
-        from savegem.common.util.file import save_file
+        from src.savegem import EditableJsonConfigHolder
+        from src.savegem import save_file
 
         save_file(_test_config_path, {}, as_json=True)
 
@@ -65,8 +65,8 @@ class TestEditableJsonConfigHolder:
         Test that set fully replaces the internal data and calls save_file.
         """
 
-        from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
-        from savegem.common.util.file import save_file
+        from src.savegem import EditableJsonConfigHolder
+        from src.savegem import save_file
 
         save_file(_test_config_path, {}, as_json=True)
 
@@ -98,7 +98,7 @@ class TestEditableJsonConfigHolder:
         within this specific test.
         """
 
-        from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
+        from src.savegem import EditableJsonConfigHolder
 
         mocker.patch.object(EditableJsonConfigHolder, "_load_data")
 

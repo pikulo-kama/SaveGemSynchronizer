@@ -21,7 +21,7 @@ class TestAppState:
     @pytest.fixture
     def _app_state(self, app_context_mock, app_config_mock, games_config_mock, _state_change_callback):
 
-        from savegem.common.core.app_state import AppState
+        from src.savegem.common.core.app_state import AppState
 
         state = AppState(app_context_mock)
         state.on_change(_state_change_callback)
@@ -31,7 +31,7 @@ class TestAppState:
 
     def test_should_call_callback_when_changing_game(self, _app_state, _state_change_callback, db_table_mock):
 
-        from savegem.common.core.app_state import AppState
+        from src.savegem.common.core.app_state import AppState
 
         _app_state.game_name = GameTestData.SecondGame
 
@@ -46,7 +46,7 @@ class TestAppState:
 
     def test_should_call_callback_when_changing_locale(self, _app_state, _state_change_callback, db_table_mock):
 
-        from savegem.common.core.app_state import AppState
+        from src.savegem.common.core.app_state import AppState
 
         _app_state.locale = LocaleTestData.FirstLocale
 
@@ -61,8 +61,8 @@ class TestAppState:
 
     def test_should_call_callback_when_changing_color_theme(self, _app_state, db_table_mock):
 
-        from savegem.common.core.app_state import AppState
-        from savegem.app.gui.style import ColorMode
+        from src.savegem.common.core.app_state import AppState
+        from src.savegem import ColorMode
 
         _app_state.color_theme = ColorMode.Dark
 
@@ -76,8 +76,8 @@ class TestAppState:
 
     def test_should_call_callback_when_changing_time_format(self, _app_state, db_table_mock):
 
-        from savegem.common.core.app_state import AppState
-        from savegem.constants import TimeFormat
+        from src.savegem.common.core.app_state import AppState
+        from src.savegem.constants import TimeFormat
 
         _app_state.time_format = TimeFormat.Regular
 
@@ -91,7 +91,7 @@ class TestAppState:
 
     def test_should_use_default_time_format_if_not_provided(self, _app_state, db_table_mock):
 
-        from savegem.constants import TimeFormat
+        from src.savegem.constants import TimeFormat
 
         db_table_mock.get_first.return_value = None
         assert _app_state.time_format == TimeFormat.Military
@@ -99,7 +99,7 @@ class TestAppState:
 
     def test_should_get_first_game_if_not_in_state(self, _app_state, db_table_mock):
 
-        from savegem.common.core.app_state import AppState
+        from src.savegem.common.core.app_state import AppState
 
         _app_state.game_name = None
         game_name = _app_state.game_name
@@ -110,7 +110,7 @@ class TestAppState:
 
     def test_should_get_default_locale_if_not_in_state(self, _app_state, db_table_mock, prop_mock):
 
-        from savegem.common.core.app_state import AppState
+        from src.savegem.common.core.app_state import AppState
 
         prop_mock.return_value = LocaleTestData.FirstLocale
 
@@ -123,7 +123,7 @@ class TestAppState:
 
     def test_should_create_temporary_record_when_no_user_data(self, app_context_mock, db_table_mock):
 
-        from savegem.common.core.app_state import AppState
+        from src.savegem.common.core.app_state import AppState
 
         app_context_mock.users.current = None
 

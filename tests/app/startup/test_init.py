@@ -12,7 +12,7 @@ class TestStartupJob:
 
     @pytest.fixture
     def _mock_startup_worker(self):
-        from savegem.app.startup import QStartupWorker
+        from src.savegem.app.startup import QStartupWorker
 
         class MockStartupWorker(QStartupWorker):
             """
@@ -54,7 +54,7 @@ class TestStartupJob:
         Test initialization of internal state and task loading.
         """
 
-        from savegem.app.startup import StartupJob
+        from src.savegem.app.startup import StartupJob
 
         job = StartupJob()
 
@@ -67,8 +67,8 @@ class TestStartupJob:
         Tests that start() performs all necessary setup steps for threading and UI.
         """
 
-        from savegem.app.gui.constants import UISection
-        from savegem.app.startup import StartupJob
+        from src.savegem import UISection
+        from src.savegem.app.startup import StartupJob
 
         job = StartupJob()
         job.start()
@@ -90,7 +90,7 @@ class TestStartupJob:
         Tests that task completion is correctly recorded.
         """
 
-        from savegem.app.startup import StartupJob
+        from src.savegem.app.startup import StartupJob
 
         job = StartupJob()
         worker = _mock_startup_worker()
@@ -106,7 +106,7 @@ class TestStartupJob:
         Tests that gui().build() is only called when ALL tasks have finished.
         """
 
-        from savegem.app.startup import StartupJob
+        from src.savegem.app.startup import StartupJob
 
         job = StartupJob()
 

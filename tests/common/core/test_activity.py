@@ -18,7 +18,7 @@ class TestActivity:
 
     @pytest.fixture
     def _activity(self, app_config_mock, app_context_mock, user_config_mock, games_config_mock):
-        from savegem.common.core.activity import Activity
+        from src.savegem.common.core.activity import Activity
 
         return Activity(app_context_mock)
 
@@ -28,7 +28,7 @@ class TestActivity:
 
 
     def test_should_retrieve_data_from_holder(self, _activity, holder_mock):
-        from savegem.constants import HolderObject
+        from src.savegem.constants import HolderObject
 
         holder_mock.get.return_value = NoActivity
         _activity.refresh()

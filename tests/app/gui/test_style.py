@@ -11,8 +11,8 @@ class TestStyle:
     @pytest.fixture(autouse=True)
     def _setup(self, path_join_mock, resolve_resource_mock, db_mock, app_state_mock):
 
-        from savegem.common.db.table import DatabaseRow
-        from savegem.app.gui.style import ColorMode
+        from src.savegem import DatabaseRow
+        from src.savegem import ColorMode
 
         color_table_columns = ["color_id", ColorMode.Light, ColorMode.Dark]
         font_table_columns = ["font_id", "font_size", "font_family", "font_weight"]
@@ -59,7 +59,7 @@ class TestStyle:
         Test that _get_color_mode returns 'light' for Qt.ColorScheme.Light.
         """
 
-        from savegem.app.gui.style import ColorMode, get_system_color_mode
+        from src.savegem import ColorMode, get_system_color_mode
 
         _mock_color_scheme(Qt.ColorScheme.Light)
         assert get_system_color_mode() == ColorMode.Light
@@ -70,7 +70,7 @@ class TestStyle:
         Test that _get_color_mode returns 'dark' for Qt.ColorScheme.Dark.
         """
 
-        from savegem.app.gui.style import ColorMode, get_system_color_mode
+        from src.savegem import ColorMode, get_system_color_mode
 
         _mock_color_scheme(Qt.ColorScheme.Dark)
         assert get_system_color_mode() == ColorMode.Dark
@@ -81,7 +81,7 @@ class TestStyle:
         Test that _get_color_mode returns 'light' for an unrecognized scheme (default).
         """
 
-        from savegem.app.gui.style import ColorMode, get_system_color_mode
+        from src.savegem import ColorMode, get_system_color_mode
 
         # Use an arbitrary int not matching Light (1) or Dark (2)
         _mock_color_scheme(99)
@@ -98,7 +98,7 @@ class TestStyle:
         Test _color retrieves the correct color in light mode.
         """
 
-        from savegem.app.gui.style import color
+        from src.savegem import color
 
         _mock_color_scheme(Qt.ColorScheme.Light)
 
@@ -111,7 +111,7 @@ class TestStyle:
         Test _color retrieves the correct color in dark mode.
         """
 
-        from savegem.app.gui.style import color
+        from src.savegem import color
 
         _mock_color_scheme(Qt.ColorScheme.Dark)
 
@@ -121,7 +121,7 @@ class TestStyle:
 
     def test_color_from_settings(self, _mock_color_scheme, app_state_mock):
 
-        from savegem.app.gui.style import color, ColorMode
+        from src.savegem import color, ColorMode
 
         app_state_mock.color_theme = ColorMode.Light
         _mock_color_scheme(Qt.ColorScheme.Dark)
@@ -137,7 +137,7 @@ class TestStyle:
         Test _font retrieves the correct font property.
         """
 
-        from savegem.app.gui.style import font
+        from src.savegem import font
 
         assert font("main_text") == "14px 'Arial'; font-weight: 400"
         assert font("title_text") == "24px 'Roboto Bold'; font-weight: 800"
@@ -145,7 +145,7 @@ class TestStyle:
 
     def test_rgba_color(self, module_patch):
 
-        from savegem.app.gui.style import rgba_color
+        from src.savegem import rgba_color
 
         module_patch("color").return_value = "#1E1E1E"
 
@@ -157,7 +157,7 @@ class TestStyle:
         Test _resolve_style_properties correctly replaces color(), font(), and image() tokens.
         """
 
-        from savegem.app.gui.style import resolve_style_properties
+        from src.savegem import resolve_style_properties
 
         _mock_color_scheme(Qt.ColorScheme.Dark)
 
@@ -189,8 +189,8 @@ class TestStyle:
         Test load_stylesheet reads all files, concatenates them, and resolves properties.
         """
 
-        from savegem.constants import Directory
-        from savegem.app.gui.style import load_stylesheet
+        from src.savegem.constants import Directory
+        from src.savegem import load_stylesheet
 
         _mock_color_scheme(Qt.ColorScheme.Light)
 
@@ -235,7 +235,7 @@ class TestStyle:
     def test_load_stylesheet_with_sub_dir(self, mocker: MockerFixture, module_patch, listdir_mock, read_file_mock,
                                           _mock_color_scheme, path_mock):
 
-        from savegem.app.gui.style import load_stylesheet
+        from src.savegem import load_stylesheet
 
         resolve_props_mock = module_patch("resolve_style_properties")
         resolve_props_mock.side_effect = lambda style: style
@@ -266,7 +266,7 @@ class TestStyle:
         colors are resolved, content is replaced, and files are saved.
         """
 
-        from savegem.app.gui.style import create_dynamic_resources, ColorMode
+        from src.savegem import create_dynamic_resources, ColorMode
 
         read_file_mock.return_value = '<svg fill="currentColor" />'
         _mock_color_scheme(ColorMode.Dark)

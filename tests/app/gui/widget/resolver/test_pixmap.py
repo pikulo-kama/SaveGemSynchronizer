@@ -27,7 +27,7 @@ class TestPixmapResolver:
 
     def test_file_path_is_none(self, _pixmap_mock, logger_mock):
 
-        from savegem.app.gui.widget.resolver.pixmap import PixmapResolver
+        from src.savegem import PixmapResolver
 
         resolver = PixmapResolver()
         resolver.resolve(None)  # noqa
@@ -39,7 +39,7 @@ class TestPixmapResolver:
 
     def test_no_props(self, _scale_image_mock, _round_image_mock, _pixmap_mock):
 
-        from savegem.app.gui.widget.resolver.pixmap import PixmapResolver
+        from src.savegem import PixmapResolver
 
         resolver = PixmapResolver()
         resolver.resolve(TEST_PATH)
@@ -50,7 +50,7 @@ class TestPixmapResolver:
 
     def test_with_scale(self, _scale_image_mock, _round_image_mock, _pixmap_mock):
 
-        from savegem.app.gui.widget.resolver.pixmap import PixmapResolver
+        from src.savegem import PixmapResolver
 
         resolver = PixmapResolver()
         resolver.resolve(TEST_PATH, scale=20)
@@ -61,7 +61,7 @@ class TestPixmapResolver:
 
     def test_with_radius(self, _scale_image_mock, _round_image_mock, _pixmap_mock):
 
-        from savegem.app.gui.widget.resolver.pixmap import PixmapResolver
+        from src.savegem import PixmapResolver
 
         resolver = PixmapResolver()
         resolver.resolve(TEST_PATH, radius=20)
@@ -72,7 +72,7 @@ class TestPixmapResolver:
 
     def test_with_circle(self, _scale_image_mock, _round_image_mock, _pixmap_mock):
 
-        from savegem.app.gui.widget.resolver.pixmap import PixmapResolver
+        from src.savegem import PixmapResolver
 
         resolver = PixmapResolver()
         resolver.resolve(TEST_PATH, "circle")
@@ -83,7 +83,7 @@ class TestPixmapResolver:
 
     def test_with_radius_and_circle(self, _scale_image_mock, _round_image_mock, _pixmap_mock):
 
-        from savegem.app.gui.widget.resolver.pixmap import PixmapResolver
+        from src.savegem import PixmapResolver
 
         resolver = PixmapResolver()
         resolver.resolve(TEST_PATH, "circle", radius=20)
@@ -94,7 +94,7 @@ class TestPixmapResolver:
         _scale_image_mock.assert_not_called()
 
     def test_scale_and_radius(self, _scale_image_mock, _round_image_mock, _pixmap_mock):
-        from savegem.app.gui.widget.resolver.pixmap import PixmapResolver
+        from src.savegem import PixmapResolver
 
         resolver = PixmapResolver()
         resolver.resolve(TEST_PATH, scale=30, radius=20)

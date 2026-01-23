@@ -51,7 +51,7 @@ class TestUploader:
         Fixture for the Uploader instance with a subscribed mock
         """
 
-        from savegem.common.service.uploader import Uploader
+        from src.savegem.common.service.uploader import Uploader
 
         uploader = Uploader()
         uploader.subscribe(_mock_subscriber)
@@ -65,8 +65,8 @@ class TestUploader:
         Test a successful full upload process, ensuring all 5 stages complete
         """
 
-        from savegem.common.core.save_meta import SaveMetaProp
-        from savegem.common.service.subscriptable import DoneEvent
+        from src.savegem.common.core.save_meta import SaveMetaProp
+        from src.savegem.common.service.subscriptable import DoneEvent
 
         # Setup datetime
         mock_now = datetime(2025, 10, 2, 12, 30, 0)
@@ -140,7 +140,7 @@ class TestUploader:
         Test early exit and error handling when the local saves directory is missing
         """
 
-        from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind, ProgressEvent
+        from src.savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind, ProgressEvent
 
         path_exists_mock.return_value = False
 
@@ -175,7 +175,7 @@ class TestUploader:
         Test error handling when GDrive.upload_file raises an HttpError
         """
 
-        from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
+        from src.savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
 
         # Setup GDrive mock to raise HttpError
         gdrive_mock.upload_file.side_effect = http_error_mock

@@ -29,7 +29,7 @@ class TestDatabaseRow:
         A fully initialized DatabaseRow instance.
         """
 
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import DatabaseRow
 
         return DatabaseRow(
             row_number=5,
@@ -57,7 +57,7 @@ class TestDatabaseRow:
         Tests init when data tuple is shorter than columns list.
         """
 
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import DatabaseRow
 
         row = DatabaseRow(1, (999,), _db_row_columns)
 
@@ -190,7 +190,7 @@ class TestDatabaseTable:
         An initialized DatabaseTable instance.
         """
 
-        from savegem.common.db.table import DatabaseTable
+        from src.savegem import DatabaseTable
 
         return DatabaseTable(_db_mock, "test_table")
 

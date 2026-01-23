@@ -21,7 +21,7 @@ class TestQScrollableWidget:
         """
         Tests that __init__ sets up the content widget and basic QScrollArea flags.
         """
-        from savegem.app.gui.component.list import QScrollableWidget
+        from src.savegem import QScrollableWidget
 
         mock_resizable = mocker.patch.object(QScrollArea, 'setWidgetResizable')
 
@@ -41,7 +41,7 @@ class TestQScrollableWidget:
         Tests that layout methods are delegated to the internal content widget.
         """
 
-        from savegem.app.gui.component.list import QScrollableWidget
+        from src.savegem import QScrollableWidget
 
         mock_layout = mocker.MagicMock()
 
@@ -64,7 +64,7 @@ class TestQScrollableWidget:
         Tests that setStyleSheet is delegated to the internal content widget.
         """
 
-        from savegem.app.gui.component.list import QScrollableWidget
+        from src.savegem import QScrollableWidget
 
         test_sheet = "background: red;"
 
@@ -78,7 +78,7 @@ class TestQScrollableWidget:
 
     def test_metadata_props(self, mocker: MockerFixture, _content_widget_mock):
 
-        from savegem.app.gui.component.list import QScrollableWidget
+        from src.savegem import QScrollableWidget
 
         widget = QScrollableWidget()
         meta_mock = mocker.MagicMock()

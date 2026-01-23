@@ -7,7 +7,7 @@ class TestProfilerUtil:
 
     @pytest.fixture
     def _dummy_function_to_time(self):
-        from savegem.common.util.profiler import measure_time
+        from src.savegem import measure_time
 
         @measure_time()
         def _function(a, b=1):
@@ -18,7 +18,7 @@ class TestProfilerUtil:
 
     @pytest.fixture
     def _info_level_function(self):
-        from savegem.common.util.profiler import measure_time
+        from src.savegem import measure_time
 
         @measure_time(when=logging.INFO)
         def _function():

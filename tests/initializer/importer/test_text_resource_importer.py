@@ -4,7 +4,7 @@ class TestTextResourceImporter:
 
     def test_tr_importer(self):
 
-        from savegem.initializer.importer.text_resource_importer import TextResourceImporter
+        from src.savegem import TextResourceImporter
 
         data = {
             "label_Test": {

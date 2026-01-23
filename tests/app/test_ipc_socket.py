@@ -23,7 +23,7 @@ class TestUISocket:
         and sets up the child process list.
         """
 
-        from savegem.app.ipc_socket import UISocket
+        from src.savegem.app.ipc_socket import UISocket
 
         prop_mock.side_effect = lambda key: 12345 if key == "ipc.uiSocketPort" else None
 
@@ -38,8 +38,8 @@ class TestUISocket:
         Tests that send_ui_refresh_command formats and sends the correct message.
         """
 
-        from savegem.app.ipc_socket import UISocket, IPCCommand
-        from savegem.common.core.ipc_socket import IPCProp
+        from src.savegem.app.ipc_socket import UISocket, IPCCommand
+        from src.savegem.common import IPCProp
 
         event = "TestEvent"
         socket = UISocket()
@@ -62,8 +62,8 @@ class TestUISocket:
         Tests handling of IPCCommand.RebuildWindow.
         """
 
-        from savegem.app.ipc_socket import UISocket
-        from savegem.common.core.ipc_socket import IPCCommand
+        from src.savegem.app.ipc_socket import UISocket
+        from src.savegem.common import IPCCommand
 
         socket = UISocket()
 
@@ -78,9 +78,9 @@ class TestUISocket:
         Tests handling of IPCCommand.RefreshUI for ActivityLogUpdate.
         """
 
-        from savegem.app.ipc_socket import UISocket
-        from savegem.app.gui.constants import UIRefreshEvent
-        from savegem.common.core.ipc_socket import IPCCommand, IPCProp
+        from src.savegem.app.ipc_socket import UISocket
+        from src.savegem import UIRefreshEvent
+        from src.savegem.common import IPCCommand, IPCProp
 
         mock_update_activity = mocker.patch.object(UISocket, '_UISocket__update_activity')
 
@@ -101,9 +101,9 @@ class TestUISocket:
         Tests handling of IPCCommand.RefreshUI for GameConfigChange.
         """
 
-        from savegem.app.ipc_socket import UISocket
-        from savegem.app.gui.constants import UIRefreshEvent
-        from savegem.common.core.ipc_socket import IPCCommand, IPCProp
+        from src.savegem.app.ipc_socket import UISocket
+        from src.savegem import UIRefreshEvent
+        from src.savegem.common import IPCCommand, IPCProp
 
         mock_update_games = mocker.patch.object(UISocket, '_UISocket__update_games_configuration')
 
@@ -124,7 +124,7 @@ class TestUISocket:
         Tests handling of an unknown IPC command.
         """
 
-        from savegem.app.ipc_socket import UISocket
+        from src.savegem.app.ipc_socket import UISocket
 
         socket = UISocket()
         socket._handle("UnknownCommand", {})
@@ -139,7 +139,7 @@ class TestUISocket:
         Tests that notify_children sends the message to all configured child sockets.
         """
 
-        from savegem.app.ipc_socket import UISocket
+        from src.savegem.app.ipc_socket import UISocket
 
         message = {"Command": "TestMessage"}
         gdrive_watcher_socket_mock.port = 10001
@@ -165,8 +165,8 @@ class TestUISocket:
         Tests __update_activity logic.
         """
 
-        from savegem.app.ipc_socket import UISocket
-        from savegem.constants import HolderObject
+        from src.savegem.app.ipc_socket import UISocket
+        from src.savegem.constants import HolderObject
 
         # Call the static method directly
         UISocket._UISocket__update_activity()  # noqa
@@ -185,8 +185,8 @@ class TestUISocket:
         Tests __update_games_configuration logic when GameConfigChange event occurs.
         """
 
-        from savegem.app.ipc_socket import UISocket, UIRefreshEvent
-        from savegem.constants import HolderObject
+        from src.savegem.app.ipc_socket import UISocket, UIRefreshEvent
+        from src.savegem.constants import HolderObject
 
         UISocket._UISocket__update_games_configuration(UIRefreshEvent.GameConfigChange)  # noqa
 
@@ -211,8 +211,8 @@ class TestUISocket:
         Tests __update_games_configuration logic when CloudSaveFilesChange event occurs.
         """
 
-        from savegem.app.ipc_socket import UISocket
-        from savegem.app.gui.constants import UIRefreshEvent
+        from src.savegem.app.ipc_socket import UISocket
+        from src.savegem import UIRefreshEvent
 
         UISocket._UISocket__update_games_configuration(UIRefreshEvent.CloudSaveFilesChange)  # noqa
 

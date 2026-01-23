@@ -8,8 +8,8 @@ class TestQWaitBar:
         Tests that QWaitBar correctly inherits from QProgressBar and CustomComponentMixin.
         """
 
-        from savegem.app.gui.component import CustomComponentMixin
-        from savegem.app.gui.component.wait_bar import QWaitBar
+        from src.savegem import CustomComponentMixin
+        from src.savegem import QWaitBar
 
         wait_bar = QWaitBar()
         qtbot.addWidget(wait_bar)
@@ -23,7 +23,7 @@ class TestQWaitBar:
         Tests that the progress bar is set to indeterminate mode by setting the range to (0, 0).
         """
 
-        from savegem.app.gui.component.wait_bar import QWaitBar
+        from src.savegem import QWaitBar
 
         wait_bar = QWaitBar()
         qtbot.addWidget(wait_bar)

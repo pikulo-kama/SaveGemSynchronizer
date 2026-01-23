@@ -7,8 +7,10 @@ from datetime import date
 from PyInstaller.building.api import PYZ, EXE, COLLECT
 from PyInstaller.building.build_main import Analysis
 from PyInstaller.log import logger  # noqa
-from PyInstaller.utils.win32.versioninfo import VSVersionInfo, VarFileInfo, VarStruct, StringFileInfo, StringTable, \
-    StringStruct, FixedFileInfo
+from PyInstaller.utils.win32.versioninfo import (
+    StringStruct, VarFileInfo, VarStruct, StringFileInfo, StringTable,  # noqa
+    VSVersionInfo, FixedFileInfo
+)
 
 
 def read_config(service_name: str) -> dict:
@@ -97,7 +99,7 @@ def build_exe(
             datas[index] = (entry, entry)
 
     analysis = Analysis(
-        [f"savegem/{service_name}/main.py"],
+        [f"src/savegem/{service_name}/main.py"],
         binaries=[],
         datas=datas,
         hiddenimports=hidden_imports or [],

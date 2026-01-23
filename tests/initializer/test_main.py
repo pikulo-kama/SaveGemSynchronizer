@@ -38,7 +38,7 @@ class TestInitializerCLI:
         Utility to run main() with mocked sys.argv.
         """
 
-        from savegem.initializer.main import main
+        from src.savegem import main
 
         mocker.patch('sys.argv', ['cli_manager.py'] + args)
         main()
@@ -81,7 +81,7 @@ class TestInitializerCLI:
         Verify 'extract' command calls invoke_extractor with correct defaults.
         """
 
-        from savegem.initializer.extractor import RegularExtractorName
+        from src.savegem import RegularExtractorName
 
         args = ['extract', '--table_name', 'config_data']
         self.run_main_with_args(mocker, args)
@@ -100,8 +100,8 @@ class TestInitializerCLI:
         Verify the 'type' choices include 'regular' plus discovered extractors.
         """
 
-        from savegem.initializer.main import add_extract_command
-        from savegem.initializer.extractor import RegularExtractorName
+        from src.savegem import add_extract_command
+        from src.savegem import RegularExtractorName
 
         # We must run `add_extract_command` and inspect the choices.
         mock_parser = MagicMock()
@@ -132,7 +132,7 @@ class TestInitializerCLI:
         Verify main() exits and prints help if no arguments are provided.
         """
 
-        from savegem.initializer.main import main
+        from src.savegem import main
 
         module_patch('sys.argv', ['cli_manager.py'])
 

@@ -15,7 +15,7 @@ class TestQCustomToggle:
         Fixture for QCustomToggle instance.
         """
 
-        from savegem.app.gui.component.toggle import QCustomToggle
+        from src.savegem import QCustomToggle
 
         toggle = QCustomToggle()
         qtbot.addWidget(toggle)
@@ -34,7 +34,7 @@ class TestQCustomToggle:
         Test initial state and setup.
         """
 
-        from savegem.app.gui.component import CustomComponentMixin
+        from src.savegem import CustomComponentMixin
 
         assert isinstance(_toggle, QPushButton)
         assert isinstance(_toggle, CustomComponentMixin)
@@ -92,7 +92,7 @@ class TestQCustomToggle:
         Test that setChecked calls the three required methods.
         """
 
-        from savegem.app.gui.component.toggle import QCustomToggle
+        from src.savegem import QCustomToggle
 
         mock_animate = mocker.patch.object(QCustomToggle, "_QCustomToggle__animate_toggle")
         mock_on_toggle = mocker.patch.object(QCustomToggle, "_QCustomToggle__on_toggle")
@@ -157,7 +157,7 @@ class TestQCustomToggle:
         Tests that paintEvent makes the correct drawing calls with correct geometry.
         """
 
-        from savegem.app.gui.component.toggle import QCustomToggle
+        from src.savegem import QCustomToggle
 
         mock_draw_rounded_rect = mocker.patch.object(QPainter, 'drawRoundedRect')
         mock_draw_ellipse = mocker.patch.object(QPainter, 'drawEllipse')

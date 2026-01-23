@@ -17,7 +17,7 @@ class TestIconResolver:
 
     def test_invalid_file_path(self, _icon_mock):
 
-        from savegem.app.gui.widget.resolver.icon import IconResolver
+        from src.savegem import IconResolver
 
         resolver = IconResolver()
         resolved_value = resolver.resolve(None)  # noqa
@@ -26,7 +26,7 @@ class TestIconResolver:
 
     def test_no_size(self, _icon_mock):
 
-        from savegem.app.gui.widget.resolver.icon import IconResolver
+        from src.savegem import IconResolver
 
         resolver = IconResolver()
         resolved_value = resolver.resolve(TEST_PATH)
@@ -37,7 +37,7 @@ class TestIconResolver:
 
     def test_one_dimension_defined(self, _icon_mock):
 
-        from savegem.app.gui.widget.resolver.icon import IconResolver
+        from src.savegem import IconResolver
 
         resolver = IconResolver()
         resolved_value = resolver.resolve(TEST_PATH, width=100)
@@ -57,7 +57,7 @@ class TestIconResolver:
 
     def test_size_and_dimension_defined(self, _icon_mock):
 
-        from savegem.app.gui.widget.resolver.icon import IconResolver
+        from src.savegem import IconResolver
 
         resolver = IconResolver()
         resolved_value = resolver.resolve(TEST_PATH, size=100, width=200)

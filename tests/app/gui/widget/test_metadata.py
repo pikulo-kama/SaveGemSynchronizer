@@ -7,7 +7,7 @@ from pytest_mock import MockerFixture
 class TestRefreshEventMetadata:
 
     def test_init(self):
-        from savegem.app.gui.widget.metadata import RefreshEventMetadata
+        from src.savegem import RefreshEventMetadata
 
         meta = RefreshEventMetadata(refresh_children=True)
         assert meta.refresh_children is True
@@ -56,7 +56,7 @@ class TestWidgetMetadata:
         Mocks the database layer to return metadata and event rows.
         """
 
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import DatabaseRow
 
         db_table_mock.retrieve.return_value = [
             DatabaseRow(1, ("LOAD_COMPLETE", 1), ["refresh_event_id", "refresh_children"]),
@@ -65,7 +65,7 @@ class TestWidgetMetadata:
 
     def test_id_setting(self, _init_kw):
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from src.savegem import WidgetMetadata
 
         original_id = _init_kw["widget_id"]
         new_id = "new_id"
@@ -82,7 +82,7 @@ class TestWidgetMetadata:
 
     def test_parent(self, _init_kw):
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from src.savegem import WidgetMetadata
 
         original_parent_id = "parent_id"
         new_parent_id = "new_parent_id"
@@ -110,8 +110,8 @@ class TestWidgetMetadata:
 
     def test_resolvers(self, _init_kw):
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
-        from savegem.app.gui.widget.resolver import ContentResolver
+        from src.savegem import WidgetMetadata
+        from src.savegem import ContentResolver
 
         class TestResolver1(ContentResolver): pass
         class TestResolver2(ContentResolver): pass
@@ -139,7 +139,7 @@ class TestWidgetMetadata:
         Test default values and mandatory setup for refresh events.
         """
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata, UIRefreshEvent
+        from src.savegem import WidgetMetadata, UIRefreshEvent
 
         meta = WidgetMetadata(**_init_kw)
 
@@ -167,7 +167,7 @@ class TestWidgetMetadata:
 
     def test_should_allow_changing_order_id(self, _init_kw):
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from src.savegem import WidgetMetadata
 
         meta = WidgetMetadata(**_init_kw, order_id=10)
         assert meta.order_id == 10
@@ -180,7 +180,7 @@ class TestWidgetMetadata:
         Test non-default initialization values and derived properties.
         """
 
-        from savegem.app.gui.widget.metadata import RefreshEventMetadata, WidgetMetadata, UIRefreshEvent
+        from src.savegem import RefreshEventMetadata, WidgetMetadata, UIRefreshEvent
 
         events_meta = {"CUSTOM_EVENT": RefreshEventMetadata(True)}
 
@@ -212,7 +212,7 @@ class TestWidgetMetadata:
         Test section_id logic when it is None.
         """
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata, UISection
+        from src.savegem import WidgetMetadata, UISection
 
         meta = WidgetMetadata(
             widget_id='test',
@@ -231,7 +231,7 @@ class TestWidgetMetadata:
         Test parsing a single alignment string.
         """
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from src.savegem import WidgetMetadata
         assert WidgetMetadata._WidgetMetadata__parse_alignment("right") == Qt.AlignmentFlag.AlignRight  # noqa
 
 
@@ -240,7 +240,7 @@ class TestWidgetMetadata:
         Test parsing a hyphenated alignment string.
         """
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from src.savegem import WidgetMetadata
 
         expected = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         assert WidgetMetadata._WidgetMetadata__parse_alignment("top-left") == expected  # noqa
@@ -250,7 +250,7 @@ class TestWidgetMetadata:
         Test parsing None returns the default flag.
         """
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from src.savegem import WidgetMetadata
         assert WidgetMetadata._WidgetMetadata__parse_alignment(None) == Qt.AlignmentFlag(0)  # noqa
 
     def test_parse_stylesheet(self):
@@ -258,7 +258,7 @@ class TestWidgetMetadata:
         Test converting JSON dict to QSS string.
         """
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from src.savegem import WidgetMetadata
 
         style_dict = {"color": "red", "padding": "0px"}
         expected_string = "color: red;\npadding: 0px;\n"
@@ -279,7 +279,7 @@ class TestWidgetMetadata:
         Tests parsing object name and properties from the composed string.
         """
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
+        from src.savegem import WidgetMetadata
 
         meta = WidgetMetadata(**_init_kw)
 
@@ -299,8 +299,8 @@ class TestWidgetMetadata:
         Test successful mapping of a typical database row.
         """
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata, UIRefreshEvent
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import WidgetMetadata, UIRefreshEvent
+        from src.savegem import DatabaseRow
 
         input_data = {
             "widget_id": "main_view",
@@ -354,8 +354,8 @@ class TestWidgetMetadata:
 
     def test_widget_without_section_id(self, db_table_mock):
 
-        from savegem.app.gui.widget.metadata import WidgetMetadata
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import WidgetMetadata
+        from src.savegem import DatabaseRow
 
         row = DatabaseRow(1, ("id", None), ["widget_id", "section_id"])
         WidgetMetadata.from_database_row(row)

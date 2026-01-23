@@ -1,4 +1,4 @@
-from savegem.common.core.editable_json_config_holder import EditableJsonConfigHolder
+from src.savegem import EditableJsonConfigHolder
 
 
 class MockJsonConfigHolder(EditableJsonConfigHolder):

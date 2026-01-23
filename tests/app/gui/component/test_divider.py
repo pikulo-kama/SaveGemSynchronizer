@@ -7,8 +7,8 @@ from pytest_mock import MockerFixture
 class TestQBaseDivider:
 
     def test_init(self, qtbot):
-        from savegem.app.gui.component import CustomComponentMixin
-        from savegem.app.gui.component.divider import QBaseDivider
+        from src.savegem import CustomComponentMixin
+        from src.savegem import QBaseDivider
 
         widget = QBaseDivider()
         qtbot.addWidget(widget)
@@ -24,7 +24,7 @@ class TestQBaseDivider:
         from the palette and calls _paint_divider.
         """
 
-        from savegem.app.gui.component.divider import QBaseDivider
+        from src.savegem import QBaseDivider
 
         widget = QBaseDivider()
         qtbot.addWidget(widget)
@@ -54,7 +54,7 @@ class TestQBaseDivider:
 class TestQHDivider:
 
     def test_init_sets_fixed_height(self, qtbot):
-        from savegem.app.gui.component.divider import QHDivider
+        from src.savegem import QHDivider
 
         widget = QHDivider()
         qtbot.addWidget(widget)
@@ -69,7 +69,7 @@ class TestQHDivider:
         Ensure external calls to setFixedHeight are ignored as per code.
         """
 
-        from savegem.app.gui.component.divider import QHDivider
+        from src.savegem import QHDivider
 
         widget = QHDivider()
         qtbot.addWidget(widget)
@@ -85,7 +85,7 @@ class TestQHDivider:
         Verifies the rectangle geometry calculations.
         """
 
-        from savegem.app.gui.component.divider import QHDivider
+        from src.savegem import QHDivider
 
         widget = QHDivider()
         qtbot.addWidget(widget)
@@ -101,7 +101,7 @@ class TestQHDivider:
 class TestQVDivider:
 
     def test_init_sets_fixed_width(self, qtbot):
-        from savegem.app.gui.component.divider import QVDivider
+        from src.savegem import QVDivider
 
         widget = QVDivider()
         qtbot.addWidget(widget)
@@ -116,7 +116,7 @@ class TestQVDivider:
         Ensure external calls to setFixedWidth are ignored.
         """
 
-        from savegem.app.gui.component.divider import QVDivider
+        from src.savegem import QVDivider
 
         widget = QVDivider()
         qtbot.addWidget(widget)
@@ -132,7 +132,7 @@ class TestQVDivider:
         Verifies the rectangle geometry calculations.
         """
 
-        from savegem.app.gui.component.divider import QVDivider
+        from src.savegem import QVDivider
 
         widget = QVDivider()
         qtbot.addWidget(widget)

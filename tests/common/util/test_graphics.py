@@ -37,7 +37,7 @@ class TestGraphicsUtil:
         Checks size and alpha channel creation for a standard square pixmap.
         """
 
-        from savegem.common.util.graphics import round_image
+        from src.savegem import round_image
 
         size = 100
         original = self.create_solid_pixmap(size, size, QColor(Qt.GlobalColor.blue))
@@ -50,7 +50,7 @@ class TestGraphicsUtil:
 
     def test_should_round_image_with_radius(self, _qt_app, module_patch, painter_mock):
 
-        from savegem.common.util.graphics import round_image
+        from src.savegem import round_image
 
         size, radius = 100, 10
         original = self.create_solid_pixmap(size, size, QColor(Qt.GlobalColor.blue))
@@ -67,7 +67,7 @@ class TestGraphicsUtil:
         Checks size for a rectangular input, which should result in an ellipse clipping.
         """
 
-        from savegem.common.util.graphics import round_image
+        from src.savegem import round_image
 
         width, height = 150, 80
         original = self.create_solid_pixmap(width, height, QColor(Qt.GlobalColor.green))
@@ -81,7 +81,7 @@ class TestGraphicsUtil:
         Checks behavior with a zero-dimension pixmap.
         """
 
-        from savegem.common.util.graphics import round_image
+        from src.savegem import round_image
 
         original = QPixmap(0, 0)
         circular = round_image(original)
@@ -96,7 +96,7 @@ class TestGraphicsUtil:
         by checking a corner pixel (which is definitely outside the circle).
         """
 
-        from savegem.common.util.graphics import round_image
+        from src.savegem import round_image
 
         size = 100
         original = self.create_solid_pixmap(size, size, QColor(Qt.GlobalColor.white))
@@ -125,7 +125,7 @@ class TestGraphicsUtil:
         and doesn't unintentionally remove resolver.
         """
 
-        from savegem.common.util.graphics import round_image
+        from src.savegem import round_image
 
         size = 100
         original = QPixmap(size, size)
@@ -153,7 +153,7 @@ class TestGraphicsUtil:
 
     def test_should_scale_image(self, _qt_app):
 
-        from savegem.common.util.graphics import scale_image
+        from src.savegem import scale_image
 
         size = 100
         target_width = 20
@@ -170,7 +170,7 @@ class TestGraphicsUtil:
 
     def test_should_scale_image_width_only(self, _qt_app):
 
-        from savegem.common.util.graphics import scale_image
+        from src.savegem import scale_image
 
         size, target_size = 100, 50
         original = self.create_solid_pixmap(size, size, QColor(Qt.GlobalColor.white))

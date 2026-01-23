@@ -18,7 +18,7 @@ class TestCustomLayoutMixin:
         Creates a parent widget with mocked metadata.
         """
 
-        from savegem.app.gui.component.widget import QCustomWidget
+        from src.savegem import QCustomWidget
 
         widget = QCustomWidget()
         qtbot.addWidget(widget)
@@ -38,7 +38,7 @@ class TestCustomLayoutMixin:
         Creates a layout attached to the parent widget.
         """
 
-        from savegem.app.gui.component.layout import QCustomVBoxLayout
+        from src.savegem import QCustomVBoxLayout
 
         layout = QCustomVBoxLayout()
         _parent_widget.setLayout(layout)
@@ -62,7 +62,7 @@ class TestQCustomGridLayout:
 
     @pytest.fixture
     def _parent_widget(self, mocker: MockerFixture, qtbot):
-        from savegem.app.gui.component.widget import QCustomWidget
+        from src.savegem import QCustomWidget
 
         widget = QCustomWidget()
         qtbot.addWidget(widget)
@@ -81,7 +81,7 @@ class TestQCustomGridLayout:
         and parent's grid_columns setting.
         """
 
-        from savegem.app.gui.component.layout import QCustomGridLayout
+        from src.savegem import QCustomGridLayout
 
         # Configure parent for 2 columns
         _parent_widget.metadata.grid_columns = 2  # noqa
@@ -133,7 +133,7 @@ class TestQCustomGridLayout:
         Test that setColumnStretch is called for configured columns.
         """
 
-        from savegem.app.gui.component.layout import QCustomGridLayout
+        from src.savegem import QCustomGridLayout
 
         _parent_widget.metadata.grid_columns = 3  # noqa
         layout = QCustomGridLayout()

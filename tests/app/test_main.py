@@ -25,7 +25,8 @@ class TestApplication:
         Tests the main sequence: initialization, setup, service calls, and exit.
         """
 
-        from savegem.app import main, teardown
+        from src.savegem.app import teardown
+        from src.savegem.app import main
 
         prop_mock.return_value = "1.0.0"
 
@@ -61,8 +62,8 @@ class TestApplication:
         We retrieve the lambda and execute it.
         """
 
-        from savegem.app import main
-        from savegem.common.core.ipc_socket import IPCCommand
+        from src.savegem.app import main
+        from src.savegem.common import IPCCommand
 
         # Run main() to connect the lambda
         main()
@@ -83,7 +84,7 @@ class TestApplication:
         We retrieve the lambda and execute it.
         """
 
-        from savegem.app import main
+        from src.savegem.app import main
 
         # Run main() to connect the lambda
         main()
@@ -103,8 +104,8 @@ class TestApplication:
         Tests cleanup_directory, os.mkdir, and flag disablement.
         """
 
-        from savegem.app import teardown
-        from savegem.constants import Directory
+        from src.savegem.app import teardown
+        from src.savegem.constants import Directory
 
         teardown()
 
@@ -123,7 +124,7 @@ class TestApplication:
         Tests the sequence of state refresh, text resources reset, and GUI build.
         """
 
-        from savegem.app import rebuild
+        from src.savegem.app import rebuild
 
         text_resource_mock = module_patch("TextResource")
 

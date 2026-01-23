@@ -15,7 +15,7 @@ class ResolverTestModuleHelper:
 
     @pytest.fixture
     def _mock_token_resolver(self):
-        from savegem.app.gui.widget.resolver import ContentResolver
+        from src.savegem import ContentResolver
 
         # Define concrete resolver implementations for testing
         class MockTokenResolver(ContentResolver):
@@ -27,7 +27,7 @@ class ResolverTestModuleHelper:
 
     @pytest.fixture
     def _mock_integer_resolver(self):
-        from savegem.app.gui.widget.resolver import ContentResolver
+        from src.savegem import ContentResolver
 
         class MockIntegerResolver(ContentResolver):
             def resolve(self, value: str, *args, **kw):
@@ -38,7 +38,7 @@ class ResolverTestModuleHelper:
 
     @pytest.fixture
     def _mock_no_sub_resolver(self):
-        from savegem.app.gui.widget.resolver import ContentResolver
+        from src.savegem import ContentResolver
 
         class MockNoSubsResolver(ContentResolver):
             def resolve(self, value: str, *args, **kw):
@@ -63,7 +63,7 @@ class TestContentResolverFactory(ResolverTestModuleHelper):
         Test that resolvers are loaded only once (lazy loading/singleton).
         """
 
-        from savegem.app.gui.widget.resolver import get_resolvers
+        from src.savegem import get_resolvers
 
         # 1. First call loads the pool
         resolvers_1 = get_resolvers()
@@ -82,7 +82,7 @@ class TestResolveContent(ResolverTestModuleHelper):
 
     @pytest.fixture
     def _mock_token_resolve_method(self, mocker: MockerFixture):
-        from savegem.app.gui.widget.resolver import get_resolvers
+        from src.savegem import get_resolvers
         return mocker.patch.object(get_resolvers().get("mocktokenresolver"), "resolve")
 
     def test_no_token_returns_string(self):
@@ -90,7 +90,7 @@ class TestResolveContent(ResolverTestModuleHelper):
         Test simple string without tokens is returned unchanged.
         """
 
-        from savegem.app.gui.widget.resolver import resolve_content
+        from src.savegem import resolve_content
 
         content = "This is plain text."
         assert resolve_content(content) == content
@@ -100,7 +100,7 @@ class TestResolveContent(ResolverTestModuleHelper):
         Test resolution of a simple, single token.
         """
 
-        from savegem.app.gui.widget.resolver import resolve_content
+        from src.savegem import resolve_content
 
         content = "mocktoken{value, scaled: 100}"
         resolved = resolve_content(content)
@@ -112,7 +112,7 @@ class TestResolveContent(ResolverTestModuleHelper):
         Test that properties that look like digits are converted to int.
         """
 
-        from savegem.app.gui.widget.resolver import resolve_content
+        from src.savegem import resolve_content
 
         content = "mocktoken{param, key1: 42, key2: 99}"
         resolve_content(content)
@@ -124,7 +124,7 @@ class TestResolveContent(ResolverTestModuleHelper):
         Test a token that only has positional arguments after the main parameter.
         """
 
-        from savegem.app.gui.widget.resolver import resolve_content
+        from src.savegem import resolve_content
 
         content = "mocktoken{param, arg1, arg2: val}"
         resolve_content(content)
@@ -137,7 +137,7 @@ class TestResolveContent(ResolverTestModuleHelper):
         and the resulting non-string object breaks the outer loop correctly.
         """
 
-        from savegem.app.gui.widget.resolver import resolve_content, get_resolvers
+        from src.savegem import resolve_content, get_resolvers
 
         token_resolve = mocker.spy(get_resolvers().get("mocktokenresolver"), "resolve")
         integer_resolve = mocker.spy(get_resolvers().get("mockintegerresolver"), "resolve")
@@ -156,7 +156,7 @@ class TestResolveContent(ResolverTestModuleHelper):
         Test substitution when token is combined with literal text.
         """
 
-        from savegem.app.gui.widget.resolver import resolve_content
+        from src.savegem import resolve_content
 
         resolved = resolve_content("The logo is: mocktoken{user_id, scaled: 10}.")
         assert resolved == "The logo is: TOKEN_RES:user_id, 10."
@@ -166,7 +166,7 @@ class TestResolveContent(ResolverTestModuleHelper):
         Test token resolution resulting in None should resolve to empty string.
         """
 
-        from savegem.app.gui.widget.resolver import resolve_content
+        from src.savegem import resolve_content
 
         _mock_token_resolve_method.return_value = None
         resolved = resolve_content("Result: mocktoken{none_value}.")

@@ -31,7 +31,7 @@ class WidgetControllerTest:
 
     @pytest.fixture
     def _mock_sections(self, mocker: MockerFixture, module_patch):
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import DatabaseRow
 
         def _mock_controller_sections(section_data: list):
 

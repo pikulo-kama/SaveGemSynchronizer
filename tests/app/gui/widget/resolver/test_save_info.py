@@ -18,7 +18,7 @@ class TestSaveInfoResolver:
         Provides the SaveInfoResolver instance.
         """
 
-        from savegem.app.gui.widget.resolver.save_info import SaveInfoResolver
+        from src.savegem import SaveInfoResolver
         return SaveInfoResolver()
 
     @pytest.fixture
@@ -27,7 +27,7 @@ class TestSaveInfoResolver:
         Sets up a fully populated save context.
         """
 
-        from savegem.common.core.save_meta import SyncStatus
+        from src.savegem.common.core.save_meta import SyncStatus
 
         # Setup users
         user_config_mock.by_email.return_value.email = "owner@example.com"
@@ -47,7 +47,7 @@ class TestSaveInfoResolver:
         Sets up a context where the save is not present (is_present=False).
         """
 
-        from savegem.common.core.save_meta import SyncStatus
+        from src.savegem.common.core.save_meta import SyncStatus
 
         games_config_mock.current.meta.sync_status = SyncStatus.NoInformation
         games_config_mock.current.meta.drive.is_present = False
@@ -154,7 +154,7 @@ class TestSaveInfoResolver:
         Tests all permutations of SyncStatus mapping.
         """
 
-        from savegem.common.core.save_meta import SyncStatus
+        from src.savegem.common.core.save_meta import SyncStatus
 
         # Configure the context for the specific status
         games_config_mock.current.meta.sync_status = SyncStatus[status_name]

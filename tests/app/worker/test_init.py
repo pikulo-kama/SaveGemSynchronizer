@@ -9,7 +9,7 @@ class TestQWorker:
         Test that calling _run() on the base QWorker raises NotImplementedError.
         """
 
-        from savegem.app.worker import QWorker
+        from src.savegem.app.worker import QWorker
 
         with pytest.raises(NotImplementedError):
             QWorker()._run()
@@ -19,7 +19,7 @@ class TestQWorker:
         Test start() correctly calls _run, emits finished, and handles mutex locks.
         """
 
-        from savegem.app.worker import QWorker
+        from src.savegem.app.worker import QWorker
 
         class ConcreteWorker(QWorker):
             def _run(self):
@@ -46,7 +46,7 @@ class TestQWorker:
         Test that start() finished is NOT emitted if _run raises an exception.
         """
 
-        from savegem.app.worker import QWorker
+        from src.savegem.app.worker import QWorker
 
         # Arrange: Worker that always fails
         class FailingWorker(QWorker):
@@ -75,7 +75,7 @@ class TestQSubscriptableWorker:
         Provides an instance of QSubscriptableWorker.
         """
 
-        from savegem.app.worker import SubscriptableWorker
+        from src.savegem.app.worker import SubscriptableWorker
 
         worker = SubscriptableWorker()
         # Mock _run to prevent NotImplementedError if start() were called
@@ -108,7 +108,7 @@ class TestQSubscriptableWorker:
         Test ErrorEvent is correctly propagated via the error signal.
         """
 
-        from savegem.common.service.subscriptable import ErrorEvent
+        from src.savegem.common.service.subscriptable import ErrorEvent
 
         error_event = ErrorEvent("Test Error")
 
@@ -125,7 +125,7 @@ class TestQSubscriptableWorker:
         Test ProgressEvent is correctly propagated via the progress signal.
         """
 
-        from savegem.common.service.subscriptable import ProgressEvent
+        from src.savegem.common.service.subscriptable import ProgressEvent
 
         progress_event = ProgressEvent(None, 50)
 
@@ -142,7 +142,7 @@ class TestQSubscriptableWorker:
         Test DoneEvent is correctly propagated via the completed signal.
         """
 
-        from savegem.common.service.subscriptable import DoneEvent
+        from src.savegem.common.service.subscriptable import DoneEvent
 
         done_event = DoneEvent(None)
 
@@ -159,7 +159,7 @@ class TestQSubscriptableWorker:
         Test an unhandled Event type is ignored.
         """
 
-        from savegem.common.service.subscriptable import Event
+        from src.savegem.common.service.subscriptable import Event
 
         unhandled_event = Event(None)
 

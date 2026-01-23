@@ -23,7 +23,7 @@ class TestMenuController(WidgetControllerTest):
         Provides the MenuController instance with mocked dependencies.
         """
 
-        from savegem.app.gui.controller.menu import MenuController
+        from src.savegem import MenuController
 
         _mock_sections(_section_data)
         return MenuController(_widget_manager)
@@ -48,8 +48,8 @@ class TestMenuController(WidgetControllerTest):
 
     def test_refresh_when_no_current_section(self, mocker: MockerFixture, _controller, _change_tab_mock, _section_data):
 
-        from savegem.app.gui.controller import TemplateWidgetController
-        from savegem.app.gui.controller.menu import MenuController
+        from src.savegem import TemplateWidgetController
+        from src.savegem import MenuController
 
         parent_refresh_mock = mocker.patch.object(TemplateWidgetController, "refresh")
         parent_widget = mocker.MagicMock()
@@ -62,8 +62,8 @@ class TestMenuController(WidgetControllerTest):
 
     def test_refresh_when_current_section(self, mocker: MockerFixture, _controller, _change_tab_mock, _section_data):
 
-        from savegem.app.gui.controller import TemplateWidgetController
-        from savegem.app.gui.controller.menu import MenuController
+        from src.savegem import TemplateWidgetController
+        from src.savegem import MenuController
 
         parent_refresh_mock = mocker.patch.object(TemplateWidgetController, "refresh")
         parent_widget = mocker.MagicMock()
@@ -76,8 +76,8 @@ class TestMenuController(WidgetControllerTest):
 
     def test_handle_menu_item(self, mocker: MockerFixture, _controller, _change_tab_mock, _is_selected_mock):
 
-        from savegem.app.gui.controller.menu import MenuController
-        from savegem.app.gui.constants import QBool
+        from src.savegem import MenuController
+        from src.savegem import QBool
 
         menu_item = mocker.MagicMock()
         _is_selected_mock.return_value = True
@@ -121,7 +121,7 @@ class TestMenuController(WidgetControllerTest):
 
     def test_is_selected(self, _controller):
 
-        from savegem.app.gui.controller.menu import MenuController
+        from src.savegem import MenuController
 
         first_section = _controller.sections.rows[0]
         second_section = _controller.sections.rows[1]
@@ -148,7 +148,7 @@ class TestMenuController(WidgetControllerTest):
         Tests the core flow of tearing down the old UI and building the new section.
         """
 
-        from savegem.app.gui.constants import UIRefreshEvent
+        from src.savegem import UIRefreshEvent
 
         current_section_id = "home_section"
         new_section_id = "about_section"

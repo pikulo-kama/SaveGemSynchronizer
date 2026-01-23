@@ -11,8 +11,8 @@ class TestGameBarTabController(WidgetControllerTest):
         (UISection.HomeSection, "game_container").
         """
 
-        from savegem.app.gui.controller.game_bar_tab import GameBarTabController
-        from savegem.app.gui.constants import UISection
+        from src.savegem import GameBarTabController
+        from src.savegem import UISection
 
         controller = GameBarTabController(_widget_manager)
 

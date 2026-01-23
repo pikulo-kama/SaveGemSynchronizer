@@ -12,7 +12,7 @@ class TestHolders:
         from tests.tools.mocks.mock_json_config_holder import MockJsonConfigHolder
 
         # Reset global module state so functions like prop() run the service_info loader again
-        import savegem.common.core.holders as holders_module
+        from src import savegem as holders_module
         mocker.patch.object(holders_module, '_app_config', None)
         mocker.patch.object(holders_module, '_locales', None)
 
@@ -27,19 +27,19 @@ class TestHolders:
 
 
     def test_should_read_property(self, json_config_holder_mock):
-        from savegem.common.core.holders import prop
+        from src.savegem import prop
         assert prop("property") == LocaleTestData.FirstLocale
 
 
     def test_should_read_nested_property(self, json_config_holder_mock):
-        from savegem.common.core.holders import prop
+        from src.savegem import prop
         assert prop("nested.property") == SocketTestData.UIPort
 
 
     def test_should_load_locales(self, db_mock, db_table_mock):
 
-        from savegem.common.core.holders import locales
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import locales
+        from src.savegem import DatabaseRow
 
         db_table_mock.__iter__.return_value = [
             DatabaseRow(1, (LocaleTestData.SecondLocale,), ["locale_id"]),

@@ -25,7 +25,7 @@ class TestQCustomDialog:
         Creates the dialog attached to the parent.
         """
 
-        from savegem.app.gui.component.dialog import QCustomDialog
+        from src.savegem import QCustomDialog
 
         dialog_widget = QCustomDialog()
         dialog_widget.setParent(_parent_widget)
@@ -38,7 +38,7 @@ class TestQCustomDialog:
     @pytest.fixture
     def _orphan_dialog(self, qtbot):
 
-        from savegem.app.gui.component.dialog import QCustomDialog
+        from src.savegem import QCustomDialog
 
         dialog_widget = QCustomDialog()
         qtbot.addWidget(dialog_widget)
@@ -90,7 +90,7 @@ class TestQCustomDialog:
         Test that show returns early if no parent is set.
         """
 
-        from savegem.app.gui.component.dialog import QCustomDialog
+        from src.savegem import QCustomDialog
 
         orphan_dialog = QCustomDialog()
         qtbot.addWidget(orphan_dialog)

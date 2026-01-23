@@ -9,7 +9,7 @@ class TestRegularExtractor:
 
     @pytest.fixture
     def _custom_extractor_mock(self):
-        from savegem.initializer.extractor import RegularExtractor
+        from src.savegem import RegularExtractor
 
         class MockCustomExtractor(RegularExtractor):
             """
@@ -33,7 +33,7 @@ class TestRegularExtractor:
         Fixture to provide a mock argparse Namespace object.
         """
 
-        from savegem.initializer.extractor import RegularExtractorName
+        from src.savegem import RegularExtractorName
 
         args = mocker.MagicMock()
         args.type = RegularExtractorName
@@ -92,8 +92,8 @@ class TestRegularExtractor:
         subclasses of RegularExtractor (excluding RegularExtractor itself).
         """
 
-        from savegem.initializer.extractor import RegularExtractor
-        from savegem.initializer.extractor import get_extractors
+        from src.savegem import RegularExtractor
+        from src.savegem import get_extractors
 
         # Mock the reflection utility to return test members
         get_members_mock.return_value = [
@@ -116,7 +116,7 @@ class TestRegularExtractor:
         Tests that if the type is Regular, RegularExtractor.do_extract is called.
         """
 
-        from savegem.initializer.extractor import invoke_extractor, RegularExtractor
+        from src.savegem import invoke_extractor, RegularExtractor
 
         # Mock the RegularExtractor instance method
         mock_do_extract = mocker.patch.object(RegularExtractor, 'do_extract')
@@ -132,7 +132,7 @@ class TestRegularExtractor:
         Tests that a custom extractor is correctly identified and invoked.
         """
 
-        from savegem.initializer.extractor import invoke_extractor, RegularExtractor
+        from src.savegem import invoke_extractor, RegularExtractor
 
         mock_args.type = "Custom"
         custom_instance = _custom_extractor_mock()
@@ -152,8 +152,8 @@ class TestRegularExtractor:
         Tests the main success path of do_extract without filtering.
         """
 
-        from savegem.initializer.extractor import RegularExtractor
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import RegularExtractor
+        from src.savegem import DatabaseRow
 
         db_table_mock.retrieve.return_value = [
             DatabaseRow(1, (1, "Alice", None), ["id", "name", "value"]),
@@ -195,7 +195,7 @@ class TestRegularExtractor:
         Tests that a filter argument correctly invokes table.where() and adds filter to metadata.
         """
 
-        from savegem.initializer.extractor import RegularExtractor
+        from src.savegem import RegularExtractor
 
         mock_args.filter = "column > 10"
 
@@ -215,8 +215,8 @@ class TestRegularExtractor:
         Tests that the _post_extract method is correctly called with processed data.
         """
 
-        from savegem.initializer.extractor import RegularExtractor
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import RegularExtractor
+        from src.savegem import DatabaseRow
 
         # Mock _post_extract to change the data structure
         mock_post_extract = mocker.patch.object(RegularExtractor, '_post_extract', return_value=["Modified Data"])

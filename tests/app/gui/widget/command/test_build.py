@@ -8,8 +8,8 @@ class TestWidgetBuildCommand:
 
     def test_execute(self, mocker: MockerFixture):
 
-        from savegem.app.gui.widget.command.build import WidgetBuildCommand
-        from savegem.app.gui.widget.manager import ManagerContext
+        from src.savegem import WidgetBuildCommand
+        from src.savegem import ManagerContext
 
         build_widget_mock = mocker.patch.object(WidgetBuildCommand, "_build_widget")
         manager = mocker.MagicMock()
@@ -30,7 +30,7 @@ class TestWidgetBuildCommand:
 
     def test_build_widget(self, mocker: MockerFixture, resolve_content_mock):
 
-        from savegem.app.gui.widget.command.build import WidgetBuildCommand
+        from src.savegem import WidgetBuildCommand
 
         widget = mocker.MagicMock()
         layout = mocker.MagicMock()
@@ -89,7 +89,7 @@ class TestWidgetSectionBuildCommand:
 
     def test_controller(self, module_patch):
 
-        from savegem.app.gui.widget.command.build import WidgetSectionBuildCommand
+        from src.savegem import WidgetSectionBuildCommand
 
         test_section_id = "section"
         base_init_mock = module_patch("WidgetBuildCommand.__init__")
@@ -107,7 +107,7 @@ class TestWidgetSectionBuildCommand:
     def test_retrieve_with_root_section(self, mocker: MockerFixture, db_mock, db_table_mock, _meta_from_row_mock,
                                         section, where_clause_args):
 
-        from savegem.app.gui.widget.command.build import WidgetSectionBuildCommand
+        from src.savegem import WidgetSectionBuildCommand
 
         db_table_mock.retrieve.return_value = [
             mocker.MagicMock(),

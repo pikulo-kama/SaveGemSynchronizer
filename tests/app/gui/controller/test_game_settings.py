@@ -16,7 +16,7 @@ class TestAutoModeController(WidgetControllerTest):
 
     @pytest.fixture
     def _controller(self, _widget_manager):
-        from savegem.app.gui.controller.game_settings import AutoModeController
+        from src.savegem import AutoModeController
         return AutoModeController(_widget_manager)
 
     def test_setup_allowed_binds_clicked_signal(self, _controller, _toggle, games_config_mock):

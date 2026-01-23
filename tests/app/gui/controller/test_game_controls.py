@@ -16,8 +16,8 @@ class TestSubscribers:
         Test notification is sent when DoneEvent.success is True.
         """
 
-        from savegem.app.gui.controller.game_controls import _done_subscriber
-        from savegem.common.service.subscriptable import DoneEvent
+        from src.savegem import _done_subscriber
+        from src.savegem.common.service.subscriptable import DoneEvent
 
         callback = _done_subscriber("notification_Message")
         callback(DoneEvent(None))
@@ -29,8 +29,8 @@ class TestSubscribers:
         Test no notification is sent when DoneEvent.success is False.
         """
 
-        from savegem.app.gui.controller.game_controls import _done_subscriber
-        from savegem.common.service.subscriptable import DoneEvent, EventKind
+        from src.savegem import _done_subscriber
+        from src.savegem.common.service.subscriptable import DoneEvent, EventKind
 
         callback = _done_subscriber("notification_Message")
 
@@ -42,7 +42,7 @@ class TestSubscribers:
         Test progress event updates the QProgressPushButton widget.
         """
 
-        from savegem.app.gui.controller.game_controls import _progress_subscriber
+        from src.savegem import _progress_subscriber
 
         mock_widget = mocker.MagicMock()
 
@@ -56,8 +56,8 @@ class TestSubscribers:
         Test notification for SavesDirectoryMissing error.
         """
 
-        from savegem.common.service.subscriptable import EventKind, ErrorEvent
-        from savegem.app.gui.controller.game_controls import _error_subscriber
+        from src.savegem.common.service.subscriptable import EventKind, ErrorEvent
+        from src.savegem import _error_subscriber
 
         games_config_mock.current.local_path = "/mock/path/to/saves"
 
@@ -73,8 +73,8 @@ class TestSubscribers:
         Test notification for DriveMetadataMissing error.
         """
 
-        from savegem.common.service.subscriptable import EventKind, ErrorEvent
-        from savegem.app.gui.controller.game_controls import _error_subscriber
+        from src.savegem.common.service.subscriptable import EventKind, ErrorEvent
+        from src.savegem import _error_subscriber
 
         event = ErrorEvent(EventKind.DriveMetadataMissing)
         _error_subscriber(event)
@@ -86,8 +86,8 @@ class TestSubscribers:
         Test notification for DriveMetadataMissing error.
         """
 
-        from savegem.common.service.subscriptable import EventKind, ErrorEvent
-        from savegem.app.gui.controller.game_controls import _error_subscriber
+        from src.savegem.common.service.subscriptable import EventKind, ErrorEvent
+        from src.savegem import _error_subscriber
 
         event = ErrorEvent(EventKind.ErrorUploadingToDrive)
         _error_subscriber(event)
@@ -117,7 +117,7 @@ class TestDownloadButtonController(WidgetControllerTest):
         Tests that the button's clicked signal is connected to the gui().confirmation wrapper.
         """
 
-        from savegem.app.gui.controller.game_controls import DownloadButtonController
+        from src.savegem import DownloadButtonController
 
         controller = DownloadButtonController(_widget_manager)
         controller.setup(_mock_button)
@@ -138,8 +138,8 @@ class TestDownloadButtonController(WidgetControllerTest):
         Tests the execution path inside the start_download function, verifying worker1 setup.
         """
 
-        from savegem.app.gui.controller.game_controls import DownloadButtonController
-        from savegem.app.gui.constants import UIRefreshEvent
+        from src.savegem import DownloadButtonController
+        from src.savegem import UIRefreshEvent
 
         mock_error_sub = module_patch("_error_subscriber")
         mock_progress_sub = module_patch("_progress_subscriber")
@@ -194,7 +194,7 @@ class TestUploadButtonController(WidgetControllerTest):
         Tests that the button's clicked signal is connected directly to the start_upload wrapper.
         """
 
-        from savegem.app.gui.controller.game_controls import UploadButtonController
+        from src.savegem import UploadButtonController
 
         controller = UploadButtonController(_widget_manager)
         controller.setup(_mock_button)
@@ -210,7 +210,7 @@ class TestUploadButtonController(WidgetControllerTest):
         Tests the execution path inside the start_upload function, verifying worker1 setup.
         """
 
-        from savegem.app.gui.controller.game_controls import UploadButtonController
+        from src.savegem import UploadButtonController
 
         mock_progress_sub = module_patch("_progress_subscriber")
         mock_done_sub = module_patch("_done_subscriber")

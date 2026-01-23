@@ -10,7 +10,7 @@ class TestDialogController(WidgetControllerTest):
         Tests that the setup method correctly sets the parent, adjusts size, and executes the dialog modally.
         """
 
-        from savegem.app.gui.controller.dialog import DialogController
+        from src.savegem import DialogController
 
         dialog = mocker.MagicMock()
 

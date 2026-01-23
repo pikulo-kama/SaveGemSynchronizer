@@ -12,7 +12,7 @@ class TestPlayersController(WidgetControllerTest):
         Provides the PlayersController instance.
         """
 
-        from savegem.app.gui.controller.players import PlayersController
+        from src.savegem import PlayersController
         return PlayersController(_widget_manager)
 
     def test_get_data_when_game_players_configured(self, mocker: MockerFixture, _controller, activity_mock, 
@@ -73,8 +73,8 @@ class TestPlayersController(WidgetControllerTest):
 
     def test_handle_player_card(self, mocker: MockerFixture, _controller, activity_mock):
 
-        from savegem.app.gui.controller.players import PlayersController
-        from savegem.app.gui.constants import QAttr
+        from src.savegem import PlayersController
+        from src.savegem import KamaAttr
 
         player = mocker.MagicMock()
         player_card = mocker.MagicMock()
@@ -91,4 +91,4 @@ class TestPlayersController(WidgetControllerTest):
 
         _controller.handle__player_card(player_card, player)
 
-        player_card.setProperty.assert_called_once_with(QAttr.Id, PlayersController.PlayerActive)
+        player_card.setProperty.assert_called_once_with(KamaAttr.Id, PlayersController.PlayerActive)

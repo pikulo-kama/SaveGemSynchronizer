@@ -8,8 +8,8 @@ class TestQSpacer:
         Tests that QSpacer correctly inherits from QWidget and CustomComponentMixin.
         """
 
-        from savegem.app.gui.component import CustomComponentMixin
-        from savegem.app.gui.component.spacer import QSpacer
+        from src.savegem import CustomComponentMixin
+        from src.savegem import QSpacer
 
         spacer = QSpacer()
         qtbot.addWidget(spacer)
@@ -24,7 +24,7 @@ class TestQSpacer:
         and Preferred vertically, ensuring spacer behavior.
         """
 
-        from savegem.app.gui.component.spacer import QSpacer
+        from src.savegem import QSpacer
 
         spacer = QSpacer()
         qtbot.addWidget(spacer)

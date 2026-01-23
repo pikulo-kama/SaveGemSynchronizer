@@ -7,7 +7,7 @@ class TestDaemon:
 
     @pytest.fixture
     def _mock_daemon(self):
-        from savegem.common.service.daemon import Daemon
+        from src.savegem.common.service.daemon import Daemon
 
         class MockDaemon(Daemon):
             """
@@ -59,7 +59,7 @@ class TestDaemon:
         Test successful initialization when service_info file is present.
         """
 
-        from savegem.common.service.daemon import Daemon
+        from src.savegem.common.service.daemon import Daemon
 
         path_exists_mock.return_value = True
 
@@ -78,7 +78,7 @@ class TestDaemon:
         Test initialization when service_info file is missing.
         """
 
-        from savegem.common.service.daemon import Daemon
+        from src.savegem.common.service.daemon import Daemon
 
         path_exists_mock.return_value = False
         mock_config_constructor = module_patch("JsonConfigHolder")
@@ -110,7 +110,7 @@ class TestDaemon:
         Test the main loop when no authentication is required.
         """
 
-        from savegem.common.service.daemon import ExitTestLoop
+        from src.savegem.common.service.daemon import ExitTestLoop
 
         path_exists_mock.return_value = False
         daemon = _mock_daemon("TestService", requires_auth=False)
@@ -134,7 +134,7 @@ class TestDaemon:
         Test the loop when authentication is required and delayed.
         """
 
-        from savegem.common.service.daemon import ExitTestLoop
+        from src.savegem.common.service.daemon import ExitTestLoop
 
         google_auth_mock.is_authenticated.side_effect = [False, False, True, ExitTestLoop]
 
@@ -176,7 +176,7 @@ class TestDaemon:
         Test that exceptions in _work are logged and the loop continues.
         """
 
-        from savegem.common.service.daemon import ExitTestLoop
+        from src.savegem.common.service.daemon import ExitTestLoop
 
         path_exists_mock.return_value = False
 
@@ -202,7 +202,7 @@ class TestDaemon:
 
     def test_interval_change(self, _mock_daemon):
 
-        from savegem.common.service.daemon import Daemon
+        from src.savegem.common.service.daemon import Daemon
 
         test_interval = 12345
 

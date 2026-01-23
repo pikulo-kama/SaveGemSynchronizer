@@ -5,7 +5,7 @@ class TestWidgetsExtractor:
 
     def test_widget_import(self, db_mock, db_table_mock):
 
-        from savegem.initializer.extractor.widgets_extractor import WidgetsExtractor
+        from src.savegem import WidgetsExtractor
 
         data = [
             {
@@ -82,7 +82,7 @@ class TestWidgetsExtractor:
 
     def test_should_build_where_clause_correctly_when_section_id_is_null(self, db_table_mock):
 
-        from savegem.initializer.extractor.widgets_extractor import WidgetsExtractor
+        from src.savegem import WidgetsExtractor
 
         data = [
             {
@@ -105,8 +105,8 @@ class TestWidgetsExtractor:
 
     def test_should_include_events_when_extracting(self, db_table_mock):
 
-        from savegem.initializer.extractor.widgets_extractor import WidgetsExtractor
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import WidgetsExtractor
+        from src.savegem import DatabaseRow
 
         table_columns = ["refresh_event_id", "refresh_children"]
         first_event = "test_event"

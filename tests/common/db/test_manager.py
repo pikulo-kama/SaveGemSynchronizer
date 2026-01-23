@@ -13,7 +13,7 @@ class TestDatabaseManager:
         """
 
         # Access the global variable directly for reset
-        import savegem.common.db.manager as manager_module
+        from src import savegem as manager_module
         mocker.patch.object(manager_module, '_db', None)
 
 
@@ -24,7 +24,7 @@ class TestDatabaseManager:
         for testing. This bypasses the need for mock_resolve_app_data for core logic.
         """
 
-        from savegem.common.db.manager import DatabaseManager
+        from src.savegem import DatabaseManager
 
         class InMemoryDatabaseManager(DatabaseManager):
             def connection(self):
@@ -59,7 +59,7 @@ class TestDatabaseManager:
         Tests that the db() function creates and returns the same instance.
         """
 
-        import savegem.common.db.manager as database_module
+        from src import savegem as database_module
 
         # Ensure it's None initially
         assert database_module._db is None
@@ -79,7 +79,7 @@ class TestDatabaseManager:
         by the mocked resolve_app_data.
         """
 
-        import savegem.common.db.manager as database_module
+        from src import savegem as database_module
 
         resolve_app_data_mock.return_value = ":memory:"
 

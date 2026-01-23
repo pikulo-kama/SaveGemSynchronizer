@@ -12,7 +12,7 @@ class TestCustomComponentMixin:
 
     @pytest.fixture
     def _test_widget_class(self):
-        from savegem.app.gui.component import CustomComponentMixin
+        from src.savegem import CustomComponentMixin
 
         class TestWidget(CustomComponentMixin, QWidget):
             def __init__(self, parent=None):

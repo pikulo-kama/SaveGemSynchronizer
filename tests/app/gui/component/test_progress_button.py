@@ -13,7 +13,7 @@ class TestQProgressPushButton:
         Provides a QProgressPushButton instance registered with qtbot.
         """
 
-        from savegem.app.gui.component.progress_button import QProgressPushButton
+        from src.savegem import QProgressPushButton
 
         button = QProgressPushButton("Download")
         button.resize(200, 50)
@@ -24,7 +24,7 @@ class TestQProgressPushButton:
 
     def test_refresh(self, mocker: MockerFixture, _progress_button):
 
-        from savegem.app.gui.component.button import QCustomPushButton
+        from src.savegem import QCustomPushButton
 
         _progress_button.set_progress = mocker.Mock()
         parent_refresh = mocker.patch.object(QCustomPushButton, "refresh")
@@ -40,8 +40,8 @@ class TestQProgressPushButton:
         Test the button initializes the progress bar correctly.
         """
 
-        from savegem.app.gui.component.button import QCustomPushButton
-        from savegem.app.gui.component.progress_button import QProgressPushButton
+        from src.savegem import QCustomPushButton
+        from src.savegem import QProgressPushButton
 
         assert isinstance(_progress_button, QCustomPushButton)
 
@@ -69,8 +69,8 @@ class TestQProgressPushButton:
         Test set_progress updates QProgressBar value, text, custom property, and enabled state.
         """
 
-        from savegem.app.gui.component.progress_button import QProgressPushButton
-        from savegem.app.gui.constants import QBool
+        from src.savegem import QProgressPushButton
+        from src.savegem import QBool
 
         progress_bar = _progress_button._QProgressPushButton__progress_bar  # noqa
         original_text = _progress_button.text()
@@ -93,24 +93,24 @@ class TestQProgressPushButton:
 
     def test_set_property_propagates_kind_to_progress_bar(self, _progress_button):
         """
-        Test setProperty propagates QAttr.Kind to the progress bar with the correct prefixed value.
+        Test setProperty propagates KamaAttr.Kind to the progress bar with the correct prefixed value.
         """
 
-        from savegem.app.gui.constants import QAttr
+        from src.savegem import KamaAttr
 
         test_kind = "Primary"
         progress_bar = _progress_button._QProgressPushButton__progress_bar  # noqa
         expected_bar_kind = f"QProgressPushButton-{test_kind}"
 
-        _progress_button.setProperty(QAttr.Kind, test_kind)
+        _progress_button.setProperty(KamaAttr.Kind, test_kind)
 
-        assert _progress_button.property(QAttr.Kind) == test_kind
-        assert progress_bar.property(QAttr.Kind) == expected_bar_kind
+        assert _progress_button.property(KamaAttr.Kind) == test_kind
+        assert progress_bar.property(KamaAttr.Kind) == expected_bar_kind
 
 
     def test_set_property_does_not_propagate_other_attributes(self, _progress_button):
         """
-        Test setProperty only propagates QAttr.Kind and ignores others.
+        Test setProperty only propagates KamaAttr.Kind and ignores others.
         """
 
         test_attr = "SomeOtherAttribute"
@@ -128,7 +128,7 @@ class TestQProgressPushButton:
         Test that resizeEvent sets the progress bar's geometry to match the button.
         """
 
-        from savegem.app.gui.component.button import QCustomPushButton
+        from src.savegem import QCustomPushButton
 
         mock_super_resize = mocker.spy(QCustomPushButton, 'resizeEvent')
 

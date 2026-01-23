@@ -15,7 +15,7 @@ class TestIPCSocket:
 
     @pytest.fixture
     def _ipc_socket(self):
-        from savegem.common.core.ipc_socket import IPCSocket
+        from src.savegem.common import IPCSocket
         return IPCSocket(port=SocketTestData.UIPort)
 
 
@@ -30,7 +30,7 @@ class TestIPCSocket:
 
     def test_is_socket_running_true(self, _ipc_socket, _socket, logger_mock):
 
-        from savegem.common.core.ipc_socket import IPCSocket
+        from src.savegem.common import IPCSocket
 
         mock_instance = _socket.return_value
 
@@ -59,9 +59,9 @@ class TestIPCSocket:
     def test_listen_state_changed_command(self, mocker: MockerFixture, _ipc_socket, _socket, app_state_mock,
                                           _mock_is_socket_running):
 
-        from savegem.constants import UTF_8
-        from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
-        from savegem.common.util.test import ExitTestLoop
+        from src.savegem.constants import UTF_8
+        from src.savegem.common import IPCSocket, IPCProp, IPCCommand
+        from src.savegem.common.util.test import ExitTestLoop
 
         test_message = {IPCProp.Command: IPCCommand.StateChanged}
         encoded_message = json.dumps(test_message).encode(UTF_8)
@@ -106,9 +106,9 @@ class TestIPCSocket:
     def test_listen_custom_command(self, mocker: MockerFixture, _ipc_socket, _socket, app_state_mock,
                                    _mock_is_socket_running, logger_mock):
 
-        from savegem.constants import UTF_8
-        from savegem.common.core.ipc_socket import IPCSocket, IPCProp
-        from savegem.common.util.test import ExitTestLoop
+        from src.savegem.constants import UTF_8
+        from src.savegem.common import IPCSocket, IPCProp
+        from src.savegem.common.util.test import ExitTestLoop
 
         _mock_is_socket_running(False)
 
@@ -140,8 +140,8 @@ class TestIPCSocket:
 
     def test_send_string_command_success(self, _ipc_socket, _socket):
 
-        from savegem.constants import UTF_8
-        from savegem.common.core.ipc_socket import IPCSocket, IPCProp, IPCCommand
+        from src.savegem.constants import UTF_8
+        from src.savegem.common import IPCSocket, IPCProp, IPCCommand
 
         socket_mock = _socket.return_value
         socket_mock.__enter__.return_value = socket_mock
@@ -156,8 +156,8 @@ class TestIPCSocket:
 
     def test_send_dict_message_success(self, _ipc_socket, _socket):
 
-        from savegem.constants import UTF_8
-        from savegem.common.core.ipc_socket import IPCProp
+        from src.savegem.constants import UTF_8
+        from src.savegem.common import IPCProp
 
         test_message = {IPCProp.Command: "test", "data": [1, 2]}
 

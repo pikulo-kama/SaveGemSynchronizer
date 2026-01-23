@@ -28,8 +28,8 @@ class TestGDriveWatcher:
 
     def test_run_once_initializes_user_and_downloads_config(self, gdrive_mock, app_context_mock, app_config_mock, holder_mock):
 
-        from savegem.gdrive_watcher import GDriveWatcher
-        from savegem.constants import HolderObject
+        from src.savegem.gdrive_watcher import GDriveWatcher
+        from src.savegem.constants import HolderObject
 
         watcher = GDriveWatcher()
         watcher._run_once()
@@ -45,7 +45,7 @@ class TestGDriveWatcher:
 
     def test_should_not_work_if_gui_not_initialized(self, gdrive_mock, flags_mock):
 
-        from savegem.gdrive_watcher import GDriveWatcher
+        from src.savegem.gdrive_watcher import GDriveWatcher
 
         flags_mock.gui_initialized.enabled = False
 
@@ -59,7 +59,7 @@ class TestGDriveWatcher:
         Test __get_changes correctly processes changes and updates start_page_token.
         """
 
-        from savegem.gdrive_watcher import GDriveWatcher
+        from src.savegem.gdrive_watcher import GDriveWatcher
 
         watcher = GDriveWatcher()
 
@@ -96,7 +96,7 @@ class TestGDriveWatcher:
         Test that removed files are handled by assuming current game files were affected.
         """
 
-        from savegem.gdrive_watcher import GDriveWatcher
+        from src.savegem.gdrive_watcher import GDriveWatcher
 
         watcher = GDriveWatcher()
         app_dir = app_context_mock.games.current.drive_directory
@@ -128,8 +128,8 @@ class TestGDriveWatcher:
         Test that all three relevant change types trigger the correct refresh events.
         """
 
-        from savegem.app.gui.constants import UIRefreshEvent
-        from savegem.gdrive_watcher import GDriveWatcher
+        from src.savegem import UIRefreshEvent
+        from src.savegem.gdrive_watcher import GDriveWatcher
 
         watcher = GDriveWatcher()
 
@@ -166,7 +166,7 @@ class TestGDriveWatcher:
         Test no refresh commands are sent if unrelated changes occur.
         """
 
-        from savegem.gdrive_watcher import GDriveWatcher
+        from src.savegem.gdrive_watcher import GDriveWatcher
 
         watcher = GDriveWatcher()
 

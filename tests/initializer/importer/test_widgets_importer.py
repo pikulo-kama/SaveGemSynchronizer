@@ -5,7 +5,7 @@ class TestWidgetsImporter:
 
     def test_widgets_import(self, db_table_mock):
 
-        from savegem.initializer.importer.widgets_importer import WidgetsImporter
+        from src.savegem import WidgetsImporter
 
         data = [
             {
@@ -80,7 +80,7 @@ class TestWidgetsImporter:
 
     def test_template_import(self, db_table_mock):
 
-        from savegem.initializer.importer.widgets_importer import WidgetsImporter
+        from src.savegem import WidgetsImporter
 
         data = [
             {
@@ -251,7 +251,7 @@ class TestWidgetsImporter:
         assert formatted_data == expected_data
 
     def test_should_apply_filter_when_provided(self, db_table_mock):
-        from savegem.initializer.importer.widgets_importer import WidgetsImporter
+        from src.savegem import WidgetsImporter
 
         data_filter = "column = 'a'"
 
@@ -261,7 +261,7 @@ class TestWidgetsImporter:
         db_table_mock.where.assert_called_once_with(data_filter)
 
     def test_should_import_events_when_present(self, db_table_mock):
-        from savegem.initializer.importer.widgets_importer import WidgetsImporter
+        from src.savegem import WidgetsImporter
 
         first_event = "test_event"
         second_event = "another_event"

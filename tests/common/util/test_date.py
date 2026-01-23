@@ -9,7 +9,7 @@ class TestDateUtil:
         and localizes it to the mocked local timezone.
         """
 
-        from savegem.common.util.date import string_to_date
+        from src.savegem import string_to_date
 
         string_date = "2024-01-15T10:30:00.000Z"
         expected_tz = "America/New_York"
@@ -39,7 +39,7 @@ class TestDateUtil:
         Tests date formatting when show_year is True.
         """
 
-        from savegem.common.util.date import get_verbose_date
+        from src.savegem import get_verbose_date
 
         test_dt = datetime.now()
         app_state_mock.locale = "fr_FR"
@@ -59,7 +59,7 @@ class TestDateUtil:
         Tests date formatting when show_year is False.
         """
 
-        from savegem.common.util.date import get_verbose_date
+        from src.savegem import get_verbose_date
 
         test_dt = datetime.now()
         app_state_mock.locale = "de_DE"
@@ -79,8 +79,8 @@ class TestDateUtil:
         Tests time formatting using the default 24-hour (Military) format.
         """
 
-        from savegem.constants import TimeFormat
-        from savegem.common.util.date import get_verbose_time
+        from src.savegem.constants import TimeFormat
+        from src.savegem import get_verbose_time
 
         app_state_mock.time_format = TimeFormat.Military
 
@@ -101,8 +101,8 @@ class TestDateUtil:
         Tests time formatting using the 12-hour (Regular) format.
         """
 
-        from savegem.constants import TimeFormat
-        from savegem.common.util.date import get_verbose_time
+        from src.savegem.constants import TimeFormat
+        from src.savegem import get_verbose_time
 
         app_state_mock.time_format = TimeFormat.Regular
 

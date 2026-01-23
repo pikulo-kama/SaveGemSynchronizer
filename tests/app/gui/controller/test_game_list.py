@@ -20,7 +20,7 @@ class TestGameListController(WidgetControllerTest):
         Provides the GameListController instance.
         """
 
-        from savegem.app.gui.controller.game_list import GameListController
+        from src.savegem import GameListController
         return GameListController(_widget_manager)
 
     @pytest.fixture
@@ -32,9 +32,9 @@ class TestGameListController(WidgetControllerTest):
 
     def test_handle_game_option_for_current_game(self, _controller, _game_button, _game, games_config_mock):
 
-        from savegem.app.gui.controller.game_list import GameListController
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.app.gui.constants import QBool
+        from src.savegem import GameListController
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem import QBool
 
         games_config_mock.current = _game
         _game.meta.sync_status = SyncStatus.UpToDate
@@ -46,9 +46,9 @@ class TestGameListController(WidgetControllerTest):
 
     def test_handle_game_option_for_outdated_game(self, _controller, _game_button, _game, games_config_mock):
 
-        from savegem.app.gui.controller.game_list import GameListController
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.app.gui.constants import QBool
+        from src.savegem import GameListController
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem import QBool
 
         _game.meta.sync_status = SyncStatus.NeedsUpload
 
@@ -96,7 +96,7 @@ class TestGameListController(WidgetControllerTest):
         Tests that __change_game instantiates and executes GameChangeWorker when the game is changed.
         """
 
-        from savegem.app.gui.constants import UIRefreshEvent
+        from src.savegem import UIRefreshEvent
 
         new_game_name = "GameX"
 

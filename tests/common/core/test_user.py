@@ -31,7 +31,7 @@ class TestUser:
         Provides a standard set of arguments for User initialization.
         """
 
-        from savegem.common.core.user import User
+        from src.savegem.common import User
 
         return User(
             name=PlayerTestData.FirstPlayerName,
@@ -73,7 +73,7 @@ class TestUser:
         Tests the logic for shortening the user name.
         """
 
-        from savegem.common.core.user import User
+        from src.savegem.common import User
 
         user = User(
             name=name,
@@ -100,7 +100,7 @@ class TestUser:
         Tests successful photo download and path generation.
         """
 
-        from savegem.constants import JPG_EXTENSION
+        from src.savegem.constants import JPG_EXTENSION
 
         # Check that URL retrieve was called with the correct link and mocked path
         url_retrieve_mock.assert_called_once_with(PlayerPhotoLink, _test_user.photo)
@@ -112,7 +112,7 @@ class TestUser:
         Tests behavior when photo_link is None.
         """
 
-        from savegem.common.core.user import User
+        from src.savegem.common import User
 
         user = User(
             name=PlayerTestData.FirstPlayerName,
@@ -134,7 +134,7 @@ class TestUserState:
 
     @pytest.fixture
     def _user_state(self, app_context_mock, app_config_mock, _mock_holder_data):
-        from savegem.common.core.user import UserState
+        from src.savegem.common import UserState
 
         return UserState(app_context_mock)
 
@@ -145,7 +145,7 @@ class TestUserState:
         Mocks the global holder() and its get() method.
         """
 
-        from savegem.constants import HolderObject
+        from src.savegem.constants import HolderObject
 
         # Configure holder().get() to return specific mock data based on argument
         holder_mock.get.side_effect = lambda arg: {

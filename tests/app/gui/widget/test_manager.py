@@ -6,7 +6,7 @@ class TestManagerContext:
 
     def test_context_initialization(self, mocker: MockerFixture):
 
-        from savegem.app.gui.widget.manager import ManagerContext
+        from src.savegem import ManagerContext
 
         mock_manager = mocker.Mock()
         mock_widget = mocker.Mock()
@@ -25,7 +25,7 @@ class TestManagerContext:
 
     def test_add_remove_widgets(self, mocker: MockerFixture):
 
-        from savegem.app.gui.widget.manager import ManagerContext
+        from src.savegem import ManagerContext
 
         context = ManagerContext(mocker.Mock(), [], {})
         mock_w = mocker.Mock()
@@ -42,7 +42,7 @@ class TestWidgetManager:
     @pytest.fixture
     def _manager(self, gui_mock, module_patch):
 
-        from savegem.app.gui.widget.manager import WidgetManager
+        from src.savegem import WidgetManager
 
         # Patch load_controllers to avoid external file loading
         module_patch("load_controllers", return_value={})
@@ -71,7 +71,7 @@ class TestWidgetManager:
 
     def test_execute_command_lifecycle(self, _manager, mocker: MockerFixture):
 
-        from savegem.app.gui.widget.manager import WidgetManager
+        from src.savegem import WidgetManager
 
         # Mocking the Command
         mock_command = mocker.Mock()

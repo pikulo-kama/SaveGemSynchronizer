@@ -18,7 +18,7 @@ class TestGDrive:
         Ensure GDrive.__drive is reset before each test.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         GDrive._GDrive__drive = None
 
@@ -122,7 +122,7 @@ class TestGDrive:
         Test successful authentication using an existing valid token file.
         """
 
-        from savegem.common.service.gdrive import GDrive, GDRIVE_SCOPES
+        from src.savegem.common.service.gdrive import GDrive, GDRIVE_SCOPES
 
         resolve_app_data_mock.return_value = "token.json"
         resolve_project_data_mock.return_value = "creds.json"
@@ -142,7 +142,7 @@ class TestGDrive:
         Test get_current_user calls the correct Drive API endpoint.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         user_info = GDrive.get_current_user()
 
@@ -153,7 +153,7 @@ class TestGDrive:
 
     def test_get_users_with_access(self, _google_build_mock, _drive_service_mock, _get_creds_mock):
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         file_id = "test"
         result = GDrive.get_users_with_access(file_id)
@@ -171,7 +171,7 @@ class TestGDrive:
         Test query_metadata successful execution.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         page_size = 123
         q_str = "name='test'"
@@ -196,7 +196,7 @@ class TestGDrive:
         Test query_metadata handling of HttpError.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         # Setup mock to raise HttpError
         _drive_service_mock.files.return_value \
@@ -213,7 +213,7 @@ class TestGDrive:
         Test __next_chunk correctly calculates and calls subscriber with progress.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         mock_request = Mock()
         mock_subscriber = Mock()
@@ -237,7 +237,7 @@ class TestGDrive:
         Test __next_chunk calls subscriber with 1.0 when done.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         mock_request = Mock()
         mock_subscriber = Mock()
@@ -257,7 +257,7 @@ class TestGDrive:
         Test __next_chunk calls subscriber with 0 when status is None (and not done).
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         mock_request = Mock()
         mock_subscriber = Mock()
@@ -277,7 +277,7 @@ class TestGDrive:
         Test __next_chunk does nothing if no subscriber provided.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         mock_request = Mock()
 
@@ -297,7 +297,7 @@ class TestGDrive:
         Test download_file successful completion.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         file_id = "test_id"
 
@@ -324,7 +324,7 @@ class TestGDrive:
         Test download_file handles HttpError.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         file_id = "test_id"
 
@@ -341,8 +341,8 @@ class TestGDrive:
         Test upload_file successful completion.
         """
 
-        from savegem.constants import ZIP_MIME_TYPE
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.constants import ZIP_MIME_TYPE
+        from src.savegem.common.service.gdrive import GDrive
 
         file_name_from_path_mock.return_value = "test.zip"
 
@@ -384,7 +384,7 @@ class TestGDrive:
         Test upload_file handles HttpError by raising it.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         file_name_from_path_mock.return_value = "test.zip"
 
@@ -402,7 +402,7 @@ class TestGDrive:
         Test update_file successful completion.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         # Setup: 2 chunks followed by done
         _next_chunk_mock.side_effect = [(Mock(), False), (Mock(), False), (None, True)]
@@ -429,7 +429,7 @@ class TestGDrive:
         Test update_file handles HttpError by raising it.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         _next_chunk_mock.side_effect = http_error_mock
 
@@ -443,7 +443,7 @@ class TestGDrive:
         Test get_changes fetches start token if none is provided.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         # Act
         result = GDrive.get_changes(None)
@@ -464,7 +464,7 @@ class TestGDrive:
         Test get_changes uses provided start token.
         """
 
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.common.service.gdrive import GDrive
 
         start_token = "provided_token"
 
@@ -487,8 +487,8 @@ class TestGDrive:
         Tests the case where valid credentials are loaded from the file.
         """
 
-        from savegem.constants import File
-        from savegem.common.service.gdrive import GDRIVE_SCOPES, GDrive
+        from src.savegem.constants import File
+        from src.savegem.common.service.gdrive import GDRIVE_SCOPES, GDrive
 
         resolve_app_data_mock.return_value = File.GDriveToken
         creds_mock = _credentials_mock.from_authorized_user_file.return_value
@@ -512,8 +512,8 @@ class TestGDrive:
         Tests the case where expired credentials are successfully refreshed.
         """
 
-        from savegem.constants import File
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.constants import File
+        from src.savegem.common.service.gdrive import GDrive
 
         resolve_app_data_mock.return_value = File.GDriveToken
         creds_mock = _credentials_mock.from_authorized_user_file.return_value
@@ -538,8 +538,8 @@ class TestGDrive:
         Tests the case where the refresh fails due to an expired refresh token.
         """
 
-        from savegem.constants import File
-        from savegem.common.service.gdrive import GDrive
+        from src.savegem.constants import File
+        from src.savegem.common.service.gdrive import GDrive
 
         resolve_app_data_mock.return_value = File.GDriveToken
         creds_mock = _credentials_mock.from_authorized_user_file.return_value
@@ -570,7 +570,7 @@ class TestGoogleAuth:
         Tests when the token file exists.
         """
 
-        from savegem.common.service.gdrive import GoogleAuth
+        from src.savegem.common.service.gdrive import GoogleAuth
 
         path_exists_mock.return_value = True
         resolve_app_data_mock.return_value = "/fake/app/token.json"
@@ -583,7 +583,7 @@ class TestGoogleAuth:
         Tests when the token file does not exist.
         """
 
-        from savegem.common.service.gdrive import GoogleAuth
+        from src.savegem.common.service.gdrive import GoogleAuth
 
         path_exists_mock.return_value = False
         resolve_app_data_mock.return_value = "/fake/app/token.json"
@@ -596,7 +596,7 @@ class TestGoogleAuth:
         Tests that authentication is skipped if the token file already exists.
         """
 
-        from savegem.common.service.gdrive import GoogleAuth
+        from src.savegem.common.service.gdrive import GoogleAuth
 
         path_exists_mock.side_effect = [True, False]
 
@@ -611,8 +611,8 @@ class TestGoogleAuth:
         Tests that a RuntimeError is raised if the credentials file is missing.
         """
 
-        from savegem.constants import File
-        from savegem.common.service.gdrive import GoogleAuth
+        from src.savegem.constants import File
+        from src.savegem.common.service.gdrive import GoogleAuth
 
         path_exists_mock.side_effect = [False, False]
 
@@ -629,7 +629,7 @@ class TestGoogleAuth:
         Tests the full authentication flow, saving the new token.
         """
 
-        from savegem.common.service.gdrive import GoogleAuth, GDRIVE_SCOPES
+        from src.savegem.common.service.gdrive import GoogleAuth, GDRIVE_SCOPES
 
         mock_creds_json = {"token": "mock_access_token", "refresh_token": "mock_refresh"}
         token_path = '/fake/app/token.json'

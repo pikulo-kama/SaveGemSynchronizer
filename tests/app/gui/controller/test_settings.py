@@ -43,8 +43,8 @@ class SettingsControllerTestModuleHelper(WidgetControllerTest):
 
     @pytest.fixture(autouse=True)
     def _module_setup(self, app_state_mock):
-        from savegem.constants import TimeFormat
-        from savegem.app.gui.style import ColorMode
+        from src.savegem.constants import TimeFormat
+        from src.savegem import ColorMode
 
         app_state_mock.locale = "en_US"
         app_state_mock.time_format = TimeFormat.Regular
@@ -59,7 +59,7 @@ class TestLanguageDropdownController(SettingsControllerTestModuleHelper):
 
     @pytest.fixture(autouse=True)
     def _setup(self, db_mock):
-        from savegem.common.db.table import DatabaseRow
+        from src.savegem import DatabaseRow
 
         db_mock.retrieve_table.return_value = [
             DatabaseRow(1, ("en_US", "English"), ["locale_id", "locale_name"]),
@@ -68,7 +68,7 @@ class TestLanguageDropdownController(SettingsControllerTestModuleHelper):
 
     @pytest.fixture
     def _controller(self, _widget_manager):
-        from savegem.app.gui.controller.settings import LanguageDropdownController
+        from src.savegem import LanguageDropdownController
         return LanguageDropdownController(_widget_manager)
 
     def test_setup_initializes_and_connects(self, _controller, _combobox, app_state_mock, db_mock):
@@ -95,7 +95,7 @@ class TestLanguageDropdownController(SettingsControllerTestModuleHelper):
         Tests the on_language_change callback correctly updates state and refreshes GUI.
         """
 
-        from savegem.app.gui.constants import UIRefreshEvent
+        from src.savegem import UIRefreshEvent
 
         # Setup mock return values for the callback logic
         _combobox.itemData.return_value = "de_DE"  # New locale ID
@@ -118,7 +118,7 @@ class TestTimeFormatDropdownController(SettingsControllerTestModuleHelper):
 
     @pytest.fixture
     def _controller(self, _widget_manager):
-        from savegem.app.gui.controller.settings import TimeFormatDropdownController
+        from src.savegem import TimeFormatDropdownController
         return TimeFormatDropdownController(_widget_manager)
 
     def test_setup_initializes_and_connects(self, _controller, _combobox, app_state_mock):
@@ -126,7 +126,7 @@ class TestTimeFormatDropdownController(SettingsControllerTestModuleHelper):
         Tests that setup adds two format options, sets current index, and connects signal.
         """
 
-        from savegem.constants import TimeFormat
+        from src.savegem.constants import TimeFormat
 
         _controller.setup(_combobox)
 
@@ -143,7 +143,7 @@ class TestTimeFormatDropdownController(SettingsControllerTestModuleHelper):
         Tests the on_time_format_change callback correctly updates state.
         """
 
-        from savegem.constants import TimeFormat
+        from src.savegem.constants import TimeFormat
 
         # Setup mock return values for the callback logic
         _combobox.itemData.return_value = TimeFormat.Military
@@ -176,7 +176,7 @@ class TestColorThemeDropdownController(SettingsControllerTestModuleHelper):
 
     @pytest.fixture
     def _controller(self, _widget_manager):
-        from savegem.app.gui.controller.settings import ColorThemeDropdownController
+        from src.savegem import ColorThemeDropdownController
         return ColorThemeDropdownController(_widget_manager)
 
     def test_setup_initializes_and_connects(self, _controller, _combobox, app_state_mock):
@@ -184,7 +184,7 @@ class TestColorThemeDropdownController(SettingsControllerTestModuleHelper):
         Tests that setup adds three color modes, sets index, and connects signal.
         """
 
-        from savegem.app.gui.style import ColorMode
+        from src.savegem import ColorMode
 
         # Reset mock app state for this test
         app_state_mock.state.color_theme = ColorMode.Light
@@ -210,7 +210,7 @@ class TestColorThemeDropdownController(SettingsControllerTestModuleHelper):
         Tests the callback updates state, reloads styles, and triggers manager refresh.
         """
 
-        from savegem.app.gui.style import ColorMode
+        from src.savegem import ColorMode
 
         # Setup mock return values for the callback logic
         _combobox.itemData.return_value = ColorMode.Dark
@@ -246,7 +246,7 @@ class TestLogoutController(SettingsControllerTestModuleHelper):
 
     @pytest.fixture
     def _controller(self, _widget_manager):
-        from savegem.app.gui.controller.settings import LogoutController
+        from src.savegem import LogoutController
         return LogoutController(_widget_manager)
 
     @pytest.fixture
@@ -275,7 +275,7 @@ class TestLogoutController(SettingsControllerTestModuleHelper):
         Tests the core logout logic: file deletion, GUI destruction, and program exit.
         """
 
-        from savegem.constants import File
+        from src.savegem.constants import File
 
         # Set up the expected app data path
         resolve_app_data_mock.return_value = "/mock/auth/token.dat"

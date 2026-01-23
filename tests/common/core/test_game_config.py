@@ -25,7 +25,7 @@ class GameModuleTestHelper:
         Provides a representative Game instance for testing.
         """
 
-        from savegem.common.core.game_config import Game
+        from src.savegem.common.core.game_config import Game
 
         return Game(
             game_config=_games_config,
@@ -42,7 +42,7 @@ class GameModuleTestHelper:
 
     @pytest.fixture
     def _games_config(self, app_context_mock, app_config_mock, user_config_mock, app_state_mock):
-        from savegem.common.core.game_config import GameConfig
+        from src.savegem.common.core.game_config import GameConfig
 
         return GameConfig(app_context_mock)
 
@@ -96,7 +96,7 @@ class TestGameConfig(GameModuleTestHelper):
         Tests successful download and verifies filtering logic for players and hidden games.
         """
 
-        from savegem.constants import HolderObject
+        from src.savegem.constants import HolderObject
 
         _games_config.initialize()
         holder_mock.get.assert_called_once_with(HolderObject.GamesConfig)
@@ -125,7 +125,7 @@ class TestGameConfig(GameModuleTestHelper):
         Tests the failure path when GDrive download fails.
         """
 
-        from savegem.constants import File
+        from src.savegem.constants import File
 
         holder_mock.get.return_value = None
 
@@ -142,7 +142,7 @@ class TestGameConfig(GameModuleTestHelper):
         Tests basic properties: list, names, empty, by_name, current.
         """
 
-        from savegem.common.core.game_config import Game, GameSettings
+        from src.savegem.common.core.game_config import Game, GameSettings
 
         # Initial state
         assert _games_config.empty is True
@@ -167,7 +167,7 @@ class TestGameConfig(GameModuleTestHelper):
         Verifies that refresh() calls refresh on LocalMetadata for each game.
         """
 
-        from savegem.common.core.save_meta import LocalMetadata
+        from src.savegem.common.core.save_meta import LocalMetadata
 
         # Mock the LocalMetadata.refresh method which is called via game.meta.local.refresh()
         mock_local_refresh = mocker.patch.object(LocalMetadata, "refresh")
@@ -183,7 +183,7 @@ class TestGameSettings(GameModuleTestHelper):
 
     def test_game_settings_on_init_loads_existing_data(self, games_config_mock, user_config_mock, _game, db_mock,
                                                        db_table_mock):
-        from savegem.common.core.game_config import GameSettings
+        from src.savegem.common.core.game_config import GameSettings
 
         user_config_mock.current.id = "test_user"
         db_table_mock.reset_mock()
@@ -200,7 +200,7 @@ class TestGameSettings(GameModuleTestHelper):
 
     def test_game_settings_on_init_creates_if_no_data(self, games_config_mock, user_config_mock, _game, db_mock,
                                                       db_table_mock):
-        from savegem.common.core.game_config import GameSettings
+        from src.savegem.common.core.game_config import GameSettings
 
         user_config_mock.current.id = "test_user"
         db_table_mock.reset_mock()
@@ -217,7 +217,7 @@ class TestGameSettings(GameModuleTestHelper):
         assert db_table_mock.save.call_count == 1
 
     def test_auto_mode_setting(self, db_table_mock, games_config_mock, _game):
-        from savegem.common.core.game_config import GameSettings
+        from src.savegem.common.core.game_config import GameSettings
 
         db_table_mock.get_first.return_value = 1
         settings = GameSettings(_game, games_config_mock)
@@ -232,7 +232,7 @@ class TestGameSettings(GameModuleTestHelper):
         db_table_mock.save.assert_called_once()
 
     def test_reload(self, db_table_mock, games_config_mock, _game):
-        from savegem.common.core.game_config import GameSettings
+        from src.savegem.common.core.game_config import GameSettings
 
         settings = GameSettings(_game, games_config_mock)
         db_table_mock.retrieve.reset_mock()
@@ -307,7 +307,7 @@ class TestGame(GameModuleTestHelper):
         Tests filter_patterns when the filter list is empty (should default to ".*").
         """
 
-        from savegem.common.core.game_config import Game
+        from src.savegem.common.core.game_config import Game
 
         # Arrange: Create a Game instance with an empty filter list
         game_no_filter = Game(

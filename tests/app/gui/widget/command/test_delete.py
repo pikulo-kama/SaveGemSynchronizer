@@ -5,8 +5,8 @@ class TestWidgetDeleteCommand:
 
     def test_execute(self, mocker: MockerFixture):
 
-        from savegem.app.gui.widget.command.delete import WidgetDeleteCommand
-        from savegem.app.gui.widget.manager import ManagerContext
+        from src.savegem import WidgetDeleteCommand
+        from src.savegem import ManagerContext
 
         manager = mocker.MagicMock()
 

@@ -1,4 +1,4 @@
-from savegem.common.core.game_config import Game, GameSettings
+from src.savegem.common.core.game_config import Game, GameSettings
 
 
 class MockGameSettings(GameSettings):

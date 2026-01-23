@@ -63,7 +63,7 @@ class TestGUI:
 
     @pytest.fixture
     def _gui(self, qtbot, _qt_settings_mock):
-        from savegem.app.gui.window import GUI
+        from src.savegem import GUI
 
         app_gui = GUI()
         qtbot.addWidget(app_gui)
@@ -76,7 +76,7 @@ class TestGUI:
         Test the gui() function ensures a singleton instance.
         """
 
-        from savegem.app.gui.window import gui, GUI
+        from src.savegem import gui, GUI
 
         instance1 = gui()
         instance1.application = qt_app_mock
@@ -160,7 +160,7 @@ class TestGUI:
 
     def test_refresh(self, mocker: MockerFixture, _gui, logger_mock, tr_mock, widget_manager_mock, prop_mock):
 
-        from savegem.app.gui.constants import UIRefreshEvent
+        from src.savegem import UIRefreshEvent
 
         tr_mock.return_value = "Title"
 
@@ -174,7 +174,7 @@ class TestGUI:
 
 
     def test_notification(self, _gui, holder_mock, widget_manager_mock, widget_section_build_command_mock):
-        from savegem.app.gui.constants import UISection
+        from src.savegem import UISection
 
         message = "test"
         _gui.notification(message)
@@ -187,7 +187,7 @@ class TestGUI:
     def test_confirmation(self, mocker: MockerFixture, _gui, holder_mock, widget_manager_mock,
                           widget_section_build_command_mock):
 
-        from savegem.app.gui.constants import UISection
+        from src.savegem import UISection
 
         message = "test"
         callback = mocker.Mock()

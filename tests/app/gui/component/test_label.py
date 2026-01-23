@@ -9,7 +9,7 @@ class TestQCustomLabel:
 
     @pytest.fixture
     def _custom_label(self, qtbot):
-        from savegem.app.gui.component.label import QCustomLabel
+        from src.savegem import QCustomLabel
 
         label = QCustomLabel()
         qtbot.addWidget(label)
@@ -67,7 +67,7 @@ class TestQWordWrapLabel:
 
     @pytest.fixture
     def _word_wrap_label(self, qtbot):
-        from savegem.app.gui.component.label import QWordWrapLabel
+        from src.savegem import QWordWrapLabel
 
         label = QWordWrapLabel()
         qtbot.addWidget(label)
@@ -92,7 +92,7 @@ class TestQWordWrapLabel:
         Ensure it still works as a QCustomLabel.
         """
 
-        from savegem.app.gui.component.label import QCustomLabel
+        from src.savegem import QCustomLabel
 
         assert isinstance(_word_wrap_label, QCustomLabel)
         assert _word_wrap_label.textFormat() == Qt.TextFormat.PlainText  # Inherited default
@@ -102,7 +102,7 @@ class TestQRichLabel:
 
     @pytest.fixture
     def _rich_label(self, qtbot):
-        from savegem.app.gui.component.label import QRichLabel
+        from src.savegem import QRichLabel
 
         label = QRichLabel()
         qtbot.addWidget(label)
@@ -125,5 +125,5 @@ class TestQRichLabel:
         Ensure it still works as a QCustomLabel.
         """
 
-        from savegem.app.gui.component.label import QCustomLabel
+        from src.savegem import QCustomLabel
         assert isinstance(_rich_label, QCustomLabel)

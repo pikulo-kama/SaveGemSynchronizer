@@ -8,7 +8,7 @@ class TestDatabaseInitializer:
 
     @pytest.fixture
     def migration_exists_mock(self, mocker: MockerFixture):
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         return mocker.patch.object(
             DatabaseInitializer,
@@ -18,7 +18,7 @@ class TestDatabaseInitializer:
 
     @pytest.fixture
     def update_schema_version_mock(self, mocker: MockerFixture):
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         return mocker.patch.object(
             DatabaseInitializer,
@@ -31,7 +31,7 @@ class TestDatabaseInitializer:
         Tests that the main 'run' method correctly calls initialize and migrate.
         """
 
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         mock_initialize = mocker.patch.object(DatabaseInitializer, '_DatabaseInitializer__initialize')
         mock_migrate = mocker.patch.object(DatabaseInitializer, '_DatabaseInitializer__migrate')
@@ -48,7 +48,7 @@ class TestDatabaseInitializer:
         Tests that __initialize executes the CREATE TABLE statement.
         """
 
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         # Access the private method directly
         DatabaseInitializer._DatabaseInitializer__initialize()  # noqa
@@ -65,7 +65,7 @@ class TestDatabaseInitializer:
         Tests that __migration_exists correctly queries the database.
         """
 
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         # Configure the cursor's fetchone based on expected outcome
         cursor = mocker.MagicMock()
@@ -86,7 +86,7 @@ class TestDatabaseInitializer:
         and inserts a record into schema_version.
         """
 
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         # Mock datetime to control the date_applied value
         migration_name = "v2025_10_12_2205__Create_setup_tables.py"
@@ -112,7 +112,7 @@ class TestDatabaseInitializer:
         Tests that __update_schema_version validates the migration name format.
         """
 
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         with pytest.raises(RuntimeError) as error:
             DatabaseInitializer._DatabaseInitializer__update_schema_version(db_mock, "invalid_name.py")  # noqa
@@ -127,7 +127,7 @@ class TestDatabaseInitializer:
         Tests that __migrate exits early if the latest migration file is already in the schema_version table.
         """
 
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         listdir_mock.return_value = ["v1.py", "v2.py", "v3.py"]
         migration_exists_mock.return_value = True
@@ -149,7 +149,7 @@ class TestDatabaseInitializer:
         Tests the core migration logic, applying new scripts and updating the schema table.
         """
 
-        from savegem.initializer.db_initializer import DatabaseInitializer
+        from src.savegem import DatabaseInitializer
 
         read_file_mock.side_effect = ["SQL for v2", "SQL for v3"]
         migrations = ["v1.py", "v2.py", "v3.py"]

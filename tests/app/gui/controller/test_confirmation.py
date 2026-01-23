@@ -33,8 +33,8 @@ class TestConfirmationDialogController(WidgetControllerTest):
         Tests that setup() correctly looks up buttons and enables them.
         """
 
-        from savegem.app.gui.controller.confirmation import ConfirmationDialogController
-        from savegem.app.gui.constants import UISection
+        from src.savegem import ConfirmationDialogController
+        from src.savegem import UISection
 
         controller = ConfirmationDialogController(_widget_manager)
         controller.setup(_dialog)
@@ -57,7 +57,7 @@ class TestConfirmationDialogController(WidgetControllerTest):
         Tests that the cancel button is connected directly to dialog.hide().
         """
 
-        from savegem.app.gui.controller.confirmation import ConfirmationDialogController
+        from src.savegem import ConfirmationDialogController
 
         controller = ConfirmationDialogController(_widget_manager)
         controller.setup(_dialog)
@@ -75,7 +75,7 @@ class TestConfirmationDialogController(WidgetControllerTest):
         Tests that the confirm button logic correctly retrieves the callback, executes it, and hides the dialog.
         """
 
-        from savegem.app.gui.controller.confirmation import ConfirmationDialogController
+        from src.savegem import ConfirmationDialogController
 
         confirm_callback = holder_mock.get.return_value
 

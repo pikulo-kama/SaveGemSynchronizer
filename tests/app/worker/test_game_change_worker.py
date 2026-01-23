@@ -8,7 +8,7 @@ class TestGameChangeWorker:
         and refreshes activity.
         """
 
-        from savegem.app.worker import GameChangeWorker
+        from src.savegem.app.worker import GameChangeWorker
 
         test_game_name = "Test"
         worker = GameChangeWorker(test_game_name)

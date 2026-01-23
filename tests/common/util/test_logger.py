@@ -24,7 +24,7 @@ class TestLogger:
         before the module is imported to correctly set initial globals.
         """
 
-        import savegem.common.util.logger as module
+        from src import savegem as module
         module._log_file_name = "my_service"
 
         return module
@@ -138,7 +138,7 @@ class TestLogger:
         Tests that logging is initialized correctly on the first call, setting up the root logger.
         """
 
-        from savegem.constants import UTF_8
+        from src.savegem.constants import UTF_8
 
         module_patch("logging.Formatter")
         resolve_log_mock.side_effect = lambda name: name

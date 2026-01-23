@@ -8,7 +8,7 @@ class TestSyncStatusController(WidgetControllerTest):
 
     @pytest.fixture
     def _controller(self, _widget_manager):
-        from savegem.app.gui.controller.save_details import SyncStatusController
+        from src.savegem import SyncStatusController
         return SyncStatusController(_widget_manager)
 
     @pytest.fixture
@@ -29,8 +29,8 @@ class TestSyncStatusController(WidgetControllerTest):
         and that update_styles is called to trigger redraw.
         """
 
-        from savegem.common.core.save_meta import SyncStatus
-        from savegem.app.gui.constants import QAttr, QBool
+        from src.savegem.common.core.save_meta import SyncStatus
+        from src.savegem import KamaAttr, QBool
 
         # Setup: Configure current game sync status
         games_config_mock.current.meta.sync_status = SyncStatus[status_name]
@@ -38,8 +38,8 @@ class TestSyncStatusController(WidgetControllerTest):
         # ACT
         _controller.refresh(_badge)
 
-        # 1. Assert QAttr.Hidden property is set based on expected_hidden boolean
-        _badge.setProperty.assert_called_once_with(QAttr.Hidden, QBool(expected_hidden))
+        # 1. Assert KamaAttr.Hidden property is set based on expected_hidden boolean
+        _badge.setProperty.assert_called_once_with(KamaAttr.Hidden, QBool(expected_hidden))
 
         # 2. Assert styles are updated to force immediate redraw/re-styling
         _badge.update_styles.assert_called_once()

@@ -5,8 +5,8 @@ class TestWidgetEnableCommand:
 
     def test_execute(self, mocker: MockerFixture):
 
-        from savegem.app.gui.widget.command.enable import WidgetEnableCommand
-        from savegem.app.gui.widget.manager import ManagerContext
+        from src.savegem import WidgetEnableCommand
+        from src.savegem import ManagerContext
 
         manager = mocker.MagicMock()
         widget1 = mocker.MagicMock()

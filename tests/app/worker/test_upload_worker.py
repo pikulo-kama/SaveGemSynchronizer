@@ -8,7 +8,7 @@ class TestUploadWorker:
         and calls download with the current game.
         """
 
-        from savegem.app.worker import UploadWorker
+        from src.savegem.app.worker import UploadWorker
 
         worker = UploadWorker()
         expected_handler = worker._on_subscriptable_event

@@ -8,8 +8,8 @@ class TestInitializationWorker:
         ensuring this worker1 runs last.
         """
 
-        from savegem.app.startup import InitializationWorker
-        from savegem.app.startup import ActivityWorker, GameConfigDownloadWorker, \
+        from src.savegem.app.startup import InitializationWorker
+        from src.savegem.app.startup import ActivityWorker, GameConfigDownloadWorker, \
             CurrentUserDownloadWorker, AllUsersDownloadWorker, UserDataDownloadWorker
 
         worker = InitializationWorker()
@@ -30,7 +30,7 @@ class TestInitializationWorker:
         methods on the global app context.
         """
 
-        from savegem.app.startup import InitializationWorker
+        from src.savegem.app.startup import InitializationWorker
 
         worker = InitializationWorker()
         worker._run()

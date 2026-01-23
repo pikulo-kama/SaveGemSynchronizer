@@ -4,7 +4,7 @@ class TestTextResourceExtractor:
 
     def test_text_resource_import(self):
 
-        from savegem.initializer.extractor.text_resource_extractor import TextResourceExtractor
+        from src.savegem import TextResourceExtractor
 
         data = [
             {

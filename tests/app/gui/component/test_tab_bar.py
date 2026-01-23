@@ -8,8 +8,8 @@ class TestQCustomTabBar:
         Tests that QCustomTabBar correctly inherits from QTabBar and CustomComponentMixin.
         """
 
-        from savegem.app.gui.component import CustomComponentMixin
-        from savegem.app.gui.component.tab_bar import QCustomTabBar
+        from src.savegem import CustomComponentMixin
+        from src.savegem import QCustomTabBar
 
         tab_bar = QCustomTabBar()
         qtbot.addWidget(tab_bar)

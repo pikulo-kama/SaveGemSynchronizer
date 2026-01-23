@@ -19,7 +19,7 @@ class TestCopyrightController(WidgetControllerTest):
         Tests the year formatting logic and final string application.
         """
 
-        from savegem.app.gui.controller.about import CopyrightController
+        from src.savegem import CopyrightController
 
         label = mocker.MagicMock()
         datetime_mock.now.return_value = datetime(current_year, 1, 1)

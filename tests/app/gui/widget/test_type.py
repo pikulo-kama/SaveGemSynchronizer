@@ -16,7 +16,7 @@ class WidgetTypeTestModuleHelper:
         Resets the global state lists before each test runs to ensure singleton logic is testable.
         """
 
-        import savegem.app.gui.widget.type as type_module
+        from src import savegem as type_module
 
         mocker.patch.object(type_module, '_widget_type_pool', new=[])
         mocker.patch.object(type_module, '_layout_type_pool', new=[])
@@ -29,7 +29,7 @@ class TestCoreUtilities(WidgetTypeTestModuleHelper):
         Test the basic getters of UIObjectType.
         """
 
-        from savegem.app.gui.widget.type import UIObjectType
+        from src.savegem import UIObjectType
 
         obj = UIObjectType("Label", str)
         assert obj.name == "Label"
@@ -40,7 +40,7 @@ class TestCoreUtilities(WidgetTypeTestModuleHelper):
         Test the additional property of WidgetType.
         """
 
-        from savegem.app.gui.widget.type import WidgetType
+        from src.savegem import WidgetType
 
         widget = WidgetType("Button", int, is_interactable=True)
         assert widget.name == "Button"
@@ -55,7 +55,7 @@ class TestCoreUtilities(WidgetTypeTestModuleHelper):
         Test dynamic loading of a class from a string path.
         """
 
-        from savegem.app.gui.widget.type import get_class_from_path
+        from src.savegem import get_class_from_path
 
         get_attr_mock = module_patch("getattr")
         get_attr_mock.return_value = DummyWidget
@@ -73,7 +73,7 @@ class TestCoreUtilities(WidgetTypeTestModuleHelper):
         Test that failure to load raises an appropriate error.
         """
 
-        from savegem.app.gui.widget.type import get_class_from_path
+        from src.savegem import get_class_from_path
 
         with pytest.raises(ImportError):
             get_class_from_path("non.existent.path.InvalidClass")
@@ -109,7 +109,7 @@ class TestWidgetTypePool:
         Tests that the DB is called only once to load the pool.
         """
 
-        from savegem.app.gui.widget.type import _get_widget_type_pool
+        from src.savegem import _get_widget_type_pool
 
         # 1. First call loads the data
         pool_1 = _get_widget_type_pool()
@@ -135,7 +135,7 @@ class TestWidgetTypePool:
         Test lookup by widget type ID.
         """
 
-        from savegem.app.gui.widget.type import get_widget_type
+        from src.savegem import get_widget_type
 
         widget_type = get_widget_type("BTN_PRIMARY")
 
@@ -176,7 +176,7 @@ class TestLayoutTypePool:
         Tests that the pool loads data from the DB and caches it.
         """
 
-        from savegem.app.gui.widget.type import get_layout_type
+        from src.savegem import get_layout_type
 
         # 1. First call loads the data
         layout_type = get_layout_type("V_LAYOUT")
@@ -196,7 +196,7 @@ class TestLayoutTypePool:
         Test that not finding a layout type returns None.
         """
 
-        from savegem.app.gui.widget.type import get_layout_type
+        from src.savegem import get_layout_type
 
         result = get_layout_type("MISSING")
         assert result is None

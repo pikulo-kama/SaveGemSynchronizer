@@ -11,8 +11,8 @@ class TestMenuItemController(WidgetControllerTest):
         (UISection.HomeSection, "game_container").
         """
 
-        from savegem.app.gui.controller.menu_item import MenuItemController
-        from savegem.app.gui.constants import UISection
+        from src.savegem import MenuItemController
+        from src.savegem import UISection
 
         controller = MenuItemController(_widget_manager)
 

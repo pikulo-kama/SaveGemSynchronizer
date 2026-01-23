@@ -50,7 +50,7 @@ class TestProcess:
         Tests that all requested processes are returned, ignoring irrelevant ones.
         """
 
-        from savegem.common.util.process import get_running_processes
+        from src.savegem import get_running_processes
 
         requested_names = ["chrome.exe", "spotify.exe"]
 
@@ -82,7 +82,7 @@ class TestProcess:
         Tests that only the subset of processes that are running are returned.
         """
 
-        from savegem.common.util.process import get_running_processes
+        from src.savegem import get_running_processes
 
         requested_names = ["firefox.exe", "vlc.exe", "slack.exe"]
 
@@ -107,7 +107,7 @@ class TestProcess:
         This is verified by ensuring subsequent mock processes are not accessed.
         """
 
-        from savegem.common.util.process import get_running_processes
+        from src.savegem import get_running_processes
 
         requested_names = ["a.exe", "b.exe"]
 
@@ -138,7 +138,7 @@ class TestProcess:
         Tests that NoSuchProcess exception is caught and the process is safely ignored.
         """
 
-        from savegem.common.util.process import get_running_processes
+        from src.savegem import get_running_processes
 
         requested_names = ["good.exe", "bad.exe"]
         mock_proc_good = self.create_mock_process("good.exe", pid=101)
@@ -163,7 +163,7 @@ class TestProcess:
         Tests that AccessDenied exception is caught and the process is safely ignored.
         """
 
-        from savegem.common.util.process import get_running_processes
+        from src.savegem import get_running_processes
 
         requested_names = ["safe.exe", "denied.exe"]
 
@@ -189,7 +189,7 @@ class TestProcess:
         Tests function behavior when an empty list of processes is provided
         """
 
-        from savegem.common.util.process import get_running_processes
+        from src.savegem import get_running_processes
 
         # Configure the iterator with a large list to ensure it doesn't get fully consumed
         _process_iter.return_value = [
@@ -213,7 +213,7 @@ class TestProcess:
         Tests that True is returned when an identical, *other* process is found.
         """
 
-        from savegem.common.util.process import is_process_already_running
+        from src.savegem import is_process_already_running
 
         process_name = "test_app"
         current_pid = 100
@@ -237,7 +237,7 @@ class TestProcess:
         Tests that False is returned when only non-matching or the current process is found.
         """
 
-        from savegem.common.util.process import is_process_already_running
+        from src.savegem import is_process_already_running
 
         process_name = "test_app"
         current_pid = 100
@@ -262,7 +262,7 @@ class TestProcess:
         Tests that the current process, even if its name matches, is correctly excluded.
         """
 
-        from savegem.common.util.process import is_process_already_running
+        from src.savegem import is_process_already_running
 
         process_name = "test_app"
         current_pid = 100
@@ -281,7 +281,7 @@ class TestProcess:
         Tests that NoSuchProcess and AccessDenied exceptions are caught and the search continues.
         """
 
-        from savegem.common.util.process import is_process_already_running
+        from src.savegem import is_process_already_running
 
         process_name = "test_app"
         current_pid = 100
@@ -314,7 +314,7 @@ class TestProcess:
         Tests a process whose .exe() returns None or an empty string (e.g., some system processes).
         """
 
-        from savegem.common.util.process import is_process_already_running
+        from src.savegem import is_process_already_running
 
         process_name = "test_app"
 
