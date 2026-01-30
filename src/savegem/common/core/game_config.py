@@ -1,3 +1,4 @@
+import glob
 import os
 import re
 from typing import Final, Iterator
@@ -248,7 +249,14 @@ class Game:
         """
         Path to the game on local filesystem.
         """
-        return os.path.expandvars(self.__local_path)
+
+        expanded_path =  os.path.expandvars(self.__local_path)
+        matches = glob.glob(expanded_path)
+
+        if not matches:
+            return expanded_path
+
+        return matches[0]
 
     @property
     def drive_directory(self):

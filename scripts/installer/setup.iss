@@ -19,7 +19,7 @@ AppName={#AppName}
 UninstallDisplayName={#AppName}
 AppPublisher={#Author}
 AppVersion={#AppVersion}
-SetupIconFile={#RootPath}resources\application.ico
+SetupIconFile={#RootPath}resources\images\application.ico
 DefaultDirName={pf}\{#AppName}
 DefaultGroupName={#AppName}
 UninstallDisplayIcon={app}\{#AppExeName}
@@ -90,19 +90,19 @@ Name: "startmenuicon"; \
 ; Start Menu shortcut
 Name: "{group}\{#AppName}"; \
     Filename: "{app}\{#AppExeName}"; \
-    IconFilename: "{app}\_internal\resources\application.ico"; \
+    IconFilename: "{app}\_internal\resources\images\application.ico"; \
     Tasks: startmenuicon
 
 ; Desktop shortcut (user chooses in installer)
 Name: "{commondesktop}\{#AppName}"; \
     Filename: "{app}\{#AppExeName}"; \
-    IconFilename: "{app}\_internal\resources\application.ico"; \
+    IconFilename: "{app}\_internal\resources\images\application.ico"; \
     Tasks: desktopicon
     
 ; Add watchdog to startup.
 Name: "{userstartup}\{#WatchdogName}"; \
     Filename: "{app}\{#WatchdogExeName}"; \
-    IconFilename: "{app}\_internal\resources\application.ico"
+    IconFilename: "{app}\_internal\resources\images\application.ico"
 
 [Run]
 ; Kill main application.
@@ -173,18 +173,15 @@ Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [CustomMessages]
 en.CreateStartMenuShortcut=Create a Start Menu shortcut
-en.RemoveUserDataPrompt=Do you want to remove all %1 user data?
-
 uk.CreateStartMenuShortcut=Створити ярлики у меню Пуск
-uk.RemoveUserDataPrompt=Бажаєте видалити всі дані користувача %1?
-
 fr.CreateStartMenuShortcut=Créer un raccourci dans le menu Démarrer
-fr.RemoveUserDataPrompt=Voulez-vous supprimer toutes les données utilisateur de %1?
-
 de.CreateStartMenuShortcut=Verknüpfung im Startmenü erstellen
-de.RemoveUserDataPrompt=Möchten Sie alle Benutzerdaten von %1 löschen?
-
 es.CreateStartMenuShortcut=Crear un acceso directo en el menú Inicio
+
+en.RemoveUserDataPrompt=Do you want to remove all %1 user data?
+uk.RemoveUserDataPrompt=Бажаєте видалити всі дані користувача %1?
+fr.RemoveUserDataPrompt=Voulez-vous supprimer toutes les données utilisateur de %1?
+de.RemoveUserDataPrompt=Möchten Sie alle Benutzerdaten von %1 löschen?
 es.RemoveUserDataPrompt=¿Desea eliminar todos los datos de usuario de %1?
 
 ; ------------------------------------------------------------------------- ;
@@ -201,8 +198,8 @@ begin
     Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
     
     // Migrate database and reimport non-user related data.
-    Exec(ExpandConstant('{app}\_internal\bin\kama-dbm.exe'), 'migrate --migration_directories="{app}\_internal\migration" --database="{userappdata}\{#AppName}\savegem.db"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    Exec(ExpandConstant('{app}\_internal\bin\kama-dbm.exe'), 'import --definition_file="{app}\_internal\importData\import.def" --database="{userappdata}\{#AppName}\savegem.db"', '', SW_HIDE, ewNoWait, ResultCode);
+    Exec(ExpandConstant('{app}\_internal\bin\kama-dbm.exe'), ExpandConstant('migrate --migration_directories="{app}\_internal\migration" --database="{userappdata}\{#AppName}\savegem.db"'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    Exec(ExpandConstant('{app}\_internal\bin\kama-dbm.exe'), ExpandConstant('import --definition_file="{app}\_internal\importData\import.def" --database="{userappdata}\{#AppName}\savegem.db"'), '', SW_HIDE, ewNoWait, ResultCode);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
