@@ -1,6 +1,5 @@
 import hashlib
 import json
-import urllib.request
 from typing import Iterator, Final, Optional
 
 from kui.core.shortcut import dynamic_data, resolve_temp_image
@@ -8,6 +7,8 @@ from kutil.file_type import JPG
 from kutil.logger import get_logger
 
 from kui.core.constants import UTF_8
+from kutil.request import url_retrieve
+
 from src.savegem.constants import HolderObject
 from src.savegem.common.core.app_data import AppData
 from src.savegem.common.service.gdrive import GDrive
@@ -91,14 +92,13 @@ class User:
         save image locally. Will return image path.
         """
 
-        if photo_link is None:
-            return None
-
         image_name = JPG.add_extension(self.id)
         image_path = resolve_temp_image(image_name)
-        urllib.request.urlretrieve(photo_link, image_path)
 
-        return image_path
+        if url_retrieve(photo_link, image_path):
+            return image_path
+
+        return None
 
 
 class UserState(AppData):

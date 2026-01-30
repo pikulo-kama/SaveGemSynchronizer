@@ -1,6 +1,5 @@
 import os
 import re
-import urllib.request
 from typing import Final, Iterator
 
 from kui.core.shortcut import dynamic_data, resolve_app_data, resolve_image, resolve_temp_image
@@ -8,6 +7,7 @@ from kui_db_plugin.database import db
 from kutil.file import delete_file
 from kutil.file_type import JPG
 from kutil.logger import get_logger
+from kutil.request import url_retrieve
 
 from src.savegem.constants import File
 from src.savegem.constants import HolderObject
@@ -335,11 +335,10 @@ class Game:
         Will use default SaveGem logo as fallback value.
         """
 
-        if logo_url is None:
-            return resolve_image("gem.svg")
-
         logo_name = JPG.add_extension(self.name)
         logo_path = resolve_temp_image(logo_name)
-        urllib.request.urlretrieve(logo_url, logo_path)
 
-        return logo_path
+        if url_retrieve(logo_url, logo_path):
+            return logo_path
+
+        return resolve_image("gem.svg")
