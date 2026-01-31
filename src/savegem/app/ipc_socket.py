@@ -75,7 +75,7 @@ class UISocket(IPCSocket, QObject):
     @staticmethod
     def __update_games_configuration(event: str):
 
-        # If game service_info changed on drive then download it again
+        # If game serviceInfo changed on drive then download it again
         # and reinitialize game state.
         if event == UIRefreshEvent.GameConfigChange:
             add_dynamic_data(

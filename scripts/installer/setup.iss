@@ -1,16 +1,17 @@
 
 #include "helpers.iss"
 
-#define AppName GetProperty("service_info\app.json", "name")
-#define Author GetProperty("service_info\app.json", "author")
-#define AppExeName GetProperty("service_info\app.json", "processName")
-#define AppVersion GetProperty("service_info\app.json", "version")
+#define AppName GetProperty("serviceInfo\app.json", "name")
+#define Author GetProperty("serviceInfo\app.json", "author")
+#define AppExeName GetProperty("serviceInfo\app.json", "processName")
+#define AppVersion GetProperty("serviceInfo\app.json", "version")
 
-#define WatchdogName GetProperty("service_info\watchdog.json", "name")
-#define WatchdogExeName GetProperty("service_info\watchdog.json", "processName")
+#define WatchdogName GetProperty("serviceInfo\watchdog.json", "name")
+#define WatchdogExeName GetProperty("serviceInfo\watchdog.json", "processName")
 
-#define ProcessWatcherExeName GetProperty("service_info\process_watcher.json", "processName")
-#define GDriveWatcherExeName GetProperty("service_info\gdrive_watcher.json", "processName")
+#define ProcessWatcherExeName GetProperty("serviceInfo\process-watcher.json", "processName")
+#define GDriveWatcherExeName GetProperty("serviceInfo\gdrive-watcher.json", "processName")
+
 
 [Setup]
 ; --- App Info ---
@@ -60,6 +61,11 @@ Source: "{#RootPath}output\dist\{#AppName}\*"; \
 Source: "{#RootPath}logback\*"; \
     DestDir: "{userappdata}\{#AppName}\Logback"; \
     Flags: ignoreversion
+    
+; Copy raw database to app data directory.
+Source: "{#RootPath}output\dist\*.db"; \
+  DestDir: "{userappdata}\{#AppName}\"; \
+  Flags: replacesameversion
 
 ; Install Fonts
 Source: "{#RootPath}fonts\PT_Sans_Caption\PTSansCaption-Regular.ttf"; \
@@ -126,9 +132,9 @@ Filename: "taskkill"; \
     Flags: runhidden
 
 ; Add option to start application after installation.
-Filename: "{app}\{#AppExeName}"; \
-    Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; \
-    Flags: nowait postinstall skipifsilent
+; Filename: "{app}\{#AppExeName}"; \
+    ; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; \
+    ; Flags: nowait postinstall skipifsilent
 
 ; ------------------------------------------------------------------------- ;
 ; UNINSTALL SECTION
@@ -196,10 +202,6 @@ begin
   if CurStep = ssPostInstall then
     // Immediately start watchdog process.
     Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
-    
-    // Migrate database and reimport non-user related data.
-    Exec(ExpandConstant('{app}\_internal\bin\kama-dbm.exe'), ExpandConstant('migrate --migration_directories="{app}\_internal\migration" --database="{userappdata}\{#AppName}\savegem.db"'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    Exec(ExpandConstant('{app}\_internal\bin\kama-dbm.exe'), ExpandConstant('import --definition_file="{app}\_internal\importData\import.def" --database="{userappdata}\{#AppName}\savegem.db"'), '', SW_HIDE, ewNoWait, ResultCode);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

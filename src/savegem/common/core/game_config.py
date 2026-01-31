@@ -54,7 +54,7 @@ class GameConfig(AppData):
 
         if game_config is None:
             message = "Configuration file ID is invalid, is missing or you don't have access."
-            # Remove token when failed to remove game service_info.
+            # Remove token when failed to remove game serviceInfo.
             # Since there is a chance that user used wrong account to
             # authenticate we remove token so that he could log in again.
             drive_token_path = resolve_app_data(File.GDriveToken)
@@ -300,7 +300,7 @@ class Game:
         save_directory = self.local_path
 
         for file_name in sorted(os.listdir(save_directory)):
-            # Only include files that are present in game service_info.
+            # Only include files that are present in game serviceInfo.
             if any(p.match(file_name) for p in self.filter_patterns):
                 yield os.path.join(save_directory, file_name)
 

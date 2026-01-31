@@ -47,7 +47,7 @@ class GDriveWatcher(Daemon):
         activity_log_modified = context().config.activity_log_file_id in files
 
         self._logger.debug("Current game files modified: %s", save_files_modified)
-        self._logger.debug("Games service_info modified: %s", games_config_modified)
+        self._logger.debug("Games config modified: %s", games_config_modified)
         self._logger.debug("Activity log modified: %s", activity_log_modified)
 
         if save_files_modified:

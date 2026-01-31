@@ -18,7 +18,7 @@ def read_config(service_name: str) -> dict:
     Used to read and return service configuration file.
     """
 
-    with open(f"service_info/{service_name}.json") as file:
+    with open(f"serviceInfo/{service_name}.json") as file:
         return json.load(file)
 
 
@@ -84,7 +84,8 @@ def build_exe(
         console: bool = False,
         datas: list = None,
         hooks: list = None,
-        hidden_imports: list = None
+        hidden_imports: list = None,
+        run_as_admin: bool = False
 ):
     """
     Used to build EXE file.
@@ -120,7 +121,8 @@ def build_exe(
         name=exe_info.get("name"),
         console=console,
         icon=icon,
-        version=exe_info.get("version_info")
+        version=exe_info.get("version_info"),
+        uac_admin=run_as_admin
     )
 
     return exe, analysis
@@ -135,12 +137,11 @@ app, app_a = build_exe(
     datas=[
         credentials_data,
         drive_config_data,
-        "importData",
-        "resources",
-        "migration"
+        "resources"
     ],
     hooks=['hooks'],
-    icon='resources/images/application.ico'
+    icon='resources/images/application.ico',
+    run_as_admin=True
 )
 
 process_watcher, process_watcher_a = build_exe(
@@ -149,7 +150,7 @@ process_watcher, process_watcher_a = build_exe(
         credentials_data,
         drive_config_data,
         "resources",
-        "service_info"
+        "serviceInfo"
     ]
 )
 
@@ -158,13 +159,14 @@ gdrive_watcher, gdrive_watcher_a = build_exe(
     datas=[
         credentials_data,
         drive_config_data,
-        "service_info"
+        "serviceInfo"
     ]
 )
 
 watchdog, watchdog_a = build_exe(
     service_name="watchdog",
-    datas=["service_info"]
+    datas=["serviceInfo"],
+    run_as_admin=True
 )
 
 # Collect everything into one folder

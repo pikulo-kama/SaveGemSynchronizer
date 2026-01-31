@@ -27,7 +27,7 @@ class Daemon(abc.ABC):
         self.__interval = self.DefaultInterval
         self.__service_name = service_name
         self.__requires_auth = requires_auth
-        config_path = resolve_project_file("service_info", JSON.add_extension(service_name))
+        config_path = resolve_project_file("serviceInfo", JSON.add_extension(service_name))
 
         if os.path.exists(config_path):
             config = JsonConfigHolder(config_path)

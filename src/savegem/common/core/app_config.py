@@ -56,6 +56,6 @@ class AppConfig(AppData):
         return self.__config.get_value(AppConfig.UsersConfigFileProp)
 
     def refresh(self):  # pragma: no cover
-        # No need to reload service_info since it
+        # No need to reload serviceInfo since it
         # is not modified by application.
         pass
