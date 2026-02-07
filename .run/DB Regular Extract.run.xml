@@ -12,8 +12,10 @@
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <option name="RUN_TOOL" value="" />
     <option name="SCRIPT_NAME" value="kamadbm.main" />
-    <option name="PARAMETERS" value="extract --table_name=setup_locale --database=&quot;&quot;%APPDATA%/SaveGem/savegem.db&quot;&quot; --output=&quot;&quot;$ProjectFileDir$/output/extract&quot;&quot;" />
+    <option name="PARAMETERS" value="extract --type=TextResource --table_name=text_resources --database=&quot;&quot;%APPDATA%/SaveGem/savegem.db&quot;&quot; --output=&quot;&quot;$ProjectFileDir$/output/extract&quot;&quot;" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="true" />

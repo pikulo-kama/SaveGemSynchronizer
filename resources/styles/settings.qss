@@ -8,3 +8,8 @@ KamaWidget#settingGroup {
     background-color: color("surface-a10");
     border-radius: 5px;
 }
+
+KamaPushButton#noBorderButton {
+    padding: 0;
+    border: none;
+}

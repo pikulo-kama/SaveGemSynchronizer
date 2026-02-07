@@ -190,10 +190,10 @@ class LocalMetadata(Metadata):
 
         for file_path in self._game.file_list:
             # Don't include metadata when calculating checksum.
-            if file_path == self._game.metadata_file_path:
+            if file_path.path == self._game.metadata_file_path:
                 continue
 
-            checksum.update(file_checksum(file_path).encode())
+            checksum.update(file_checksum(file_path.path).encode())
 
         self.__current_checksum = checksum.hexdigest()
         return self.__current_checksum

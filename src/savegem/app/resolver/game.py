@@ -18,6 +18,9 @@ class GameResolver(ContentResolver):
         if value == "name":
             content = context().games.current.name
 
+        elif value == 'path':
+            content = context().games.current.local_path
+
         elif value == "logo":
             content = context().games.current.logo
 

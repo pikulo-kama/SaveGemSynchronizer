@@ -2,7 +2,7 @@
   "metadata": {
     "table_name": "text_resources",
     "type": "TextResource",
-    "extract_date": "2025-11-25T02:27:37.935289"
+    "extract_date": "2026-02-07T04:34:16.700682"
   },
   "data": {
     "confirmation_ConfirmLogout": {
@@ -187,6 +187,13 @@
       "fr_FR": "Dernière Sauvegarde Cloud",
       "uk_UA": "Останнє Хмарне Збереження"
     },
+    "label_LocalSavesLocation": {
+      "de_DE": "Pfad zum Speicher",
+      "en_US": "Path to storage",
+      "es_ES": "Ruta de almacenamiento",
+      "fr_FR": "Chemin vers le stockage",
+      "uk_UA": "Шлях до сховища"
+    },
     "label_Logout": {
       "de_DE": "Abmelden",
       "en_US": "Log Out",
@@ -200,6 +207,13 @@
       "es_ES": "Finaliza su sesión local sin eliminar datos o configuraciones guardadas.",
       "fr_FR": "Met fin à votre session locale sans supprimer aucune donnée ou paramètre enregistré.",
       "uk_UA": "Завершує ваш локальний сеанс, не видаляючи збережені дані чи налаштування."
+    },
+    "label_Modify": {
+      "de_DE": "Ändern",
+      "en_US": "Modify",
+      "es_ES": "Modificar",
+      "fr_FR": "Modifier",
+      "uk_UA": "Змінити"
     },
     "label_NA": {
       "de_DE": "N. zutr.",
@@ -235,6 +249,13 @@
       "es_ES": "Restaurar",
       "fr_FR": "Restaurer",
       "uk_UA": "Відновити"
+    },
+    "label_SelectTargetDirectory": {
+      "de_DE": "Zielverzeichnis auswählen",
+      "en_US": "Select Target Directory",
+      "es_ES": "Seleccionar directorio de destino",
+      "fr_FR": "Sélectionner le répertoire cible",
+      "uk_UA": "Виберіть цільову папку"
     },
     "label_SettingIsDisabled": {
       "de_DE": "Dieses Spiel unterstützt diese Funktion nicht.",

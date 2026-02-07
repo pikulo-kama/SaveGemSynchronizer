@@ -1,6 +1,8 @@
 import glob
 import os
 import re
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Final, Iterator
 
 from kui.core.shortcut import dynamic_data, resolve_app_data, resolve_image, resolve_temp_image
@@ -163,6 +165,15 @@ class GameSettings:
         self.__settings.set_first("auto_mode_enabled", 1 if enabled else 0)
         self.__settings.save()
 
+    @property
+    def local_storage_path(self):
+        return self.__settings.get_first('storage_path')
+
+    @local_storage_path.setter
+    def local_storage_path(self, path: str):
+        self.__settings.set_first('storage_path', path)
+        self.__settings.save()
+
     def __get_settings_table(self, game_config: GameConfig):
         """
         Used to load game settings from database.
@@ -192,6 +203,13 @@ class GameSettings:
         self.__settings.retrieve()
 
 
+@dataclass
+class SaveFilePath:
+    name: str
+    path: str
+    relative_path: str
+
+
 class Game:
     """
     Represents a game.
@@ -218,9 +236,8 @@ class Game:
         self.__files_filter = files_filter
         self._auto_mode_allowed = auto_mode_allowed
         self.__players = players
-
-        self._metadata = MetadataWrapper(LocalMetadata(self), DriveMetadata(self))
         self._settings = GameSettings(self, game_config)
+        self._metadata = MetadataWrapper(LocalMetadata(self), DriveMetadata(self))
 
     @property
     def name(self):
@@ -249,6 +266,9 @@ class Game:
         """
         Path to the game on local filesystem.
         """
+
+        if self.settings.local_storage_path is not None:
+            return self.settings.local_storage_path
 
         expanded_path =  os.path.expandvars(self.__local_path)
         matches = glob.glob(expanded_path)
@@ -297,12 +317,17 @@ class Game:
         that are being managed for game.
         """
 
-        save_directory = self.local_path
+        save_directory = Path(self.local_path)
 
-        for file_name in sorted(os.listdir(save_directory)):
-            # Only include files that are present in game serviceInfo.
-            if any(p.match(file_name) for p in self.filter_patterns):
-                yield os.path.join(save_directory, file_name)
+        for file_path in sorted(save_directory.rglob('*')):
+            relative_path = os.path.relpath(file_path, save_directory)
+
+            if any(pattern.match(relative_path) for pattern in self.filter_patterns):
+                yield SaveFilePath(
+                    name=os.path.basename(file_path),
+                    path=str(file_path),
+                    relative_path=relative_path,
+                )
 
     @property
     def filter_patterns(self):

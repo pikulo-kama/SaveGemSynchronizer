@@ -1,4 +1,10 @@
+import os
+import subprocess
+
+from PyQt6.QtWidgets import QFileDialog
+from kui.component.button import KamaPushButton
 from kui.component.toggle import KamaToggle
+from kui.core.app import KamaApplication
 from kui.core.controller import WidgetController
 from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr
@@ -49,3 +55,34 @@ class AutoModeController(WidgetController):
     def disable(self, auto_mode_toggle: KamaToggle, args: ControllerArgs):
         if not context().games.current.auto_mode_allowed:
             auto_mode_toggle.setEnabled(False)
+
+
+class OpenSaveLocationButtonController(WidgetController):
+
+    def setup(self, open_button: KamaPushButton, args: ControllerArgs):
+        open_button.clicked.connect(
+            lambda: subprocess.run(['explorer', os.path.normpath(context().games.current.local_path)])
+        )
+
+
+class ChangeStoragePathButtonController(WidgetController):
+
+    def setup(self, modify_button: KamaPushButton, args: ControllerArgs):
+
+        def change_path():
+            current_game = context().games.current
+            existing_path = current_game.local_path
+            new_path = QFileDialog.getExistingDirectory(
+                KamaApplication().window,
+                tr('label_SelectTargetDirectory'),
+                existing_path,
+                QFileDialog.Option.ShowDirsOnly
+            )
+
+            if new_path == existing_path or len(new_path) == 0:
+                return
+
+            current_game.settings.local_storage_path = new_path
+            self.manager.event_refresh('local_storage_path_change')
+
+        modify_button.clicked.connect(change_path)

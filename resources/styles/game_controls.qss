@@ -8,3 +8,8 @@ KamaProgressPushButton[id="uploadButton"] {
     icon: image("upload.svg");
     icon-size: 25px 25px;
 }
+
+KamaProgressPushButton[in-progress="true"] {
+    color: transparent;
+    icon: none;
+}

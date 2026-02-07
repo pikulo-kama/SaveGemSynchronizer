@@ -52,8 +52,15 @@ class Uploader(SubscriptableService):
         self._complete_stage()
 
         # Copy game files to archive directory.
-        for file_path in game.file_list:
-            shutil.copy(file_path, target_archive_path)
+        for save_path in game.file_list:
+            target_file_location = os.path.join(target_archive_path, save_path.relative_path)
+            target_file_directory = os.path.dirname(target_file_location)
+
+            if not os.path.exists(target_file_directory):
+                os.makedirs(target_file_directory)
+
+            shutil.copy(save_path.path, target_file_directory)
+
         self._complete_stage()
 
         # Set checksum then copy metadata file to target directory.
