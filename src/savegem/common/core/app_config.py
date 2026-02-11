@@ -4,8 +4,8 @@ from kui.core.json_holder import JsonConfigHolder
 from kui.core.shortcut import resolve_project_file
 from kutil.logger import get_logger
 
-from src.savegem.constants import File
-from src.savegem.common.core.app_data import AppData
+from savegem.constants import File
+from savegem.common.core.app_data import AppData
 
 
 _logger = get_logger(__name__)

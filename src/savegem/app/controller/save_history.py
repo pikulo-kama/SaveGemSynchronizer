@@ -10,11 +10,11 @@ from kui.core.shortcut import tr
 from kutil.date import string_to_date, get_verbose_date, get_verbose_time
 from kutil.logger import get_logger
 
-from src.savegem.constants import UIRefreshEvent, TimeFormat
-from src.savegem.app.worker.download_worker import DownloadWorker
-from src.savegem.common.core.context import context
-from src.savegem.common.core.save_meta import DriveFileMetadata
-from src.savegem.common.service.subscriptable import DoneEvent
+from savegem.constants import UIRefreshEvent, TimeFormat
+from savegem.app.worker.download_worker import DownloadWorker
+from savegem.common.core.context import context
+from savegem.common.core.save_meta import DriveFileMetadata
+from savegem.common.service.subscriptable import DoneEvent
 
 _logger = get_logger(__name__)
 

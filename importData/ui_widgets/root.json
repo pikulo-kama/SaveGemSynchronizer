@@ -22,7 +22,7 @@
             {
               "id": "menu",
               "layout": "KVBoxLayout",
-              "controller": "SectionListController",
+              "controller": "SectionListWithErrorController",
               "args": {
                 "sections": [
                   "home",
@@ -33,6 +33,9 @@
               "style_id": "sidebarMenu",
               "margin_left": 5,
               "margin_right": 5,
+              "refresh_events": [
+                "game_config_change"
+              ],
               "recursive_refresh_events": [
                 "language_change"
               ],

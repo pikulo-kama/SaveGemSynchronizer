@@ -9,9 +9,9 @@ from kutil.logger import get_logger
 from kui.core.constants import UTF_8
 from kutil.request import url_retrieve
 
-from src.savegem.constants import HolderObject
-from src.savegem.common.core.app_data import AppData
-from src.savegem.common.service.gdrive import GDrive
+from savegem.constants import HolderObject
+from savegem.common.core.app_data import AppData
+from savegem.common.service.gdrive import GDrive
 
 
 _logger = get_logger(__name__)

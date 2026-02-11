@@ -3,8 +3,8 @@ from typing import Final
 
 from kutil.process import get_running_processes
 
-from src.savegem.common.core.context import context
-from src.savegem.common.core.game_config import Game
+from savegem.common.core.context import context
+from savegem.common.core.game_config import Game
 
 _previous_game_names = []
 

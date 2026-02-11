@@ -1,5 +1,5 @@
 from kui.core.resolver import ContentResolver
-from src.savegem.common.core.context import context
+from savegem.common.core.context import context
 from kutil.logger import get_logger
 
 

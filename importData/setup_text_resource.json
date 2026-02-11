@@ -250,6 +250,13 @@
       "fr_FR": "Restaurer",
       "uk_UA": "Відновити"
     },
+    "label_NoGamesConfigured": {
+      "de_DE": "Keine Spiele konfiguriert",
+      "en_US": "No games configured",
+      "es_ES": "No hay juegos configurados",
+      "fr_FR": "Aucun jeu configuré",
+      "uk_UA": "Немає налаштованих ігор"
+    },
     "label_SelectTargetDirectory": {
       "de_DE": "Zielverzeichnis auswählen",
       "en_US": "Select Target Directory",

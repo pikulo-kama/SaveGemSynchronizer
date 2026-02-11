@@ -5,9 +5,9 @@ from kui.core.resolver import ContentResolver
 from kui.core.shortcut import tr
 from kutil.date import string_to_date, get_verbose_date, get_verbose_time
 from kutil.logger import get_logger
-from src.savegem.common.core.context import context
-from src.savegem.common.core.save_meta import SyncStatus
-from src.savegem.constants import TimeFormat
+from savegem.common.core.context import context
+from savegem.common.core.save_meta import SyncStatus
+from savegem.constants import TimeFormat
 
 _logger = get_logger(__name__)
 
@@ -41,6 +41,9 @@ class SaveInfoResolver(ContentResolver):
 
     def resolve(self, key: str, *args, **kw):
         na_label = tr("label_NA")
+
+        if context().games.current is None:
+            return na_label
 
         if key == "size":
             return self.__get_save_size() or na_label

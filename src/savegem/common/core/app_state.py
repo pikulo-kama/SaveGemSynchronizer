@@ -4,8 +4,8 @@ from kdb.table import DatabaseTable
 from kui_db_plugin.database import db
 from kutil.logger import get_logger
 
-from src.savegem.constants import TimeFormat
-from src.savegem.common.core.app_data import AppData
+from savegem.constants import TimeFormat
+from savegem.common.core.app_data import AppData
 
 _logger = get_logger(__name__)
 
@@ -41,7 +41,11 @@ class AppState(AppData):
         game_name = self.__state_table.get_first(self.SelectedGame)
 
         if game_name not in self.app.games.names:
-            default_game = self.app.games.names[0]
+            default_game = None
+
+            if len(self.app.games) > 0:
+                default_game = self.app.games.names[0]
+
             _logger.warning("Game '%s' was not found. Using game '%s' as default.", str(game_name), default_game)
 
             game_name = default_game

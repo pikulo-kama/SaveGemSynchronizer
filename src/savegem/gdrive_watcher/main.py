@@ -2,14 +2,14 @@ import threading
 
 from kui.core.shortcut import add_dynamic_data, dynamic_data
 
-from src.savegem.constants import HolderObject
-from src.savegem.constants import UIRefreshEvent
-from src.savegem.app.ipc_socket import ui_socket
-from src.savegem.common.core.context import context
-from src.savegem.common.core.flag import flags
-from src.savegem.common.service.daemon import Daemon
-from src.savegem.common.service.gdrive import GDrive
-from src.savegem.gdrive_watcher.ipc_socket import google_drive_watcher_socket
+from savegem.constants import HolderObject
+from savegem.constants import UIRefreshEvent
+from savegem.app.ipc_socket import ui_socket
+from savegem.common.core.context import context
+from savegem.common.core.flag import flags
+from savegem.common.service.daemon import Daemon
+from savegem.common.service.gdrive import GDrive
+from savegem.gdrive_watcher.ipc_socket import google_drive_watcher_socket
 
 
 class GDriveWatcher(Daemon):

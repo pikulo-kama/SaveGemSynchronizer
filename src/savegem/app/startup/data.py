@@ -2,9 +2,9 @@ from kui.core.shortcut import add_dynamic_data
 from kui.core.service.startup import KamaStartupWorker
 from kutil.logger import get_logger
 
-from src.savegem.constants import HolderObject
-from src.savegem.common.core.context import context
-from src.savegem.common.service.gdrive import GDrive
+from savegem.constants import HolderObject
+from savegem.common.core.context import context
+from savegem.common.service.gdrive import GDrive
 
 
 _logger = get_logger(__name__)

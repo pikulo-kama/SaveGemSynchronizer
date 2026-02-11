@@ -1,6 +1,6 @@
 from kui.core.app import KamaApplication
 from kui.core.service.startup import KamaStartupWorker
-from src.savegem.common.core.context import context
+from savegem.common.core.context import context
 
 
 class InitializationWorker(KamaStartupWorker):

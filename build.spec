@@ -80,12 +80,13 @@ def build_exe_info(service_name: str):
 
 def build_exe(
         service_name: str,
+        script_path: str = None,
         icon: str = "NONE",
         console: bool = False,
         datas: list = None,
         hooks: list = None,
         hidden_imports: list = None,
-        run_as_admin: bool = False
+        run_as_admin: bool = True
 ):
     """
     Used to build EXE file.
@@ -99,8 +100,11 @@ def build_exe(
         if isinstance(entry, str):
             datas[index] = (entry, entry)
 
+    if script_path is None:
+        script_path = f"src/savegem/{service_name}/main.py"
+
     analysis = Analysis(
-        [f"src/savegem/{service_name}/main.py"],
+        [script_path],
         binaries=[],
         datas=datas,
         hiddenimports=hidden_imports or [],
@@ -127,7 +131,7 @@ def build_exe(
 
     return exe, analysis
 
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 credentials_data = ('credentials.json', '.')
 drive_config_data = ('config.json', '.')
@@ -140,8 +144,7 @@ app, app_a = build_exe(
         "resources"
     ],
     hooks=['hooks'],
-    icon='resources/images/application.ico',
-    run_as_admin=True
+    icon='resources/images/application.ico'
 )
 
 process_watcher, process_watcher_a = build_exe(
@@ -165,8 +168,18 @@ gdrive_watcher, gdrive_watcher_a = build_exe(
 
 watchdog, watchdog_a = build_exe(
     service_name="watchdog",
-    datas=["serviceInfo"],
-    run_as_admin=True
+    datas=["serviceInfo"]
+)
+
+kamadbm, kamadbm_a = build_exe(
+    service_name="kama-dbm",
+    script_path=".venv/Lib/site-packages/kamadbm/main.py",
+    datas=[
+        "importData",
+        "migration"
+    ],
+    console=True,
+    run_as_admin=False
 )
 
 # Collect everything into one folder
@@ -175,15 +188,18 @@ COLLECT(
     process_watcher,
     gdrive_watcher,
     watchdog,
+    kamadbm,
 
     app_a.binaries +
     process_watcher_a.binaries +
     gdrive_watcher_a.binaries +
     watchdog_a.binaries,
+    kamadbm_a.binaries,
 
     app_a.datas +
     process_watcher_a.datas +
     gdrive_watcher_a.datas,
+    kamadbm_a.datas,
 
     upx=True,
     name=read_config("app").get("name")

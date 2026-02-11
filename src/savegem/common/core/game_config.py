@@ -1,6 +1,7 @@
 import glob
 import os
 import re
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Final, Iterator
@@ -12,10 +13,10 @@ from kutil.file_type import JPG
 from kutil.logger import get_logger
 from kutil.request import url_retrieve
 
-from src.savegem.constants import File
-from src.savegem.constants import HolderObject
-from src.savegem.common.core.app_data import AppData
-from src.savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
+from savegem.constants import File
+from savegem.constants import HolderObject
+from savegem.common.core.app_data import AppData
+from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
 
 _logger = get_logger(__name__)
 
@@ -100,6 +101,7 @@ class GameConfig(AppData):
                 players
             )
 
+        self.app.activity.refresh()
         _logger.debug("Configuration for following game(s) was found = %s", ", ".join(self.names))
 
     @property
@@ -270,13 +272,13 @@ class Game:
         if self.settings.local_storage_path is not None:
             return self.settings.local_storage_path
 
-        expanded_path =  os.path.expandvars(self.__local_path)
+        expanded_path = os.path.expandvars(self.__local_path)
         matches = glob.glob(expanded_path)
 
-        if not matches:
-            return expanded_path
+        if matches:
+            return matches[0]
 
-        return matches[0]
+        return os.path.join(tempfile.gettempdir(), self.name)
 
     @property
     def drive_directory(self):

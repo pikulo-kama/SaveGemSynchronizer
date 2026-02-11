@@ -10,7 +10,7 @@ from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr
 from kutil.logger import get_logger
 
-from src.savegem.common.core.context import context
+from savegem.common.core.context import context
 
 
 _logger = get_logger(__name__)

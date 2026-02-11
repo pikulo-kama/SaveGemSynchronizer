@@ -8,6 +8,13 @@ from kutil.file import remove_extension_from_path
 from kutil.file_type import JSON
 
 
+def exception_hook(exctype, value, traceback):
+    print(exctype, value, traceback)
+    sys._excepthook(exctype, value, traceback)
+    sys.exit(1)
+
+sys.excepthook = exception_hook
+
 _application = KamaApplication()
 _executable_name = remove_extension_from_path(os.path.basename(sys.argv[0]))
 

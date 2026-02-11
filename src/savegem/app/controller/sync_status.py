@@ -4,8 +4,8 @@ from kui.core.controller import WidgetController
 from kui.core.metadata import ControllerArgs
 from kutil.logger import get_logger
 
-from src.savegem.common.core.context import context
-from src.savegem.common.core.save_meta import SyncStatus
+from savegem.common.core.context import context
+from savegem.common.core.save_meta import SyncStatus
 
 _logger = get_logger(__name__)
 

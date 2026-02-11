@@ -1,5 +1,5 @@
 from kui.core.resolver import ContentResolver
-from src.savegem.common.core.context import context
+from savegem.common.core.context import context
 from kutil.logger import get_logger
 
 
@@ -14,6 +14,9 @@ class GameResolver(ContentResolver):
     def resolve(self, value: str, *args, **kw):
 
         content = ""
+
+        if context().games.current is None:
+            return content
 
         if value == "name":
             content = context().games.current.name

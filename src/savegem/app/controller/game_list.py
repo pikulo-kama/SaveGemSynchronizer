@@ -6,10 +6,10 @@ from kui.core.controller import TemplateWidgetController, TemplateWidgetContext
 from kui.core.metadata import ControllerArgs
 from kutil.logger import get_logger
 
-from src.savegem.constants import UIRefreshEvent
-from src.savegem.app.worker.game_change_worker import GameChangeWorker
-from src.savegem.common.core.context import context
-from src.savegem.common.core.save_meta import SyncStatus
+from savegem.constants import UIRefreshEvent
+from savegem.app.worker.game_change_worker import GameChangeWorker
+from savegem.common.core.context import context
+from savegem.common.core.save_meta import SyncStatus
 
 
 _logger = get_logger(__name__)

@@ -7,9 +7,9 @@ from kutil.file import save_file, cleanup_directory
 from kutil.file_type import ZIP
 from kutil.logger import get_logger
 
-from src.savegem.common.core.game_config import Game
-from src.savegem.common.service.gdrive import GDrive
-from src.savegem.common.service.subscriptable import SubscriptableService, ErrorEvent, DoneEvent, EventKind
+from savegem.common.core.game_config import Game
+from savegem.common.service.gdrive import GDrive
+from savegem.common.service.subscriptable import SubscriptableService, ErrorEvent, DoneEvent, EventKind
 
 _logger = get_logger(__name__)
 

@@ -182,6 +182,7 @@
                       "height": 30,
                       "refresh_events": [
                         "cloud_files_change",
+                        "game_config_change",
                         "game_selection_change"
                       ]
                     }
@@ -209,6 +210,7 @@
           "style_id": "playersContainer",
           "refresh_events": [
             "activity_log_update",
+            "game_config_change",
             "game_selection_change"
           ],
           "template": {

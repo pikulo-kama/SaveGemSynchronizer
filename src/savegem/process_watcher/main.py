@@ -1,17 +1,17 @@
 from kui.core.app import KamaApplication
 from kui.core.shortcut import tr, dynamic_data, add_dynamic_data
-from src.savegem.constants import HolderObject
-from src.savegem.constants import UIRefreshEvent
-from src.savegem.process_watcher.push_notification import push_notification
-from src.savegem.app.ipc_socket import ui_socket
-from src.savegem.common.core.save_meta import SyncStatus
-from src.savegem.common.service.daemon import Daemon
-from src.savegem.common.service.downloader import Downloader
-from src.savegem.common.service.gdrive import GDrive
-from src.savegem.common.service.uploader import Uploader
-from src.savegem.common.core.context import context
-from src.savegem.process_watcher.game_process import get_running_game_processes, GameProcess
-from src.savegem.process_watcher.ipc_socket import process_watcher_socket
+from savegem.constants import HolderObject
+from savegem.constants import UIRefreshEvent
+from savegem.process_watcher.push_notification import push_notification
+from savegem.app.ipc_socket import ui_socket
+from savegem.common.core.save_meta import SyncStatus
+from savegem.common.service.daemon import Daemon
+from savegem.common.service.downloader import Downloader
+from savegem.common.service.gdrive import GDrive
+from savegem.common.service.uploader import Uploader
+from savegem.common.core.context import context
+from savegem.process_watcher.game_process import get_running_game_processes, GameProcess
+from savegem.process_watcher.ipc_socket import process_watcher_socket
 import threading
 
 

@@ -7,10 +7,10 @@ from kui.core.json_holder import EditableJsonConfigHolder
 from kutil.file import file_checksum
 from kutil.file_type import ZIP
 from kutil.logger import get_logger
-from src.savegem.common.service.gdrive import GDrive
+from savegem.common.service.gdrive import GDrive
 
 if TYPE_CHECKING:
-    from src.savegem.common.core.game_config import Game
+    from savegem.common.core.game_config import Game
 
 
 _logger = get_logger(__name__)

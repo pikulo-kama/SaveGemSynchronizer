@@ -4,11 +4,11 @@ from kui.core.controller import WidgetController
 from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr
 
-from src.savegem.constants import UIRefreshEvent
-from src.savegem.app.worker.download_worker import DownloadWorker
-from src.savegem.app.worker.upload_worker import UploadWorker
-from src.savegem.common.core.context import context
-from src.savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
+from savegem.constants import UIRefreshEvent
+from savegem.app.worker.download_worker import DownloadWorker
+from savegem.app.worker.upload_worker import UploadWorker
+from savegem.common.core.context import context
+from savegem.common.service.subscriptable import DoneEvent, ErrorEvent, EventKind
 
 
 def _done_subscriber(message_key: str):

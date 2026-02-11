@@ -5,13 +5,13 @@ from kui.core.app import KamaApplication
 from kui.core.shortcut import prop
 from kutil.logger import get_logger
 
-from src.savegem.constants import UISection
+from savegem.constants import UISection
 
-from src.savegem.app.ipc_socket import ui_socket
-from src.savegem.common.core.flag import flags
-from src.savegem.common.core.ipc_socket import IPCCommand
-from src.savegem.common.service.gdrive import GoogleAuth
-from src.savegem.common.core.context import context
+from savegem.app.ipc_socket import ui_socket
+from savegem.common.core.flag import flags
+from savegem.common.core.ipc_socket import IPCCommand
+from savegem.common.service.gdrive import GoogleAuth
+from savegem.common.core.context import context
 
 
 _logger = get_logger("app")

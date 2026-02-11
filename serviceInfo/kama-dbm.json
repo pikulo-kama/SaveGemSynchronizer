@@ -1,0 +1,5 @@
+{
+  "name" : "Kama Database Manager",
+  "description" : "Database schema manager and data importer",
+  "processName" : "kama-dbm.exe"
+}

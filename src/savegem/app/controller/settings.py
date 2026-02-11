@@ -11,8 +11,8 @@ from kui_db_plugin.database import db
 from kutil.file import delete_file
 from kutil.logger import get_logger
 
-from src.savegem.constants import TimeFormat, File, UIRefreshEvent
-from src.savegem.common.core.context import context
+from savegem.constants import TimeFormat, File, UIRefreshEvent
+from savegem.common.core.context import context
 
 _logger = get_logger(__name__)
 

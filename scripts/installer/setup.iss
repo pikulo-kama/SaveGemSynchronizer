@@ -9,8 +9,9 @@
 #define WatchdogName GetProperty("serviceInfo\watchdog.json", "name")
 #define WatchdogExeName GetProperty("serviceInfo\watchdog.json", "processName")
 
-#define ProcessWatcherExeName GetProperty("serviceInfo\process-watcher.json", "processName")
-#define GDriveWatcherExeName GetProperty("serviceInfo\gdrive-watcher.json", "processName")
+#define ProcessWatcherExeName GetProperty("serviceInfo\process_watcher.json", "processName")
+#define GDriveWatcherExeName GetProperty("serviceInfo\gdrive_watcher.json", "processName")
+#define KamaDbmExeName GetProperty("serviceInfo\kama-dbm.json", "processName")
 
 
 [Setup]
@@ -45,9 +46,6 @@ Name: "{userappdata}\{#AppName}"
 ; Output dir
 Name: "{userappdata}\{#AppName}\Output"
 
-; Dynamic Resources dir
-Name: "{userappdata}\{#AppName}\Output\Resources"
-
 ; Logs dir
 Name: "{userappdata}\{#AppName}\Logs"
 
@@ -61,11 +59,6 @@ Source: "{#RootPath}output\dist\{#AppName}\*"; \
 Source: "{#RootPath}logback\*"; \
     DestDir: "{userappdata}\{#AppName}\Logback"; \
     Flags: ignoreversion
-    
-; Copy raw database to app data directory.
-Source: "{#RootPath}output\dist\*.db"; \
-  DestDir: "{userappdata}\{#AppName}\"; \
-  Flags: replacesameversion
 
 ; Install Fonts
 Source: "{#RootPath}fonts\PT_Sans_Caption\PTSansCaption-Regular.ttf"; \
@@ -131,10 +124,10 @@ Filename: "taskkill"; \
     Parameters: "/f /im {#ProcessWatcherExeName}"; \
     Flags: runhidden
 
-; Add option to start application after installation.
-; Filename: "{app}\{#AppExeName}"; \
-    ; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; \
-    ; Flags: nowait postinstall skipifsilent
+Filename: "schtasks"; \
+    Parameters: "/Create /TN ""SaveGemWatchdog"" /TR ""'{app}\{#WatchdogExeName}'"" /SC ONLOGON /RL HIGHEST /F"; \
+    Flags: runhidden; \
+    StatusMsg: "Configuring startup settings..."
 
 ; ------------------------------------------------------------------------- ;
 ; UNINSTALL SECTION
@@ -159,6 +152,10 @@ Filename: "taskkill"; \
 ; Kill process watcher.
 Filename: "taskkill"; \
     Parameters: "/f /im {#ProcessWatcherExeName}"; \
+    Flags: runhidden
+    
+Filename: "schtasks"; \
+    Parameters: "/Delete /TN ""SaveGemWatchdog"" /F"; \
     Flags: runhidden
     
 [UninstallDelete]
@@ -202,6 +199,10 @@ begin
   if CurStep = ssPostInstall then
     // Immediately start watchdog process.
     Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
+    
+    // Migrate database schema changes and (re)import application data.
+    Exec(ExpandConstant('{app}\{#KamaDbmExeName}'), ExpandConstant('migrate --migration_directories="{app}/_internal/migration" --database="{userappdata}/{#AppName}/savegem.db"'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    Exec(ExpandConstant('{app}\{#KamaDbmExeName}'), ExpandConstant('import --definition_file=""{app}/_internal/importData/import.def"" --database="{userappdata}/{#AppName}/savegem.db"'), '', SW_HIDE, ewNoWait, ResultCode);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

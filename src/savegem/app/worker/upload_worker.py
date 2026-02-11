@@ -1,8 +1,8 @@
 from kutil.logger import get_logger
 
-from src.savegem.app.worker import SubscriptableWorker
-from src.savegem.common.core.context import context
-from src.savegem.common.service.uploader import Uploader
+from savegem.app.worker import SubscriptableWorker
+from savegem.common.core.context import context
+from savegem.common.service.uploader import Uploader
 
 
 _logger = get_logger(__name__)

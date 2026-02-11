@@ -5,8 +5,8 @@ from typing import Final
 from kui.core.constants import UTF_8
 from kutil.logger import get_logger
 
-from src.savegem.common.core.context import context
-from src.savegem.common.util.test import ExitTestLoop
+from savegem.common.core.context import context
+from savegem.common.util.test import ExitTestLoop
 
 
 _logger = get_logger(__name__)

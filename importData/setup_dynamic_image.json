@@ -94,6 +94,11 @@
       "image_name": "exclamation_mark_danger.svg",
       "image_path": "exclamation_mark.svg",
       "color": "danger-a0"
+    },
+    {
+      "image_name": "external_link.svg",
+      "image_path": "external_link.svg",
+      "color": "primary-a0"
     }
   ]
 }

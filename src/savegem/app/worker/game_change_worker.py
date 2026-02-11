@@ -1,5 +1,5 @@
 from kui.core.worker import KamaWorker
-from src.savegem.common.core.context import context
+from savegem.common.core.context import context
 
 
 class GameChangeWorker(KamaWorker):

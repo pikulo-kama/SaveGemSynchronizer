@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "table_name": "ui_widgets",
+    "type": "Widgets",
+    "extract_date": "2026-01-14T20:46:56.008603",
+    "filter": "section = 'error'"
+  },
+  "data": [
+    {
+      "id": "error_root",
+      "section": "error",
+      "layout": "KVBoxLayout",
+      "controller": "RebindParentController",
+      "alignment": "center",
+      "spacing": 15,
+      "args": {
+        "parent": "root.content"
+      },
+      "children": [
+        {
+          "id": "question_mark_icon",
+          "type": "KLabel",
+          "content": "pixmap{active_about.svg, scale: 70}",
+          "alignment": "center",
+          "height": 70
+        },
+        {
+          "id": "error_message",
+          "type": "KLabel",
+          "content": "data{errorMessage}",
+          "alignment": "center",
+          "style_id": "cardTitleText",
+          "height": 40,
+          "stylesheet": {
+            "color": "rgba('text-primary', 0.6)"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -8,12 +8,12 @@ from kui.core.shortcut import resolve_temp_file
 from kutil.file_type import ZIP
 from kutil.logger import get_logger
 
-from src.savegem.common.core.context import context
+from savegem.common.core.context import context
 
-from src.savegem.common.core.game_config import Game
-from src.savegem.common.core.save_meta import SaveMetaProp
-from src.savegem.common.service.gdrive import GDrive
-from src.savegem.common.service.subscriptable import SubscriptableService, DoneEvent, ErrorEvent, EventKind
+from savegem.common.core.game_config import Game
+from savegem.common.core.save_meta import SaveMetaProp
+from savegem.common.service.gdrive import GDrive
+from savegem.common.service.subscriptable import SubscriptableService, DoneEvent, ErrorEvent, EventKind
 
 
 _logger = get_logger(__name__)

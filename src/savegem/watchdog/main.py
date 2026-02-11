@@ -1,6 +1,6 @@
 from kui.core.json_holder import JsonConfigHolder
-from src.savegem.common.service.daemon import Daemon
-from src.savegem.common.util.test import ExitTestLoop
+from savegem.common.service.daemon import Daemon
+from savegem.common.util.test import ExitTestLoop
 
 import subprocess
 import threading

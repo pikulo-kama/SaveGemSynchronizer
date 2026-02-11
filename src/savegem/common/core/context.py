@@ -1,10 +1,10 @@
 from typing import Optional
 
-from src.savegem.common.core.activity import Activity
-from src.savegem.common.core.app_config import AppConfig
-from src.savegem.common.core.app_state import AppState
-from src.savegem.common.core.game_config import GameConfig
-from src.savegem.common.core.user import UserState
+from savegem.common.core.activity import Activity
+from savegem.common.core.app_config import AppConfig
+from savegem.common.core.app_state import AppState
+from savegem.common.core.game_config import GameConfig
+from savegem.common.core.user import UserState
 
 
 _app: Optional["ApplicationContext"] = None

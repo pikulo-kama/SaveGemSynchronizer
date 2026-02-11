@@ -10,8 +10,8 @@ from kutil.file_type import JSON
 from kutil.logger import get_logger
 from kutil.process import is_process_already_running
 
-from src.savegem.common.service.gdrive import GoogleAuth
-from src.savegem.common.util.test import ExitTestLoop
+from savegem.common.service.gdrive import GoogleAuth
+from savegem.common.util.test import ExitTestLoop
 
 
 class Daemon(abc.ABC):

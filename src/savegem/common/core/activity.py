@@ -3,9 +3,9 @@ import json
 from kui.core.shortcut import dynamic_data
 from kutil.logger import get_logger
 
-from src.savegem.constants import HolderObject
-from src.savegem.common.core.app_data import AppData
-from src.savegem.common.service.gdrive import GDrive
+from savegem.constants import HolderObject
+from savegem.common.core.app_data import AppData
+from savegem.common.service.gdrive import GDrive
 
 
 _logger = get_logger(__name__)
@@ -56,8 +56,12 @@ class Activity(AppData):
 
         self.__players.clear()
         activity_log = dynamic_data(HolderObject.Activity)
+        current_game_name = None
         _logger.debug("Activity log: %s", activity_log)
 
+        if self.app.games.current is not None:
+            current_game_name = self.app.games.current.name
+
         for user_email, games in activity_log.items():
-            if self.app.games.current.name in games:
+            if current_game_name in games:
                 self.__players.append(self.app.users.by_email(user_email))

@@ -14,7 +14,7 @@ from kutil.file import file_name_from_path, save_file
 from kutil.file_type import ZIP, JSON
 from kutil.logger import get_logger
 
-from src.savegem.constants import File
+from savegem.constants import File
 from kui.core.constants import UTF_8
 
 
@@ -225,25 +225,7 @@ class GDrive:
         """
 
         token_file_path = resolve_app_data(File.GDriveToken)
-
-        # Get credentials from file (possible if authentication was done previously)
-        _logger.info("Token was found. Application will use credentials from token.")
-        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
-
-        if creds and creds.valid:
-            return creds
-
-        # If they're just expired then try to refresh them
-        if creds and creds.expired and creds.refresh_token:
-            _logger.info("Credentials expired, performing refresh.")
-
-            try:
-                creds.refresh(Request())
-                return creds
-            except RefreshError:
-                _logger.error("Refresh token expired. Starting authentication process.")
-
-        return creds
+        return Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
 
 
 class GoogleAuth:
@@ -260,10 +242,12 @@ class GoogleAuth:
         """
 
         token_file_path = resolve_app_data(File.GDriveToken)
-        return os.path.exists(token_file_path)
+        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
 
-    @staticmethod
-    def authenticate():
+        return creds.valid and not creds.expired
+
+    @classmethod
+    def authenticate(cls):
         """
         Used to initiate Google authentication process.
         """
@@ -271,15 +255,25 @@ class GoogleAuth:
         token_file_path = resolve_app_data(File.GDriveToken)
         credentials_file_path = resolve_project_file(File.GDriveCreds)
 
-        # User is already authenticated.
-        if os.path.exists(token_file_path):
-            _logger.info("Skipping authentication. User is already authenticated.")
-            return
-
-        # Authenticate with credentials and then store them for future use
         if not os.path.exists(credentials_file_path):
             _logger.critical(f"{File.GDriveCreds} is missing.")
             raise RuntimeError(f"Google Cloud credentials are missing in root of the project. Add {File.GDriveCreds}.")
+
+        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
+
+        if cls.is_authenticated():
+            _logger.info("Token was found. Application will use credentials from token.")
+            return
+
+        # If they're just expired then try to refresh them
+        if creds.expired and creds.refresh_token:
+            try:
+                _logger.info("Credentials expired, performing refresh.")
+                creds.refresh(Request())
+                return
+
+            except RefreshError:
+                _logger.error("Refresh token expired. Starting authentication process.")
 
         _logger.info("Attempting authentication using credentials.")
 
