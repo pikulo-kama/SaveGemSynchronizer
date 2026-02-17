@@ -1,8 +1,5 @@
 <KamaSection name="game_settings" label="tr{label_Settings}">
-<KamaScrollableWidget layout="vertical"
-                      controller="RebindParentController" arg_parent="home.gameContainer"
-                      ml="10" mt="20" mr="10" mb="20"
->
+<KamaScrollableWidget layout="vertical" ml="10" mt="20" mr="10" mb="20">
     <!--  Storage Path Setting  -->
     <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter"
                 height="75" ml="20" mr="20"

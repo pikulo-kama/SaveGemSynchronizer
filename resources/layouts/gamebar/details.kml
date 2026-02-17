@@ -1,8 +1,5 @@
 <KamaSection name="game_details" label="tr{label_Details}">
-<KamaScrollableWidget layout="vertical" alignment="top"
-                      controller="RebindParentController" arg_parent="home.gameContainer"
-                      spacing="10" ml="10" mt="30" mr="10"
->
+<KamaScrollableWidget layout="vertical" alignment="top" spacing="10" ml="10" mt="30" mr="10">
     <!--  Game Details Section  -->
     <KamaLabel class="sectionTitleText">
         tr{label_LastCloudSave}

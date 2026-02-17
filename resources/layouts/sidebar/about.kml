@@ -1,8 +1,6 @@
 <KamaSection name="about" label="tr{label_About}" icon="about.svg">
-<KamaScrollableWidget layout="vertical" alignment="top-vcenter"
-                      controller="RebindParentController" arg_parent="root.content"
-                      spacing="50" ml="20" mt="20" mr="20"
->
+<KamaScrollableWidget layout="vertical" alignment="top-vcenter" spacing="50" ml="20" mt="20" mr="20">
+
     <!--  Page Header (Logo + description)  -->
     <KamaWidget layout="vertical" alignment="top-vcenter">
         <KamaWidget layout="horizontal" alignment="left">

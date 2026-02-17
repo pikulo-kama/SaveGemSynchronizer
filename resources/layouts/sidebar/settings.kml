@@ -1,8 +1,5 @@
 <KamaSection name="settings" label="tr{label_Settings}" icon="gear.svg">
-<KamaWidget layout="horizontal"
-            controller="RebindParentController" arg_parent="root.content"
-            alignment="left" ml="20" mt="20" mr="20"
->
+<KamaWidget layout="horizontal" alignment="left" ml="20" mt="20" mr="20">
     <KamaWidget layout="vertical" stylesheet="max-width: 900px;">
 
         <!--    Settings screen title.    -->

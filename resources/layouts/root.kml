@@ -6,7 +6,7 @@
         <!--  Main application navigation bar.  -->
         <KamaWidget id="sidebarMenu" layout="vertical"
                     controller="SectionListWithErrorController"
-                    arg_list_sections="home settings about"
+                    arg_list_sections="home settings about" arg_parent="content"
                     refresh_events="game_config_change" recursive_refresh_events="language_change"
                     ml="5" mr="5"
         >

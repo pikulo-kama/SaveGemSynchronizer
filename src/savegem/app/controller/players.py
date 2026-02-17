@@ -18,6 +18,10 @@ class PlayersController(TemplateWidgetController):
     PlayerActive: Final = "active"
 
     def retrieve_data(self, args: ControllerArgs) -> list[Any]:
+
+        if context().games.current is None:
+            return []
+
         active_players = context().activity.players
         game_players = context().games.current.players
         players = []

@@ -1,5 +1,5 @@
 <KamaSection name="home" label="tr{label_Home}" icon="home.svg">
-<KamaWidget layout="horizontal" controller="RebindParentController" arg_parent="root.content">
+<KamaWidget layout="horizontal">
 
     <!--  Left Section  -->
     <KamaWidget layout="vertical" width="250" mb="20">
@@ -89,6 +89,7 @@
                     <!--  Game Tab Bar  -->
                     <KamaTabBar id="gameBar" controller="SectionTabBarController"
                                 arg_list_sections="game_details game_history game_settings"
+                                arg_parent="gameContainer"
                     />
                 </KamaWidget>
 
