@@ -1,0 +1,5 @@
+
+KamaHDivider,
+KamaVDivider {
+    background-color: color("surface-a20");
+}

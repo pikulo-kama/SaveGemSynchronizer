@@ -46,7 +46,7 @@ def rebuild():
     application = KamaApplication()
 
     context().state.refresh()
-    application.translations.reload()
+    application.resources.read()
     application.window.build(UISection.RootSection)
 
 

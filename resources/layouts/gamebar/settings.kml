@@ -17,7 +17,7 @@
                 </KamaPushButton>
                 <KamaSpacer/>
             </KamaWidget>
-            <KamaLabel class="smallText" stylesheet="color: rgba('text-primary', 0.4)"
+            <KamaLabel class="smallText fg-text-primary-04"
                        refresh_events="game_selection_change local_storage_path_change"
             >
                 game{path}

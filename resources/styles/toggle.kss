@@ -1,0 +1,10 @@
+
+
+KamaToggle {
+    qproperty-track_color: color("surface-a20");
+    qproperty-thumb_color: color("text-primary");
+
+    &.checked {
+        qproperty-track_color: color("primary-a10");
+    }
+}

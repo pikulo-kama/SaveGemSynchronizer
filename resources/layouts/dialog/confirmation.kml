@@ -9,7 +9,7 @@
         <KamaLabel alignment="vcenter">
             pixmap{exclamation_mark.svg, scale: 20}
         </KamaLabel>
-        <KamaLabel class="sectionTitleTextInverted" alignment="vcenter">
+        <KamaLabel class="sectionTitleText fg-text-inverted" alignment="vcenter">
             tr{popup_ConfirmationTitle}
         </KamaLabel>
     </KamaWidget>

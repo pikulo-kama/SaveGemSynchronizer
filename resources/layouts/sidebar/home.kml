@@ -79,8 +79,8 @@
                                     pixmap{saveInfo{statusIcon}, scale: 12}
                                 </KamaLabel>
                             </KamaWidget>
-                            <KamaLabel class="smallTextInverted" alignment="left-center"
-                                       stylesheet="font-weight: bold; color: color('dark-a0')">
+                            <KamaLabel class="smallText fg-dark" alignment="left-center"
+                                       stylesheet="font-weight: bold">
                                 saveInfo{status}
                             </KamaLabel>
                         </KamaWidget>
@@ -102,7 +102,7 @@
         <!--  Game Controls  -->
         <KamaWidget layout="horizontal" alignment="bottom-right" height="60" ml="10" mr="10" mb="10">
             <KamaProgressPushButton
-                    id="uploadButton" controller="UploadButtonController"
+                    class="uploadButton" controller="UploadButtonController"
                     width="200" height="40"
                     refresh_events="language_change">
                 tr{label_UploadSaveToDrive}
@@ -111,7 +111,7 @@
             <KamaWidget width="5"/>
 
             <KamaProgressPushButton
-                    id="downloadButton" class="primary"
+                    class="downloadButton primary"
                     controller="DownloadButtonController" height="40"
                     refresh_events="language_change"
             />

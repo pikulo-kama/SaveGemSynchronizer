@@ -1,0 +1,23 @@
+
+KamaDialog#confirmationDialog {
+    qproperty-top_offset: 10;
+
+    min-height: 100px;
+    border-radius: 5px;
+    /* background-color: color("surface-a10"); */
+    background: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0      color("primary-a10"),
+        stop:0.25   color("primary-a10"),
+        stop:0.251  color("surface-a10"),
+        stop:1      color("surface-a10")
+    );
+
+    border: 1px solid color("primary-a20");
+}
+
+#confirmationDialogContainer {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    background-color: color("primary-a10");
+}

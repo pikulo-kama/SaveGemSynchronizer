@@ -20,7 +20,7 @@
 
     <!--  Application Details  -->
     <KamaWidget layout="vertical">
-        <KamaLabel class="bodyText" stylesheet="color: rgba('text-primary', 0.6)">
+        <KamaLabel class="bodyText fg-text-primary-06">
             tr{label_ApplicationDetails}
         </KamaLabel>
 
@@ -47,7 +47,7 @@
 
     <!--  Contact Us Section  -->
     <KamaWidget layout="vertical">
-        <KamaLabel class="bodyText" stylesheet="color: rgba('text-primary', 0.6)">
+        <KamaLabel class="bodyText fg-text-primary-06">
             tr{label_ContactUs}
         </KamaLabel>
 
@@ -74,7 +74,7 @@
 
     <!--  Copyright & Disclaimer  -->
     <KamaLabel>tr{window_CopyrightDisclaimer, prop{application.name}}</KamaLabel>
-    <KamaLabel stylesheet="color: rgba('text-primary', 0.7)">
+    <KamaLabel class="fg-text-primary-07">
         tr{window_Copyright, date{year}, prop{application.name}}
     </KamaLabel>
 </KamaScrollableWidget>

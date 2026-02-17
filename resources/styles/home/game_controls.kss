@@ -1,15 +1,10 @@
 
-#downloadButton {
+.downloadButton {
     icon: image("download.svg");
     icon-size: 25px 25px;
 }
 
-#uploadButton {
+.uploadButton {
     icon: image("upload.svg");
     icon-size: 25px 25px;
-}
-
-KamaProgressPushButton.in-progress {
-    color: transparent;
-    icon: none;
 }

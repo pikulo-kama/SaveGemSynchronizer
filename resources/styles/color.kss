@@ -1,0 +1,20 @@
+
+.fg-dark {
+    color: color('dark-a0');
+}
+
+.fg-text-primary-04 {
+    color: rgba('text-primary', 0.4);
+}
+
+.fg-text-primary-06 {
+    color: rgba('text-primary', 0.6);
+}
+
+.fg-text-primary-07 {
+    color: rgba('text-primary', 0.7);
+}
+
+.fg-text-inverted {
+    color: color("text-inverted");
+}

@@ -1,0 +1,35 @@
+
+QScrollBar {
+    background-color: color("surface-a0");
+    margin: 0px;
+    border: none;
+
+    &:vertical {
+        width: 6px;
+    }
+
+    &:horizontal {
+        height: 6px;
+    }
+
+    &::handle {
+        background: color("surface-a30");
+        border: none;
+        border-radius: 3px;
+    }
+
+    &::add-line:vertical,
+    &::sub-line:vertical {
+        height: 0px;
+    }
+
+    &::add-line:horizontal,
+    &::sub-line:horizontal {
+        width: 0px;
+    }
+
+    &::add-page:vertical,
+    &::sub-page:vertical {
+         background: none;
+    }
+}
