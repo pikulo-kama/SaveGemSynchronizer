@@ -29,7 +29,9 @@ QScrollBar {
     }
 
     &::add-page:vertical,
-    &::sub-page:vertical {
+    &::sub-page:vertical,
+    &::add-page:horizontal,
+    &::sub-page:horizontal {
          background: none;
     }
 }
