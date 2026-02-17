@@ -4,7 +4,7 @@ import sys
 import time
 from typing import Final
 
-from kui.core.json_holder import JsonConfigHolder
+from kui.holder.json import JsonConfigHolder
 from kui.core.shortcut import prop, resolve_project_file
 from kutil.file_type import JSON
 from kutil.logger import get_logger

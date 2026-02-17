@@ -200,9 +200,8 @@ begin
     // Immediately start watchdog process.
     Exec(ExpandConstant('{app}\{#WatchdogExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
     
-    // Migrate database schema changes and (re)import application data.
-    Exec(ExpandConstant('{app}\{#KamaDbmExeName}'), ExpandConstant('migrate --migration_directories="{app}/_internal/migration" --database="{userappdata}/{#AppName}/savegem.db"'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    Exec(ExpandConstant('{app}\{#KamaDbmExeName}'), ExpandConstant('import --definition_file=""{app}/_internal/importData/import.def"" --database="{userappdata}/{#AppName}/savegem.db"'), '', SW_HIDE, ewNoWait, ResultCode);
+    // Migrate database schema changes.
+    Exec(ExpandConstant('{app}\{#KamaDbmExeName}'), ExpandConstant('migrate --migration_directories="{app}/_internal/migration" --database="{userappdata}/{#AppName}/savegem.db"'), '', SW_HIDE, ewNoWait, ResultCode);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

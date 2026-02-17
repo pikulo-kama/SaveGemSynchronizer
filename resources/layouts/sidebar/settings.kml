@@ -1,0 +1,109 @@
+<KamaSection name="settings" label="tr{label_Settings}" icon="gear.svg">
+<KamaWidget layout="horizontal"
+            controller="RebindParentController" arg_parent="root.content"
+            alignment="left" ml="20" mt="20" mr="20"
+>
+    <KamaWidget layout="vertical" stylesheet="max-width: 900px;">
+
+        <!--    Settings screen title.    -->
+        <KamaWidget layout="horizontal" spacing="10" mb="10">
+            <KamaLabel alignment="left-vcenter">
+                pixmap{gear.svg, scale: 30}
+            </KamaLabel>
+            <KamaLabel class="heroText" alignment="left-vcenter" refresh_events="language_change">
+                tr{label_Settings}
+            </KamaLabel>
+            <KamaSpacer />
+        </KamaWidget>
+
+        <KamaHDivider />
+
+        <KamaScrollableWidget layout="vertical" alignment="top" spacing="15" mt="20">
+            <!--  General Settings  -->
+            <KamaLabel class="subtitleText" alignment="top" height="30" refresh_events="language_change">
+                tr{label_GeneralSettings}
+            </KamaLabel>
+
+            <KamaWidget layout="vertical" class="settingGroup" ml="20" mr="20">
+
+                <!--  Language Setting  -->
+                <KamaWidget layout="horizontal" alignment="vcenter" height="75">
+                    <KamaWidget layout="vertical">
+                        <KamaLabel class="bodyText" stylesheet="font-weight: bold" refresh_events="language_change">
+                            tr{label_Language}
+                        </KamaLabel>
+                        <KamaLabel class="smallText" refresh_events="language_change">
+                            tr{label_LanguageDesc}
+                        </KamaLabel>
+                    </KamaWidget>
+                    <KamaSpacer />
+                    <KamaComboBox controller="LanguageDropdownController" width="150" height="35"
+                                  refresh_events="language_change"
+                    />
+                </KamaWidget>
+
+                <KamaHDivider />
+
+                <!--  Time Format Setting  -->
+                <KamaWidget layout="horizontal" alignment="vcenter" height="75">
+                    <KamaWidget layout="vertical">
+                        <KamaLabel class="bodyText" stylesheet="font-weight: bold" refresh_events="language_change">
+                            tr{label_TimeFormat}
+                        </KamaLabel>
+                        <KamaLabel class="smallText" refresh_events="language_change">
+                            tr{label_TimeFormatDesc}
+                        </KamaLabel>
+                    </KamaWidget>
+                    <KamaSpacer />
+                    <KamaComboBox controller="TimeFormatDropdownController" width="150" height="35"
+                                  refresh_events="language_change"
+                    />
+                </KamaWidget>
+
+                <KamaHDivider />
+
+                <!--  Theme Setting  -->
+                <KamaWidget layout="horizontal" alignment="vcenter" height="75">
+                    <KamaWidget layout="vertical">
+                        <KamaLabel class="bodyText" stylesheet="font-weight: bold" refresh_events="language_change">
+                            tr{label_Theme}
+                        </KamaLabel>
+                        <KamaLabel class="smallText" refresh_events="language_change">
+                            tr{label_ThemeDesc}
+                        </KamaLabel>
+                    </KamaWidget>
+                    <KamaSpacer />
+                    <KamaComboBox controller="ColorThemeDropdownController" width="150" height="35"
+                                  refresh_events="language_change"
+                    />
+                </KamaWidget>
+            </KamaWidget>
+
+            <!--  Account Settings  -->
+            <KamaLabel class="subtitleText" alignment="vcenter" height="50" refresh_events="language_change">
+                tr{label_AccountSettings}
+            </KamaLabel>
+
+            <!--  Logout Section  -->
+            <KamaWidget layout="vertical" class="settingGroup" ml="20" mr="20">
+                <KamaWidget layout="horizontal" alignment="vcenter" height="75">
+                    <KamaWidget layout="vertical">
+                        <KamaLabel class="bodyText" stylesheet="font-weight: bold" refresh_events="language_change">
+                            tr{label_Logout}
+                        </KamaLabel>
+                        <KamaLabel class="smallText" refresh_events="language_change">
+                            tr{label_LogoutDesc}
+                        </KamaLabel>
+                    </KamaWidget>
+                    <KamaSpacer />
+                    <KamaPushButton id="logoutButton" controller="LogoutController" alignment="left" width="50"
+                                    refresh_events="language_change"
+                    >
+                        tr{label_Logout}
+                    </KamaPushButton>
+                </KamaWidget>
+            </KamaWidget>
+        </KamaScrollableWidget>
+    </KamaWidget>
+</KamaWidget>
+</KamaSection>

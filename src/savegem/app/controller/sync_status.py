@@ -1,5 +1,6 @@
+from typing import Final
+
 from kui.component.label import KamaLabel
-from kui.core.constants import KamaAttr, QBool
 from kui.core.controller import WidgetController
 from kui.core.metadata import ControllerArgs
 from kutil.logger import get_logger
@@ -16,10 +17,16 @@ class SyncStatusController(WidgetController):
     based on synchronization status of current game.
     """
 
-    def refresh(self, sync_status_badge: KamaLabel, args: ControllerArgs):
+    Visible: Final[str] = "visible"
+
+    def refresh(self, sync_status_chip: KamaLabel, args: ControllerArgs):
         sync_status = context().games.current.meta.sync_status
         _logger.debug("game=%s, sync_status=%s", context().games.current.name, sync_status.name)
 
         # Only show badge when sync is not up-to-date with cloud.
-        sync_status_badge.setProperty(KamaAttr.Hidden, QBool(sync_status == SyncStatus.UpToDate))
-        sync_status_badge.update_styles()
+        if sync_status != SyncStatus.UpToDate:
+            sync_status_chip.add_class(self.Visible)
+        else:
+            sync_status_chip.remove_class(self.Visible)
+
+        sync_status_chip.update_styles()

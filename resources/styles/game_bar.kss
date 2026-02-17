@@ -1,0 +1,27 @@
+
+#gameBar::tab {
+    padding: 10px;
+    background-color: transparent;
+    font: font("accent");
+    border-bottom: 2px solid color("surface-a0");
+
+    &:!selected {
+        color: color("text-primary");
+    }
+
+    &:selected {
+        color: color("primary-a0");
+        border-bottom-color: color("primary-a0");
+    }
+
+    &:hover {
+        background-color: rgba("surface-a10", 0.5);
+        border-bottom-color: rgba("surface-a10", 0.5);
+    }
+
+    &:selected:hover {
+        background-color: rgba("primary-a10", 0.1);
+        border-bottom-color: color("primary-a0");
+    }
+}
+

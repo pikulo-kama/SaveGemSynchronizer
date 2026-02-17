@@ -1,0 +1,36 @@
+<KamaSection name="root">
+<KamaWidget layout="horizontal">
+    <KamaWidget id="sidebar" layout="vertical"
+                width="60" mt="10" mb="10"
+    >
+        <!--  Main application navigation bar.  -->
+        <KamaWidget id="sidebarMenu" layout="vertical"
+                    controller="SectionListWithErrorController"
+                    arg_list_sections="home settings about"
+                    refresh_events="game_config_change" recursive_refresh_events="language_change"
+                    ml="5" mr="5"
+        >
+            <Template>
+                <Body>
+                    <KamaPushButton id="sectionItem" tooltip="template{label}">
+                        icon{template{icon}, size: 25}
+                    </KamaPushButton>
+                </Body>
+                <Footer>
+                    <KamaSpacer/>
+                </Footer>
+            </Template>
+        </KamaWidget>
+
+        <KamaSpacer/>
+
+        <!--  User picture.  -->
+        <KamaLabel tooltip="user{name}" alignment="bottom-center" height="50">
+            pixmap{user{photo}, scale: 35, circle}
+        </KamaLabel>
+    </KamaWidget>
+
+    <!--  Container where subsections are being rendered.  -->
+    <KamaWidget id="content" layout="vertical" mt="10" mr="10" mb="5"/>
+</KamaWidget>
+</KamaSection>

@@ -1,4 +1,4 @@
-from kui.core.json_holder import JsonConfigHolder
+from kui.holder.json import JsonConfigHolder
 from savegem.common.service.daemon import Daemon
 from savegem.common.util.test import ExitTestLoop
 

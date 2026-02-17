@@ -61,7 +61,7 @@ class OpenSaveLocationButtonController(WidgetController):
 
     def setup(self, open_button: KamaPushButton, args: ControllerArgs):
         open_button.clicked.connect(
-            lambda: subprocess.run(['explorer', os.path.normpath(context().games.current.local_path)])
+            lambda: subprocess.run(["explorer", os.path.normpath(context().games.current.local_path)])
         )
 
 
@@ -74,7 +74,7 @@ class ChangeStoragePathButtonController(WidgetController):
             existing_path = current_game.local_path
             new_path = QFileDialog.getExistingDirectory(
                 KamaApplication().window,
-                tr('label_SelectTargetDirectory'),
+                tr("label_SelectTargetDirectory"),
                 existing_path,
                 QFileDialog.Option.ShowDirsOnly
             )
@@ -83,6 +83,7 @@ class ChangeStoragePathButtonController(WidgetController):
                 return
 
             current_game.settings.local_storage_path = new_path
-            self.manager.event_refresh('local_storage_path_change')
+            current_game.meta.local.calculate_checksum()
+            self.manager.event_refresh("local_storage_path_change")
 
         modify_button.clicked.connect(change_path)

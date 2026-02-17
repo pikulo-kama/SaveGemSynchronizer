@@ -1,0 +1,34 @@
+
+.detailsCard {
+    background-color: color("surface-a10");
+    border-radius: 5px;
+    text-align: left;
+}
+
+.detailsCardTitle {
+    color: rgba("text-primary", 0.4);
+    font: font("small");
+    font-weight: bold;
+}
+
+.detailsCardContent {
+    font: font("card-title");
+}
+
+#syncStatusChip {
+    background-color: transparent;
+    border-radius: 5px;
+
+    & KamaWidget {
+        background-color: transparent;
+        border-radius: 5px;
+    }
+
+    &.visible {
+        background-color: color("warning-a20");
+
+        & KamaWidget {
+            background-color: color("warning-a0");
+        }
+    }
+}

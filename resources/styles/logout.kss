@@ -1,0 +1,10 @@
+
+#logoutButton {
+    color: color("danger-a10");
+
+    &:hover {
+        color: color("text-primary");
+        border-color: transparent;
+        background-color: color("danger-a10");
+    }
+}

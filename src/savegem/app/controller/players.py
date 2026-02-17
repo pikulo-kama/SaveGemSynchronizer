@@ -1,7 +1,6 @@
 from typing import Any, Final
 
 from kui.component.widget import KamaWidget
-from kui.core.constants import KamaAttr
 from kui.core.controller import TemplateWidgetController, TemplateWidgetContext
 from kui.core.metadata import ControllerArgs
 from kutil.logger import get_logger
@@ -50,10 +49,10 @@ class PlayersController(TemplateWidgetController):
         return None
 
     @classmethod
-    def handle__player_card(cls, player_card: KamaWidget, widget_context: TemplateWidgetContext):
+    def handle__playerCard(cls, player_card: KamaWidget, widget_context: TemplateWidgetContext):  # noqa
         """
         Used to apply style property to players that are currently in-game.
         """
 
         if widget_context.element in context().activity.players:
-            player_card.setProperty(KamaAttr.Id, cls.PlayerActive)
+            player_card.add_class(cls.PlayerActive)

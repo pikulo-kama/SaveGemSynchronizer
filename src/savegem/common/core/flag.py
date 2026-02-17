@@ -1,7 +1,7 @@
 from typing import Final, Optional
 
 from kdb.table import DatabaseTable
-from kui_db_plugin.database import db
+from savegem.common.database import db
 from kutil.logger import get_logger
 
 _logger = get_logger(__name__)

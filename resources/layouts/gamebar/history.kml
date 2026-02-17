@@ -1,0 +1,37 @@
+<KamaSection name="game_history" label="tr{label_History}">
+<KamaWidget layout="vertical"
+            controller="RebindParentController" arg_parent="home.gameContainer"
+            ml="10" mt="20" mr="10" mb="20"
+>
+    <KamaScrollableWidget layout="vertical" controller="SaveHistoryListController" mr="10"
+                          refresh_events="cloud_files_change game_config_change game_selection_change save_downloaded">
+        <Template>
+            <Body>
+                <KamaWidget id="saveListRecord" class="saveListRecord" layout="horizontal" height="65"
+                            ml="10" mt="5" mr="10" mb="5"
+                >
+                    <!--  Snapshot information  -->
+                    <KamaWidget layout="vertical" alignment="vcenter">
+                        <KamaLabel class="saveListRecordVersion">
+                            template{version}
+                        </KamaLabel>
+                        <KamaLabel class="saveListRecordOwner">
+                            template{owner}
+                        </KamaLabel>
+                    </KamaWidget>
+
+                    <KamaSpacer />
+
+                    <!--  Restore Button  -->
+                    <KamaProgressPushButton id="restoreButton">
+                        tr{label_Restore}
+                    </KamaProgressPushButton>
+                </KamaWidget>
+            </Body>
+            <Footer>
+                <KamaSpacer />
+            </Footer>
+        </Template>
+    </KamaScrollableWidget>
+</KamaWidget>
+</KamaSection>

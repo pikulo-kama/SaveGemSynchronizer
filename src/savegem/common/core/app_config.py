@@ -1,6 +1,6 @@
 from typing import Final
 
-from kui.core.json_holder import JsonConfigHolder
+from kui.holder.json import JsonConfigHolder
 from kui.core.shortcut import resolve_project_file
 from kutil.logger import get_logger
 

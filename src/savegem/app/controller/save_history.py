@@ -3,7 +3,6 @@ from typing import Any, Final
 from kui.component.progress_button import KamaProgressPushButton
 from kui.component.widget import KamaWidget
 from kui.core.app import KamaApplication
-from kui.core.constants import QBool
 from kui.core.controller import TemplateWidgetController, TemplateWidgetContext
 from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr
@@ -39,16 +38,16 @@ class SaveHistoryListController(TemplateWidgetController):
         return None
 
     @classmethod
-    def handle__history_record(cls, history_record: KamaWidget, widget_context: TemplateWidgetContext):
+    def handle__saveListRecord(cls, history_record: KamaWidget, widget_context: TemplateWidgetContext):  # noqa
         """
         Used to apply style property to history record if
         save file checksum matches local save checksum.
         """
 
-        is_current_save = widget_context.element.checksum == context().games.current.meta.local.checksum
-        history_record.setProperty(cls.HistoryRecordActive, QBool(is_current_save))
+        if widget_context.element.checksum == context().games.current.meta.local.checksum:
+            history_record.add_class(cls.HistoryRecordActive)
 
-    def handle__restore_button(self, restore_button: KamaProgressPushButton, widget_context: TemplateWidgetContext):
+    def handle__restoreButton(self, restore_button: KamaProgressPushButton, widget_context: TemplateWidgetContext):  # noqa
         """
         Used to manager restore button of history record.
         Will hide button if checksum matches local checksum

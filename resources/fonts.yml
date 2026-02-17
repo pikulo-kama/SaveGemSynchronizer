@@ -1,0 +1,37 @@
+
+hero:
+  family: "PT Sans Caption"
+  size: 33
+
+section-title:
+  family: "Plus Jakarta Sans"
+  size: 18
+  weight: 800
+
+subtitle:
+  family: "Plus Jakarta Sans"
+  size: 23
+
+card-title:
+  family: "PT Sans Caption"
+  size: 19
+
+body:
+  family: "PT Sans Caption"
+  size: 16
+
+label:
+  family: "PT Sans Caption"
+  size: 16
+
+accent:
+  family: "PT Sans Caption"
+  size: 14
+
+small:
+  family: "PT Sans Caption"
+  size: 12
+
+caption:
+  family: "PT Sans Caption"
+  size: 10

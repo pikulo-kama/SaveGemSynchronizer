@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Final, Iterator
 
 from kui.core.shortcut import dynamic_data, resolve_app_data, resolve_image, resolve_temp_image
-from kui_db_plugin.database import db
+from savegem.common.database import db
 from kutil.file import delete_file
 from kutil.file_type import JPG
 from kutil.logger import get_logger

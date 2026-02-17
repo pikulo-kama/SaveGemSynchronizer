@@ -3,7 +3,7 @@ import hashlib
 from enum import Enum, auto
 from typing import Final, TYPE_CHECKING, Iterator
 
-from kui.core.json_holder import EditableJsonConfigHolder
+from kui.holder.json import EditableJsonConfigHolder
 from kutil.file import file_checksum
 from kutil.file_type import ZIP
 from kutil.logger import get_logger

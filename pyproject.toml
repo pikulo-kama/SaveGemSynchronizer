@@ -9,7 +9,7 @@ classifiers = [
 ]
 dependencies = [
     "kama-ui @ git+https://github.com/pikulo-kama/kama-ui.git",
-    "kama-ui-db-plugin @ git+https://github.com/pikulo-kama/kama-ui-db-plugin.git",
+    "kama-db @ git+https://github.com/pikulo-kama/kama-db.git",
     "kama-dbm @ git+https://github.com/pikulo-kama/kama-dbm.git",
     "PyQt6 >= 6.10.0, < 7.0.0",
     "pyqt6-sip >= 13.10.3, < 14.0.0",

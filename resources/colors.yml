@@ -1,0 +1,65 @@
+
+light:
+  dark-a0:        "#000000"
+
+  text-primary:   "#000000"
+  text-inverted:  "#ffffff"
+
+  primary-a0:     "#2a8ecf"
+  primary-a10:    "#2a7db6"
+  primary-a20:    "#286d9d"
+  primary-a30:    "#265d85"
+  primary-a40:    "#234d6d"
+  primary-a50:    "#1f3e57"
+
+  surface-a0:     "#f0f0f0"
+  surface-a10:    "#e3e3e3"
+  surface-a20:    "#d6d6d6"
+  surface-a30:    "#c9c9c9"
+  surface-a40:    "#bdbdbd"
+  surface-a50:    "#b0b0b0"
+
+  success-a0:     "#1b7f5c"
+  success-a10:    "#28be8a"
+  success-a20:    "#58dbad"
+
+  warning-a0:     "#b8871f"
+  warning-a10:    "#dfae44"
+  warning-a20:    "#ebca85"
+
+  danger-a0:      "#b13535"
+  danger-a10:     "#d06262"
+  danger-a20:     "#e29d9d"
+
+
+dark:
+  dark-a0:        "#000000"
+
+  text-primary:   "#ffffff"
+  text-inverted:  "#000000"
+
+  primary-a0:     "#00c3ff"
+  primary-a10:    "#4dcaff"
+  primary-a20:    "#6ed0ff"
+  primary-a30:    "#88d7ff"
+  primary-a40:    "#9fdeff"
+  primary-a50:    "#b4e4ff"
+
+  surface-a0:     "#202020"
+  surface-a10:    "#353535"
+  surface-a20:    "#4b4b4b"
+  surface-a30:    "#626262"
+  surface-a40:    "#7a7a7a"
+  surface-a50:    "#939393"
+
+  success-a0:     "#22946e"
+  success-a10:    "#47d5a6"
+  success-a20:    "#9ae8ce"
+
+  warning-a0:     "#a87a2a"
+  warning-a10:    "#d7ac61"
+  warning-a20:    "#ecd7b2"
+
+  danger-a0:      "#9c2121"
+  danger-a10:     "#d94a4a"
+  danger-a20:     "#eb9e9e"

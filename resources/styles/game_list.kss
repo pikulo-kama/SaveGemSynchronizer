@@ -1,0 +1,30 @@
+
+.gameListOption {
+    font: font("accent");
+    background-color: transparent;
+    text-align: left;
+    icon: none;
+
+    border: none;
+    border-radius: 0;
+
+    &.warning {
+        icon: image("exclamation_mark_danger.svg");
+        background-color: rgba("warning-a0", 0.1);
+    }
+
+    &:hover {
+        background-color: rgba("surface-a10", 0.5);
+    }
+
+    &.selected {
+        /* Add vertical line to indicate that game is selected. */
+        background: qlineargradient(
+            x1:0.02, y1:0, x2:1, y2:0,
+            stop:0    color("success-a0"),
+            stop:0.01 color("success-a0"),
+            stop:0.01 rgba("success-a0", 0.1),
+            stop:1    rgba("success-a0", 0.1)
+        );
+    }
+}

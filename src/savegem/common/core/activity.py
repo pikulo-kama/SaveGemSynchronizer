@@ -55,7 +55,7 @@ class Activity(AppData):
         """
 
         self.__players.clear()
-        activity_log = dynamic_data(HolderObject.Activity)
+        activity_log = dynamic_data(HolderObject.Activity) or {}
         current_game_name = None
         _logger.debug("Activity log: %s", activity_log)
 

@@ -1,0 +1,121 @@
+<KamaSection name="home" label="tr{label_Home}" icon="home.svg">
+<KamaWidget layout="horizontal" controller="RebindParentController" arg_parent="root.content">
+
+    <!--  Left Section  -->
+    <KamaWidget layout="vertical" width="250" mb="20">
+
+        <!--  Logo Section  -->
+        <KamaWidget layout="horizontal" height="80" ml="5">
+            <KamaLabel alignment="left-center">
+                pixmap{gem_outline.svg, scale: 60}
+            </KamaLabel>
+            <KamaLabel class="heroText" alignment="left-center">
+                prop{application.name}
+            </KamaLabel>
+            <KamaSpacer/>
+        </KamaWidget>
+
+        <!--  Game List Section  -->
+        <KamaScrollableWidget id="gameList" layout="vertical" controller="GameListController" spacing="0"
+                              refresh_events="
+                                cloud_files_change
+                                game_config_change
+                                game_selection_change
+                                save_downloaded
+                                local_storage_path_change
+                              "
+        >
+            <Template>
+                <Body>
+                    <KamaHDivider/>
+                    <KamaPushButton id="gameOption" class="gameListOption">
+                        template{name}
+                    </KamaPushButton>
+                </Body>
+                <Footer>
+                    <KamaHDivider/>
+                    <KamaSpacer/>
+                </Footer>
+            </Template>
+        </KamaScrollableWidget>
+    </KamaWidget>
+
+    <KamaVDivider/>
+
+    <!--  Right Section  -->
+    <KamaWidget layout="vertical">
+        <KamaWidget layout="horizontal">
+            <KamaWidget layout="vertical" stylesheet="max-width: 900px">
+
+                <!--  Game Header  -->
+                <KamaWidget layout="vertical" height="130"
+                            recursive_refresh_events="game_config_change game_selection_change"
+                >
+                    <KamaWidget layout="horizontal" alignment="left-vcenter" ml="10" mr="10" mb="10">
+                        <!--  Name and Logo  -->
+                        <KamaLabel alignment="left-vcenter" width="45">
+                            pixmap{game{logo}, scale: 40, radius: 3}
+                        </KamaLabel>
+                        <KamaLabel class="subtitleText" alignment="left-center">
+                            game{name}
+                        </KamaLabel>
+
+                        <KamaSpacer/>
+
+                        <!--  Sync Status Badge  -->
+                        <KamaWidget id="syncStatusChip" layout="horizontal" alignment="left-vcenter"
+                                    controller="SyncStatusController"
+                                    height="25" mr="5" ml="5"
+                                    tooltip="saveInfo{statusDescription}"
+                                    recursive_refresh_events="
+                                        cloud_files_change
+                                        game_selection_change
+                                        save_downloaded
+                                        local_storage_path_change
+                                    "
+                        >
+                            <KamaWidget layout="vertical" alignment="vcenter" width="18" height="18">
+                                <KamaLabel alignment="center">
+                                    pixmap{saveInfo{statusIcon}, scale: 12}
+                                </KamaLabel>
+                            </KamaWidget>
+                            <KamaLabel class="smallTextInverted" alignment="left-center"
+                                       stylesheet="font-weight: bold; color: color('dark-a0')">
+                                saveInfo{status}
+                            </KamaLabel>
+                        </KamaWidget>
+                    </KamaWidget>
+
+                    <!--  Game Tab Bar  -->
+                    <KamaTabBar id="gameBar" controller="SectionTabBarController"
+                                arg_list_sections="game_details game_history game_settings"
+                    />
+                </KamaWidget>
+
+                <!--  Game Container (would be used to render game bar tabs.)  -->
+                <KamaWidget id="gameContainer" layout="vertical"/>
+            </KamaWidget>
+        </KamaWidget>
+
+        <KamaHDivider/>
+
+        <!--  Game Controls  -->
+        <KamaWidget layout="horizontal" alignment="bottom-right" height="60" ml="10" mr="10" mb="10">
+            <KamaProgressPushButton
+                    id="uploadButton" controller="UploadButtonController"
+                    width="200" height="40"
+                    refresh_events="language_change">
+                tr{label_UploadSaveToDrive}
+            </KamaProgressPushButton>
+
+            <KamaWidget width="5"/>
+
+            <KamaProgressPushButton
+                    id="downloadButton" class="primary"
+                    controller="DownloadButtonController" height="40"
+                    refresh_events="language_change"
+            />
+        </KamaWidget>
+    </KamaWidget>
+</KamaWidget>
+</KamaSection>

@@ -1,0 +1,63 @@
+
+about:
+  color: "text-primary"
+
+gear:
+  color: "text-primary"
+
+home:
+  color: "text-primary"
+
+active_about:
+  path: "about"
+  color: "primary-a20"
+
+active_gear:
+  path: "gear"
+  color: "primary-a20"
+
+active_home:
+  path: "home"
+  color: "primary-a20"
+
+calendar:
+  color: "primary-a30"
+
+person:
+  color: "primary-a30"
+
+drive:
+  color: "primary-a30"
+
+tooltip:
+  color: "surface-a40"
+
+chevron:
+  color: "text-primary"
+
+download:
+  color: "text-inverted"
+
+download_warning:
+  path: "download"
+  color: "warning-a20"
+
+upload:
+  color: "text-primary"
+
+upload_warning:
+  path: "upload"
+  color: "warning-a20"
+
+checkmark:
+  color: "text-inverted"
+
+exclamation_mark:
+  color: "text-inverted"
+
+exclamation_mark_danger:
+  path: "exclamation_mark"
+  color: "danger-a0"
+
+external_link:
+  color: "primary-a0"

@@ -174,10 +174,7 @@ watchdog, watchdog_a = build_exe(
 kamadbm, kamadbm_a = build_exe(
     service_name="kama-dbm",
     script_path=".venv/Lib/site-packages/kamadbm/main.py",
-    datas=[
-        "importData",
-        "migration"
-    ],
+    datas=["migration"],
     console=True,
     run_as_admin=False
 )

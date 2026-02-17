@@ -1,0 +1,14 @@
+<KamaSection name="error">
+<KamaWidget layout="vertical" alignment="center" spacing="15"
+            controller="RebindParentController" arg_parent="root.content"
+>
+    <KamaLabel alignment="center" height="70">
+        pixmap{active_about.svg, scale: 70}
+    </KamaLabel>
+    <KamaLabel alignment="center" class="cardTitleText" height="40"
+               stylesheet="color: rgba('text-primary', 0.6)"
+    >
+        data{errorMessage}
+    </KamaLabel>
+</KamaWidget>
+</KamaSection>

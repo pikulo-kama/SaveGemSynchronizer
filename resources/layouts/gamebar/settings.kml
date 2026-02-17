@@ -1,0 +1,56 @@
+<KamaSection name="game_settings" label="tr{label_Settings}">
+<KamaScrollableWidget layout="vertical"
+                      controller="RebindParentController" arg_parent="home.gameContainer"
+                      ml="10" mt="20" mr="10" mb="20"
+>
+    <!--  Storage Path Setting  -->
+    <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter"
+                height="75" ml="20" mr="20"
+    >
+        <KamaWidget layout="vertical" width="100">
+            <KamaWidget layout="horizontal">
+                <KamaLabel class="bodyText" stylesheet="font-weight: bold">
+                    tr{label_LocalSavesLocation}
+                </KamaLabel>
+                <KamaPushButton class="noBorderButton" controller="OpenSaveLocationButtonController" alignment="center">
+                    icon{external_link.svg, size: 18}
+                </KamaPushButton>
+                <KamaSpacer/>
+            </KamaWidget>
+            <KamaLabel class="smallText" stylesheet="color: rgba('text-primary', 0.4)"
+                       refresh_events="game_selection_change local_storage_path_change"
+            >
+                game{path}
+            </KamaLabel>
+        </KamaWidget>
+
+        <KamaSpacer/>
+
+        <KamaPushButton controller="ChangeStoragePathButtonController">
+            tr{label_Modify}
+        </KamaPushButton>
+    </KamaWidget>
+
+    <!--  Auto Mode Setting  -->
+    <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter"
+                height="75" ml="20" mr="20"
+    >
+        <KamaWidget layout="vertical" width="100">
+            <KamaLabel class="bodyText" stylesheet="font-weight: bold">
+                tr{label_AutoModeGameSetting}
+            </KamaLabel>
+            <KamaLabel class="smallText">
+                tr{label_AutoModeGameSettingDesc}
+            </KamaLabel>
+        </KamaWidget>
+
+        <KamaSpacer/>
+
+        <KamaToggle controller="AutoModeController" width="55" height="25"
+                    refresh_events="game_selection_change"
+        />
+    </KamaWidget>
+
+    <KamaSpacer/>
+</KamaScrollableWidget>
+</KamaSection>

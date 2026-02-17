@@ -242,8 +242,11 @@ class GoogleAuth:
         """
 
         token_file_path = resolve_app_data(File.GDriveToken)
-        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
 
+        if not os.path.exists(token_file_path):
+            return False
+
+        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
         return creds.valid and not creds.expired
 
     @classmethod
@@ -255,31 +258,40 @@ class GoogleAuth:
         token_file_path = resolve_app_data(File.GDriveToken)
         credentials_file_path = resolve_project_file(File.GDriveCreds)
 
+        def exec_auth():
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_file_path, GDRIVE_SCOPES)
+            credentials = flow.run_local_server(port=0)
+
+            _logger.info("Authentication completed.")
+            _logger.info("Saving Google Cloud access token for later use.")
+
+            save_file(token_file_path, json.loads(credentials.to_json()), as_json=True)
+
         if not os.path.exists(credentials_file_path):
             _logger.critical(f"{File.GDriveCreds} is missing.")
             raise RuntimeError(f"Google Cloud credentials are missing in root of the project. Add {File.GDriveCreds}.")
 
-        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
+        if not os.path.exists(token_file_path):
+            _logger.info("Token doesn't exist. Attempting authentication using credentials.")
+            exec_auth()
+            return
 
         if cls.is_authenticated():
             _logger.info("Token was found. Application will use credentials from token.")
             return
+
+        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
 
         # If they're just expired then try to refresh them
         if creds.expired and creds.refresh_token:
             try:
                 _logger.info("Credentials expired, performing refresh.")
                 creds.refresh(Request())
+                save_file(token_file_path, json.loads(creds.to_json()), as_json=True)
                 return
 
             except RefreshError:
                 _logger.error("Refresh token expired. Starting authentication process.")
 
         _logger.info("Attempting authentication using credentials.")
-
-        flow = InstalledAppFlow.from_client_secrets_file(credentials_file_path, GDRIVE_SCOPES)
-        creds = flow.run_local_server(port=0)
-
-        _logger.info("Authentication completed.")
-        _logger.info("Saving Google Cloud access token for later use.")
-        save_file(token_file_path, json.loads(creds.to_json()), as_json=True)
+        exec_auth()

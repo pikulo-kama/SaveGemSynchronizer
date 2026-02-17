@@ -7,7 +7,6 @@ from kui.core.controller import WidgetController
 from kui.core.metadata import ControllerArgs
 from kui.core.shortcut import tr, resolve_app_data
 from kui.core.style import ColorMode
-from kui_db_plugin.database import db
 from kutil.file import delete_file
 from kutil.logger import get_logger
 
@@ -24,13 +23,14 @@ class LanguageDropdownController(WidgetController):
 
     def setup(self, language_combobox: KamaComboBox, args: ControllerArgs):
 
+        application = KamaApplication()
+
         def on_language_change(index: int):
             """
             Callback which is called when language selection in
             dropdown changes.
             """
 
-            application = KamaApplication()
             new_locale = language_combobox.itemData(index)
 
             _logger.debug("Changing language to %s", new_locale)
@@ -38,9 +38,8 @@ class LanguageDropdownController(WidgetController):
             application.translations.locale = new_locale
             application.window.refresh(UIRefreshEvent.LanguageChange)
 
-        for language in db.retrieve_table("setup_locale"):
-            locale_id = language.get("locale_id")
-            locale_name = language.get("locale_name")
+        for locale_id in application.translations.locales:
+            locale_name = application.translations.get(f"language_{locale_id}")
 
             _logger.info("Adding language with code %s to language dropdown.", locale_id)
             language_combobox.addItem(locale_name, locale_id)
@@ -48,6 +47,16 @@ class LanguageDropdownController(WidgetController):
         target_language_id = language_combobox.findData(context().state.locale)
         language_combobox.setCurrentIndex(target_language_id)
         language_combobox.currentIndexChanged.connect(on_language_change)  # noqa
+
+    def refresh(self, language_combobox: KamaComboBox, args: ControllerArgs):
+
+        application = KamaApplication()
+
+        for idx, locale_id in enumerate(application.translations.locales):
+            locale_name = application.translations.get(f"language_{locale_id}")
+
+            _logger.info("Adding language with code %s to language dropdown.", locale_id)
+            language_combobox.setItemText(idx, locale_name)
 
 
 class TimeFormatDropdownController(WidgetController):

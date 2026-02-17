@@ -1,7 +1,6 @@
 from typing import Any, Final
 
 from kui.component.button import KamaPushButton
-from kui.core.constants import QBool
 from kui.core.controller import TemplateWidgetController, TemplateWidgetContext
 from kui.core.metadata import ControllerArgs
 from kutil.logger import get_logger
@@ -26,7 +25,7 @@ class GameListController(TemplateWidgetController):
     def retrieve_data(self, args: ControllerArgs) -> list[Any]:
         return context().games
 
-    def handle__game_option(self, game_button: KamaPushButton, widget_context: TemplateWidgetContext):
+    def handle__gameOption(self, game_button: KamaPushButton, widget_context: TemplateWidgetContext):  # noqa
         """
         Used to link callback to game option and apply
         style properties to it.
@@ -38,10 +37,10 @@ class GameListController(TemplateWidgetController):
         game_button.clicked.connect(change_name(widget_context.element.name))  # noqa
 
         if widget_context.element == context().games.current:
-            game_button.setProperty(self.GameOptionSelected, QBool(True))
+            game_button.add_class(self.GameOptionSelected)
 
         if widget_context.element.meta.sync_status != SyncStatus.UpToDate:
-            game_button.setProperty(self.GameOptionWarning, QBool(True))
+            game_button.add_class(self.GameOptionWarning)
 
     def resolve(self, widget_context: TemplateWidgetContext, value: str, *args, **kw):
         if value == "name":
