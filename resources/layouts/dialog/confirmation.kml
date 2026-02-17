@@ -3,9 +3,7 @@
             controller="ConfirmationDialogController" arg_confirm="confirmButton" arg_cancel="cancelButton"
             spacing="15" width="400" mb="20"
 >
-    <KamaWidget id="confirmationDialogContainer" layout="horizontal" alignment="left"
-                ml="20" mt="10" mr="20" mb="10"
-    >
+    <KamaWidget id="confirmationDialogBody" layout="horizontal" alignment="left" ml="20" mt="10" mr="20" mb="10">
         <KamaLabel alignment="vcenter">
             pixmap{exclamation_mark.svg, scale: 20}
         </KamaLabel>

@@ -1,12 +1,11 @@
 <KamaSection name="game_settings" label="tr{label_Settings}">
 <KamaScrollableWidget layout="vertical" ml="10" mt="20" mr="10" mb="20">
+
     <!--  Storage Path Setting  -->
-    <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter"
-                height="75" ml="20" mr="20"
-    >
+    <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter" height="75" ml="20" mr="20">
         <KamaWidget layout="vertical" width="100">
             <KamaWidget layout="horizontal">
-                <KamaLabel class="bodyText" stylesheet="font-weight: bold">
+                <KamaLabel class="bodyText fw-bold">
                     tr{label_LocalSavesLocation}
                 </KamaLabel>
                 <KamaPushButton class="noBorderButton" controller="OpenSaveLocationButtonController" alignment="center">
@@ -29,11 +28,9 @@
     </KamaWidget>
 
     <!--  Auto Mode Setting  -->
-    <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter"
-                height="75" ml="20" mr="20"
-    >
+    <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter" height="75" ml="20" mr="20">
         <KamaWidget layout="vertical" width="100">
-            <KamaLabel class="bodyText" stylesheet="font-weight: bold">
+            <KamaLabel class="bodyText fw-bold">
                 tr{label_AutoModeGameSetting}
             </KamaLabel>
             <KamaLabel class="smallText">
@@ -43,9 +40,7 @@
 
         <KamaSpacer/>
 
-        <KamaToggle controller="AutoModeController" width="55" height="25"
-                    refresh_events="game_selection_change"
-        />
+        <KamaToggle controller="AutoModeController" width="55" height="25" refresh_events="game_selection_change"/>
     </KamaWidget>
 
     <KamaSpacer/>

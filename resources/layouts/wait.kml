@@ -3,6 +3,6 @@
     <KamaLabel alignment="center">
         pixmap{gem_outline.svg, scale: 80}
     </KamaLabel>
-    <KamaWaitBar alignment="bottom" height="10" />
+    <KamaWaitBar alignment="bottom" height="10"/>
 </KamaWidget>
 </KamaSection>

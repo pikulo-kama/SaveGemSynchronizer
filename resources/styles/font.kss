@@ -1,0 +1,4 @@
+
+.fw-bold {
+    font-weight: bold;
+}

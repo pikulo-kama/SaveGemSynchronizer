@@ -26,7 +26,7 @@
                 <!--  Language Setting  -->
                 <KamaWidget layout="horizontal" alignment="vcenter" height="75">
                     <KamaWidget layout="vertical">
-                        <KamaLabel class="bodyText" stylesheet="font-weight: bold" refresh_events="language_change">
+                        <KamaLabel class="bodyText fw-bold" refresh_events="language_change">
                             tr{label_Language}
                         </KamaLabel>
                         <KamaLabel class="smallText" refresh_events="language_change">
@@ -44,7 +44,7 @@
                 <!--  Time Format Setting  -->
                 <KamaWidget layout="horizontal" alignment="vcenter" height="75">
                     <KamaWidget layout="vertical">
-                        <KamaLabel class="bodyText" stylesheet="font-weight: bold" refresh_events="language_change">
+                        <KamaLabel class="bodyText fw-bold" refresh_events="language_change">
                             tr{label_TimeFormat}
                         </KamaLabel>
                         <KamaLabel class="smallText" refresh_events="language_change">
@@ -62,7 +62,7 @@
                 <!--  Theme Setting  -->
                 <KamaWidget layout="horizontal" alignment="vcenter" height="75">
                     <KamaWidget layout="vertical">
-                        <KamaLabel class="bodyText" stylesheet="font-weight: bold" refresh_events="language_change">
+                        <KamaLabel class="bodyText fw-bold" refresh_events="language_change">
                             tr{label_Theme}
                         </KamaLabel>
                         <KamaLabel class="smallText" refresh_events="language_change">
@@ -85,7 +85,7 @@
             <KamaWidget layout="vertical" class="settingGroup" ml="20" mr="20">
                 <KamaWidget layout="horizontal" alignment="vcenter" height="75">
                     <KamaWidget layout="vertical">
-                        <KamaLabel class="bodyText" stylesheet="font-weight: bold" refresh_events="language_change">
+                        <KamaLabel class="bodyText fw-bold" refresh_events="language_change">
                             tr{label_Logout}
                         </KamaLabel>
                         <KamaLabel class="smallText" refresh_events="language_change">

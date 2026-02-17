@@ -22,9 +22,9 @@
             tr{label_ApplicationDetails}
         </KamaLabel>
 
-        <!--    Version    -->
+        <!--  Version  -->
         <KamaWidget layout="horizontal" alignment="left" spacing="20">
-            <KamaLabel class="accentText" stylesheet="font-weight: bold">
+            <KamaLabel class="accentText fw-bold">
                 tr{label_Version}:
             </KamaLabel>
             <KamaLabel class="accentText">
@@ -32,9 +32,9 @@
             </KamaLabel>
         </KamaWidget>
 
-        <!--    Author    -->
+        <!--  Author  -->
         <KamaWidget layout="horizontal" alignment="left" spacing="20">
-            <KamaLabel class="accentText" stylesheet="font-weight: bold">
+            <KamaLabel class="accentText fw-bold">
                 tr{label_Author}:
             </KamaLabel>
             <KamaLabel class="accentText">
@@ -51,17 +51,18 @@
 
         <!--  GitHub  -->
         <KamaWidget layout="horizontal" alignment="left" spacing="20">
-            <KamaLabel class="accentText" stylesheet="font-weight: bold">
+            <KamaLabel class="accentText fw-bold">
                 GitHub:
             </KamaLabel>
             <KamaRichLabel class="accentText">
-                &lt;a href='https://github.com/pikulo-kama/SaveGemSynchronizer'&gt;https://github.com/pikulo-kama/SaveGemSynchronizer&lt;/a&gt;
+                &lt;a href='https://github.com/pikulo-kama/SaveGemSynchronizer'&gt;
+                    https://github.com/pikulo-kama/SaveGemSynchronizer&lt;/a&gt;
             </KamaRichLabel>
         </KamaWidget>
 
         <!--  E-mail  -->
         <KamaWidget layout="horizontal" alignment="left" spacing="20">
-            <KamaLabel class="accentText" stylesheet="font-weight: bold">
+            <KamaLabel class="accentText fw-bold">
                 tr{label_Email}:
             </KamaLabel>
             <KamaRichLabel class="accentText">

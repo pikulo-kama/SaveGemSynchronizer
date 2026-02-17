@@ -17,13 +17,8 @@
 
         <!--  Game List Section  -->
         <KamaScrollableWidget id="gameList" layout="vertical" controller="GameListController" spacing="0"
-                              refresh_events="
-                                cloud_files_change
-                                game_config_change
-                                game_selection_change
-                                save_downloaded
-                                local_storage_path_change
-                              "
+                              refresh_events="cloud_files_change game_config_change game_selection_change
+                              save_downloaded local_storage_path_change"
         >
             <Template>
                 <Body>
@@ -79,8 +74,7 @@
                                     pixmap{saveInfo{statusIcon}, scale: 12}
                                 </KamaLabel>
                             </KamaWidget>
-                            <KamaLabel class="smallText fg-dark" alignment="left-center"
-                                       stylesheet="font-weight: bold">
+                            <KamaLabel class="smallText fg-dark fw-bold" alignment="left-center">
                                 saveInfo{status}
                             </KamaLabel>
                         </KamaWidget>

@@ -1,5 +1,6 @@
 <KamaSection name="game_details" label="tr{label_Details}">
 <KamaScrollableWidget layout="vertical" alignment="top" spacing="10" ml="10" mt="30" mr="10">
+
     <!--  Game Details Section  -->
     <KamaLabel class="sectionTitleText">
         tr{label_LastCloudSave}
@@ -8,7 +9,7 @@
     <!--  Detail Cards Section  -->
     <KamaWidget layout="horizontal" spacing="15" height="150">
 
-        <!--    Save Date Card    -->
+        <!--  Save Date Card  -->
         <KamaWidget layout="vertical" class="detailsCard">
             <KamaWidget layout="vertical" alignment="top-left" spacing="2" ml="20" mt="20">
                 <KamaLabel width="30" height="30">
@@ -30,7 +31,7 @@
             </KamaWidget>
         </KamaWidget>
 
-        <!--    Save Owner Card    -->
+        <!--  Save Owner Card  -->
         <KamaWidget layout="vertical" class="detailsCard">
             <KamaWidget layout="vertical" alignment="top-left" spacing="2" ml="20" mt="20">
                 <KamaLabel width="30" height="30">
@@ -52,7 +53,7 @@
             </KamaWidget>
         </KamaWidget>
 
-        <!--    Save Size Card    -->
+        <!--  Save Size Card  -->
         <KamaWidget layout="vertical" class="detailsCard">
             <KamaWidget layout="vertical" alignment="top-left" spacing="2" ml="20" mt="20">
                 <KamaLabel width="30" height="30">
