@@ -1,19 +1,18 @@
 
-#sidebar,
-#sidebarMenu {
+.sidebar {
     background-color: color("surface-a10");
-}
 
-#sidebarMenu KamaPushButton {
-    background-color: transparent;
-    border-color: transparent;
-    border-radius: 8px;
+    &--menu KamaPushButton {
+        background-color: transparent;
+        border-color: transparent;
+        border-radius: 8px;
 
-    &:hover {
-        background-color: rgba("text-primary", 0.2);
-    }
+        &:hover {
+            background-color: rgba("text-primary", 0.2);
+        }
 
-    &.active:hover {
-        background-color: rgba("primary-a20", 0.33);
+        &.active:hover {
+            background-color: rgba("primary-a20", 0.33);
+        }
     }
 }

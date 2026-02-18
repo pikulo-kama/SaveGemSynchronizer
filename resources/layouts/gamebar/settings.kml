@@ -2,18 +2,18 @@
 <KamaScrollableWidget layout="vertical" ml="10" mt="20" mr="10" mb="20">
 
     <!--  Storage Path Setting  -->
-    <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter" height="75" ml="20" mr="20">
+    <KamaWidget class="setting-card" layout="horizontal" alignment="left-vcenter" height="75" ml="20" mr="20">
         <KamaWidget layout="vertical" width="100">
             <KamaWidget layout="horizontal">
-                <KamaLabel class="bodyText fw-bold">
+                <KamaLabel class="font-body fw-bold">
                     tr{label_LocalSavesLocation}
                 </KamaLabel>
-                <KamaPushButton class="noBorderButton" controller="OpenSaveLocationButtonController" alignment="center">
+                <KamaPushButton class="p0 border-none" controller="OpenSaveLocationButtonController" alignment="center">
                     icon{external_link.svg, size: 18}
                 </KamaPushButton>
                 <KamaSpacer/>
             </KamaWidget>
-            <KamaLabel class="smallText fg-text-primary-04"
+            <KamaLabel class="font-small fg-text-primary-04"
                        refresh_events="game_selection_change local_storage_path_change"
             >
                 game{path}
@@ -28,12 +28,12 @@
     </KamaWidget>
 
     <!--  Auto Mode Setting  -->
-    <KamaWidget class="settingCard" layout="horizontal" alignment="left-vcenter" height="75" ml="20" mr="20">
+    <KamaWidget class="setting-card" layout="horizontal" alignment="left-vcenter" height="75" ml="20" mr="20">
         <KamaWidget layout="vertical" width="100">
-            <KamaLabel class="bodyText fw-bold">
+            <KamaLabel class="font-body fw-bold">
                 tr{label_AutoModeGameSetting}
             </KamaLabel>
-            <KamaLabel class="smallText">
+            <KamaLabel class="font-small">
                 tr{label_AutoModeGameSettingDesc}
             </KamaLabel>
         </KamaWidget>

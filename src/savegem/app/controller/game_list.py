@@ -25,7 +25,7 @@ class GameListController(TemplateWidgetController):
     def retrieve_data(self, args: ControllerArgs) -> list[Any]:
         return context().games
 
-    def handle__gameOption(self, game_button: KamaPushButton, widget_context: TemplateWidgetContext):  # noqa
+    def handle__gameListOption(self, game_button: KamaPushButton, widget_context: TemplateWidgetContext):  # noqa
         """
         Used to link callback to game option and apply
         style properties to it.

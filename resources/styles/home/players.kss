@@ -1,5 +1,5 @@
 
-#playersContainer KamaWidget {
+.player-card {
     background-color: rgba("surface-a10", 0.7);
     border-radius: 5px;
     border: 1px solid color("surface-a20");
@@ -13,9 +13,5 @@
             stop:1       color("success-a10")
         );
         border-color: color("success-a0");
-    }
-
-    & KamaLabel {
-        font: font("accent");
     }
 }

@@ -1,5 +1,5 @@
 
-#logoutButton {
+.logout-button {
     color: color("danger-a10");
 
     &:hover {

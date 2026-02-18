@@ -1,10 +1,10 @@
 
-.downloadButton {
+.download-button {
     icon: image("download.svg");
     icon-size: 25px 25px;
 }
 
-.uploadButton {
+.upload-button {
     icon: image("upload.svg");
     icon-size: 25px 25px;
 }

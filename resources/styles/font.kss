@@ -1,4 +1,36 @@
 
+.font-hero {
+    font: font("hero");
+}
+
+.font-section-title {
+    font: font("section-title");
+}
+
+.font-subtitle {
+    font: font("subtitle");
+}
+
+.font-card-title {
+    font: font("card-title");
+}
+
+.font-accent {
+    font: font("accent");
+}
+
+.font-body {
+    font: font("body");
+}
+
+.smallText {
+    font: font("small");
+}
+
+.font-caption {
+    font: font("caption");
+}
+
 .fw-bold {
     font-weight: bold;
 }

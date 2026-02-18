@@ -9,21 +9,21 @@
             <KamaLabel alignment="left-center">
                 pixmap{gem_outline.svg, scale: 60}
             </KamaLabel>
-            <KamaLabel class="heroText" alignment="left-center">
+            <KamaLabel class="font-hero" alignment="left-center">
                 prop{application.name}
             </KamaLabel>
             <KamaSpacer/>
         </KamaWidget>
 
         <!--  Game List Section  -->
-        <KamaScrollableWidget id="gameList" layout="vertical" controller="GameListController" spacing="0"
+        <KamaScrollableWidget layout="vertical" controller="GameListController" spacing="0"
                               refresh_events="cloud_files_change game_config_change game_selection_change
                               save_downloaded local_storage_path_change"
         >
             <Template>
                 <Body>
                     <KamaHDivider/>
-                    <KamaPushButton id="gameOption" class="gameListOption">
+                    <KamaPushButton id="gameListOption" class="game-list-option">
                         template{name}
                     </KamaPushButton>
                 </Body>
@@ -51,14 +51,14 @@
                         <KamaLabel alignment="left-vcenter" width="45">
                             pixmap{game{logo}, scale: 40, radius: 3}
                         </KamaLabel>
-                        <KamaLabel class="subtitleText" alignment="left-center">
+                        <KamaLabel class="font-subtitle" alignment="left-center">
                             game{name}
                         </KamaLabel>
 
                         <KamaSpacer/>
 
                         <!--  Sync Status Badge  -->
-                        <KamaWidget id="syncStatusChip" layout="horizontal" alignment="left-vcenter"
+                        <KamaWidget class="sync-status-chip" layout="horizontal" alignment="left-vcenter"
                                     controller="SyncStatusController"
                                     height="25" mr="5" ml="5"
                                     tooltip="saveInfo{statusDescription}"
@@ -74,14 +74,14 @@
                                     pixmap{saveInfo{statusIcon}, scale: 12}
                                 </KamaLabel>
                             </KamaWidget>
-                            <KamaLabel class="smallText fg-dark fw-bold" alignment="left-center">
+                            <KamaLabel class="font-small fg-dark fw-bold" alignment="left-center">
                                 saveInfo{status}
                             </KamaLabel>
                         </KamaWidget>
                     </KamaWidget>
 
                     <!--  Game Tab Bar  -->
-                    <KamaTabBar id="gameBar" controller="SectionTabBarController"
+                    <KamaTabBar class="tab-bar" controller="SectionTabBarController"
                                 arg_list_sections="game_details game_history game_settings"
                                 arg_parent="gameContainer"
                     />
@@ -97,7 +97,7 @@
         <!--  Game Controls  -->
         <KamaWidget layout="horizontal" alignment="bottom-right" height="60" ml="10" mr="10" mb="10">
             <KamaProgressPushButton
-                    class="uploadButton" controller="UploadButtonController"
+                    class="upload-button" controller="UploadButtonController"
                     width="200" height="40"
                     refresh_events="language_change">
                 tr{label_UploadSaveToDrive}
@@ -106,7 +106,7 @@
             <KamaWidget width="5"/>
 
             <KamaProgressPushButton
-                    class="downloadButton primary"
+                    class="download-button primary"
                     controller="DownloadButtonController" height="40"
                     refresh_events="language_change"
             />

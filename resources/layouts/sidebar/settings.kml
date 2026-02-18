@@ -7,7 +7,7 @@
             <KamaLabel alignment="left-vcenter">
                 pixmap{gear.svg, scale: 30}
             </KamaLabel>
-            <KamaLabel class="heroText" alignment="left-vcenter" refresh_events="language_change">
+            <KamaLabel class="font-hero" alignment="left-vcenter" refresh_events="language_change">
                 tr{label_Settings}
             </KamaLabel>
             <KamaSpacer />
@@ -17,19 +17,19 @@
 
         <KamaScrollableWidget layout="vertical" alignment="top" spacing="15" mt="20">
             <!--  General Settings  -->
-            <KamaLabel class="subtitleText" alignment="top" height="30" refresh_events="language_change">
+            <KamaLabel class="font-subtitle" alignment="top" height="30" refresh_events="language_change">
                 tr{label_GeneralSettings}
             </KamaLabel>
 
-            <KamaWidget layout="vertical" class="settingGroup" ml="20" mr="20">
+            <KamaWidget layout="vertical" class="setting-group" ml="20" mr="20">
 
                 <!--  Language Setting  -->
                 <KamaWidget layout="horizontal" alignment="vcenter" height="75">
                     <KamaWidget layout="vertical">
-                        <KamaLabel class="bodyText fw-bold" refresh_events="language_change">
+                        <KamaLabel class="font-body fw-bold" refresh_events="language_change">
                             tr{label_Language}
                         </KamaLabel>
-                        <KamaLabel class="smallText" refresh_events="language_change">
+                        <KamaLabel class="font-small" refresh_events="language_change">
                             tr{label_LanguageDesc}
                         </KamaLabel>
                     </KamaWidget>
@@ -44,10 +44,10 @@
                 <!--  Time Format Setting  -->
                 <KamaWidget layout="horizontal" alignment="vcenter" height="75">
                     <KamaWidget layout="vertical">
-                        <KamaLabel class="bodyText fw-bold" refresh_events="language_change">
+                        <KamaLabel class="font-body fw-bold" refresh_events="language_change">
                             tr{label_TimeFormat}
                         </KamaLabel>
-                        <KamaLabel class="smallText" refresh_events="language_change">
+                        <KamaLabel class="font-small" refresh_events="language_change">
                             tr{label_TimeFormatDesc}
                         </KamaLabel>
                     </KamaWidget>
@@ -62,10 +62,10 @@
                 <!--  Theme Setting  -->
                 <KamaWidget layout="horizontal" alignment="vcenter" height="75">
                     <KamaWidget layout="vertical">
-                        <KamaLabel class="bodyText fw-bold" refresh_events="language_change">
+                        <KamaLabel class="font-body fw-bold" refresh_events="language_change">
                             tr{label_Theme}
                         </KamaLabel>
-                        <KamaLabel class="smallText" refresh_events="language_change">
+                        <KamaLabel class="font-small" refresh_events="language_change">
                             tr{label_ThemeDesc}
                         </KamaLabel>
                     </KamaWidget>
@@ -77,23 +77,23 @@
             </KamaWidget>
 
             <!--  Account Settings  -->
-            <KamaLabel class="subtitleText" alignment="vcenter" height="50" refresh_events="language_change">
+            <KamaLabel class="font-subtitle" alignment="vcenter" height="50" refresh_events="language_change">
                 tr{label_AccountSettings}
             </KamaLabel>
 
             <!--  Logout Section  -->
-            <KamaWidget layout="vertical" class="settingGroup" ml="20" mr="20">
+            <KamaWidget layout="vertical" class="setting-group" ml="20" mr="20">
                 <KamaWidget layout="horizontal" alignment="vcenter" height="75">
                     <KamaWidget layout="vertical">
-                        <KamaLabel class="bodyText fw-bold" refresh_events="language_change">
+                        <KamaLabel class="font-body fw-bold" refresh_events="language_change">
                             tr{label_Logout}
                         </KamaLabel>
-                        <KamaLabel class="smallText" refresh_events="language_change">
+                        <KamaLabel class="font-small" refresh_events="language_change">
                             tr{label_LogoutDesc}
                         </KamaLabel>
                     </KamaWidget>
                     <KamaSpacer />
-                    <KamaPushButton id="logoutButton" controller="LogoutController" alignment="left" width="50"
+                    <KamaPushButton class="logout-button" controller="LogoutController" alignment="left" width="50"
                                     refresh_events="language_change"
                     >
                         tr{label_Logout}

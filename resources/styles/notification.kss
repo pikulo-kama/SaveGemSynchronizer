@@ -1,5 +1,5 @@
 
-KamaDialog#notificationDialog {
+.notification-dialog {
     qproperty-top_offset: 10;
     qproperty-show_duration: 6000;
 
@@ -11,7 +11,7 @@ KamaDialog#notificationDialog {
         stop:1    color("success-a20")
     );
 
-    & QWordWrapLabel {
+    & KamaWordWrapLabel {
         color: color("text-inverted");
         min-height: 50px;
     }

@@ -1,5 +1,5 @@
 
-.saveListRecord {
+.save-list-record {
     background-color: rgba("surface-a10", 0.3);
     border: 1px solid color("surface-a20");
     border-radius: 5px;
@@ -8,14 +8,14 @@
         border-color: color("success-a10");
         background-color: color("surface-a0");
     }
-}
 
-.saveListRecordVersion {
-    font: font("accent");
-    font-weight: bold;
-}
+    &--version {
+        font: font("accent");
+        font-weight: bold;
+    }
 
-.saveListRecordOwner {
-    font: font("small");
-    color: rgba('text-primary', 0.7);
+    &--owner {
+        font: font("small");
+        color: rgba('text-primary', 0.7);
+    }
 }

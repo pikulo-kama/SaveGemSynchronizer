@@ -1,0 +1,19 @@
+
+.root {
+    background-color: color("surface-a0");
+}
+
+KamaLabel {
+    padding: 0px;
+    margin: 0px;
+
+    color: color("text-primary");
+}
+
+.p0 {
+    padding: 0;
+}
+
+.border-none {
+    border: none;
+}

@@ -1,5 +1,5 @@
 
-#gameBar::tab {
+.tab-bar::tab {
     padding: 10px;
     background-color: transparent;
     font: font("accent");

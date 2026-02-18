@@ -2,7 +2,7 @@
 <KamaScrollableWidget layout="vertical" alignment="top" spacing="10" ml="10" mt="30" mr="10">
 
     <!--  Game Details Section  -->
-    <KamaLabel class="sectionTitleText">
+    <KamaLabel class="font-section-title">
         tr{label_LastCloudSave}
     </KamaLabel>
 
@@ -10,20 +10,20 @@
     <KamaWidget layout="horizontal" spacing="15" height="150">
 
         <!--  Save Date Card  -->
-        <KamaWidget layout="vertical" class="detailsCard">
+        <KamaWidget class="details-card" layout="vertical">
             <KamaWidget layout="vertical" alignment="top-left" spacing="2" ml="20" mt="20">
                 <KamaLabel width="30" height="30">
                     pixmap{calendar.svg, scale: 30}
                 </KamaLabel>
-                <KamaLabel class="detailsCardTitle" alignment="vcenter" height="35">
+                <KamaLabel class="details-card--title" alignment="vcenter" height="35">
                     tr{label_Date}
                 </KamaLabel>
-                <KamaLabel class="detailsCardContent" height="25"
+                <KamaLabel class="details-card--content" height="25"
                            refresh_events="cloud_files_change game_config_change game_selection_change"
                 >
                     saveInfo{uploadDate}
                 </KamaLabel>
-                <KamaLabel class="detailsCardContent" height="30"
+                <KamaLabel class="details-card--content" height="30"
                            refresh_events="cloud_files_change game_config_change game_selection_change"
                 >
                     saveInfo{uploadTime}
@@ -32,21 +32,21 @@
         </KamaWidget>
 
         <!--  Save Owner Card  -->
-        <KamaWidget layout="vertical" class="detailsCard">
+        <KamaWidget class="details-card" layout="vertical">
             <KamaWidget layout="vertical" alignment="top-left" spacing="2" ml="20" mt="20">
                 <KamaLabel width="30" height="30">
                     pixmap{person.svg, scale: 30}
                 </KamaLabel>
-                <KamaLabel class="detailsCardTitle" alignment="vcenter" height="35">
+                <KamaLabel class="details-card--title" alignment="vcenter" height="35">
                     tr{label_Author}
                 </KamaLabel>
                 <KamaWidget layout="horizontal" alignment="vcenter"
                             recursive_refresh_events="cloud_files_change game_config_change game_selection_change"
                 >
-                    <KamaLabel class="detailsCardContent" height="30">
+                    <KamaLabel class="details-card--content" height="30">
                         pixmap{saveInfo{ownerPhoto}, scale: 25, circle}
                     </KamaLabel>
-                    <KamaLabel class="detailsCardContent" height="30">
+                    <KamaLabel class="details-card--content" height="30">
                         saveInfo{ownerName}
                     </KamaLabel>
                 </KamaWidget>
@@ -54,15 +54,15 @@
         </KamaWidget>
 
         <!--  Save Size Card  -->
-        <KamaWidget layout="vertical" class="detailsCard">
+        <KamaWidget class="details-card" layout="vertical">
             <KamaWidget layout="vertical" alignment="top-left" spacing="2" ml="20" mt="20">
                 <KamaLabel width="30" height="30">
                     pixmap{drive.svg, scale: 30}
                 </KamaLabel>
-                <KamaLabel class="detailsCardTitle" alignment="vcenter" height="30">
+                <KamaLabel class="details-card--title" alignment="vcenter" height="30">
                     tr{label_Size}
                 </KamaLabel>
-                <KamaLabel class="detailsCardContent" height="30"
+                <KamaLabel class="details-card--content" height="30"
                            refresh_events="cloud_files_change game_config_change game_selection_change"
                 >
                     saveInfo{size}
@@ -74,21 +74,21 @@
     <KamaWidget height="30" />
 
     <!--  Players Section  -->
-    <KamaLabel class="sectionTitleText">
+    <KamaLabel class="font-section-title">
         tr{label_Players}
     </KamaLabel>
 
-    <KamaWidget id="playersContainer" controller="PlayersController"
+    <KamaWidget controller="PlayersController"
                 layout="grid" cols="3"
                 refresh_events="activity_log_update game_config_change game_selection_change"
     >
         <Template>
             <Body>
-                <KamaWidget id="playerCard" layout="horizontal" ml="10" mt="8" mr="10" mb="8">
+                <KamaWidget id="playerCard" class="player-card" layout="horizontal" ml="10" mt="8" mr="10" mb="8">
                     <KamaLabel>
                         pixmap{template{photo}, scale: 30, circle}
                     </KamaLabel>
-                    <KamaLabel class="bodyText" alignment="center">
+                    <KamaLabel class="font-accent" alignment="center">
                         template{name}
                     </KamaLabel>
                     <KamaSpacer />

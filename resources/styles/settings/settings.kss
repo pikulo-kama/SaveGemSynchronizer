@@ -1,15 +1,10 @@
 
-.settingCard {
+.setting-card {
     border: 1px solid color("surface-a20");
     border-radius: 5px;
 }
 
-.settingGroup {
+.setting-group {
     background-color: color("surface-a10");
     border-radius: 5px;
-}
-
-.noBorderButton {
-    padding: 0;
-    border: none;
 }

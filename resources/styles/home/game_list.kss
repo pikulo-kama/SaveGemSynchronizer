@@ -1,5 +1,5 @@
 
-.gameListOption {
+.game-list-option {
     font: font("accent");
     background-color: transparent;
     text-align: left;

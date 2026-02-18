@@ -1,9 +1,9 @@
 <KamaSection name="root">
 <KamaWidget layout="horizontal">
-    <KamaWidget id="sidebar" layout="vertical" width="60" mt="10" mb="10">
+    <KamaWidget class="sidebar" layout="vertical" width="60" mt="10" mb="10">
 
         <!--  Main application navigation bar.  -->
-        <KamaWidget id="sidebarMenu" layout="vertical"
+        <KamaWidget class="sidebar--menu" layout="vertical"
                     controller="SectionListWithErrorController"
                     arg_list_sections="home settings about" arg_parent="content"
                     refresh_events="game_config_change" recursive_refresh_events="language_change"

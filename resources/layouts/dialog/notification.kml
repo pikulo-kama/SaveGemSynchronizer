@@ -1,11 +1,11 @@
 <KamaSection name="notification">
-<KamaDialog id="notificationDialog" layout="horizontal" alignment="left"
+<KamaDialog class="notification-dialog" layout="horizontal" alignment="left"
             controller="DialogController" width="400" ml="10" mr="10"
 >
     <KamaLabel alignment="vcenter">
         pixmap{checkmark.svg, scale: 30}
     </KamaLabel>
-    <KamaWordWrapLabel class="bodyText" alignment="vcenter">
+    <KamaWordWrapLabel class="font-body" alignment="vcenter">
         data{dialogMessage}
     </KamaWordWrapLabel>
 </KamaDialog>

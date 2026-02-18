@@ -1,21 +1,21 @@
 
-.detailsCard {
+.details-card {
     background-color: color("surface-a10");
     border-radius: 5px;
     text-align: left;
+
+    &--title {
+        color: rgba("text-primary", 0.4);
+        font: font("small");
+        font-weight: bold;
+    }
+
+    &--content {
+        font: font("card-title");
+    }
 }
 
-.detailsCardTitle {
-    color: rgba("text-primary", 0.4);
-    font: font("small");
-    font-weight: bold;
-}
-
-.detailsCardContent {
-    font: font("card-title");
-}
-
-#syncStatusChip {
+.sync-status-chip {
     background-color: transparent;
     border-radius: 5px;
 

@@ -1,18 +1,18 @@
 <KamaSection name="confirmation">
-<KamaDialog id="confirmationDialog" layout="vertical" alignment="left"
+<KamaDialog class="confirmation-dialog" layout="vertical" alignment="left"
             controller="ConfirmationDialogController" arg_confirm="confirmButton" arg_cancel="cancelButton"
             spacing="15" width="400" mb="20"
 >
-    <KamaWidget id="confirmationDialogBody" layout="horizontal" alignment="left" ml="20" mt="10" mr="20" mb="10">
+    <KamaWidget layout="horizontal" alignment="left" ml="20" mt="10" mr="20" mb="10">
         <KamaLabel alignment="vcenter">
             pixmap{exclamation_mark.svg, scale: 20}
         </KamaLabel>
-        <KamaLabel class="sectionTitleText fg-text-inverted" alignment="vcenter">
+        <KamaLabel class="font-section-title fg-text-inverted" alignment="vcenter">
             tr{popup_ConfirmationTitle}
         </KamaLabel>
     </KamaWidget>
     <KamaWidget layout="vertical" alignment="vcenter" ml="20" mr="20">
-        <KamaWordWrapLabel class="bodyText" alignment="vcenter" ml="20" mr="20">
+        <KamaWordWrapLabel class="font-body" alignment="vcenter" ml="20" mr="20">
             data{dialogMessage}
         </KamaWordWrapLabel>
     </KamaWidget>

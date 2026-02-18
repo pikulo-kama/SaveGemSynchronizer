@@ -7,37 +7,37 @@
             <KamaLabel alignment="vcenter">
                 pixmap{gem_outline.svg, scale: 50}
             </KamaLabel>
-            <KamaLabel alignment="vcenter" class="heroText">
+            <KamaLabel alignment="vcenter" class="font-hero">
                 prop{application.name}
             </KamaLabel>
         </KamaWidget>
-        <KamaLabel class="accentText">
+        <KamaLabel class="font-accent">
             tr{label_AppDescription}
         </KamaLabel>
     </KamaWidget>
 
     <!--  Application Details  -->
     <KamaWidget layout="vertical">
-        <KamaLabel class="bodyText fg-text-primary-06">
+        <KamaLabel class="font-body fg-text-primary-06">
             tr{label_ApplicationDetails}
         </KamaLabel>
 
         <!--  Version  -->
         <KamaWidget layout="horizontal" alignment="left" spacing="20">
-            <KamaLabel class="accentText fw-bold">
+            <KamaLabel class="font-accent fw-bold">
                 tr{label_Version}:
             </KamaLabel>
-            <KamaLabel class="accentText">
+            <KamaLabel class="font-accent">
                 prop{application.version}
             </KamaLabel>
         </KamaWidget>
 
         <!--  Author  -->
         <KamaWidget layout="horizontal" alignment="left" spacing="20">
-            <KamaLabel class="accentText fw-bold">
+            <KamaLabel class="font-accent fw-bold">
                 tr{label_Author}:
             </KamaLabel>
-            <KamaLabel class="accentText">
+            <KamaLabel class="font-accent">
                 prop{application.author}
             </KamaLabel>
         </KamaWidget>
@@ -45,16 +45,16 @@
 
     <!--  Contact Us Section  -->
     <KamaWidget layout="vertical">
-        <KamaLabel class="bodyText fg-text-primary-06">
+        <KamaLabel class="font-body fg-text-primary-06">
             tr{label_ContactUs}
         </KamaLabel>
 
         <!--  GitHub  -->
         <KamaWidget layout="horizontal" alignment="left" spacing="20">
-            <KamaLabel class="accentText fw-bold">
+            <KamaLabel class="font-accent fw-bold">
                 GitHub:
             </KamaLabel>
-            <KamaRichLabel class="accentText">
+            <KamaRichLabel class="font-accent">
                 &lt;a href='https://github.com/pikulo-kama/SaveGemSynchronizer'&gt;
                     https://github.com/pikulo-kama/SaveGemSynchronizer&lt;/a&gt;
             </KamaRichLabel>
@@ -62,10 +62,10 @@
 
         <!--  E-mail  -->
         <KamaWidget layout="horizontal" alignment="left" spacing="20">
-            <KamaLabel class="accentText fw-bold">
+            <KamaLabel class="font-accent fw-bold">
                 tr{label_Email}:
             </KamaLabel>
-            <KamaRichLabel class="accentText">
+            <KamaRichLabel class="font-accent">
                 &lt;a href='mailto:jhorr2222@gmail.com'&gt;jhorr2222@gmail.com&lt;/a&gt;
             </KamaRichLabel>
         </KamaWidget>

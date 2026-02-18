@@ -4,15 +4,15 @@
                           refresh_events="cloud_files_change game_config_change game_selection_change save_downloaded">
         <Template>
             <Body>
-                <KamaWidget id="saveListRecord" class="saveListRecord" layout="horizontal" height="65"
+                <KamaWidget id="saveListRecord" class="save-list-record" layout="horizontal" height="65"
                             ml="10" mt="5" mr="10" mb="5"
                 >
                     <!--  Snapshot information  -->
                     <KamaWidget layout="vertical" alignment="vcenter">
-                        <KamaLabel class="saveListRecordVersion">
+                        <KamaLabel class="save-list-record--version">
                             template{version}
                         </KamaLabel>
-                        <KamaLabel class="saveListRecordOwner">
+                        <KamaLabel class="save-list-record--owner">
                             template{owner}
                         </KamaLabel>
                     </KamaWidget>
