@@ -5,8 +5,6 @@ from kui.core.app import KamaApplication
 from kui.core.shortcut import prop
 from kutil.logger import get_logger
 
-from savegem.constants import UISection
-
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.flag import flags
 from savegem.common.core.ipc_socket import IPCCommand
@@ -47,7 +45,7 @@ def rebuild():
 
     context().state.refresh()
     application.resources.read()
-    application.window.build(UISection.RootSection)
+    application.window.build()
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -11,7 +11,7 @@ from kui.core.shortcut import tr
 from kutil.logger import get_logger
 
 from savegem.common.core.context import context
-
+from savegem.constants import UIRefreshEvent
 
 _logger = get_logger(__name__)
 
@@ -84,6 +84,6 @@ class ChangeStoragePathButtonController(WidgetController):
 
             current_game.settings.local_storage_path = new_path
             current_game.meta.local.calculate_checksum()
-            self.manager.event_refresh("local_storage_path_change")
+            self.manager.event_refresh(UIRefreshEvent.LocalStoragePathChange)
 
         modify_button.clicked.connect(change_path)

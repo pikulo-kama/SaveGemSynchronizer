@@ -14,56 +14,45 @@ class HolderObject:
     Activity: Final[str] = "activity"
     GamesConfig: Final[str] = "gamesConfig"
 
-
-class UISection:
-    """
-    Represents UI sections that are
-    being built by widget manager.
-    """
-
-    RootSection: Final[str] = "root"
-    """
-    Root section name.
-    This is main section that is being built in the first
-    place when application starts.
-    """
-
-    WaitSection: Final[str] = "wait"
-    """
-    Section that should be displayed when data to present root
-    section is still not available.
-    """
-
-    HomeSection: Final[str] = "home"
-    """
-    Section containing main application screen.
-    """
-
-    NotificationSection: Final[str] = "notification"
-    """
-    Notification dialog section
-    """
-
-    ConfirmationSection: Final[str] = "confirmation"
-    """
-    Confirmation dialog section
-    """
-
-
 class UIRefreshEvent:
     """
     Represents UI refresh event.
     """
 
-    All: Final[str] = "all"
-
     LanguageChange: Final[str] = "language_change"
+    """
+    Fired when the application language is toggled to refresh localized text.
+    """
+
     ActivityLogUpdate: Final[str] = "activity_log_update"
+    """
+    Triggered when new entries are added to the activity holder object.
+    """
+
     GameConfigChange: Final[str] = "game_config_change"
+    """
+    Signals game settings file have been modified.
+    """
+
     CloudSaveFilesChange: Final[str] = "cloud_files_change"
+    """
+    Triggered when there is a change in game save files on cloud.
+    """
+
     GameSelectionChange: Final[str] = "game_selection_change"
+    """
+    Fired when the user selects a different game within the UI.
+    """
+
     SaveDownloaded: Final[str] = "save_downloaded"
-    MenuItemChanged: Final[str] = "menu_item_changed"
+    """
+    Signals that a save file download from the cloud has successfully completed.
+    """
+
+    LocalStoragePathChange: Final[str] = "local_storage_path_change"
+    """
+    Fired when the local data storage path for current game has changed.
+    """
 
 
 class File:
