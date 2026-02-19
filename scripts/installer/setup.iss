@@ -22,13 +22,14 @@ UninstallDisplayName={#AppName}
 AppPublisher={#Author}
 AppVersion={#AppVersion}
 SetupIconFile={#RootPath}resources\images\application.ico
-DefaultDirName={pf}\{#AppName}
+DefaultDirName={commonpf}\{#AppName}
 DefaultGroupName={#AppName}
 UninstallDisplayIcon={app}\{#AppExeName}
 OutputBaseFilename={#AppName}Setup-{#AppVersion}-{#GetBuildType()}
 OutputDir={#RootPath}output\installers
 DisableProgramGroupPage=no
 CloseApplications=force
+UsedUserAreasWarning=no
 
 ; --- Installer Settings ---
 Compression=lzma
@@ -136,25 +137,30 @@ Filename: "schtasks"; \
 [UninstallRun]
 ; Kill main application.
 Filename: "taskkill"; \
+    RunOnceId: "KillApplication"; \
     Parameters: "/f /im {#AppExeName}"; \
     Flags: runhidden
 
 ; Kill watchdog.
 Filename: "taskkill"; \
+    RunOnceId: "KillWatchdog"; \
     Parameters: "/f /im {#WatchdogExeName}"; \
     Flags: runhidden
 
 ; Kill Google Drive watcher.
 Filename: "taskkill"; \
+    RunOnceId: "KillGoogleDriveWatcher"; \
     Parameters: "/f /im {#GDriveWatcherExeName}"; \
     Flags: runhidden
 
 ; Kill process watcher.
 Filename: "taskkill"; \
+    RunOnceId: "KillProcessWatcher"; \
     Parameters: "/f /im {#ProcessWatcherExeName}"; \
     Flags: runhidden
     
 Filename: "schtasks"; \
+    RunOnceId: "UnscheduleWatchdog"; \
     Parameters: "/Delete /TN ""SaveGemWatchdog"" /F"; \
     Flags: runhidden
     
@@ -207,6 +213,8 @@ end;
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   Prompt: String;
+  PowerShellCmd: String;
+  ResultCode: Integer;
 begin
 
   if CurUninstallStep = usUninstall then
@@ -215,5 +223,9 @@ begin
 
     if MsgBox(Prompt, mbConfirmation, MB_YESNO) = IDYES then
       DelTree(ExpandConstant('{userappdata}\{#AppName}'), True, True, True);
+      
+      // Remove credentials from credential manager.
+      PowerShellCmd := 'cmdkey /list | ForEach-Object { if ($_ -match ''Target: (LegacyGeneric:target={#AppName})$'') { cmdkey /delete:($Matches[1]) } }';
+      Exec('powershell.exe', '-WindowStyle Hidden -Command "' + PowerShellCmd + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
   end;
 end;
