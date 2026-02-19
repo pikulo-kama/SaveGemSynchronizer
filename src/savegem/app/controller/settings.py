@@ -5,12 +5,12 @@ from kui.component.combobox import KamaComboBox
 from kui.core.app import KamaApplication
 from kui.core.controller import WidgetController
 from kui.core.metadata import ControllerArgs
-from kui.core.shortcut import tr, resolve_app_data
+from kui.core.shortcut import tr
 from kui.core.style import ColorMode
-from kutil.file import delete_file
 from kutil.logger import get_logger
 
-from savegem.constants import TimeFormat, File, UIRefreshEvent
+from savegem.common.service.gdrive import GoogleAuth
+from savegem.constants import TimeFormat, UIRefreshEvent
 from savegem.common.core.context import context
 
 _logger = get_logger(__name__)
@@ -136,7 +136,7 @@ class LogoutController(WidgetController):
             _logger.debug("Logging out from application.")
 
             # Delete auth token.
-            delete_file(resolve_app_data(File.GDriveToken))
+            GoogleAuth.logout()
             application.window.destroy()
 
             sys.exit(0)

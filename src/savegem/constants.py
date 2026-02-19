@@ -60,7 +60,6 @@ class File:
     Contains names of files that are created/used by application.
     """
 
-    GDriveToken: Final[str] = "token.json"
     GDriveCreds: Final[str] = "credentials.json"
     GDriveConfig: Final[str] = "config.json"
 

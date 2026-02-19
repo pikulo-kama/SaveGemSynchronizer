@@ -18,7 +18,8 @@ dependencies = [
     "google-auth-httplib2 >= 0.2.1, < 1.0.0",
     "google_auth_oauthlib >= 1.2.3, < 2.0.0",
     "pyinstaller >= 6.17.0, < 7.0.0",
-    "winotify >= 1.1.0, < 2.0.0"
+    "winotify >= 1.1.0, < 2.0.0",
+    "keyring >= 25.7.0, < 26.0.0"
 ]
 
 [project.optional-dependencies]

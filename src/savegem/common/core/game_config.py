@@ -6,14 +6,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Final, Iterator
 
-from kui.core.shortcut import dynamic_data, resolve_app_data, resolve_image, resolve_temp_image
+from kui.core.shortcut import dynamic_data, resolve_image, resolve_temp_image
 from savegem.common.database import db
-from kutil.file import delete_file
 from kutil.file_type import JPG
 from kutil.logger import get_logger
 from kutil.request import url_retrieve
 
-from savegem.constants import File
+from savegem.common.service.gdrive import GoogleAuth
 from savegem.constants import HolderObject
 from savegem.common.core.app_data import AppData
 from savegem.common.core.save_meta import LocalMetadata, DriveMetadata, MetadataWrapper
@@ -60,8 +59,7 @@ class GameConfig(AppData):
             # Remove token when failed to remove game serviceInfo.
             # Since there is a chance that user used wrong account to
             # authenticate we remove token so that he could log in again.
-            drive_token_path = resolve_app_data(File.GDriveToken)
-            delete_file(drive_token_path)
+            GoogleAuth.logout()
 
             _logger.error(message)
             raise RuntimeError(message)

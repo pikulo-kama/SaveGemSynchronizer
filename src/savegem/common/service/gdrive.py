@@ -1,7 +1,9 @@
 import io
 import json
 import os.path
+from typing import Final
 
+import keyring
 from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -9,8 +11,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload, MediaIoBaseUpload
-from kui.core.shortcut import resolve_app_data, resolve_project_file
-from kutil.file import file_name_from_path, save_file
+from kui.core.app import KamaApplication
+from kui.core.shortcut import resolve_project_file
+from kutil.file import file_name_from_path
 from kutil.file_type import ZIP, JSON
 from kutil.logger import get_logger
 
@@ -214,18 +217,9 @@ class GDrive:
         """
 
         if cls.__credentials is None:
-            cls.__credentials = cls.__get_credentials()
+            cls.__credentials = GoogleAuth.get_credentials()
 
         return build("drive", "v3", credentials=cls.__credentials)
-
-    @staticmethod
-    def __get_credentials():
-        """
-        Used to authenticate to Google Cloud as well as refresh token if needed.
-        """
-
-        token_file_path = resolve_app_data(File.GDriveToken)
-        return Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
 
 
 class GoogleAuth:
@@ -234,20 +228,27 @@ class GoogleAuth:
     Used to authenticate user using Google OAUTH API.
     """
 
-    @staticmethod
-    def is_authenticated():
+    DriveToken: Final[str] = "google_drive_token"
+
+    @classmethod
+    def get_credentials(cls):
+        application = KamaApplication()
+        token = keyring.get_password(application.config.name, cls.DriveToken)
+
+        if token is None:
+            return None
+
+        return Credentials.from_authorized_user_info(json.loads(token))
+
+    @classmethod
+    def is_authenticated(cls):
         """
         Used to check if user is authenticated
         and file with auth token exists.
         """
 
-        token_file_path = resolve_app_data(File.GDriveToken)
-
-        if not os.path.exists(token_file_path):
-            return False
-
-        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
-        return creds.valid and not creds.expired
+        creds = cls.get_credentials()
+        return creds and creds.valid and not creds.expired
 
     @classmethod
     def authenticate(cls):
@@ -255,43 +256,41 @@ class GoogleAuth:
         Used to initiate Google authentication process.
         """
 
-        token_file_path = resolve_app_data(File.GDriveToken)
+        application = KamaApplication()
         credentials_file_path = resolve_project_file(File.GDriveCreds)
-
-        def exec_auth():
-            flow = InstalledAppFlow.from_client_secrets_file(credentials_file_path, GDRIVE_SCOPES)
-            credentials = flow.run_local_server(port=0)
-
-            _logger.info("Authentication completed.")
-            _logger.info("Saving Google Cloud access token for later use.")
-
-            save_file(token_file_path, json.loads(credentials.to_json()), as_json=True)
 
         if not os.path.exists(credentials_file_path):
             _logger.critical(f"{File.GDriveCreds} is missing.")
             raise RuntimeError(f"Google Cloud credentials are missing in root of the project. Add {File.GDriveCreds}.")
 
-        if not os.path.exists(token_file_path):
-            _logger.info("Token doesn't exist. Attempting authentication using credentials.")
-            exec_auth()
-            return
-
         if cls.is_authenticated():
             _logger.info("Token was found. Application will use credentials from token.")
             return
 
-        creds = Credentials.from_authorized_user_file(token_file_path, GDRIVE_SCOPES)
+        creds = cls.get_credentials()
 
-        # If they're just expired then try to refresh them
-        if creds.expired and creds.refresh_token:
+        # If credentials are present, and they're
+        # just expired then try to refresh them.
+        if creds and creds.expired and creds.refresh_token:
             try:
                 _logger.info("Credentials expired, performing refresh.")
                 creds.refresh(Request())
-                save_file(token_file_path, json.loads(creds.to_json()), as_json=True)
+                keyring.set_password(application.config.name, cls.DriveToken, creds.to_json())
                 return
 
             except RefreshError:
                 _logger.error("Refresh token expired. Starting authentication process.")
 
         _logger.info("Attempting authentication using credentials.")
-        exec_auth()
+        flow = InstalledAppFlow.from_client_secrets_file(credentials_file_path, GDRIVE_SCOPES)
+        credentials = flow.run_local_server(port=0)
+
+        _logger.info("Authentication completed.")
+        _logger.info("Saving Google Cloud access token for later use.")
+
+        keyring.set_password(application.config.name, cls.DriveToken, credentials.to_json())
+
+    @classmethod
+    def logout(cls):
+        application = KamaApplication()
+        keyring.delete_password(application.config.name, cls.DriveToken)
