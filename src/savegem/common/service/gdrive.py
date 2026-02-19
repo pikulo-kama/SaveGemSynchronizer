@@ -22,11 +22,6 @@ from kui.core.constants import UTF_8
 
 
 _logger = get_logger(__name__)
-GDRIVE_SCOPES = [
-    "https://www.googleapis.com/auth/docs",
-    "https://www.googleapis.com/auth/drive",
-    "https://www.googleapis.com/auth/drive.appdata"
-]
 
 
 class GDrive:
@@ -229,6 +224,11 @@ class GoogleAuth:
     """
 
     DriveToken: Final[str] = "google_drive_token"
+    GDriveScopes = [
+        "https://www.googleapis.com/auth/docs",
+        "https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/drive.appdata"
+    ]
 
     @classmethod
     def get_credentials(cls):
@@ -280,10 +280,15 @@ class GoogleAuth:
 
             except RefreshError:
                 _logger.error("Refresh token expired. Starting authentication process.")
+                cls.logout()
 
         _logger.info("Attempting authentication using credentials.")
-        flow = InstalledAppFlow.from_client_secrets_file(credentials_file_path, GDRIVE_SCOPES)
-        credentials = flow.run_local_server(port=0)
+        flow = InstalledAppFlow.from_client_secrets_file(
+            credentials_file_path,
+            cls.GDriveScopes,
+            autogenerate_code_verifier = True
+        )
+        credentials = flow.run_local_server(port=0, authorization_params={'code_challenge_method': 'S256'})
 
         _logger.info("Authentication completed.")
         _logger.info("Saving Google Cloud access token for later use.")
