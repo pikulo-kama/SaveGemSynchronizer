@@ -12,12 +12,12 @@ light:
   primary-a40:    "#234d6d"
   primary-a50:    "#1f3e57"
 
-  surface-a0:     "#f0f0f0"
-  surface-a10:    "#e3e3e3"
-  surface-a20:    "#d6d6d6"
-  surface-a30:    "#c9c9c9"
-  surface-a40:    "#bdbdbd"
-  surface-a50:    "#b0b0b0"
+  surface-a0:     "#e6e6e6"
+  surface-a10:    "#d6d6d6"
+  surface-a20:    "#c9c9c9"
+  surface-a30:    "#bdbdbd"
+  surface-a40:    "#b0b0b0"
+  surface-a50:    "#a0a0a0"
 
   success-a0:     "#1b7f5c"
   success-a10:    "#28be8a"

@@ -55,7 +55,7 @@
                 GitHub:
             </KamaLabel>
             <KamaRichLabel class="font-accent">
-                &lt;a href='https://github.com/pikulo-kama/SaveGemSynchronizer'&gt;
+                &lt;a href='https://github.com/pikulo-kama/SaveGemSynchronizer' style='color: color('primary-a10')'&gt;
                     https://github.com/pikulo-kama/SaveGemSynchronizer&lt;/a&gt;
             </KamaRichLabel>
         </KamaWidget>
@@ -66,7 +66,7 @@
                 tr{label_Email}:
             </KamaLabel>
             <KamaRichLabel class="font-accent">
-                &lt;a href='mailto:jhorr2222@gmail.com'&gt;jhorr2222@gmail.com&lt;/a&gt;
+                &lt;a href='mailto:jhorr2222@gmail.com' style='color: color('primary-a10')'&gt;jhorr2222@gmail.com&lt;/a&gt;
             </KamaRichLabel>
         </KamaWidget>
     </KamaWidget>
