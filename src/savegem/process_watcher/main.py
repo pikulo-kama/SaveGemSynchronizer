@@ -1,13 +1,12 @@
-from kui.core.app import KamaApplication
-from kui.core.shortcut import tr, dynamic_data, add_dynamic_data
-from savegem.constants import HolderObject
+from kui.core.shortcut import tr
+
+from savegem.common.service.process import AppDaemon, validate_version
 from savegem.constants import UIRefreshEvent
 from savegem.process_watcher.push_notification import push_notification
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.save_meta import SyncStatus
 from savegem.common.service.daemon import Daemon
 from savegem.common.service.downloader import Downloader
-from savegem.common.service.gdrive import GDrive
 from savegem.common.service.uploader import Uploader
 from savegem.common.core.context import context
 from savegem.process_watcher.game_process import get_running_game_processes, GameProcess
@@ -15,7 +14,7 @@ from savegem.process_watcher.ipc_socket import process_watcher_socket
 import threading
 
 
-class ProcessWatcher(Daemon):
+class ProcessWatcher(AppDaemon):
     """
     Process process_watcher.
     Runs in background and checks if any of the configured games is opened.
@@ -28,21 +27,7 @@ class ProcessWatcher(Daemon):
         self.__downloader = Downloader()
         self.__uploader = Uploader()
 
-    def _run_once(self):
-        add_dynamic_data(HolderObject.CurrentUser, GDrive.get_current_user())
-        # No need to get all users that have access since process watcher
-        # only needs current user information.
-        add_dynamic_data(HolderObject.AllUsers, [dynamic_data(HolderObject.CurrentUser)])
-        add_dynamic_data(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
-        add_dynamic_data(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
-
-        context().users.initialize()
-        context().games.initialize()
-        context().state.refresh()
-
-        application = KamaApplication()
-        application.translations.locale = context().state.locale
-
+    @validate_version
     def _work(self):
         active_processes = get_running_game_processes()
 

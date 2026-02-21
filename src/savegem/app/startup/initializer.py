@@ -10,10 +10,11 @@ class InitializationWorker(KamaStartupWorker):
 
     def _run(self):
         application = KamaApplication()
+        version = application.config.version
 
         context().users.initialize()
         context().state.refresh()
-        context().games.initialize()
+        context().settings.initialize()
 
         if context().state.locale is None:
             context().state.locale = application.config.default_locale
@@ -21,11 +22,17 @@ class InitializationWorker(KamaStartupWorker):
         application.translations.locale = context().state.locale
         application.style.color_mode = context().state.color_theme
 
-        for game in context().games:
-            game.meta.local.calculate_checksum()
-            game.meta.drive.refresh()
+        # Don't load games and activity from drive
+        # if version is outdated to avoid breaking
+        # application.
+        if context().settings.is_version_valid(version):
+            context().games.initialize()
 
-        context().activity.refresh()
+            for game in context().games:
+                game.meta.local.calculate_checksum()
+                game.meta.drive.refresh()
+
+            context().activity.refresh()
 
     @property
     def dependencies(self) -> list[str]:

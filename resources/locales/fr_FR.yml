@@ -56,6 +56,7 @@ label:
   TimeFormatDesc: "Choisissez entre le format horaire de 12 heures (AM/PM) et celui de 24 heures."
   UploadSaveToDrive: "Envoyer"
   Version: "Version"
+  AppVersionOutdated: "Cette version de {0} est obsolète.\n Contactez votre administrateur pour obtenir de l'aide."
 
 language:
   de_DE: "Deutsch (Allemand)"

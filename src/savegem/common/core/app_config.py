@@ -20,6 +20,7 @@ class AppConfig(AppData):
     ActivityLogFileProp: Final = "activityLogFileId"
     GameConfigFileProp: Final = "gameConfigFileId"
     UsersConfigFileProp: Final = "usersConfigFileId"
+    AppSettingsFileProp: Final = "appSettingsFileId"
 
     def __init__(self, context):
         super().__init__(context)
@@ -54,6 +55,14 @@ class AppConfig(AppData):
         users.
         """
         return self.__config.get_value(AppConfig.UsersConfigFileProp)
+
+    @property
+    def app_settings_file_id(self):
+        """
+        ID of file in Google Drive that
+        contains application settings.
+        """
+        return self.__config.get_value(AppConfig.AppSettingsFileProp)
 
     def refresh(self):  # pragma: no cover
         # No need to reload serviceInfo since it

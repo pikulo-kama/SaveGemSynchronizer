@@ -8,6 +8,10 @@ gear:
 home:
   color: "text-primary"
 
+warning_about:
+  path: "about"
+  color: "warning-a10"
+
 active_about:
   path: "about"
   color: "primary-a20"

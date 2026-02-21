@@ -13,6 +13,7 @@ class HolderObject:
 
     Activity: Final[str] = "activity"
     GamesConfig: Final[str] = "gamesConfig"
+    AppSettings: Final[str] = "appSettings"
 
 class UIRefreshEvent:
     """
@@ -32,6 +33,11 @@ class UIRefreshEvent:
     GameConfigChange: Final[str] = "game_config_change"
     """
     Signals game settings file have been modified.
+    """
+
+    AppSettingsChange: Final[str] = "app_settings_change"
+    """
+    Signals app settings file have been modified.
     """
 
     CloudSaveFilesChange: Final[str] = "cloud_files_change"

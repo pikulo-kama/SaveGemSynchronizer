@@ -1,34 +1,21 @@
 import threading
 
-from kui.core.shortcut import add_dynamic_data, dynamic_data
-
-from savegem.constants import HolderObject
+from savegem.common.service.process import AppDaemon, validate_version
 from savegem.constants import UIRefreshEvent
 from savegem.app.ipc_socket import ui_socket
 from savegem.common.core.context import context
 from savegem.common.core.flag import flags
-from savegem.common.service.daemon import Daemon
 from savegem.common.service.gdrive import GDrive
 from savegem.gdrive_watcher.ipc_socket import google_drive_watcher_socket
 
 
-class GDriveWatcher(Daemon):
+class GDriveWatcher(AppDaemon):
 
     def __init__(self):
         self.__start_page_token = None
-        Daemon.__init__(self, "gdrive_watcher", True)
+        AppDaemon.__init__(self, "gdrive_watcher", True)
 
-    def _run_once(self):
-        add_dynamic_data(HolderObject.CurrentUser, GDrive.get_current_user())
-        # No need to get all users that have access since GDrive watcher
-        # only needs current user information.
-        add_dynamic_data(HolderObject.AllUsers, [dynamic_data(HolderObject.CurrentUser)])
-        add_dynamic_data(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
-        add_dynamic_data(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
-
-        context().users.initialize()
-        context().games.initialize()
-
+    @validate_version
     def _work(self):
         """
         Used to poll from Google Drive Changes API

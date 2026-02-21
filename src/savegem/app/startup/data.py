@@ -10,6 +10,10 @@ from savegem.common.service.gdrive import GDrive
 _logger = get_logger(__name__)
 
 
+def download_file(key: str, file_id: str):
+    add_dynamic_data(key, GDrive.download_json_file(file_id))
+
+
 class CurrentUserDownloadWorker(KamaStartupWorker):
     """
     Used to download authenticated user data.
@@ -34,7 +38,7 @@ class UserDataDownloadWorker(KamaStartupWorker):
     """
 
     def _run(self):
-        add_dynamic_data(HolderObject.UserData, GDrive.download_json_file(context().config.users_config_file_id))
+        download_file(HolderObject.UserData, context().config.users_config_file_id)
 
 
 class ActivityWorker(KamaStartupWorker):
@@ -43,7 +47,7 @@ class ActivityWorker(KamaStartupWorker):
     """
 
     def _run(self):
-        add_dynamic_data(HolderObject.Activity, GDrive.download_json_file(context().config.activity_log_file_id))
+        download_file(HolderObject.Activity, context().config.activity_log_file_id)
 
 
 class GameConfigDownloadWorker(KamaStartupWorker):
@@ -52,4 +56,13 @@ class GameConfigDownloadWorker(KamaStartupWorker):
     """
 
     def _run(self):
-        add_dynamic_data(HolderObject.GamesConfig, GDrive.download_json_file(context().config.games_config_file_id))
+        download_file(HolderObject.GamesConfig, context().config.games_config_file_id)
+
+
+class AppSettingsDownloadWorker(KamaStartupWorker):
+    """
+    Used to download app settings from drive.
+    """
+
+    def _run(self):
+        download_file(HolderObject.AppSettings, context().config.app_settings_file_id)

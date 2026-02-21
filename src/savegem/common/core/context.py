@@ -4,6 +4,7 @@ from savegem.common.core.activity import Activity
 from savegem.common.core.app_config import AppConfig
 from savegem.common.core.app_state import AppState
 from savegem.common.core.game_config import GameConfig
+from savegem.common.core.settings import AppSettings
 from savegem.common.core.user import UserState
 
 
@@ -24,6 +25,7 @@ class ApplicationContext:
         self.__user_state = UserState(self)
         self.__state = AppState(self)
         self.__app_config = AppConfig(self)
+        self.__app_settings = AppSettings(self)
         self.__game_config = GameConfig(self)
         self.__activity = Activity(self)
 
@@ -54,6 +56,10 @@ class ApplicationContext:
         Application configurations.
         """
         return self.__app_config
+
+    @property
+    def settings(self) -> AppSettings:
+        return self.__app_settings
 
     @property
     def activity(self) -> Activity:

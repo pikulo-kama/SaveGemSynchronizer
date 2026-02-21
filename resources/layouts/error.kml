@@ -1,9 +1,9 @@
 <KamaSection name="error">
 <KamaWidget layout="vertical" alignment="center" spacing="15">
     <KamaLabel alignment="center" height="70">
-        pixmap{active_about.svg, scale: 70}
+        pixmap{warning_about.svg, scale: 70}
     </KamaLabel>
-    <KamaLabel alignment="center" class="font-card-title fg-text-primary-06" height="40">
+    <KamaLabel alignment="center" class="font-card-title fg-text-primary-06">
         data{errorMessage}
     </KamaLabel>
 </KamaWidget>
