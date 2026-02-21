@@ -40,7 +40,7 @@
     <!--  Right Section  -->
     <KamaWidget layout="vertical">
         <KamaWidget layout="horizontal">
-            <KamaWidget layout="vertical" stylesheet="max-width: 900px">
+            <KamaWidget layout="vertical" style="max-width: 900px">
 
                 <!--  Game Header  -->
                 <KamaWidget layout="vertical" height="130"
